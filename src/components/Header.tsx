@@ -16,8 +16,9 @@ export default function Header() {
 
     return (
         <>
-            {/* ロゴエリア*/}
-            <div className="absolute top-0 left-0 p-6 md:p-8 z-50">
+            {/* ロゴエリア */}
+            {/* 余白の切り替えタイミングを md から lg に変更 */}
+            <div className="absolute top-0 left-0 p-6 lg:p-8 z-50">
                 <div className="pointer-events-auto">
                     <Link href="/" className="inline-block">
                         <Image
@@ -26,25 +27,35 @@ export default function Header() {
                             width={240}
                             height={80}
                             priority
-                            className="h-10 md:h-20 w-auto"
+                            /* 
+                              🌟 修正ポイント1:
+                              Safari等でのサイズ潰れを防ぐため `aspect-[3/1]`（アスペクト比 3:1）を追加します。
+                              また、タブレット縦画面での圧迫感を抑えるため、サイズが大きくなるブレイクポイントを lg に変更します。
+                              ※より確実に固定する場合は `w-[120px] lg:w-[240px]` を追加することをおすすめします。
+                            */
+                            className="h-10 lg:h-20 w-auto aspect-[3/1] object-contain"
                         />
                     </Link>
                 </div>
             </div>
 
             {/* ナビゲーションエリア */}
-            <header className="fixed top-6 right-6 md:right-8 z-50 pointer-events-none">
-                <nav className="pointer-events-auto hidden md:flex bg-white/90 backdrop-blur-sm shadow-lg shadow-blue-300/20 rounded-full px-6 py-2 border border-green-200">
+            {/* 右側の配置位置切り替えを md から lg に変更 */}
+            <header className="fixed top-6 right-6 lg:right-8 z-50 pointer-events-none">
+                {/* 
+                  🌟 修正ポイント2:
+                  ロゴとヘッダーメニューの重なりを防ぐため、横並び表示にする条件を lg（1024px以上）に変更します。
+                  これにより、中間の画面幅（一般的なタブレットの縦画面など）ではハンバーガーメニューが表示されます。
+                */}
+                <nav className="pointer-events-auto hidden lg:flex bg-white/90 backdrop-blur-sm shadow-lg shadow-blue-300/20 rounded-full px-6 py-2 border border-green-200">
                     <NavLink href="/">TOP</NavLink>
                     <NavLink href="/about">ABOUT</NavLink>
                     <NavLink href="/services">SERVICES</NavLink>
-                    <NavLink href="/financial">FINANCIAL</NavLink>
-                    <NavLink href="/community">COMM</NavLink>
                     <NavLink href="https://note.com/rhing_official/all">NEWS</NavLink>
                 </nav>
 
-                {/* スマホ用ボタン */}
-                <button className="md:hidden pointer-events-auto p-3 bg-white/90 backdrop-blur-sm rounded-full shadow-lg border border-gray-100" onClick={() => setIsOpen(true)}>
+                {/* スマホ・タブレット用ボタン（md:hidden から lg:hidden に変更） */}
+                <button className="lg:hidden pointer-events-auto p-3 bg-white/90 backdrop-blur-sm rounded-full shadow-lg border border-gray-100" onClick={() => setIsOpen(true)}>
                     <div className="space-y-1">
                         <span className="block w-5 h-0.5 bg-gray-800"></span>
                         <span className="block w-5 h-0.5 bg-gray-800"></span>
@@ -53,7 +64,7 @@ export default function Header() {
                 </button>
             </header>
 
-            {/* ドロワーメニューはそのまま... */}
+            {/* ドロワーメニュー */}
             <AnimatePresence>
                 {isOpen && (
                     <>
@@ -66,8 +77,6 @@ export default function Header() {
                             <NavLink href="/" onClick={() => setIsOpen(false)}>TOP</NavLink>
                             <NavLink href="/about" onClick={() => setIsOpen(false)}>ABOUT</NavLink>
                             <NavLink href="/services" onClick={() => setIsOpen(false)}>SERVICES</NavLink>
-                            <NavLink href="/financial" onClick={() => setIsOpen(false)}>FINANCIAL</NavLink>
-                            <NavLink href="/community" onClick={() => setIsOpen(false)}>COMM</NavLink>
                             <NavLink href="/news" onClick={() => setIsOpen(false)}>NEWS</NavLink>
                         </motion.nav>
                     </>

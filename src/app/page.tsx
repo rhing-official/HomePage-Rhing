@@ -7,10 +7,7 @@ import { ArrowRight } from "lucide-react";
 // 導線カード用
 const menuCards = [
     { title: "団体概要・理念", en: "ABOUT", href: "/about", desc: "Rhingの理念と組織について" },
-    { title: "サービス紹介", en: "SERVICES", href: "/services", desc: "kuwa / DaiDai" },
-    { title: "収支報告", en: "FINANCIAL", href: "/financial", desc: "月次・年次の財務状況" },
-    { title: "協力者募集", en: "COMM", href: "/community", desc: "エンジニア・広報など各職種" },
-    //{ title: "daidai横丁", en: "STORE", href: "/store", desc: "ペタピタ等のECサイト" },
+    { title: "サービス紹介", en: "SERVICES", href: "/services", desc: "アプリケーションなど" },
 ];
 
 import { newsList } from "@/data/newsData";
@@ -34,7 +31,7 @@ export default function Home() {
 
             {/* 導線エリア*/}
             <section className="container mx-auto px-4 py-16">
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-4">
                     {menuCards.map((card, index) => (
                         <Link key={index} href={card.href} className="group block h-64 bg-[#f8f8f8] hover:bg-[#111] transition-colors duration-500 rounded-lg overflow-hidden relative p-8">
                             <div className="relative z-10 h-full flex flex-col justify-between">
@@ -69,6 +66,8 @@ export default function Home() {
 
                     <a
                         href="https://note.com/rhing_official/all"
+                        target="_blank"
+                        rel="noopener noreferrer"
                         className="px-6 py-2 border border-gray-300 rounded-full text-sm font-bold text-gray-600 hover:text-blue-600 hover:border-blue-500 transition-all duration-300"
                     >
                         すべてのニュース →
@@ -78,7 +77,13 @@ export default function Home() {
                 {/* グリッドレイアウト（6つまで表示） */}
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-10">
                     {newsList.slice(0, 6).map((news) => (
-                        <a href={news.url} key={news.id} className="group flex flex-col h-full bg-white rounded-xl shadow-sm hover:shadow-xl transition-all duration-300 overflow-hidden">
+                        <a
+                            href={news.url}
+                            key={news.id}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="group flex flex-col h-full bg-white rounded-xl shadow-sm hover:shadow-xl transition-all duration-300 overflow-hidden"
+                        >
                             <div className="relative w-full aspect-[16/9] overflow-hidden bg-gray-100">
                                 <img
                                     src={news.image}

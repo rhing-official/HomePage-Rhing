@@ -2,23 +2,23 @@ import { Metadata } from "next";
 import Link from "next/link";
 
 export const metadata: Metadata = {
-    title: "zakuro | Rhing",
+    title: "komichi | Rhing",
     description: "本と、二人きり。PDF・CBZ対応のミニマルな電子書籍リーダー",
 };
 
-export default function ZakuroPage() {
+export default function KomichiPage() {
     const features = [
-        { icon: "📚", title: "木目調の本棚", desc: "フォルダをそのまま本棚に。サムネイルが並ぶグリッド表示で、大切な本を一覧できる。" },
-        { icon: "📖", title: "迷わない読書画面", desc: "画面をタップするだけでページをめくる。余計なアニメーションなし、即時切り替え。" },
-        { icon: "🔖", title: "しおりを挟む", desc: "最後に読んだページを自動で記録。次に開いた時、続きからすぐ読める。" },
-        { icon: "⌨️", title: "キーボードでも快適に", desc: "PC版はキーボード操作に対応。矢印キーでページ送り、Spaceでメニュー切り替え。" },
+        { title: "木目調の本棚", desc: "フォルダをそのまま本棚に。サムネイルが並ぶグリッド表示で、大切な本を一覧できる。" },
+        { title: "迷わない読書画面", desc: "画面をタップするだけでページをめくる。余計なアニメーションなし、即時切り替え。" },
+        { title: "しおりを挟む", desc: "最後に読んだページを自動で記録。次に開いた時、続きからすぐ読める。" },
+        { title: "キーボードでも快適に", desc: "PC版はキーボード操作に対応。矢印キーでページ送り、Spaceでメニュー切り替え。" },
     ];
 
     return (
         <div className="w-full bg-[#fdfbf7] text-gray-800 pb-32">
             {/* ヒーローエリア */}
             <div className="container mx-auto px-6 py-24 text-center">
-                <h1 className="text-4xl md:text-5xl font-bold tracking-widest text-gray-900 mb-4">zakuro</h1>
+                <h1 className="text-4xl md:text-5xl font-bold tracking-widest text-gray-900 mb-4">komichi</h1>
                 <p className="text-xl md:text-2xl tracking-[0.2em] mb-12">「本と、二人きり。」</p>
                 <div className="flex flex-wrap justify-center gap-4">
                     <button className="bg-gray-900 text-white px-8 py-3 rounded-full hover:bg-gray-700 transition">Android</button>
@@ -35,7 +35,7 @@ export default function ZakuroPage() {
                 <p className="leading-relaxed text-lg">
                     余計な通知もない、広告もない。ただ本だけがある空間。<br />
                     自分のデバイスにある本を、自分のペースで読む。<br />
-                    それだけのために、zakuroはある。
+                    それだけのために、komichiはある。
                 </p>
             </section>
 
@@ -44,7 +44,6 @@ export default function ZakuroPage() {
                 <div className="grid md:grid-cols-2 gap-8 max-w-5xl mx-auto">
                     {features.map((f, i) => (
                         <div key={i} className="bg-white p-8 rounded-2xl shadow-sm border border-gray-100">
-                            <div className="text-4xl mb-4">{f.icon}</div>
                             <h3 className="text-xl font-bold mb-3">{f.title}</h3>
                             <p className="text-gray-600 text-sm leading-relaxed">{f.desc}</p>
                         </div>

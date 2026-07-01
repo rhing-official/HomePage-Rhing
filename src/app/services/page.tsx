@@ -10,19 +10,19 @@ export const metadata: Metadata = {
 // サービス一覧のデータ
 const services = [
     {
-        id: "zakuro",
-        name: "zakuro", // kuwaから変更
-        tagline: "本と、二人きり。", // ここに追加
+        id: "komichi",
+        name: "komichi",
+        tagline: "本と、二人きり。",
         category: "Book Reader",
-        description: "以前から複数プラットフォームで同じ使用感で利用できる電子書籍リーダーを作りたかったので作ろうと思いました。現在鋭意開発中です。3月中の公開を目指していますが、4月までずれ込むかもしれません。手元にMacがないのでiOS,MacOS版のリリースは目処が立つまでお預けになります。ごめんなさい。",
+        description: "以前から複数プラットフォームで同じ使用感で利用できる電子書籍リーダーを作りたかったので作ろうと思いました。現在鋭意開発中です。2026年中の公開を目指しています。手元にMacがないのでiOS,MacOS版のリリースは目処が立つまでお預けになります。ごめんなさい。",
         features: ["CBZ,PDFの読み込み", "設定のカスタマイズ化", "Android,Linux,Windows,iOS,macOS対応"],
-        link: "/services/zakuro",
+        link: "/services/komichi",
         bgColor: "bg-gray-200",
     },
     {
         id: "daidai",
         name: "DaiDai",
-        tagline: "整う、守る、私に馴染む。", // ここに追加
+        tagline: "整う、守る、私に馴染む。",
         category: "Messages",
         description: "プライバシーを守る、メッセージアプリ。広告なし、電話番号・メールアドレス不要で、あなたのデータを売却しません。家族や友人との語らいから、コミュニティでの交流まで、安心して繋がれる場所を提供します。",
         features: ["厳重なプライバシー保護", "広告なし", "電話番号・メアド不要", "Android,Linux,Windows,iOS,macOS,Web対応"],
