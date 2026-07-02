@@ -30,7 +30,7 @@ const floatingItems: FloatingItem[] = [
     {
         mobile: { top: 10, left: 0 },
         tabletPortrait: { top: 10, left: 3 },
-        tabletLandscape: { top: 3, left: 30 },
+        tabletLandscape: { top: 1, left: 30 },
         desktop: { top: 8, left: 36 },
         width: "w-100", delay: 0.1, duration: 6, rot: 3, src: "/view/1.jpg"
     },
@@ -57,8 +57,8 @@ const floatingItems: FloatingItem[] = [
     },
     {
         // mobileの記述がないため、スマホ（mobile）時は自動的に表示されません
-        tabletPortrait: { top: 50, left: 0 },
-        tabletLandscape: { top: 48, left: 10 },
+        tabletPortrait: { top: 60, left: 0 },
+        tabletLandscape: { top: 55, left: 10 },
         desktop: { top: 48, left: 16 },
         width: "w-40", delay: 0.4, duration: 7.5, rot: 4, src: "/view/5.jpg"
     },
