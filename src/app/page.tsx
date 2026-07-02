@@ -57,8 +57,8 @@ const floatingItems: FloatingItem[] = [
     },
     {
         // mobileの記述がないため、スマホ（mobile）時は自動的に表示されません
-        tabletPortrait: { top: 60, left: 0 },
-        tabletLandscape: { top: 45, left: 10 },
+        tabletPortrait: { top: 50, left: 0 },
+        tabletLandscape: { top: 55, left: 10 },
         desktop: { top: 48, left: 16 },
         width: "w-40", delay: 0.4, duration: 7.5, rot: 4, src: "/view/5.jpg"
     },
