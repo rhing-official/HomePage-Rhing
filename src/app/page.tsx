@@ -24,7 +24,7 @@ interface FloatingItem {
     src: string;
 }
 
-// 🌟 ユーザー様が更新された最新の座標データ
+// ユーザー様が更新された最新の座標データ
 const floatingItems: FloatingItem[] = [
     // ■ 左上エリア（5個）
     {
@@ -56,6 +56,7 @@ const floatingItems: FloatingItem[] = [
         width: "w-36", delay: 0.2, duration: 6.5, rot: -8, src: "/view/4.jpg"
     },
     {
+        // mobileの記述がないため、スマホ（mobile）時は自動的に表示されません
         tabletPortrait: { top: 50, left: 0 },
         tabletLandscape: { top: 48, left: 10 },
         desktop: { top: 48, left: 16 },
@@ -82,15 +83,17 @@ const floatingItems: FloatingItem[] = [
         tabletPortrait: { top: 8, right: 34 },
         tabletLandscape: { top: 5, right: 22 },
         desktop: { top: 5, right: 26 },
-        width: "w-50", delay: 0.1, duration: 6.9, rot: -12, src: "/view/8.jpg"
+        width: "w-50", delay: 0.1, duration: 6.9, rot: -2, src: "/view/8.jpg"
     },
     {
+        // mobileの記述がないため、スマホ（mobile）時は自動的に表示されません
         tabletPortrait: { top: 35, right: 30 },
         tabletLandscape: { top: 35, right: 4 },
         desktop: { top: 35, right: 8 },
         width: "w-32", delay: 0.4, duration: 6.4, rot: 5, src: "/view/9.jpg"
     },
     {
+        // mobileの記述がないため、スマホ（mobile）時は自動的に表示されません
         tabletPortrait: { top: 52, right: 4 },
         tabletLandscape: { top: 48, right: 6 },
         desktop: { top: 48, right: 16 },
@@ -113,6 +116,7 @@ const floatingItems: FloatingItem[] = [
         width: "w-36", delay: 0.5, duration: 7.2, rot: -3, src: "/view/12.jpg"
     },
     {
+        // mobileの記述がないため、スマホ（mobile）時は自動的に表示されません
         tabletPortrait: { top: 90, left: 10 },
         tabletLandscape: { top: 80, left: 8 },
         desktop: { top: 86, left: 14 },
@@ -122,10 +126,11 @@ const floatingItems: FloatingItem[] = [
         mobile: { top: 65, left: 35 },
         tabletPortrait: { top: 58, left: 8 },
         tabletLandscape: { top: 55, left: 28 },
-        desktop: { top: 58, left: 40 },
+        desktop: { top: 58, left: 44 },
         width: "w-36", delay: 0.4, duration: 7.4, rot: -5, src: "/view/14.jpg"
     },
     {
+        // mobile と tabletLandscape の記述がないため、スマホとタブレット横表示のときは自動的に非表示になります！
         tabletPortrait: { top: 75, left: 18 },
         desktop: { top: 70, left: 30 },
         width: "w-36", delay: 0.2, duration: 6.8, rot: -3, src: "/view/15.jpg"
@@ -142,7 +147,7 @@ const floatingItems: FloatingItem[] = [
     {
         mobile: { top: 65, right: 4 },
         tabletPortrait: { top: 60, right: 8 },
-        tabletLandscape: { top: 60, right: 30 },
+        tabletLandscape: { top: 55, right: 30 },
         desktop: { top: 60, right: 30 },
         width: "w-100", delay: 0.2, duration: 7.6, rot: 3, src: "/view/17.jpg"
     },
@@ -156,7 +161,7 @@ const floatingItems: FloatingItem[] = [
     {
         mobile: { top: 58, right: 4 },
         tabletPortrait: { top: 62, right: 8 },
-        tabletLandscape: { top: 60, right: 3 },
+        tabletLandscape: { top: 60, right: 7 },
         desktop: { top: 58, right: 22 },
         width: "w-40", delay: 0.1, duration: 7.3, rot: -7, src: "/view/19.jpg"
     },
@@ -201,7 +206,6 @@ export default function Home() {
     return (
         <div className="w-full">
             {/* ヒーローエリア */}
-            {/* 🌟 修正ポイント1: 縦幅を h-[75vh] から少し余裕のある h-[80vh] へ拡大 */}
             <section className="h-[80vh] flex items-center justify-center px-6 relative overflow-hidden">
 
                 {/* 20個の反重力フローティングガラスカードをマッピングで描画 */}
@@ -211,7 +215,8 @@ export default function Home() {
 
                     const coords = item[currentViewport];
 
-                    // 座標（coords）が定義されていない場合はレンダリングをスキップ（自動的に完璧な非表示）
+                    // 🌟 修正ポイント3: 現在のデバイス用の座標（coords）が定義されていない場合は
+                    // このカードのレンダリング自体をスキップして、完全に非表示にします。
                     if (!coords) return null;
 
                     const leftVal = coords.left;
@@ -220,8 +225,6 @@ export default function Home() {
 
                     // 飛散距離の計算
                     const initialX = leftVal !== undefined ? `${50 - leftVal}vw` : `${rightVal !== undefined ? rightVal - 50 : 0}vw`;
-                    // 🌟 修正ポイント2: 親コンテナの高さが 80vh に拡大したため、
-                    // 中心点を 37.5 ➡️ 40vh、倍率を 0.75 ➡️ 0.8 に補正し、アニメーションの飛び出す中心を完全に揃えます
                     const initialY = `${40 - topVal * 0.8}vh`;
 
                     return (
@@ -229,22 +232,31 @@ export default function Home() {
                             key={index}
                             initial={{
                                 opacity: 0,
-                                scale: 0.1,
+                                scale: 0,
                                 y: 30,
                                 x: initialX,
+                                rotate: item.rot * 4,
                             }}
                             animate={{
                                 opacity: 1,
                                 scale: 1,
                                 x: 0,
-                                y: 0
+                                y: 0,
+                                rotate: item.rot,
                             }}
                             transition={{
-                                duration: 1.5,
+                                type: "spring",
+                                stiffness: 85,
+                                damping: 13,
+                                mass: 0.9,
                                 delay: item.delay,
-                                ease: [0.16, 1, 0.3, 1]
                             }}
-                            className="absolute z-10 pointer-events-none scale-55 sm:scale-80 lg:scale-100"
+                            /* 
+                              🌟 修正ポイント4: 
+                              古い `item.showOnMobile` の複雑な条件分岐クラスをすべて削除しました。
+                              単に各デバイスごとの大きさ（scale-55 / sm:scale-65 / xl:scale-100）を綺麗に指定するだけになり、バグが完全に解消されます。
+                            */
+                            className="absolute z-10 pointer-events-none scale-45 sm:scale-65 xl:scale-100"
                             style={{
                                 top: `${topVal}%`,
                                 left: leftVal !== undefined ? `${leftVal}%` : undefined,
