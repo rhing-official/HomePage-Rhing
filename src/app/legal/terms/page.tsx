@@ -22,7 +22,8 @@ export default function TermsPage() {
     return (
         <div className="container mx-auto px-6 py-32 max-w-4xl">
             {/* ページタイトル */}
-            <div className="mb-24 text-center">
+            {/* 🌟 修正ポイント1: タイトルエリアをガラスカードのデザインに変更 */}
+            <div className="mb-24 text-center py-10 bg-white/40 backdrop-blur-md border border-white/80 shadow-md shadow-gray-200/20 rounded-3xl">
                 <h1 className="text-4xl md:text-5xl font-bold tracking-widest text-gray-900 mb-4">TERMS OF SERVICE</h1>
                 <p className="text-gray-500 tracking-wider text-sm">利用規約</p>
             </div>
@@ -30,11 +31,18 @@ export default function TermsPage() {
             {/* 条文リスト */}
             <div className="space-y-12">
                 {terms.map((term, index) => (
+                    /* 
+                      🌟 修正ポイント2: 条文カードをガラスデザイン仕様に変更 
+                      - 黒の太い左境界線（border-l-4 border-l-gray-900）は維持しています。
+                      - bg-white/40 (半透明), backdrop-blur-md, border-white/80 (他3辺の境界線) を設定しています。
+                      - ホバー時には、明るいガラス（hover:bg-white/60）とほのかなブルーの影（hover:shadow-blue-300/10）へ滑らかに遷移します。
+                    */
                     <section
                         key={index}
-                        className="bg-white p-8 md:p-10 border-l-4 border-gray-900 shadow-sm rounded-r-2xl"
+                        className="bg-white/40 backdrop-blur-md p-8 md:p-10 border border-white/80 border-l-4 border-l-gray-900 shadow-md shadow-gray-200/20 rounded-r-2xl hover:bg-white/60 hover:shadow-xl hover:shadow-blue-300/10 transition-all duration-500"
                     >
-                        <h3 className="text-xl font-bold text-gray-900 mb-6 tracking-wide border-b border-gray-100 pb-4">
+                        {/* 🌟 区切り線をガラスの透過率に合うように微調整 */}
+                        <h3 className="text-xl font-bold text-gray-900 mb-6 tracking-wide border-b border-gray-900/10 pb-4">
                             {term.title}
                         </h3>
                         <p className="text-gray-700 leading-relaxed text-lg font-medium">

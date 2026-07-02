@@ -8,9 +8,10 @@ export default function ContactForm() {
     const searchParams = useSearchParams();
     const typeQuery = searchParams.get("type");
 
+    // 🌟 修正ポイント: 欠落していた activeTab の状態（State）定義を追加します
     const [activeTab, setActiveTab] = useState<"user" | "business">(typeQuery === "business" ? "business" : "user");
 
-    // 🌟 送信ステータスを管理する状態を追加します
+    // 送信ステータスを管理する状態
     const [status, setStatus] = useState<"idle" | "submitting" | "success" | "error">("idle");
 
     useEffect(() => {
@@ -18,7 +19,7 @@ export default function ContactForm() {
         if (typeQuery === "user") setActiveTab("user");
     }, [typeQuery]);
 
-    // 🌟 GASへ非同期でデータを送信するハンドラー
+    // GASへ非同期でデータを送信するハンドラー
     const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
         setStatus("submitting");
@@ -39,14 +40,10 @@ export default function ContactForm() {
         searchParams.append("activeTab", activeTab); // アクティブなタブ（user/business）も追加
 
         try {
-            // 🌟 先ほどコピーしたGASのウェブアプリURLをここに貼り付けてください
-            const GAS_URL = "https://script.google.com/macros/s/AKfycbxWxNCo2T3awUeDQ4WIAu1wa_IWgrl9MmNHooH3MLKmraQOrhiCBvW8_9AbdmaNI6iU/exec";
+            const GAS_URL = "https://script.google.com/macros/s/AKfycbWxNCo2T3awUeDQ4WIAu1wa_IWgrl9MmNHooH3MLKmraQOrhiCBvW8_9AbdmaNI6iU/exec";
 
             /* 
-              💡 GASとの通信時の注意点：
-              GASはリダイレクトを伴うため、ブラウザによっては「CORSエラー」がコンソールに表示されることがあります。
-              これを最も安全・確実に回避するため、`mode: "no-cors"` でリクエストを送信します。
-              `no-cors` の場合レスポンスの中身は空になりますが、例外が発生しなければ送信成功と判断できます。
+              CORS回避のため、`mode: "no-cors"` でリクエストを送信します。
             */
             await fetch(GAS_URL, {
                 method: "POST",
@@ -72,7 +69,7 @@ export default function ContactForm() {
                 <button
                     disabled={status === "submitting"}
                     onClick={() => setActiveTab("user")}
-                    className={`px-8 py-4 text-center font-bold tracking-widest transition-colors ${activeTab === "user" ? "border-b-2 border-gray-900 text-gray-900" : "text-gray-400 hover:text-gray-600"
+                    className={`px-8 py-4 text-center font-bold tracking-widest transition-colors ${activeTab === "user" ? "border-b-2 border-blue-600 text-blue-600" : "text-gray-400 hover:text-gray-600"
                         } disabled:opacity-50`}
                 >
                     ユーザー向け
@@ -80,7 +77,7 @@ export default function ContactForm() {
                 <button
                     disabled={status === "submitting"}
                     onClick={() => setActiveTab("business")}
-                    className={`px-8 py-4 text-center font-bold tracking-widest transition-colors ${activeTab === "business" ? "border-b-2 border-gray-900 text-gray-900" : "text-gray-400 hover:text-gray-600"
+                    className={`px-8 py-4 text-center font-bold tracking-widest transition-colors ${activeTab === "business" ? "border-b-2 border-blue-600 text-blue-600" : "text-gray-400 hover:text-gray-600"
                         } disabled:opacity-50`}
                 >
                     企業向け
@@ -90,15 +87,15 @@ export default function ContactForm() {
             {/* 送信状態に応じた表示の切り替え */}
             <AnimatePresence mode="wait">
                 {status === "success" ? (
-                    // 送信成功画面
+                    /* 送信成功画面（ガラス風カード） */
                     <motion.div
                         key="success-message"
                         initial={{ opacity: 0, y: 20 }}
                         animate={{ opacity: 1, y: 0 }}
                         exit={{ opacity: 0, y: -20 }}
-                        className="text-center py-16 bg-white rounded-2xl border border-gray-100 p-8 md:p-12 shadow-sm"
+                        className="text-center py-16 bg-white/40 backdrop-blur-md border border-white/80 shadow-md shadow-gray-200/30 rounded-2xl p-8 md:p-12"
                     >
-                        <div className="w-16 h-16 bg-green-50 text-green-500 rounded-full flex items-center justify-center mx-auto mb-6">
+                        <div className="w-16 h-16 bg-green-50/80 border border-green-200/40 text-green-600 rounded-full flex items-center justify-center mx-auto mb-6 shadow-sm">
                             <svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M5 13l4 4L19 7"></path>
                             </svg>
@@ -115,14 +112,14 @@ export default function ContactForm() {
                         </button>
                     </motion.div>
                 ) : (
-                    // フォーム入力画面
+                    /* フォーム本体（ガラス風カード） */
                     <motion.form
                         key="contact-form"
                         initial={{ opacity: 0 }}
                         animate={{ opacity: 1 }}
                         exit={{ opacity: 0 }}
                         onSubmit={handleSubmit}
-                        className="space-y-8 bg-white p-8 md:p-12 rounded-2xl shadow-sm border border-gray-100"
+                        className="space-y-8 bg-white/40 backdrop-blur-md p-8 md:p-12 rounded-2xl border border-white/80 shadow-md shadow-gray-200/30"
                     >
                         <input type="checkbox" name="botcheck" className="hidden" style={{ display: 'none' }} />
 
@@ -138,7 +135,7 @@ export default function ContactForm() {
                                     {/* 貴社名 */}
                                     <div>
                                         <label htmlFor="company" className="block text-sm font-bold text-gray-700 mb-2">貴社名 <span className="text-red-500 ml-1 text-xs font-normal">必須</span></label>
-                                        <input type="text" id="company" name="貴社名" required={activeTab === "business"} className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:bg-white transition-colors" placeholder="例：株式会社Rhing" />
+                                        <input type="text" id="company" name="貴社名" required={activeTab === "business"} className="w-full px-4 py-3 bg-white/50 border border-white/80 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:bg-white/80 transition-all" placeholder="例：株式会社Rhing" />
                                     </div>
 
                                     {/* ご担当者名（企業向けでのみ表示） */}
@@ -146,7 +143,7 @@ export default function ContactForm() {
                                         <label htmlFor="name" className="block text-sm font-bold text-gray-700 mb-2">
                                             ご担当者名 <span className="text-red-500 ml-1 text-xs font-normal">必須</span>
                                         </label>
-                                        <input type="text" id="name" name="ご担当者名" required={activeTab === "business"} className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:bg-white transition-colors" placeholder="例：山田 太郎" />
+                                        <input type="text" id="name" name="ご担当者名" required={activeTab === "business"} className="w-full px-4 py-3 bg-white/50 border border-white/80 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:bg-white/80 transition-all" placeholder="例：山田 太郎" />
                                     </div>
                                 </motion.div>
                             )}
@@ -155,26 +152,26 @@ export default function ContactForm() {
                         {/* 共通項目：メールアドレス */}
                         <div>
                             <label htmlFor="email" className="block text-sm font-bold text-gray-700 mb-2">メールアドレス <span className="text-red-500 ml-1 text-xs font-normal">必須</span></label>
-                            <input type="email" id="email" name="メールアドレス" required className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:bg-white transition-colors" placeholder="例：your-email@example.com" />
+                            <input type="email" id="email" name="メールアドレス" required className="w-full px-4 py-3 bg-white/50 border border-white/80 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:bg-white/80 transition-all" placeholder="例：your-email@example.com" />
                         </div>
 
                         {/* お問い合わせ種別 */}
                         <div>
                             <label htmlFor="category" className="block text-sm font-bold text-gray-700 mb-2">お問い合わせ種別 <span className="text-red-500 ml-1 text-xs font-normal">必須</span></label>
-                            <select id="category" name="お問い合わせ種別" required className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:bg-white transition-colors appearance-none cursor-pointer">
-                                <option value="">選択してください</option>
+                            <select id="category" name="お問い合わせ種別" required className="w-full px-4 py-3 bg-white/50 border border-white/80 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:bg-white/80 transition-all appearance-none cursor-pointer">
+                                <option value="" className="text-gray-900 bg-white">選択してください</option>
                                 {activeTab === "user" ? (
                                     <>
-                                        <option value="サービスの使い方について">サービスの使い方について</option>
-                                        <option value="不具合の報告">不具合の報告</option>
-                                        <option value="ご意見・ご要望">ご意見・ご要望</option>
-                                        <option value="その他">その他</option>
+                                        <option value="サービスの使い方について" className="text-gray-900 bg-white">サービスの使い方について</option>
+                                        <option value="不具合の報告" className="text-gray-900 bg-white">不具合 of 報告</option>
+                                        <option value="ご意見・ご要望" className="text-gray-900 bg-white">ご意見・ご要望</option>
+                                        <option value="その他" className="text-gray-900 bg-white">その他</option>
                                     </>
                                 ) : (
                                     <>
-                                        <option value="協業・提携について">協業・提携について</option>
-                                        <option value="取材・メディア掲載について">取材・メディア掲載について</option>
-                                        <option value="その他">その他</option>
+                                        <option value="協業・提携について" className="text-gray-900 bg-white">協業・提携について</option>
+                                        <option value="取材・メディア掲載について" className="text-gray-900 bg-white">取材・メディア掲載について</option>
+                                        <option value="その他" className="text-gray-900 bg-white">その他</option>
                                     </>
                                 )}
                             </select>
@@ -183,7 +180,7 @@ export default function ContactForm() {
                         {/* 共通項目：お問い合わせ内容 */}
                         <div>
                             <label htmlFor="message" className="block text-sm font-bold text-gray-700 mb-2">お問い合わせ内容 <span className="text-red-500 ml-1 text-xs font-normal">必須</span></label>
-                            <textarea id="message" name="お問い合わせ内容" required rows={6} className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:bg-white transition-colors resize-none" placeholder="お問い合わせ内容をご記入ください。"></textarea>
+                            <textarea id="message" name="お問い合わせ内容" required rows={6} className="w-full px-4 py-3 bg-white/50 border border-white/80 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:bg-white/80 transition-all resize-none" placeholder="お問い合わせ内容をご記入ください。"></textarea>
                         </div>
 
                         {/* 送信状況に応じたエラーメッセージ */}
@@ -198,7 +195,7 @@ export default function ContactForm() {
                             <button
                                 type="submit"
                                 disabled={status === "submitting"}
-                                className="w-full md:w-auto px-12 py-4 bg-[#111] hover:bg-gray-800 disabled:bg-gray-400 text-white font-bold rounded-full transition-colors tracking-widest disabled:cursor-not-allowed"
+                                className="w-full md:w-auto px-12 py-4 bg-[#111] hover:bg-gray-800 disabled:bg-gray-400 text-white font-bold rounded-full transition-colors tracking-widest disabled:cursor-not-allowed shadow-md"
                             >
                                 {status === "submitting" ? "送信中..." : "送信する"}
                             </button>

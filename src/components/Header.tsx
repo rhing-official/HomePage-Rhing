@@ -27,12 +27,6 @@ export default function Header() {
                             width={240}
                             height={80}
                             priority
-                            /* 
-                              🌟 修正ポイント1:
-                              Safari等でのサイズ潰れを防ぐため `aspect-[3/1]`（アスペクト比 3:1）を追加します。
-                              また、タブレット縦画面での圧迫感を抑えるため、サイズが大きくなるブレイクポイントを lg に変更します。
-                              ※より確実に固定する場合は `w-[120px] lg:w-[240px]` を追加することをおすすめします。
-                            */
                             className="h-10 lg:h-20 w-auto aspect-[3/1] object-contain"
                         />
                     </Link>
