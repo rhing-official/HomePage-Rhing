@@ -2,15 +2,9 @@ import Link from "next/link";
 import Image from "next/image";
 import { siteConfig } from "@/data/siteConfig";
 
-// リンクにホバーした際、左から下線が引かれるアニメーション用の共通部品
 const UnderlineLink = ({ href, children, external = false }: { href: string; children: React.ReactNode; external?: boolean }) => {
-    /* 
-      🌟 修正ポイント1: 
-      ・`whitespace-nowrap` を追加して、強制的に改行を防ぎます。
-      ・文字サイズを `text-sm xl:text-base` に設定し、タブレット横画面などでも窮屈に見えないようにします。
-    */
     const baseClasses = "group relative inline-block pb-1 text-gray-800 font-bold tracking-wide hover:text-black transition-colors whitespace-nowrap text-sm xl:text-base";
-    const underline = <span className="absolute bottom-0 left-0 w-0 h-[2px] bg-gray-900 transition-all duration-300 group-hover:w-full"></span>;
+    const underline = <span className="absolute bottom-0 left-0 w-0 h-[2px] bg-current transition-all duration-300 group-hover:w-full"></span>;
 
     if (external) {
         return (
