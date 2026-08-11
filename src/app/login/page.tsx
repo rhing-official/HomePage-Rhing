@@ -1,0 +1,112 @@
+"use client";
+
+import { Suspense, useEffect, useState } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
+import { auth, onAuthStateChanged, signOut, type User } from "@/lib/firebaseAuth";
+import { useGoogleSignIn } from "@/hooks/useGoogleSignIn";
+
+export default function LoginPage() {
+    return (
+        <Suspense fallback={null}>
+            <LoginPageContent />
+        </Suspense>
+    );
+}
+
+function LoginPageContent() {
+    const router = useRouter();
+    const searchParams = useSearchParams();
+    const redirectTo = searchParams.get("redirect");
+
+    const [user, setUser] = useState<User | null>(null);
+    const [ready, setReady] = useState(false);
+    const { signIn, error, resolver, code, setCode, submitTotpCode, submitting, cancelMfa } = useGoogleSignIn();
+
+    useEffect(() => onAuthStateChanged(auth, (u) => {
+        setUser(u);
+        setReady(true);
+    }), []);
+
+    // 「すでにログイン済みでこのページを開いた」場合は戻さない
+    // （アカウント情報やログアウトボタンを見せる必要があるため）。
+    // 戻すのは「このページでの操作によって今まさにログインが完了した」場合のみ。
+    const redirectIfSignedIn = () => {
+        if (redirectTo && auth.currentUser) {
+            router.replace(redirectTo);
+        }
+    };
+
+    if (!ready) return null;
+
+    return (
+        <div className="container mx-auto px-6 py-32 max-w-md text-center">
+            <h1 className="text-2xl font-bold text-gray-900 mb-4">ログイン</h1>
+
+            {user ? (
+                <div className="flex flex-col items-center gap-4">
+                    {user.photoURL ? (
+                        // eslint-disable-next-line @next/next/no-img-element
+                        <img src={user.photoURL} alt="" referrerPolicy="no-referrer" className="w-16 h-16 rounded-full" />
+                    ) : (
+                        <span className="w-16 h-16 rounded-full bg-gray-300 block" />
+                    )}
+                    <p className="font-bold text-gray-900">{user.displayName ?? "DaiDaiアカウント"}</p>
+                    {user.email && <p className="text-sm text-gray-500">{user.email}</p>}
+                    <button
+                        onClick={() => signOut()}
+                        className="mt-2 px-8 py-3 rounded-full border border-gray-300 text-gray-700 hover:bg-gray-50 transition"
+                    >
+                        ログアウト
+                    </button>
+                </div>
+            ) : resolver ? (
+                <form
+                    onSubmit={(e) => {
+                        e.preventDefault();
+                        if (submitting || !code.trim()) return;
+                        submitTotpCode().then(redirectIfSignedIn);
+                    }}
+                    className="flex flex-col items-center gap-3"
+                >
+                    <p className="text-sm text-gray-600">認証アプリの6桁コードを入力してください</p>
+                    <input
+                        value={code}
+                        onChange={(e) => setCode(e.target.value)}
+                        placeholder="123456"
+                        inputMode="numeric"
+                        autoFocus
+                        className="w-40 text-center rounded-lg border border-gray-300 px-4 py-2 text-lg tracking-widest"
+                    />
+                    <div className="flex gap-3">
+                        <button
+                            type="button"
+                            onClick={cancelMfa}
+                            className="px-6 py-2 rounded-full border border-gray-300 text-gray-500 hover:bg-gray-50 transition"
+                        >
+                            キャンセル
+                        </button>
+                        <button
+                            type="submit"
+                            disabled={submitting || !code.trim()}
+                            className="bg-amber-500 text-white px-6 py-2 rounded-full hover:bg-amber-600 transition shadow disabled:opacity-50"
+                        >
+                            {submitting ? "確認中..." : "確認"}
+                        </button>
+                    </div>
+                </form>
+            ) : (
+                <div className="flex flex-col items-center gap-4">
+                    <p className="text-gray-500 mb-2">DaiDaiアカウント（Google）でログインします。</p>
+                    <button
+                        onClick={() => signIn().then(redirectIfSignedIn)}
+                        className="bg-amber-500 text-white px-8 py-3 rounded-full hover:bg-amber-600 transition shadow-lg"
+                    >
+                        Googleでログイン
+                    </button>
+                </div>
+            )}
+
+            {error && <p className="mt-6 text-sm text-red-600">{error}</p>}
+        </div>
+    );
+}

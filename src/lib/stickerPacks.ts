@@ -6,6 +6,7 @@ import {
     limit,
     orderBy,
     query,
+    where,
     type DocumentData,
 } from "firebase/firestore";
 import { db } from "@/lib/firebase";
@@ -16,6 +17,18 @@ export interface Sticker {
     imageUrl: string;
 }
 
+// v1のカテゴリ候補（固定リスト）。増減する場合はここを編集する。
+export const STICKER_PACK_CATEGORIES = [
+    "あいさつ",
+    "感情・リアクション",
+    "動物",
+    "キャラクター",
+    "日常",
+    "ビジネス",
+    "季節・イベント",
+    "その他",
+] as const;
+
 export interface StickerPack {
     id: string;
     creatorId: string;
@@ -25,6 +38,7 @@ export interface StickerPack {
     category: string;
     tags: string[];
     salesCount: number;
+    ownerCount: number;
 }
 
 function toStickerPack(id: string, data: DocumentData): StickerPack {
@@ -37,6 +51,7 @@ function toStickerPack(id: string, data: DocumentData): StickerPack {
         category: typeof data.category === "string" ? data.category : "",
         tags: Array.isArray(data.tags) ? data.tags : [],
         salesCount: typeof data.salesCount === "number" ? data.salesCount : 0,
+        ownerCount: typeof data.ownerCount === "number" ? data.ownerCount : 0,
     };
 }
 
@@ -66,6 +81,17 @@ export async function getTrendingStickerPacks(count: number): Promise<StickerPac
     }
 }
 
+export async function getStickerPacksByCreator(uid: string): Promise<StickerPack[]> {
+    try {
+        const snapshot = await getDocs(
+            query(collection(db, "stickerPacks"), where("creatorId", "==", uid)),
+        );
+        return snapshot.docs.map((d) => toStickerPack(d.id, d.data()));
+    } catch {
+        return [];
+    }
+}
+
 export async function getStickerPackById(packId: string): Promise<StickerPack | null> {
     try {
         const snapshot = await getDoc(doc(db, "stickerPacks", packId));
@@ -73,6 +99,27 @@ export async function getStickerPackById(packId: string): Promise<StickerPack | 
         return toStickerPack(snapshot.id, snapshot.data());
     } catch {
         return null;
+    }
+}
+
+// タグ入力の候補用に、既存パックで使われているタグを重複なく集める。
+export async function getAllTags(): Promise<string[]> {
+    const packs = await getAllStickerPacks();
+    const tags = new Set<string>();
+    for (const pack of packs) {
+        for (const tag of pack.tags) tags.add(tag);
+    }
+    return Array.from(tags).sort();
+}
+
+// users/{uid}/ownedStickerPacks/{packId}はDaiDai репо firestore.rulesにより
+// 本人のみ読み取り可能。ドキュメントが存在すること自体が所有の印。
+export async function isPackOwnedByUser(uid: string, packId: string): Promise<boolean> {
+    try {
+        const snapshot = await getDoc(doc(db, "users", uid, "ownedStickerPacks", packId));
+        return snapshot.exists();
+    } catch {
+        return false;
     }
 }
 
