@@ -127,19 +127,13 @@ function CreatePackForm({
     onCreated: () => void;
 }) {
     const [name, setName] = useState("");
-    const [price, setPrice] = useState("0");
     const [category, setCategory] = useState("");
     const [tags, setTags] = useState<string[]>([]);
     const [files, setFiles] = useState<File[]>([]);
     const [submitting, setSubmitting] = useState(false);
     const [error, setError] = useState<string | null>(null);
 
-    const priceValue = Number(price);
-    const isValid =
-        name.trim() !== "" &&
-        Number.isInteger(priceValue) &&
-        priceValue >= 0 &&
-        files.length >= MIN_STICKERS_PER_PACK;
+    const isValid = name.trim() !== "" && files.length >= MIN_STICKERS_PER_PACK;
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
@@ -150,13 +144,12 @@ function CreatePackForm({
             const stickers = await uploadFiles(uid, files);
             await createStickerPack({
                 name: name.trim(),
-                price: priceValue,
+                price: 0,
                 stickers,
                 category,
                 tags,
             });
             setName("");
-            setPrice("0");
             setCategory("");
             setTags([]);
             setFiles([]);
@@ -184,17 +177,9 @@ function CreatePackForm({
                 />
             </label>
 
-            <label className="flex flex-col gap-1.5 text-sm text-gray-600">
-                価格（円、0は無料）
-                <input
-                    type="number"
-                    min={0}
-                    step={1}
-                    value={price}
-                    onChange={(e) => setPrice(e.target.value)}
-                    className="rounded-lg border border-gray-200 px-4 py-2 bg-white/70"
-                />
-            </label>
+            <p className="text-sm text-gray-500 bg-gray-50 border border-gray-200 rounded-lg px-4 py-2.5">
+                価格: 無料（0円）— 有料パックの出品は準備中のため、現在は無料配布のみ対応しています。
+            </p>
 
             <label className="flex flex-col gap-1.5 text-sm text-gray-600">
                 カテゴリ（任意）
@@ -270,6 +255,10 @@ function PackEditor({
         }
         if (!Number.isInteger(priceValue) || priceValue < 0) {
             setMetaError("価格は0以上の整数で入力してください");
+            return;
+        }
+        if (priceValue > 0 && priceValue !== pack.price) {
+            setMetaError("有料パックの出品は準備中のため、価格は0円のみ設定できます");
             return;
         }
         setSavingMeta(true);
@@ -357,7 +346,10 @@ function PackEditor({
                 </button>
             </div>
             {metaError && <p className="text-xs text-red-600">{metaError}</p>}
-            <p className="text-xs text-gray-400">現在の価格: {formatPackPrice(pack.price)}</p>
+            <p className="text-xs text-gray-400">
+                現在の価格: {formatPackPrice(pack.price)}
+                {pack.price === 0 && "（有料パックの出品は準備中のため、当面は無料のみ設定できます）"}
+            </p>
 
             <div className="flex flex-col gap-2 pt-3 border-t border-white/60">
                 <input
