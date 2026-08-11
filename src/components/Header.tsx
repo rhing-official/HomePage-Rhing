@@ -21,7 +21,7 @@ export default function Header() {
                 <div className="pointer-events-auto">
                     <Link href="/" className="inline-block">
                         <Image
-                            src="/Rhing.svg"
+                            src="/Rhing texture logo.svg"
                             alt="Rhing Logo"
                             width={240}
                             height={80}

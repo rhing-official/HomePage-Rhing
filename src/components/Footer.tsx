@@ -32,7 +32,7 @@ export default function Footer() {
                 <div className="w-full lg:w-1/3 flex items-center justify-center lg:justify-start p-12 lg:pl-24 bg-transparent">
                     <Link href="/">
                         <Image
-                            src="/Rhing.svg"
+                            src="/Rhing texture logo.svg"
                             alt="Rhing Logo"
                             width={1000}
                             height={1000}
