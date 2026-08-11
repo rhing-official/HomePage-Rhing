@@ -9,6 +9,7 @@ export const siteConfig = {
         financial: "#333333",
         recruit: "#333333",
         store: "#333333",
+        daidaiYokocho: "#333333",
         contact: "#333333",
         legal: "#333333",
     },

@@ -3,6 +3,7 @@ import { useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { motion, AnimatePresence } from "framer-motion";
+import AuthButton from "@/components/AuthButton";
 
 const NavLink = ({ href, children, onClick }: { href: string; children: React.ReactNode; onClick?: () => void }) => (
     <Link href={href} onClick={onClick} className="group relative block py-3 px-4 font-bold text-gray-800 hover:text-blue-600 transition-colors">
@@ -42,7 +43,9 @@ export default function Header() {
                     <NavLink href="/">TOP</NavLink>
                     <NavLink href="/about">ABOUT</NavLink>
                     <NavLink href="/services">SERVICES</NavLink>
+                    <NavLink href="/daidai-yokocho">daidai横丁</NavLink>
                     <NavLink href="https://note.com/rhing_official/all">NEWS</NavLink>
+                    <AuthButton />
                 </nav>
 
                 {/* 
@@ -96,8 +99,10 @@ export default function Header() {
                             <NavLink href="/" onClick={() => setIsOpen(false)}>TOP</NavLink>
                             <NavLink href="/about" onClick={() => setIsOpen(false)}>ABOUT</NavLink>
                             <NavLink href="/services" onClick={() => setIsOpen(false)}>SERVICES</NavLink>
+                            <NavLink href="/daidai-yokocho" onClick={() => setIsOpen(false)}>daidai横丁</NavLink>
                             {/* 🌟 リンク先をPC版と合わせて公式noteに統一しました */}
                             <NavLink href="https://note.com/rhing_official/all" onClick={() => setIsOpen(false)}>NEWS</NavLink>
+                            <AuthButton onNavigate={() => setIsOpen(false)} />
                         </motion.nav>
                     </>
                 )}
