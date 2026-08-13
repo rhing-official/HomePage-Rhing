@@ -51,6 +51,14 @@ export async function deleteStickerPack(data: { packId: string }): Promise<void>
     await httpsCallable(functions, "deleteStickerPack")(data);
 }
 
+export async function uninstallStickerPack(data: { packId: string }): Promise<void> {
+    await httpsCallable(functions, "uninstallStickerPack")(data);
+}
+
+export async function deleteAccountImmediately(): Promise<void> {
+    await httpsCallable(functions, "deleteAccountImmediately")();
+}
+
 export async function createCheckoutSession(data: {
     packId: string;
     origin: string;

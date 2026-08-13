@@ -123,6 +123,18 @@ export async function isPackOwnedByUser(uid: string, packId: string): Promise<bo
     }
 }
 
+// users/{uid}/ownedStickerPacksのドキュメントID一覧を取得し、各パックの詳細を
+// 並列取得する（管理画面「所持しているペタピタ」用、2026-08-11追加）。
+export async function getOwnedStickerPacks(uid: string): Promise<StickerPack[]> {
+    try {
+        const snapshot = await getDocs(collection(db, "users", uid, "ownedStickerPacks"));
+        const packs = await Promise.all(snapshot.docs.map((d) => getStickerPackById(d.id)));
+        return packs.filter((p): p is StickerPack => p !== null);
+    } catch {
+        return [];
+    }
+}
+
 export function formatPackPrice(price: number): string {
     if (price === 0) return "無料";
     return new Intl.NumberFormat("ja-JP", { style: "currency", currency: "JPY" }).format(price);

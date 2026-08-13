@@ -6,7 +6,7 @@ export const dynamic = "force-dynamic";
 
 export const metadata: Metadata = {
     title: "daidai横丁 | Rhing",
-    description: "DaiDaiで使えるペタピタ（スタンプ）パッケージのストア、daidai横丁。",
+    description: "DaiDaiで使えるペタピタのストア、daidai横丁。",
 };
 
 export default async function DaidaiYokochoPage() {
@@ -17,7 +17,7 @@ export default async function DaidaiYokochoPage() {
             {/* ページタイトル */}
             <div className="container mx-auto px-6 py-24 max-w-4xl text-center">
                 <h1 className="text-4xl md:text-5xl font-bold tracking-widest text-gray-900 mb-4">daidai横丁</h1>
-                <p className="text-gray-500 tracking-wider text-sm mb-6">DaiDaiで使えるペタピタ（スタンプ）を手に入れよう</p>
+                <p className="text-gray-500 tracking-wider text-sm mb-6">DaiDaiで使えるペタピタを手に入れよう</p>
                 <Link
                     href="/daidai-yokocho/creator"
                     className="inline-block px-6 py-2.5 bg-white/70 backdrop-blur-sm border border-white/80 shadow-sm shadow-blue-300/5 rounded-full text-sm font-bold text-gray-600 hover:text-blue-600 hover:border-blue-200 hover:bg-white/90 hover:shadow-md hover:shadow-blue-300/15 transition-all duration-300"
