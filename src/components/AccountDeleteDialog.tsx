@@ -66,6 +66,7 @@ export default function AccountDeleteDialog({
                 className="bg-white/90 backdrop-blur-md rounded-3xl shadow-2xl border border-white/80 max-w-sm w-full p-8 flex flex-col gap-4"
             >
                 <h2 className="text-lg font-bold text-gray-900">アカウントを削除しますか？</h2>
+                <p className="text-sm text-gray-500 -mt-2">DaiDaiのアカウントも削除されます</p>
 
                 <button
                     type="button"

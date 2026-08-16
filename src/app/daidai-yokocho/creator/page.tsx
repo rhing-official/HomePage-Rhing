@@ -84,7 +84,7 @@ export default function CreatorDashboardPage() {
                     <Link href="/daidai-yokocho" className="text-sm text-gray-400 hover:text-blue-600 transition-colors">
                         ← daidai横丁に戻る
                     </Link>
-                    <h1 className="text-3xl font-bold tracking-widest text-gray-900 mt-4">出品者ダッシュボード</h1>
+                    <h1 className="text-3xl font-bold tracking-widest text-gray-900 mt-4">ペタピタの作成と管理</h1>
                 </div>
 
                 <CreatePackForm
@@ -94,7 +94,7 @@ export default function CreatorDashboardPage() {
                 />
 
                 <div className="mt-16">
-                    <h2 className="text-xl font-bold text-gray-900 mb-6">自分のパック</h2>
+                    <h2 className="text-xl font-bold text-gray-900 mb-6">作成済みのパック</h2>
                     {loadingPacks ? (
                         <p className="text-gray-400 text-sm">読み込み中...</p>
                     ) : packs.length === 0 ? (
@@ -210,11 +210,10 @@ function CreatePackForm({
             <button
                 type="submit"
                 disabled={!isValid || submitting}
-                className={`self-start px-8 py-3 rounded-full shadow-lg transition ${
-                    isValid && !submitting
-                        ? "bg-amber-500 text-white hover:bg-amber-600 cursor-pointer"
-                        : "bg-gray-200 text-gray-400 cursor-not-allowed shadow-none"
-                }`}
+                className={`self-start px-8 py-3 rounded-full shadow-lg transition ${isValid && !submitting
+                    ? "bg-amber-500 text-white hover:bg-amber-600 cursor-pointer"
+                    : "bg-gray-200 text-gray-400 cursor-not-allowed shadow-none"
+                    }`}
             >
                 {submitting ? "作成中..." : "パックを作成する"}
             </button>

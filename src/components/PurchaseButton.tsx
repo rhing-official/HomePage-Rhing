@@ -3,12 +3,12 @@
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { auth, onAuthStateChanged, type User } from "@/lib/firebaseAuth";
-import { isPackOwnedByUser, formatPackPrice } from "@/lib/stickerPacks";
+import { isPackOwnedByUser } from "@/lib/stickerPacks";
 import { createCheckoutSession } from "@/lib/firebaseFunctions";
 
 type Status = "loading" | "owned" | "purchasable";
 
-export default function PurchaseButton({ packId, price }: { packId: string; price: number }) {
+export default function PurchaseButton({ packId }: { packId: string }) {
     const router = useRouter();
     const [user, setUser] = useState<User | null>(null);
     const [authReady, setAuthReady] = useState(false);
@@ -83,7 +83,7 @@ export default function PurchaseButton({ packId, price }: { packId: string; pric
                 disabled={submitting}
                 className="w-full sm:w-auto bg-amber-500 text-white px-8 py-3 rounded-full hover:bg-amber-600 transition shadow-lg disabled:opacity-50 disabled:cursor-not-allowed"
             >
-                {submitting ? "処理中..." : price === 0 ? "無料で入手する" : `購入する（${formatPackPrice(price)}）`}
+                {submitting ? "処理中..." : "入手する"}
             </button>
             {error && <p className="text-sm text-red-600 mt-2">{error}</p>}
         </div>

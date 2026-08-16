@@ -50,7 +50,7 @@ export default function OwnedStickerPacksPage() {
                     <Link href="/login" className="text-sm text-gray-400 hover:text-blue-600 transition-colors">
                         ← アカウントページに戻る
                     </Link>
-                    <h1 className="text-3xl font-bold tracking-widest text-gray-900 mt-4">所持しているペタピタ</h1>
+                    <h1 className="text-3xl font-bold tracking-widest text-gray-900 mt-4">購入済みのペタピタ</h1>
                 </div>
 
                 {loadingPacks ? (
