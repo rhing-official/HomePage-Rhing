@@ -6,6 +6,7 @@ import {
     limit,
     orderBy,
     query,
+    Timestamp,
     where,
     type DocumentData,
 } from "firebase/firestore";
@@ -39,6 +40,8 @@ export interface StickerPack {
     tags: string[];
     salesCount: number;
     ownerCount: number;
+    createdAt: number | null;
+    updatedAt: number | null;
 }
 
 function toStickerPack(id: string, data: DocumentData): StickerPack {
@@ -52,6 +55,8 @@ function toStickerPack(id: string, data: DocumentData): StickerPack {
         tags: Array.isArray(data.tags) ? data.tags : [],
         salesCount: typeof data.salesCount === "number" ? data.salesCount : 0,
         ownerCount: typeof data.ownerCount === "number" ? data.ownerCount : 0,
+        createdAt: data.createdAt instanceof Timestamp ? data.createdAt.toMillis() : null,
+        updatedAt: data.updatedAt instanceof Timestamp ? data.updatedAt.toMillis() : null,
     };
 }
 
@@ -138,4 +143,12 @@ export async function getOwnedStickerPacks(uid: string): Promise<StickerPack[]> 
 export function formatPackPrice(price: number): string {
     if (price === 0) return "無料";
     return new Intl.NumberFormat("ja-JP", { style: "currency", currency: "JPY" }).format(price);
+}
+
+export function formatPackDate(ms: number): string {
+    return new Date(ms).toLocaleDateString("ja-JP", {
+        year: "numeric",
+        month: "long",
+        day: "numeric",
+    });
 }

@@ -1,7 +1,10 @@
 import { Metadata } from "next";
+import Link from "next/link";
 import { notFound } from "next/navigation";
-import { getStickerPackById, formatPackPrice } from "@/lib/stickerPacks";
+import { getStickerPackById, formatPackDate, formatPackPrice } from "@/lib/stickerPacks";
+import { getCreatorProfile } from "@/lib/creatorProfiles";
 import PurchaseButton from "@/components/PurchaseButton";
+import FavoriteButton from "@/components/FavoriteButton";
 
 export const dynamic = "force-dynamic";
 
@@ -36,6 +39,8 @@ export default async function StickerPackDetailPage({
         notFound();
     }
 
+    const creator = await getCreatorProfile(pack.creatorId);
+
     return (
         <div className="w-full pb-24">
             <div className="container mx-auto px-6 py-24 max-w-4xl">
@@ -50,29 +55,54 @@ export default async function StickerPackDetailPage({
                     </div>
                 )}
                 <div className="bg-white/40 backdrop-blur-md border border-white/80 shadow-md shadow-gray-200/30 rounded-3xl overflow-hidden p-8 md:p-12">
-                    <div className="flex flex-col md:flex-row md:items-start justify-between gap-6 mb-10">
-                        <div>
-                            {pack.category && (
-                                <span className="text-xs font-bold tracking-widest text-gray-500 mb-2 block">
-                                    {pack.category}
+                    <div className="mb-10">
+                        {pack.category && (
+                            <span className="text-xs font-bold tracking-widest text-gray-500 mb-2 block">
+                                {pack.category}
+                            </span>
+                        )}
+                        <h1 className="text-3xl md:text-4xl font-bold text-gray-900 tracking-wider">{pack.name}</h1>
+
+                        {creator && (
+                            <Link
+                                href={`/daidai-yokocho/creator/${pack.creatorId}`}
+                                className="mt-4 flex items-center gap-2 w-fit group"
+                            >
+                                {creator.iconUrl ? (
+                                    // eslint-disable-next-line @next/next/no-img-element
+                                    <img
+                                        src={creator.iconUrl}
+                                        alt=""
+                                        className="w-7 h-7 rounded-full object-cover border border-white/80"
+                                    />
+                                ) : (
+                                    <div className="w-7 h-7 rounded-full bg-gray-200" />
+                                )}
+                                <span className="text-sm text-gray-600 group-hover:text-blue-600 transition-colors">
+                                    {creator.nickname ?? creator.rhingId}
+                                    {creator.rhingId && <span className="text-gray-400 ml-1">@{creator.rhingId}</span>}
                                 </span>
-                            )}
-                            <h1 className="text-3xl md:text-4xl font-bold text-gray-900 tracking-wider">{pack.name}</h1>
-                            {pack.tags.length > 0 && (
-                                <div className="flex flex-wrap gap-2 mt-4">
-                                    {pack.tags.map((tag) => (
-                                        <span key={tag} className="text-[10px] text-gray-400 px-2 py-1">
-                                            #{tag}
-                                        </span>
-                                    ))}
-                                </div>
-                            )}
-                        </div>
-                        <div className="text-left md:text-right shrink-0">
-                            <p className={`text-2xl font-bold ${pack.price === 0 ? "text-emerald-600" : "text-amber-600"}`}>
-                                {formatPackPrice(pack.price)}
+                            </Link>
+                        )}
+
+                        {pack.createdAt && (
+                            <p className="text-xs text-gray-400 mt-3">
+                                公開日: {formatPackDate(pack.createdAt)}
+                                {pack.updatedAt && pack.updatedAt !== pack.createdAt && (
+                                    <>（最終更新: {formatPackDate(pack.updatedAt)}）</>
+                                )}
                             </p>
-                        </div>
+                        )}
+
+                        {pack.tags.length > 0 && (
+                            <div className="flex flex-wrap gap-2 mt-4">
+                                {pack.tags.map((tag) => (
+                                    <span key={tag} className="text-[10px] text-gray-400 px-2 py-1">
+                                        #{tag}
+                                    </span>
+                                ))}
+                            </div>
+                        )}
                     </div>
 
                     <div className="grid grid-cols-3 sm:grid-cols-4 gap-4 mb-12">
@@ -91,15 +121,23 @@ export default async function StickerPackDetailPage({
                         ))}
                     </div>
 
-                    <div className="flex flex-col sm:flex-row items-center gap-4">
-                        <PurchaseButton packId={pack.id} price={pack.price} />
-                        <button
-                            disabled
-                            className="text-sm text-gray-400 cursor-not-allowed underline decoration-dotted"
-                            title="通報機能は近日公開予定です"
-                        >
-                            このパックを通報する（近日公開）
-                        </button>
+                    <div className="flex flex-col items-center sm:items-start gap-4">
+                        <div className="flex flex-col items-center sm:items-start gap-2">
+                            <p className={`text-2xl font-bold ${pack.price === 0 ? "text-emerald-600" : "text-amber-600"}`}>
+                                {formatPackPrice(pack.price)}
+                            </p>
+                            <PurchaseButton packId={pack.id} />
+                        </div>
+                        <div className="flex flex-col sm:flex-row items-center gap-4">
+                            <FavoriteButton packId={pack.id} />
+                            <button
+                                disabled
+                                className="text-sm text-gray-400 cursor-not-allowed underline decoration-dotted"
+                                title="通報機能は近日公開予定です"
+                            >
+                                通報する
+                            </button>
+                        </div>
                     </div>
                 </div>
             </div>
