@@ -126,69 +126,67 @@ export default function DaidaiYokochoMenu() {
                         >
                             <div className="mb-1">
                                 {!authReady ? null : user ? (
-                                    resolver ? (
-                                        <form
-                                            onSubmit={(e) => {
-                                                e.preventDefault();
-                                                if (submitting || !code.trim()) return;
-                                                submitTotpCode();
-                                            }}
-                                            className="flex flex-col gap-3 px-1"
-                                        >
-                                            <p className="text-sm text-gray-600">認証アプリの6桁コードを入力してください</p>
-                                            <input
-                                                value={code}
-                                                onChange={(e) => setCode(e.target.value)}
-                                                placeholder="123456"
-                                                inputMode="numeric"
-                                                autoFocus
-                                                className="w-full text-center rounded-lg border border-gray-300 px-4 py-2 text-lg tracking-widest"
+                                    <button
+                                        onClick={() => {
+                                            setOpen(false);
+                                            setShowProfileEdit(true);
+                                        }}
+                                        className="flex items-center gap-3 px-1 py-1.5 w-full rounded-xl hover:bg-white/70 transition-colors"
+                                    >
+                                        {displayProfile?.iconUrl ? (
+                                            // eslint-disable-next-line @next/next/no-img-element
+                                            <img
+                                                src={displayProfile.iconUrl}
+                                                alt=""
+                                                className="w-12 h-12 rounded-full object-cover border border-white/80 shrink-0"
                                             />
-                                            <div className="flex gap-2">
-                                                <button
-                                                    type="button"
-                                                    onClick={cancelMfa}
-                                                    className="flex-1 px-4 py-2 rounded-full border border-gray-300 text-gray-500 hover:bg-gray-50 transition text-sm"
-                                                >
-                                                    キャンセル
-                                                </button>
-                                                <button
-                                                    type="submit"
-                                                    disabled={submitting || !code.trim()}
-                                                    className="flex-1 bg-amber-500 text-white px-4 py-2 rounded-full hover:bg-amber-600 transition shadow disabled:opacity-50 text-sm"
-                                                >
-                                                    {submitting ? "確認中..." : "確認"}
-                                                </button>
-                                            </div>
-                                        </form>
-                                    ) : (
-                                        <button
-                                            onClick={() => {
-                                                setOpen(false);
-                                                setShowProfileEdit(true);
-                                            }}
-                                            className="flex items-center gap-3 px-1 py-1.5 w-full rounded-xl hover:bg-white/70 transition-colors"
-                                        >
-                                            {displayProfile?.iconUrl ? (
-                                                // eslint-disable-next-line @next/next/no-img-element
-                                                <img
-                                                    src={displayProfile.iconUrl}
-                                                    alt=""
-                                                    className="w-12 h-12 rounded-full object-cover border border-white/80 shrink-0"
-                                                />
-                                            ) : (
-                                                <div className="w-12 h-12 rounded-full bg-gray-200 shrink-0" />
+                                        ) : (
+                                            <div className="w-12 h-12 rounded-full bg-gray-200 shrink-0" />
+                                        )}
+                                        <div className="min-w-0 text-left">
+                                            <p className="font-bold text-gray-900 truncate">
+                                                {displayProfile?.nickname ?? user.displayName ?? "DaiDaiアカウント"}
+                                            </p>
+                                            {displayProfile?.rhingId && (
+                                                <p className="text-xs text-gray-400 truncate">{displayProfile.rhingId}</p>
                                             )}
-                                            <div className="min-w-0 text-left">
-                                                <p className="font-bold text-gray-900 truncate">
-                                                    {displayProfile?.nickname ?? user.displayName ?? "DaiDaiアカウント"}
-                                                </p>
-                                                {displayProfile?.rhingId && (
-                                                    <p className="text-xs text-gray-400 truncate">{displayProfile.rhingId}</p>
-                                                )}
-                                            </div>
-                                        </button>
-                                    )
+                                        </div>
+                                    </button>
+                                ) : resolver ? (
+                                    <form
+                                        onSubmit={(e) => {
+                                            e.preventDefault();
+                                            if (submitting || !code.trim()) return;
+                                            submitTotpCode();
+                                        }}
+                                        className="flex flex-col gap-3 px-1"
+                                    >
+                                        <p className="text-sm text-gray-600">認証アプリの6桁コードを入力してください</p>
+                                        <input
+                                            value={code}
+                                            onChange={(e) => setCode(e.target.value)}
+                                            placeholder="123456"
+                                            inputMode="numeric"
+                                            autoFocus
+                                            className="w-full text-center rounded-lg border border-gray-300 px-4 py-2 text-lg tracking-widest"
+                                        />
+                                        <div className="flex gap-2">
+                                            <button
+                                                type="button"
+                                                onClick={cancelMfa}
+                                                className="flex-1 px-4 py-2 rounded-full border border-gray-300 text-gray-500 hover:bg-gray-50 transition text-sm"
+                                            >
+                                                キャンセル
+                                            </button>
+                                            <button
+                                                type="submit"
+                                                disabled={submitting || !code.trim()}
+                                                className="flex-1 bg-amber-500 text-white px-4 py-2 rounded-full hover:bg-amber-600 transition shadow disabled:opacity-50 text-sm"
+                                            >
+                                                {submitting ? "確認中..." : "確認"}
+                                            </button>
+                                        </div>
+                                    </form>
                                 ) : (
                                     <div className="flex justify-center">
                                         <div ref={buttonContainerRef} />
