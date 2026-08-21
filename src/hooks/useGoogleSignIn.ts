@@ -46,16 +46,24 @@ export function useGoogleSignIn(onSignedIn?: () => void) {
     useEffect(() => {
         if (!buttonContainer) return;
 
-        const handleCredential = async (response: { credential: string }) => {
+        const handleCredential = async (response: { credential?: string }) => {
             setError(null);
             setResolver(null);
+            if (!response?.credential) {
+                setError("Googleからのログイン情報を取得できませんでした");
+                return;
+            }
             try {
                 const credential = GoogleAuthProvider.credential(response.credential);
                 await signInWithCredential(auth, credential);
                 onSignedIn?.();
             } catch (err) {
                 if (err instanceof FirebaseError && err.code === "auth/multi-factor-auth-required") {
-                    setResolver(getMultiFactorResolver(auth, err as MultiFactorError));
+                    try {
+                        setResolver(getMultiFactorResolver(auth, err as MultiFactorError));
+                    } catch {
+                        setError("2段階認証の準備に失敗しました");
+                    }
                     return;
                 }
                 console.error("Googleログインに失敗しました:", err);
