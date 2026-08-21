@@ -54,7 +54,8 @@ export default function DaidaiYokochoMenu() {
     const [profile, setProfile] = useState<OwnProfile | null>(null);
     const [showDeleteDialog, setShowDeleteDialog] = useState(false);
     const [showProfileEdit, setShowProfileEdit] = useState(false);
-    const { signIn, error, resolver, code, setCode, submitTotpCode, submitting, cancelMfa } = useGoogleSignIn();
+    const { buttonContainerRef, error, resolver, code, setCode, submitTotpCode, submitting, cancelMfa } =
+        useGoogleSignIn();
 
     useEffect(() => onAuthStateChanged(auth, (u) => {
         setUser(u);
@@ -189,12 +190,9 @@ export default function DaidaiYokochoMenu() {
                                         </button>
                                     )
                                 ) : (
-                                    <button
-                                        onClick={() => signIn()}
-                                        className="w-full bg-amber-500 text-white px-6 py-3 rounded-full hover:bg-amber-600 transition shadow-lg font-bold"
-                                    >
-                                        ログイン
-                                    </button>
+                                    <div className="flex justify-center">
+                                        <div ref={buttonContainerRef} />
+                                    </div>
                                 )}
                                 {error && <p className="mt-2 text-xs text-red-600 px-1">{error}</p>}
                             </div>

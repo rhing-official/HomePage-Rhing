@@ -24,9 +24,20 @@ function LoginPageContent() {
     const [user, setUser] = useState<User | null>(null);
     const [ready, setReady] = useState(false);
     const [showDeleteDialog, setShowDeleteDialog] = useState(false);
-    const { signIn, error, resolver, code, setCode, submitTotpCode, submitting, cancelMfa } = useGoogleSignIn();
 
     const deleted = searchParams.get("deleted");
+
+    // 「すでにログイン済みでこのページを開いた」場合は戻さない
+    // （アカウント情報やログアウトボタンを見せる必要があるため）。
+    // 戻すのは「このページでの操作によって今まさにログインが完了した」場合のみ。
+    const redirectIfSignedIn = () => {
+        if (redirectTo && auth.currentUser) {
+            router.replace(redirectTo);
+        }
+    };
+
+    const { buttonContainerRef, error, resolver, code, setCode, submitTotpCode, submitting, cancelMfa } =
+        useGoogleSignIn(redirectIfSignedIn);
 
     const handleAccountDeleted = async (mode: "requested" | "immediate") => {
         setShowDeleteDialog(false);
@@ -38,15 +49,6 @@ function LoginPageContent() {
         setUser(u);
         setReady(true);
     }), []);
-
-    // 「すでにログイン済みでこのページを開いた」場合は戻さない
-    // （アカウント情報やログアウトボタンを見せる必要があるため）。
-    // 戻すのは「このページでの操作によって今まさにログインが完了した」場合のみ。
-    const redirectIfSignedIn = () => {
-        if (redirectTo && auth.currentUser) {
-            router.replace(redirectTo);
-        }
-    };
 
     if (!ready) return null;
 
@@ -106,7 +108,7 @@ function LoginPageContent() {
                     onSubmit={(e) => {
                         e.preventDefault();
                         if (submitting || !code.trim()) return;
-                        submitTotpCode().then(redirectIfSignedIn);
+                        submitTotpCode();
                     }}
                     className="flex flex-col items-center gap-3"
                 >
@@ -149,12 +151,7 @@ function LoginPageContent() {
                         </p>
                     )}
                     <p className="text-gray-500 mb-2">DaiDaiアカウント（Google）でログインします。</p>
-                    <button
-                        onClick={() => signIn().then(redirectIfSignedIn)}
-                        className="bg-amber-500 text-white px-8 py-3 rounded-full hover:bg-amber-600 transition shadow-lg"
-                    >
-                        Googleでログイン
-                    </button>
+                    <div ref={buttonContainerRef} />
                 </div>
             )}
 
