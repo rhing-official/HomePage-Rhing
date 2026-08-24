@@ -54,7 +54,7 @@ export default function FavoritePacksPage() {
 
     return (
         <div className="w-full pb-24">
-            <div className="container mx-auto px-6 py-16 max-w-6xl">
+            <div className="container mx-auto px-6 pt-24 lg:pt-28 pb-16 max-w-4xl">
                 <h1 className="text-3xl font-bold tracking-widest text-gray-900 mb-12">お気に入りのペタピタ</h1>
 
                 {loading ? (

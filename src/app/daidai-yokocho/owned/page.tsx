@@ -45,13 +45,8 @@ export default function OwnedStickerPacksPage() {
 
     return (
         <div className="w-full pb-24">
-            <div className="container mx-auto px-6 py-16 max-w-4xl">
-                <div className="mb-12">
-                    <Link href="/login" className="text-sm text-gray-400 hover:text-blue-600 transition-colors">
-                        ← アカウントページに戻る
-                    </Link>
-                    <h1 className="text-3xl font-bold tracking-widest text-gray-900 mt-4">購入済みのペタピタ</h1>
-                </div>
+            <div className="container mx-auto px-6 pt-24 lg:pt-28 pb-16 max-w-4xl">
+                <h1 className="text-3xl font-bold tracking-widest text-gray-900 mb-12">購入済みのペタピタ</h1>
 
                 {loadingPacks ? (
                     <p className="text-gray-400 text-sm">読み込み中...</p>
