@@ -11,6 +11,7 @@ import {
     STICKER_PACK_CATEGORIES,
     type StickerPack,
 } from "@/lib/stickerPacks";
+import { getStickerRoles, type StickerRoleOption } from "@/lib/stickerRoles";
 import { uploadStickerPackAsset } from "@/lib/firebaseStorage";
 import {
     createStickerPack,
@@ -23,14 +24,22 @@ import {
 const MIN_STICKERS_PER_PACK = 4;
 const MAX_TAGS = 5;
 
-async function uploadFiles(uid: string, files: File[]): Promise<StickerInput[]> {
+// アップロード待ちの画像1枚と、それに設定する役割id（未設定は空配列、
+// 単一選択UIのため常に0〜1件）の組。
+interface StickerDraft {
+    file: File;
+    roles: string[];
+}
+
+async function uploadFiles(uid: string, entries: StickerDraft[]): Promise<StickerInput[]> {
     const stickers: StickerInput[] = [];
-    for (const file of files) {
-        const imageUrl = await uploadStickerPackAsset(uid, file);
+    for (const entry of entries) {
+        const imageUrl = await uploadStickerPackAsset(uid, entry.file);
         stickers.push({
             stickerId: crypto.randomUUID(),
-            name: file.name.replace(/\.[^/.]+$/, ""),
+            name: entry.file.name.replace(/\.[^/.]+$/, ""),
             imageUrl,
+            roles: entry.roles,
         });
     }
     return stickers;
@@ -45,6 +54,7 @@ export default function CreatorDashboardPage() {
     const [packs, setPacks] = useState<StickerPack[]>([]);
     const [loadingPacks, setLoadingPacks] = useState(false);
     const [tagSuggestions, setTagSuggestions] = useState<string[]>([]);
+    const [roleOptions, setRoleOptions] = useState<StickerRoleOption[]>([]);
 
     useEffect(() => onAuthStateChanged(auth, (u) => {
         setUser(u);
@@ -75,16 +85,21 @@ export default function CreatorDashboardPage() {
         getAllTags().then(setTagSuggestions);
     }, []);
 
+    useEffect(() => {
+        getStickerRoles().then(setRoleOptions);
+    }, []);
+
     if (!ready || !user) return null;
 
     return (
         <div className="w-full pb-24">
             <div className="container mx-auto px-6 pt-24 lg:pt-28 pb-16 max-w-4xl">
-                <h1 className="text-3xl font-bold tracking-widest text-gray-900 mb-12">ペタピタの作成と管理</h1>
+                <h1 className="text-3xl font-bold tracking-widest text-gray-900 mb-12">ぺったんの作成と管理</h1>
 
                 <CreatePackForm
                     uid={user.uid}
                     tagSuggestions={tagSuggestions}
+                    roleOptions={roleOptions}
                     onCreated={() => reloadPacks(user.uid)}
                 />
 
@@ -101,6 +116,7 @@ export default function CreatorDashboardPage() {
                                     key={pack.id}
                                     pack={pack}
                                     uid={user.uid}
+                                    roleOptions={roleOptions}
                                     onChanged={() => reloadPacks(user.uid)}
                                 />
                             ))}
@@ -115,20 +131,22 @@ export default function CreatorDashboardPage() {
 function CreatePackForm({
     uid,
     tagSuggestions,
+    roleOptions,
     onCreated,
 }: {
     uid: string;
     tagSuggestions: string[];
+    roleOptions: StickerRoleOption[];
     onCreated: () => void;
 }) {
     const [name, setName] = useState("");
     const [category, setCategory] = useState("");
     const [tags, setTags] = useState<string[]>([]);
-    const [files, setFiles] = useState<File[]>([]);
+    const [stickers, setStickers] = useState<StickerDraft[]>([]);
     const [submitting, setSubmitting] = useState(false);
     const [error, setError] = useState<string | null>(null);
 
-    const isValid = name.trim() !== "" && files.length >= MIN_STICKERS_PER_PACK;
+    const isValid = name.trim() !== "" && stickers.length >= MIN_STICKERS_PER_PACK;
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
@@ -136,18 +154,18 @@ function CreatePackForm({
         setError(null);
         setSubmitting(true);
         try {
-            const stickers = await uploadFiles(uid, files);
+            const stickerInputs = await uploadFiles(uid, stickers);
             await createStickerPack({
                 name: name.trim(),
                 price: 0,
-                stickers,
+                stickers: stickerInputs,
                 category,
                 tags,
             });
             setName("");
             setCategory("");
             setTags([]);
-            setFiles([]);
+            setStickers([]);
             onCreated();
         } catch (err) {
             setError(err instanceof Error ? err.message : "作成に失敗しました");
@@ -197,7 +215,10 @@ function CreatePackForm({
 
             <div className="flex flex-col gap-1.5 text-sm text-gray-600">
                 画像（{MIN_STICKERS_PER_PACK}枚以上、GIF/WebPアニメーション対応）
-                <ImagePicker files={files} onChange={setFiles} label="画像を選択" />
+                <p className="text-xs text-gray-400">
+                    それぞれに役割を設定すると、メッセージ内容に応じたぺったん提案（DaiDaiアプリ側の機能）に使われます（任意）
+                </p>
+                <StickerImagePicker entries={stickers} onChange={setStickers} roleOptions={roleOptions} label="画像を選択" />
             </div>
 
             {error && <p className="text-sm text-red-600">{error}</p>}
@@ -219,10 +240,12 @@ function CreatePackForm({
 function PackEditor({
     pack,
     uid,
+    roleOptions,
     onChanged,
 }: {
     pack: StickerPack;
     uid: string;
+    roleOptions: StickerRoleOption[];
     onChanged: () => void;
 }) {
     const [name, setName] = useState(pack.name);
@@ -230,9 +253,9 @@ function PackEditor({
     const [savingMeta, setSavingMeta] = useState(false);
     const [metaError, setMetaError] = useState<string | null>(null);
 
+    const [pendingStickers, setPendingStickers] = useState<StickerDraft[]>([]);
     const [addingImages, setAddingImages] = useState(false);
     const [addError, setAddError] = useState<string | null>(null);
-    const addInputRef = useRef<HTMLInputElement>(null);
 
     const [confirmingDelete, setConfirmingDelete] = useState(false);
     const [deleting, setDeleting] = useState(false);
@@ -266,14 +289,14 @@ function PackEditor({
         }
     };
 
-    const handleAddImages = async (fileList: FileList | null) => {
-        const files = Array.from(fileList ?? []);
-        if (files.length === 0) return;
+    const handleAddImages = async () => {
+        if (pendingStickers.length === 0) return;
         setAddError(null);
         setAddingImages(true);
         try {
-            const stickers = await uploadFiles(uid, files);
+            const stickers = await uploadFiles(uid, pendingStickers);
             await addStickersToStickerPack({ packId: pack.id, stickers });
+            setPendingStickers([]);
             onChanged();
         } catch (err) {
             setAddError(err instanceof Error ? err.message : "追加に失敗しました");
@@ -308,10 +331,17 @@ function PackEditor({
 
             <div className="grid grid-cols-6 sm:grid-cols-8 gap-2">
                 {pack.stickers.map((sticker, i) => (
-                    <div key={sticker.stickerId || i} className="aspect-square bg-white/60 border border-white/80 rounded-lg overflow-hidden">
-                        {sticker.imageUrl && (
-                            // eslint-disable-next-line @next/next/no-img-element
-                            <img src={sticker.imageUrl} alt={sticker.name} className="w-full h-full object-contain p-1" />
+                    <div key={sticker.stickerId || i} className="flex flex-col items-center gap-0.5">
+                        <div className="aspect-square w-full bg-white/60 border border-white/80 rounded-lg overflow-hidden">
+                            {sticker.imageUrl && (
+                                // eslint-disable-next-line @next/next/no-img-element
+                                <img src={sticker.imageUrl} alt={sticker.name} className="w-full h-full object-contain p-1" />
+                            )}
+                        </div>
+                        {sticker.roles[0] && (
+                            <span className="text-[10px] text-gray-400 truncate w-full text-center">
+                                {roleOptions.find((r) => r.roleId === sticker.roles[0])?.name ?? sticker.roles[0]}
+                            </span>
                         )}
                     </div>
                 ))}
@@ -346,26 +376,18 @@ function PackEditor({
             </p>
 
             <div className="flex flex-col gap-2 pt-3 border-t border-white/60">
-                <input
-                    ref={addInputRef}
-                    type="file"
-                    accept="image/*"
-                    multiple
-                    className="hidden"
-                    onChange={(e) => {
-                        handleAddImages(e.target.files);
-                        e.target.value = "";
-                    }}
-                />
-                <button
-                    type="button"
-                    onClick={() => addInputRef.current?.click()}
-                    disabled={addingImages}
-                    className="self-start text-sm font-bold text-gray-600 border border-gray-300 rounded-full px-5 py-2 hover:border-blue-400 hover:text-blue-600 transition-colors disabled:opacity-50"
-                >
-                    {addingImages ? "追加中..." : "画像を追加"}
-                </button>
-                <p className="text-xs text-gray-400">選択すると即座に追加されます（削除・差し替えは不可）</p>
+                <StickerImagePicker entries={pendingStickers} onChange={setPendingStickers} roleOptions={roleOptions} label="画像を選択" />
+                {pendingStickers.length > 0 && (
+                    <button
+                        type="button"
+                        onClick={handleAddImages}
+                        disabled={addingImages}
+                        className="self-start text-sm font-bold text-white bg-amber-500 rounded-full px-5 py-2 hover:bg-amber-600 transition-colors disabled:opacity-50"
+                    >
+                        {addingImages ? "追加中..." : "このパックに追加する"}
+                    </button>
+                )}
+                <p className="text-xs text-gray-400">役割を設定してから追加できます（追加後の削除・差し替えは不可）</p>
             </div>
             {addError && <p className="text-xs text-red-600">{addError}</p>}
 
@@ -405,18 +427,20 @@ function PackEditor({
     );
 }
 
-// ファイル選択ボタン＋サムネイルプレビューで、視覚的に何が選ばれているか分かるようにする。
-function ImagePicker({
-    files,
+// ファイル選択ボタン＋サムネイルプレビュー＋役割選択で、画像1枚ごとに役割を割り振れるようにする。
+function StickerImagePicker({
+    entries,
     onChange,
+    roleOptions,
     label,
 }: {
-    files: File[];
-    onChange: (files: File[]) => void;
+    entries: StickerDraft[];
+    onChange: (entries: StickerDraft[]) => void;
+    roleOptions: StickerRoleOption[];
     label: string;
 }) {
     const inputRef = useRef<HTMLInputElement>(null);
-    const previews = useMemo(() => files.map((f) => URL.createObjectURL(f)), [files]);
+    const previews = useMemo(() => entries.map((entry) => URL.createObjectURL(entry.file)), [entries]);
 
     useEffect(() => {
         return () => previews.forEach((u) => URL.revokeObjectURL(u));
@@ -431,7 +455,8 @@ function ImagePicker({
                 multiple
                 className="hidden"
                 onChange={(e) => {
-                    onChange([...files, ...Array.from(e.target.files ?? [])]);
+                    const newEntries = Array.from(e.target.files ?? []).map((file) => ({ file, roles: [] }));
+                    onChange([...entries, ...newEntries]);
                     e.target.value = "";
                 }}
             />
@@ -442,22 +467,38 @@ function ImagePicker({
             >
                 {label}
             </button>
-            {files.length > 0 && (
+            {entries.length > 0 && (
                 <div className="flex flex-wrap gap-3">
-                    {files.map((file, i) => (
-                        <div key={i} className="relative w-16 h-16 rounded-lg overflow-hidden border border-gray-200 bg-white/70">
-                            {previews[i] && (
-                                // eslint-disable-next-line @next/next/no-img-element
-                                <img src={previews[i]} alt={file.name} className="w-full h-full object-contain" />
-                            )}
-                            <button
-                                type="button"
-                                onClick={() => onChange(files.filter((_, idx) => idx !== i))}
-                                className="absolute top-0 right-0 bg-black/60 text-white text-xs w-5 h-5 flex items-center justify-center leading-none"
-                                aria-label={`${file.name}を削除`}
+                    {entries.map((entry, i) => (
+                        <div key={i} className="flex flex-col items-center gap-1 w-20">
+                            <div className="relative w-16 h-16 rounded-lg overflow-hidden border border-gray-200 bg-white/70">
+                                {previews[i] && (
+                                    // eslint-disable-next-line @next/next/no-img-element
+                                    <img src={previews[i]} alt={entry.file.name} className="w-full h-full object-contain" />
+                                )}
+                                <button
+                                    type="button"
+                                    onClick={() => onChange(entries.filter((_, idx) => idx !== i))}
+                                    className="absolute top-0 right-0 bg-black/60 text-white text-xs w-5 h-5 flex items-center justify-center leading-none"
+                                    aria-label={`${entry.file.name}を削除`}
+                                >
+                                    ×
+                                </button>
+                            </div>
+                            <select
+                                value={entry.roles[0] ?? ""}
+                                onChange={(e) => {
+                                    const next = [...entries];
+                                    next[i] = { ...entry, roles: e.target.value ? [e.target.value] : [] };
+                                    onChange(next);
+                                }}
+                                className="w-full text-[11px] rounded border border-gray-200 bg-white/70 px-1 py-0.5"
                             >
-                                ×
-                            </button>
+                                <option value="">役割なし</option>
+                                {roleOptions.map((r) => (
+                                    <option key={r.roleId} value={r.roleId}>{r.name}</option>
+                                ))}
+                            </select>
                         </div>
                     ))}
                 </div>

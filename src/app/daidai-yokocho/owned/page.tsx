@@ -46,13 +46,13 @@ export default function OwnedStickerPacksPage() {
     return (
         <div className="w-full pb-24">
             <div className="container mx-auto px-6 pt-24 lg:pt-28 pb-16 max-w-4xl">
-                <h1 className="text-3xl font-bold tracking-widest text-gray-900 mb-12">購入済みのペタピタ</h1>
+                <h1 className="text-3xl font-bold tracking-widest text-gray-900 mb-12">購入済みのぺったん</h1>
 
                 {loadingPacks ? (
                     <p className="text-gray-400 text-sm">読み込み中...</p>
                 ) : packs.length === 0 ? (
                     <p className="text-gray-400 text-sm">
-                        まだペタピタを所持していません。
+                        まだぺったんを所持していません。
                         <Link href="/daidai-yokocho" className="text-blue-600 hover:underline ml-1">
                             daidai横丁で探す →
                         </Link>
@@ -123,7 +123,7 @@ function OwnedPackCard({
                 {confirming ? (
                     <div className="flex flex-col gap-3">
                         <span className="text-sm text-gray-700">
-                            本当にアンインストールしますか？このパックのペタピタが送信できなくなります。
+                            本当にアンインストールしますか？このパックのぺったんが送信できなくなります。
                         </span>
                         <div className="flex items-center gap-3">
                             <button

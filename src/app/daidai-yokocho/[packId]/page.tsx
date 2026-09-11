@@ -20,7 +20,7 @@ export async function generateMetadata({
     }
     return {
         title: `${pack.name} | daidai横丁 | Rhing`,
-        description: `daidai横丁で頒布中のペタピタパック「${pack.name}」。`,
+        description: `daidai横丁で頒布中のぺったんパック「${pack.name}」。`,
     };
 }
 
@@ -46,7 +46,7 @@ export default async function StickerPackDetailPage({
             <div className="container mx-auto px-6 py-24 max-w-4xl">
                 {purchase === "success" && (
                     <div className="mb-6 rounded-xl border border-emerald-200 bg-emerald-50 text-emerald-700 px-6 py-4 text-sm font-bold">
-                        ご購入ありがとうございます。DaiDaiアプリでペタピタが使えるようになりました。
+                        ご購入ありがとうございます。DaiDaiアプリでぺったんが使えるようになりました。
                     </div>
                 )}
                 {purchase === "cancel" && (

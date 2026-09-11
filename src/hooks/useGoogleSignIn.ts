@@ -132,5 +132,11 @@ export function useGoogleSignIn(onSignedIn?: () => void) {
         setError(null);
     };
 
-    return { buttonContainerRef, error, resolver, code, setCode, submitTotpCode, submitting, cancelMfa };
+    // 全角入力(IME変換等)でも半角に強制し、TOTPコードの桁数(6桁)を超えて
+    // 入力できないようにする。
+    const handleCodeChange = (value: string) => {
+        setCode(value.normalize("NFKC").slice(0, 6));
+    };
+
+    return { buttonContainerRef, error, resolver, code, setCode, handleCodeChange, submitTotpCode, submitting, cancelMfa };
 }

@@ -52,12 +52,12 @@ export default async function Home() {
                 </div>
             </section>
 
-            {/* daidai横丁：売れ筋ペタピタ */}
+            {/* daidai横丁：売れ筋ぺったん */}
             {trendingPacks.length > 0 && (
                 <section className="container mx-auto px-4 py-24 max-w-7xl">
                     <div className="flex flex-col items-center mb-16">
                         <p className="text-sm font-bold text-gray-400 tracking-[0.2em] mb-2 uppercase">DAIDAI YOKOCHO</p>
-                        <h2 className="text-3xl font-bold tracking-widest text-gray-900 mb-8">daidai横丁で人気のペタピタ</h2>
+                        <h2 className="text-3xl font-bold tracking-widest text-gray-900 mb-8">daidai横丁で人気のぺったん</h2>
 
                         <Link
                             href="/daidai-yokocho"
