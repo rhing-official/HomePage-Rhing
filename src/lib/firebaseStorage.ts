@@ -23,3 +23,13 @@ export async function uploadDaidaiProfileIcon(uid: string, file: File): Promise<
     await uploadBytes(storageRef, file);
     return getDownloadURL(storageRef);
 }
+
+// storage.rulesのcontactAttachments/{fileName}と対応。お問い合わせフォームは
+// 未ログインの一般訪問者も使うため認証無しでアップロード可能（画像のみ・5MB以下、
+// 2026-09-11追加）。
+export async function uploadContactAttachment(file: File): Promise<string> {
+    const path = `contactAttachments/${crypto.randomUUID()}-${file.name}`;
+    const storageRef = ref(storage, path);
+    await uploadBytes(storageRef, file);
+    return getDownloadURL(storageRef);
+}
