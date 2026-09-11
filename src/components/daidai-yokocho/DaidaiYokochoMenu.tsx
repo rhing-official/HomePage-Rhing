@@ -54,7 +54,7 @@ export default function DaidaiYokochoMenu() {
     const [profile, setProfile] = useState<OwnProfile | null>(null);
     const [showDeleteDialog, setShowDeleteDialog] = useState(false);
     const [showProfileEdit, setShowProfileEdit] = useState(false);
-    const { buttonContainerRef, error, resolver, code, setCode, submitTotpCode, submitting, cancelMfa } =
+    const { buttonContainerRef, error, resolver, code, handleCodeChange, submitTotpCode, submitting, cancelMfa } =
         useGoogleSignIn();
 
     useEffect(() => onAuthStateChanged(auth, (u) => {
@@ -164,9 +164,10 @@ export default function DaidaiYokochoMenu() {
                                         <p className="text-sm text-gray-600">認証アプリの6桁コードを入力してください</p>
                                         <input
                                             value={code}
-                                            onChange={(e) => setCode(e.target.value)}
+                                            onChange={(e) => handleCodeChange(e.target.value)}
                                             placeholder="123456"
                                             inputMode="numeric"
+                                            maxLength={6}
                                             autoFocus
                                             className="w-full text-center rounded-lg border border-gray-300 px-4 py-2 text-lg tracking-widest"
                                         />
@@ -198,16 +199,16 @@ export default function DaidaiYokochoMenu() {
                             {user && !resolver && (
                                 <div className="flex flex-col gap-0.5 border-t border-gray-200/70 pt-2">
                                     <Link href="/daidai-yokocho/owned" onClick={close} className={menuItemClass}>
-                                        購入済みのペタピタ
+                                        購入済みのぺったん
                                     </Link>
                                     <Link href="/daidai-yokocho/follows" onClick={close} className={menuItemClass}>
                                         フォロー中のクリエイター
                                     </Link>
                                     <Link href="/daidai-yokocho/favorites" onClick={close} className={menuItemClass}>
-                                        お気に入りのペタピタ
+                                        お気に入りのぺったん
                                     </Link>
                                     <Link href="/daidai-yokocho/creator" onClick={close} className={menuItemClass}>
-                                        ペタピタの作成と管理
+                                        ぺったんの作成と管理
                                     </Link>
                                     <button
                                         onClick={() => {

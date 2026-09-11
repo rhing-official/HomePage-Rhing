@@ -12,6 +12,7 @@ export interface StickerInput {
     stickerId: string;
     name: string;
     imageUrl: string;
+    roles: string[];
 }
 
 export async function createStickerPack(data: {

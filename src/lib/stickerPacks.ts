@@ -16,6 +16,10 @@ export interface Sticker {
     stickerId: string;
     name: string;
     imageUrl: string;
+    // メッセージ内容に応じたぺったん提案機能向けの役割id（stickerRoles.tsの
+    // getStickerRoles()が返すroleIdのいずれか）のリスト。未設定は空配列
+    // （DaiDai本体側 lib/models/sticker.dart の Sticker.roles と同じ形）。
+    roles: string[];
 }
 
 // v1のカテゴリ候補（固定リスト）。増減する場合はここを編集する。
@@ -129,7 +133,7 @@ export async function isPackOwnedByUser(uid: string, packId: string): Promise<bo
 }
 
 // users/{uid}/ownedStickerPacksのドキュメントID一覧を取得し、各パックの詳細を
-// 並列取得する（管理画面「所持しているペタピタ」用、2026-08-11追加）。
+// 並列取得する（管理画面「所持しているぺったん」用、2026-08-11追加）。
 export async function getOwnedStickerPacks(uid: string): Promise<StickerPack[]> {
     try {
         const snapshot = await getDocs(collection(db, "users", uid, "ownedStickerPacks"));
