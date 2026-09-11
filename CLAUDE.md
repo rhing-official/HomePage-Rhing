@@ -18,3 +18,7 @@ Rhing公式サイト。トップページ・団体概要・サービス紹介に
 - `main`へのpushは本番ドメインに影響しない。Vercelログイン必須のPreview URL（`homepage-rhing-git-main-....vercel.app`）が自動発行されるのみ（SSO保護・`noindex`）。
 - 本番反映はGitHub Releaseを作成した時のみ発生する。`.github/workflows/promote-production.yml`が`release: published`イベントで`production`ブランチをリリースタグの内容に更新し、それをVercelが検知して`rhing.jp`へデプロイする。
 - リリースは`/release`スキルで作成する。
+
+## 環境変数
+
+- お問い合わせフォーム(`src/app/contact/ContactForm.tsx`, `src/app/api/contact/route.ts`)のreCAPTCHA v3導入に伴い、`NEXT_PUBLIC_RECAPTCHA_SITE_KEY`(クライアント公開)と`RECAPTCHA_SECRET_KEY`(サーバー専用)が必要。ローカルは`.env.local`(gitignore対象)、本番はVercelのProject Settings > Environment Variablesに設定する。
