@@ -10,12 +10,15 @@ const config: Config = {
         extend: {
             fontFamily: {
                 // layout.tsxで設定した変数を利用できるようにします
-                sans: ['var(--font-noto-sans)', 'sans-serif'],
-                serif: ['var(--font-shippori-mincho)', 'serif'],
+                sans: ['var(--font-kiwi-maru)', 'sans-serif'],
+                serif: ['var(--font-kiwi-maru)', 'serif'],
             },
             fontWeight: {
+                // キウイ丸は300/400/500のみのため、太字系は最大値の500に丸める
                 DEFAULT: '300',
-                bold: '600',
+                bold: '500',
+                extrabold: '500',
+                black: '500',
             },
         },
     },

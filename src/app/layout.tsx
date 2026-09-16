@@ -1,8 +1,15 @@
 import Script from "next/script";
+import { Kiwi_Maru } from "next/font/google";
 import "./globals.css";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import ScrollToTop from "@/components/ScrollToTop"; // 🌟 復活
+
+const kiwiMaru = Kiwi_Maru({
+    weight: ["300", "400", "500"],
+    subsets: ["latin"],
+    variable: "--font-kiwi-maru",
+});
 
 // 🌟 メタデータ設定（すでにご自身でカスタマイズされている場合はそのままで大丈夫です）
 export const metadata = {
@@ -19,7 +26,7 @@ export default function RootLayout({
         /* 
           🌟 Dark Reader対策の suppressHydrationWarning はこの位置に残します
         */
-        <html lang="ja" suppressHydrationWarning>
+        <html lang="ja" className={kiwiMaru.variable} suppressHydrationWarning>
             {/* 
               🌟 修正ポイント: 
               bodyタグの内側で、このように <Header />, <main>, <Footer />, <ScrollToTop /> 
