@@ -1,1 +1,10 @@
 @import "tailwindcss";
+
+@theme {
+    --font-sans: var(--font-kiwi-maru), sans-serif;
+    --font-serif: var(--font-kiwi-maru), serif;
+    /* キウイ丸は300/400/500のみのため、太字系は最大値の500に丸める */
+    --font-weight-bold: 500;
+    --font-weight-extrabold: 500;
+    --font-weight-black: 500;
+}
