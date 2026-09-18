@@ -9,13 +9,13 @@ export const metadata: Metadata = {
 // サービス一覧のデータ
 const services = [
     {
-        id: "komichi",
-        name: "komichi",
-        tagline: "本と、二人きり。",
+        id: "dolce",
+        name: "dolce",
+        tagline: "本と、甘美な贅沢を。",
         category: "Book Reader",
-        description: "以前から複数プラットフォームで同じ使用感で利用できる電子書籍リーダーを作りたかったので作ろうと思いました。現在鋭意開発中です。2026年中の公開を目指しています。手元にMacがないのでiOS,MacOS版のリリースは目処が立つまでお預けになります。ごめんなさい。",
-        features: ["CBZ,PDFの読み込み", "設定のカスタマイズ化", "Android,Linux,Windows,iOS,macOS対応"],
-        link: "/services/komichi",
+        description: "カスタマイズが豊富で、複数プラットフォームを跨いで同じ使用感で使えます。現在はAndroid・Windows・Linuxで利用可能です。",
+        features: ["CBZ,PDFの読み込み", "設定のカスタマイズ", "ローカル完結", "Android,Linux,Windows対応（iOS,macOSは対応予定）"],
+        link: "/services/dolce",
         bgColor: "bg-gray-200/60",
     },
     {

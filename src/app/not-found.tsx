@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 
 const exhibits = [
@@ -37,6 +38,14 @@ const exhibits = [
 ];
 
 export default function NotFound() {
+    const [exhibit, setExhibit] = useState<(typeof exhibits)[number] | null>(null);
+
+    useEffect(() => {
+        // Math.random()はサーバー/クライアントで結果が異なるため、マウント後にのみ選出してハイドレーション不一致を避ける
+        // eslint-disable-next-line react-hooks/set-state-in-effect
+        setExhibit(exhibits[Math.floor(Math.random() * exhibits.length)]);
+    }, []);
+
     return (
         <div className="w-full pb-32">
             <div className="container mx-auto px-6 pt-32 pb-16 max-w-4xl">
@@ -66,26 +75,40 @@ export default function NotFound() {
                 </motion.div>
             </div>
 
-            <div className="container mx-auto px-6 max-w-6xl">
-                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
-                    {exhibits.map((item, index) => (
-                        <motion.div
-                            key={item.src}
-                            initial={{ opacity: 0, y: 20 }}
-                            animate={{ opacity: 1, y: 0 }}
-                            transition={{ duration: 0.8, ease: "easeOut", delay: 0.15 + index * 0.1 }}
-                            className="bg-white/60 backdrop-blur-md border border-white/80 shadow-md shadow-gray-200/30 rounded-2xl p-3 md:p-4"
-                        >
-                            <div className="border border-gray-200 bg-white p-2">
-                                {/* eslint-disable-next-line @next/next/no-img-element */}
-                                <img src={item.src} alt={item.title} className="w-full h-56 object-cover" />
-                            </div>
-                            <div className="text-center mt-4 mb-1">
-                                <p className="text-sm font-bold text-gray-800 tracking-wider">{item.title}</p>
-                                <p className="text-xs text-gray-400 mt-1 tracking-wide">{item.caption}</p>
-                            </div>
-                        </motion.div>
-                    ))}
+            <div className="container mx-auto px-6 max-w-4xl">
+                <div className="flex flex-col lg:flex-row items-end justify-center gap-6 lg:gap-10">
+                    {/* 左の人物イラスト（undraw.co "book-lover"） */}
+                    <div className="hidden lg:block w-36 xl:w-44 shrink-0 pb-6">
+                        {/* eslint-disable-next-line @next/next/no-img-element */}
+                        <img src="/illustrations/book-lover.svg" alt="" className="w-full h-auto" />
+                    </div>
+
+                    {/* 展示物本体（ランダムで1点だけ表示） */}
+                    <motion.div
+                        initial={{ opacity: 0, y: 20 }}
+                        animate={{ opacity: exhibit ? 1 : 0, y: 0 }}
+                        transition={{ duration: 0.8, ease: "easeOut" }}
+                        className="w-full max-w-md bg-white/60 backdrop-blur-md border border-white/80 shadow-md shadow-gray-200/30 rounded-2xl p-3 md:p-4"
+                    >
+                        {exhibit && (
+                            <>
+                                <div className="border border-gray-200 bg-white p-2">
+                                    {/* eslint-disable-next-line @next/next/no-img-element */}
+                                    <img src={exhibit.src} alt={exhibit.title} className="w-full h-72 object-cover" />
+                                </div>
+                                <div className="text-center mt-4 mb-1">
+                                    <p className="text-sm font-bold text-gray-800 tracking-wider">{exhibit.title}</p>
+                                    <p className="text-xs text-gray-400 mt-1 tracking-wide">{exhibit.caption}</p>
+                                </div>
+                            </>
+                        )}
+                    </motion.div>
+
+                    {/* 右の人物イラスト（undraw.co "couple-photo"） */}
+                    <div className="hidden lg:block w-36 xl:w-44 shrink-0 pb-6">
+                        {/* eslint-disable-next-line @next/next/no-img-element */}
+                        <img src="/illustrations/couple-photo.svg" alt="" className="w-full h-auto" />
+                    </div>
                 </div>
             </div>
 

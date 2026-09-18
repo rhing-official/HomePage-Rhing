@@ -74,6 +74,7 @@ export default function Footer() {
                                 <li><UnderlineLink href="/legal/terms">利用規約</UnderlineLink></li>
                                 <li><UnderlineLink href="/legal/disclaimer">免責事項</UnderlineLink></li>
                                 <li><UnderlineLink href="/legal/creator">クリエイター向けポリシー</UnderlineLink></li>
+                                <li><UnderlineLink href="/about#tokushoho">特定商取引法に基づく表記</UnderlineLink></li>
                             </ul>
                         </div>
 
@@ -85,6 +86,7 @@ export default function Footer() {
                             <ul className="space-y-4 pl-2">
                                 <li><UnderlineLink href={siteConfig.socialLinks.note} external>note</UnderlineLink></li>
                                 <li><UnderlineLink href={siteConfig.socialLinks.github} external>GitHub</UnderlineLink></li>
+                                <li><UnderlineLink href={siteConfig.socialLinks.discord} external>Discord</UnderlineLink></li>
                             </ul>
                         </div>
 
