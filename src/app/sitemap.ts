@@ -10,7 +10,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
         { path: '/about', priority: 0.8, changefreq: 'monthly' },
         { path: '/services', priority: 0.8, changefreq: 'monthly' },
         { path: '/services/daidai', priority: 0.7, changefreq: 'monthly' }, // 必要に応じて追加・削除してください
-        { path: '/services/komichi', priority: 0.7, changefreq: 'monthly' },
+        { path: '/services/dolce', priority: 0.7, changefreq: 'monthly' },
         { path: '/contact', priority: 0.8, changefreq: 'monthly' },
         { path: '/legal/charter', priority: 0.5, changefreq: 'monthly' },
         { path: '/legal/privacy', priority: 0.5, changefreq: 'monthly' },

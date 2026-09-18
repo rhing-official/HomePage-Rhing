@@ -22,3 +22,11 @@ Rhing公式サイト。トップページ・団体概要・サービス紹介に
 ## 環境変数
 
 - お問い合わせフォーム(`src/app/contact/ContactForm.tsx`, `src/app/api/contact/route.ts`)のreCAPTCHA v3導入に伴い、`NEXT_PUBLIC_RECAPTCHA_SITE_KEY`(クライアント公開)と`RECAPTCHA_SECRET_KEY`(サーバー専用)が必要。ローカルは`.env.local`(gitignore対象)、本番はVercelのProject Settings > Environment Variablesに設定する。
+
+## 素材・アセット
+
+フリーイラスト素材が必要な場合は、以下のサイトから入手する（`public/illustrations/`に配置する運用）。
+
+- [undraw.co](https://undraw.co/illustrations) — 帰属表示不要、商用利用可。単色SVGなので`fill`色を書き換えてサイトの配色に合わせやすい。**特別な理由がなければこれを優先する**
+- [storyset.com](https://storyset.com/) — 帰属表示が**必須**（利用箇所にStorysetへのリンクを明記する必要あり）
+- [blush.design/ja](https://blush.design/ja) — 帰属表示不要。無料プランはPNGのみで、SVGエクスポートはPro限定

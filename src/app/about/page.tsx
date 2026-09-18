@@ -1,4 +1,5 @@
 import { Metadata } from "next";
+import Link from "next/link";
 
 export const metadata: Metadata = {
     title: "団体概要・理念 | Rhing",
@@ -50,19 +51,26 @@ export default function AboutPage() {
                         {/* 設立 */}
                         <div className="py-8 flex flex-col md:flex-row gap-4 md:gap-12 hover:bg-gray-50 transition-colors px-4">
                             <dt className="w-48 shrink-0 font-bold text-gray-900 tracking-wider">設立</dt>
-                            <dd className="text-gray-700">2026年2月20日</dd> {/* ← 実際の設立日に書き換えてください */}
-                        </div>
-
-                        {/* 所在地 */}
-                        <div className="py-8 flex flex-col md:flex-row gap-4 md:gap-12 hover:bg-gray-50 transition-colors px-4">
-                            <dt className="w-48 shrink-0 font-bold text-gray-900 tracking-wider">所在地</dt>
-                            <dd className="text-gray-700">長野県下伊那郡豊丘村神稲4573-1</dd> {/* ← 実際の所在地に書き換えてください */}
+                            <dd className="text-gray-700">2026/2/20</dd> {/* ← 実際の設立日に書き換えてください */}
                         </div>
 
                         {/* 代表者 */}
                         <div className="py-8 flex flex-col md:flex-row gap-4 md:gap-12 hover:bg-gray-50 transition-colors px-4">
                             <dt className="w-48 shrink-0 font-bold text-gray-900 tracking-wider">代表者</dt>
-                            <dd className="text-gray-700">畑中 新</dd> {/* ← 実際の代表者名に書き換えてください */}
+                            <dd className="text-gray-700 flex items-center gap-3">
+                                畑中 新 {/* ← 実際の代表者名に書き換えてください */}
+                                <a
+                                    href="https://github.com/arag616"
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    aria-label="GitHub"
+                                    className="inline-flex items-center justify-center w-7 h-7 rounded-full border border-gray-300 text-gray-600 hover:text-white hover:bg-gray-900 hover:border-gray-900 transition-colors"
+                                >
+                                    <svg viewBox="0 0 24 24" className="w-4 h-4" fill="currentColor" aria-hidden="true">
+                                        <path d="M12 .5C5.73.5.5 5.73.5 12c0 5.09 3.29 9.4 7.86 10.93.57.1.78-.25.78-.55 0-.27-.01-1.16-.02-2.1-3.2.7-3.88-1.36-3.88-1.36-.52-1.33-1.28-1.68-1.28-1.68-1.04-.71.08-.7.08-.7 1.16.08 1.77 1.19 1.77 1.19 1.03 1.76 2.7 1.25 3.36.96.1-.75.4-1.25.73-1.54-2.55-.29-5.24-1.28-5.24-5.68 0-1.25.45-2.28 1.19-3.08-.12-.29-.52-1.46.11-3.05 0 0 .97-.31 3.18 1.18a11.05 11.05 0 0 1 5.8 0c2.2-1.49 3.17-1.18 3.17-1.18.63 1.59.24 2.76.12 3.05.74.8 1.19 1.83 1.19 3.08 0 4.41-2.69 5.38-5.25 5.67.41.36.78 1.06.78 2.14 0 1.55-.01 2.79-.01 3.17 0 .3.2.66.79.55A10.51 10.51 0 0 0 23.5 12C23.5 5.73 18.27.5 12 .5Z" />
+                                    </svg>
+                                </a>
+                            </dd>
                         </div>
 
                         {/* 事業内容 */}
@@ -72,14 +80,109 @@ export default function AboutPage() {
                                 <ul className="list-none space-y-3">
                                     <li className="flex items-start">
                                         <span className="mr-2 text-gray-400">■</span>
-                                        アプリ開発事業
+                                        アプリ開発
                                     </li>
                                     <li className="flex items-start">
                                         <span className="mr-2 text-gray-400">■</span>
-                                        コミュニティ運営・ユーザーサポート
+                                        コミュニティ運営
+                                    </li>
+                                    <li className="flex items-start">
+                                        <span className="mr-2 text-gray-400">■</span>
+                                        ユーザーサポート
                                     </li>
                                 </ul>
                             </dd>
+                        </div>
+                    </dl>
+                </div>
+            </section>
+
+            {/* 特定商取引法に基づく表記セクション */}
+            <section id="tokushoho" className="mt-24">
+                <h2 className="text-2xl font-bold mb-10 tracking-widest border-b border-gray-200 pb-4 text-gray-900">
+                    LEGAL NOTICE
+                    <span className="block text-sm text-gray-500 font-normal mt-2 tracking-normal">特定商取引法に基づく表記</span>
+                </h2>
+
+                <div className="w-full">
+                    <dl className="divide-y divide-gray-200 border-t border-b border-gray-200">
+                        {/* 販売事業者 */}
+                        <div className="py-8 flex flex-col md:flex-row gap-4 md:gap-12 hover:bg-gray-50 transition-colors px-4">
+                            <dt className="w-48 shrink-0 font-bold text-gray-900 tracking-wider">販売事業者</dt>
+                            <dd className="text-gray-700">Rhing</dd>
+                        </div>
+
+                        {/* 運営統括責任者 */}
+                        <div className="py-8 flex flex-col md:flex-row gap-4 md:gap-12 hover:bg-gray-50 transition-colors px-4">
+                            <dt className="w-48 shrink-0 font-bold text-gray-900 tracking-wider">運営統括責任者</dt>
+                            <dd className="text-gray-700">畑中 新</dd>
+                        </div>
+
+                        {/* 所在地 */}
+                        <div className="py-8 flex flex-col md:flex-row gap-4 md:gap-12 hover:bg-gray-50 transition-colors px-4">
+                            <dt className="w-48 shrink-0 font-bold text-gray-900 tracking-wider">所在地</dt>
+                            <dd className="text-gray-700">請求がございましたら、遅滞なく開示いたします</dd>
+                        </div>
+
+                        {/* 電話番号 */}
+                        <div className="py-8 flex flex-col md:flex-row gap-4 md:gap-12 hover:bg-gray-50 transition-colors px-4">
+                            <dt className="w-48 shrink-0 font-bold text-gray-900 tracking-wider">電話番号</dt>
+                            <dd className="text-gray-700">請求がございましたら、遅滞なく開示いたします</dd>
+                        </div>
+
+                        {/* お問い合わせ */}
+                        <div className="py-8 flex flex-col md:flex-row gap-4 md:gap-12 hover:bg-gray-50 transition-colors px-4">
+                            <dt className="w-48 shrink-0 font-bold text-gray-900 tracking-wider">お問い合わせ</dt>
+                            <dd className="text-gray-700">
+                                <Link href="/contact?type=user" className="underline hover:text-gray-900 transition-colors">
+                                    お問い合わせフォーム
+                                </Link>
+                                よりご連絡ください
+                            </dd>
+                        </div>
+
+                        {/* 販売価格 */}
+                        <div className="py-8 flex flex-col md:flex-row gap-4 md:gap-12 hover:bg-gray-50 transition-colors px-4">
+                            <dt className="w-48 shrink-0 font-bold text-gray-900 tracking-wider">販売価格</dt>
+                            <dd className="text-gray-700">各商品ページに記載の価格（消費税込み）</dd>
+                        </div>
+
+                        {/* 商品代金以外の必要料金 */}
+                        <div className="py-8 flex flex-col md:flex-row gap-4 md:gap-12 hover:bg-gray-50 transition-colors px-4">
+                            <dt className="w-48 shrink-0 font-bold text-gray-900 tracking-wider">商品代金以外の必要料金</dt>
+                            <dd className="text-gray-700">表示価格には消費税を含みます。別途手数料が発生する場合は各商品ページに明記します</dd>
+                        </div>
+
+                        {/* 支払方法 */}
+                        <div className="py-8 flex flex-col md:flex-row gap-4 md:gap-12 hover:bg-gray-50 transition-colors px-4">
+                            <dt className="w-48 shrink-0 font-bold text-gray-900 tracking-wider">支払方法</dt>
+                            <dd className="text-gray-700">クレジットカード決済（Stripe）</dd>
+                        </div>
+
+                        {/* 支払時期 */}
+                        <div className="py-8 flex flex-col md:flex-row gap-4 md:gap-12 hover:bg-gray-50 transition-colors px-4">
+                            <dt className="w-48 shrink-0 font-bold text-gray-900 tracking-wider">支払時期</dt>
+                            <dd className="text-gray-700">ご注文（決済）確定時</dd>
+                        </div>
+
+                        {/* 引渡時期 */}
+                        <div className="py-8 flex flex-col md:flex-row gap-4 md:gap-12 hover:bg-gray-50 transition-colors px-4">
+                            <dt className="w-48 shrink-0 font-bold text-gray-900 tracking-wider">引渡時期</dt>
+                            <dd className="text-gray-700">決済完了後、直ちにご利用いただけます</dd>
+                        </div>
+
+                        {/* 返品・キャンセルについて */}
+                        <div className="py-8 flex flex-col md:flex-row gap-4 md:gap-12 hover:bg-gray-50 transition-colors px-4">
+                            <dt className="w-48 shrink-0 font-bold text-gray-900 tracking-wider">返品・キャンセルについて</dt>
+                            <dd className="text-gray-700">
+                                デジタルコンテンツの性質上、購入後の返品・キャンセルはお受けできません。商品に不具合がある場合は、お問い合わせフォームよりご連絡ください
+                            </dd>
+                        </div>
+
+                        {/* 動作環境 */}
+                        <div className="py-8 flex flex-col md:flex-row gap-4 md:gap-12 hover:bg-gray-50 transition-colors px-4">
+                            <dt className="w-48 shrink-0 font-bold text-gray-900 tracking-wider">動作環境</dt>
+                            <dd className="text-gray-700">DaiDaiアプリ内でご利用いただけます</dd>
                         </div>
                     </dl>
                 </div>
