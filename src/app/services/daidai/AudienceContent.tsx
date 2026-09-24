@@ -15,14 +15,15 @@ import {
     Network,
     ArrowRight,
 } from "lucide-react";
+import { motion, AnimatePresence } from "framer-motion";
 import ScreenshotPlaceholder from "./ScreenshotPlaceholder";
-import { useAudience } from "./AudienceContext";
+import { useAudience, AudienceToggle } from "./AudienceContext";
 
 type ContentsItem = { href: string; label: string };
 
 function ContentsNav({ items }: { items: ContentsItem[] }) {
     return (
-        <div className="max-w-sm mx-auto text-left mb-20">
+        <div className="w-full max-w-md text-left">
             <p className="text-xs tracking-[0.3em] text-gray-400 mb-3">CONTENTS</p>
             <div className="flex flex-col divide-y divide-gray-200 border-t border-b border-gray-200">
                 {items.map((c, i) => (
@@ -62,6 +63,31 @@ const geekContents: ContentsItem[] = [
     { href: "#pending", label: "未実装の機能について" },
     { href: "#github", label: "リポジトリ" },
 ];
+
+export function AudienceHeader() {
+    const { audience } = useAudience();
+    const items = audience === "general" ? generalContents : geekContents;
+
+    return (
+        <div className="flex flex-col md:flex-row gap-8 md:items-start mb-20">
+            <div className="shrink-0">
+                <AudienceToggle />
+            </div>
+            <AnimatePresence mode="wait">
+                <motion.div
+                    key={audience}
+                    className="w-full max-w-md"
+                    initial={{ opacity: 0, filter: "blur(12px)" }}
+                    animate={{ opacity: 1, filter: "blur(0px)" }}
+                    exit={{ opacity: 0, filter: "blur(12px)" }}
+                    transition={{ duration: 0.4, ease: "easeInOut" }}
+                >
+                    <ContentsNav items={items} />
+                </motion.div>
+            </AnimatePresence>
+        </div>
+    );
+}
 
 const pillars = [
     {
@@ -125,6 +151,7 @@ const notPlannedFeatures = [
 function FeatureRoadmapSection({ id }: { id: string }) {
     return (
         <div id={id} className="scroll-mt-8">
+            <span className="text-xs font-bold tracking-widest text-gray-500 mb-2 block">UNIMPLEMENTED FEATURES</span>
             <h2 className="text-2xl font-bold mb-8 tracking-widest text-gray-900">未実装の機能について</h2>
             <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
                 {(["近日実装予定", "将来実装予定", "検討中"] as const).map((status) => (
@@ -172,8 +199,6 @@ const moreFeatures = [
 function GeneralContent() {
     return (
         <div className="max-w-5xl mx-auto">
-            <ContentsNav items={generalContents} />
-
             {/* 3支柱ブロック */}
             <div id="pillars" className="grid md:grid-cols-3 gap-8 mb-24 scroll-mt-8">
                 {pillars.map((p, i) => (
@@ -328,8 +353,6 @@ const roadmap: [string, string, string][] = [
 function GeekContent() {
     return (
         <div className="max-w-5xl mx-auto">
-            <ContentsNav items={geekContents} />
-
             <div className="flex flex-col gap-20">
                 {/* 技術スタック */}
                 <div id="stack" className="scroll-mt-8">
@@ -422,40 +445,55 @@ function GeekContent() {
                 </div>
 
                 <FeatureRoadmapSection id="pending" />
-            </div>
 
-            {/* GitHub */}
-            <a
-                id="github"
-                href="https://github.com/rhing-official/DaiDai"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="group block h-64 w-full max-w-sm mx-auto mt-20 scroll-mt-8 bg-white/50 backdrop-blur-md border border-white/80 shadow-md shadow-gray-200/40 hover:bg-white/80 hover:border-white hover:shadow-xl hover:shadow-orange-300/10 transition-all duration-500 rounded-lg overflow-hidden relative p-8"
-            >
-                <div className="relative z-10 h-full flex flex-col justify-between">
-                    <div>
-                        <h3 className="text-sm font-bold tracking-widest text-gray-400 group-hover:text-[#EE7800] transition-colors">
-                            GITHUB
-                        </h3>
-                        <p className="text-2xl font-bold mt-2 text-gray-900 group-hover:text-black transition-colors">
-                            開発の様子を見る
-                        </p>
-                    </div>
-                    <div className="flex items-end justify-between">
-                        <span className="text-sm text-gray-500 group-hover:text-gray-400 transition-colors">
-                            DaiDaiのリポジトリ
-                        </span>
-                        <div className="w-10 h-10 rounded-full border border-gray-300 bg-white/40 group-hover:border-[#EE7800] group-hover:bg-[#EE7800] group-hover:text-white flex items-center justify-center text-gray-800 transition-all duration-300 transform group-hover:translate-x-2">
-                            <ArrowRight className="w-5 h-5" />
+                {/* リポジトリ */}
+                <div id="github" className="scroll-mt-8">
+                    <span className="text-xs font-bold tracking-widest text-gray-500 mb-2 block">REPOSITORY</span>
+                    <h2 className="text-2xl font-bold mb-8 tracking-wide text-gray-900">リポジトリ</h2>
+                    <a
+                        href="https://github.com/rhing-official/DaiDai"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="group block h-64 w-full max-w-sm mx-auto bg-white/50 backdrop-blur-md border border-white/80 shadow-md shadow-gray-200/40 hover:bg-white/80 hover:border-white hover:shadow-xl hover:shadow-orange-300/10 transition-all duration-500 rounded-lg overflow-hidden relative p-8"
+                    >
+                        <div className="relative z-10 h-full flex flex-col justify-between">
+                            <div>
+                                <h3 className="text-sm font-bold tracking-widest text-gray-400 group-hover:text-[#EE7800] transition-colors">
+                                    GITHUB
+                                </h3>
+                                <p className="text-2xl font-bold mt-2 text-gray-900 group-hover:text-black transition-colors">
+                                    開発の様子を見る
+                                </p>
+                            </div>
+                            <div className="flex items-end justify-between">
+                                <span className="text-sm text-gray-500 group-hover:text-gray-400 transition-colors">
+                                    DaiDaiのリポジトリ
+                                </span>
+                                <div className="w-10 h-10 rounded-full border border-gray-300 bg-white/40 group-hover:border-[#EE7800] group-hover:bg-[#EE7800] group-hover:text-white flex items-center justify-center text-gray-800 transition-all duration-300 transform group-hover:translate-x-2">
+                                    <ArrowRight className="w-5 h-5" />
+                                </div>
+                            </div>
                         </div>
-                    </div>
+                    </a>
                 </div>
-            </a>
+            </div>
         </div>
     );
 }
 
 export default function AudienceContent() {
     const { audience } = useAudience();
-    return audience === "general" ? <GeneralContent /> : <GeekContent />;
+    return (
+        <AnimatePresence mode="wait">
+            <motion.div
+                key={audience}
+                initial={{ opacity: 0, filter: "blur(12px)" }}
+                animate={{ opacity: 1, filter: "blur(0px)" }}
+                exit={{ opacity: 0, filter: "blur(12px)" }}
+                transition={{ duration: 0.4, ease: "easeInOut" }}
+            >
+                {audience === "general" ? <GeneralContent /> : <GeekContent />}
+            </motion.div>
+        </AnimatePresence>
+    );
 }
