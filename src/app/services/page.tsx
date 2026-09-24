@@ -14,7 +14,7 @@ const services = [
         tagline: "本と、甘美な贅沢を。",
         category: "Book Reader",
         description: "カスタマイズが豊富で、複数プラットフォームを跨いで同じ使用感で使えます。現在はAndroid・Windows・Linuxで利用可能です。",
-        features: ["CBZ,PDFの読み込み", "設定のカスタマイズ", "ローカル完結", "Android,Linux,Windows対応（iOS,macOSは対応予定）"],
+        features: ["CBZ,PDFの読み込み", "設定のカスタマイズ", "ローカル完結", "Android,Linux,Windows対応", "iOS,macOS対応予定"],
         link: "/services/dolce",
         bgColor: "bg-gray-200/60",
     },
@@ -24,7 +24,7 @@ const services = [
         tagline: "整う、守る、私に馴染む。",
         category: "Messages",
         description: "プライバシーを守る、メッセージアプリ。広告なし、電話番号・メールアドレス不要で、あなたのデータを売却しません。家族や友人との語らいから、コミュニティでの交流まで、安心して繋がれる場所を提供します。",
-        features: ["厳重なプライバシー保護", "広告なし", "電話番号・メアド不要", "Android,Linux,Windows,iOS,macOS,Web対応"],
+        features: ["厳重なプライバシー保護", "広告なし", "電話番号・メアド不要", "Web対応", "Android,Linux,Windows,iOS,macOS対応予定"],
         link: "/services/daidai",
         bgColor: "bg-gray-300/60",
     }
@@ -34,8 +34,10 @@ export default function ServicesPage() {
     return (
         <div className="w-full pb-24">
             {/* ページタイトル */}
-            <div className="container mx-auto px-6 py-24 max-w-4xl">
-                <div className="mb-16 text-center">
+            <div className="container mx-auto px-6 pb-24 max-w-4xl">
+                <div className="mb-16 relative flex flex-col items-center justify-center text-center md:min-h-40 lg:min-h-48">
+                    {/* eslint-disable-next-line @next/next/no-img-element */}
+                    <img src="/illustrations/mobile-app.svg" alt="" className="hidden md:block absolute right-0 top-1/2 -translate-y-1/2 w-48 lg:w-56 h-auto" />
                     <h1 className="text-4xl md:text-5xl font-bold tracking-widest text-gray-900 mb-4">SERVICES</h1>
                     <p className="text-gray-500 tracking-wider text-sm">サービス紹介</p>
                 </div>

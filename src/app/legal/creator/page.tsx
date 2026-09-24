@@ -7,10 +7,12 @@ export const metadata: Metadata = {
 
 export default function CreatorPolicyPage() {
     return (
-        <div className="container mx-auto px-6 py-32 max-w-4xl">
+        <div className="container mx-auto px-6 pb-32 max-w-4xl">
             {/* ページタイトル */}
             {/* 🌟 修正ポイント1: タイトルエリアをガラスカードのデザインに変更 */}
-            <div className="mb-24 text-center py-10 bg-white/40 backdrop-blur-md border border-white/80 shadow-md shadow-gray-200/20 rounded-3xl">
+            <div className="mb-24 relative flex flex-col items-center justify-center text-center py-10 px-8 md:px-14 md:min-h-44 lg:min-h-52 bg-white/40 backdrop-blur-md border border-white/80 shadow-md shadow-gray-200/20 rounded-3xl">
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img src="/illustrations/terms.svg" alt="" className="hidden xl:block absolute right-full -mr-10 top-1/2 -translate-y-1/2 w-40 h-auto" />
                 <h1 className="text-4xl md:text-5xl font-bold tracking-widest text-gray-900 mb-4">CREATOR POLICY</h1>
                 <p className="text-gray-500 tracking-wider text-sm">クリエイター向けポリシー</p>
             </div>
@@ -36,10 +38,10 @@ export default function CreatorPolicyPage() {
                                 <span className="mr-2">○</span> 許可される使用例
                             </h4>
                             <ul className="list-disc pl-5 space-y-2 text-green-800 text-sm">
-                                <li>・小説、漫画、映画、ドラマ、アニメ等での登場</li>
-                                <li>・キャラクターが使用するアプリとして描写</li>
-                                <li>・ロゴの改変・パロディ化</li>
-                                <li>・悪役が使う、犯罪シーンで使う等の描写</li>
+                                <li>書籍・映像作品での登場</li>
+                                <li>キャラクターが使用するアプリとして描写</li>
+                                <li>ロゴの改変・パロディ化</li>
+                                <li>悪役が使う、犯罪シーンで使う等の描写</li>
                             </ul>
                         </div>
 
@@ -50,9 +52,8 @@ export default function CreatorPolicyPage() {
                                 <span className="mr-2">×</span> 禁止される使用例
                             </h4>
                             <ul className="list-disc pl-5 space-y-2 text-red-800 text-sm">
-                                <li>・事実と異なる表現</li>
-                                <li>（例：個人情報が漏れる、データを売っている）</li>
-                                <li>・誤解を招く実在しない機能の描写</li>
+                                <li>事実と異なる表現<br></br>（例：個人情報の漏洩・データの売却）</li>
+                                <li>誤解を招く実在しない機能の描写</li>
                             </ul>
                         </div>
                     </div>

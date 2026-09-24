@@ -42,7 +42,8 @@ export default function RootLayout({
                 <Header />
 
                 {/* メインコンテンツエリア */}
-                <main className="flex-grow">
+                {/* ヘッダー（ロゴ・ナビ）がfixed/absoluteでドキュメントの流れから外れているため、ここで上余白を確保する */}
+                <main className="flex-grow pt-28 lg:pt-40">
                     {children}
                 </main>
 

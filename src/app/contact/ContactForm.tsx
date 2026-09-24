@@ -289,7 +289,7 @@ export default function ContactForm() {
                                     }}
                                 />
                                 <p className="text-sm text-gray-500 mb-3">
-                                    画像をここにドラッグ&ドロップ、またはコピーした画像をこのフォーム内で貼り付け(Ctrl+V)できます。
+                                    画像をここにドラッグ&ドロップ、またはコピーした画像をこのフォーム内で貼り付け
                                 </p>
                                 <button
                                     type="button"

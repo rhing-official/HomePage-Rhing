@@ -12,13 +12,15 @@ export const metadata: Metadata = {
 export default function ContactPage() {
     return (
         <div className="w-full pb-32">
-            <div className="container mx-auto px-6 pt-32 pb-16 max-w-4xl">
+            <div className="container mx-auto px-6 pb-16 max-w-4xl">
                 {/* 
                   🌟 修正ポイント: タイトルエリアをガラス風カードのデザインに変更 
                   - bg-white/40 (半透明), backdrop-blur-md (ぼかし), border-white/80 (細い白境界線), shadow-md を追加
                   - 丸みのあるデザイン（rounded-3xl）と上下のパディング（py-10）で美しく配置しています
                 */}
-                <div className="mb-16 text-center py-10 bg-white/40 backdrop-blur-md border border-white/80 shadow-md shadow-gray-200/20 rounded-3xl">
+                <div className="mb-16 relative flex flex-col items-center justify-center text-center py-10 px-8 md:px-14 md:min-h-44 lg:min-h-52 bg-white/40 backdrop-blur-md border border-white/80 shadow-md shadow-gray-200/20 rounded-3xl">
+                    {/* eslint-disable-next-line @next/next/no-img-element */}
+                    <img src="/illustrations/new-message.svg" alt="" className="hidden md:block absolute left-8 md:left-14 top-1/2 -translate-y-1/2 w-40 lg:w-48 h-auto" />
                     <h1 className="text-4xl md:text-5xl font-bold tracking-widest text-gray-900 mb-4">CONTACT</h1>
                     <p className="text-gray-500 tracking-wider text-sm">お問い合わせ</p>
                 </div>

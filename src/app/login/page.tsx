@@ -53,7 +53,7 @@ function LoginPageContent() {
     if (!ready) return null;
 
     return (
-        <div className="container mx-auto px-6 py-32 max-w-md text-center">
+        <div className="container mx-auto px-6 pb-32 max-w-md text-center">
             <h1 className="text-2xl font-bold text-gray-900 mb-4">ログイン</h1>
 
             {user ? (
