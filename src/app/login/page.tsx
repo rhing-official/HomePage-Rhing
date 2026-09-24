@@ -4,9 +4,13 @@ import { Suspense, useEffect, useState } from "react";
 import Link from "next/link";
 import { AnimatePresence } from "framer-motion";
 import { useRouter, useSearchParams } from "next/navigation";
+import { KeyRound } from "lucide-react";
 import { auth, onAuthStateChanged, signOut, type User } from "@/lib/firebaseAuth";
 import { useGoogleSignIn } from "@/hooks/useGoogleSignIn";
+import { usePasskeyAuth } from "@/hooks/usePasskeyAuth";
 import AccountDeleteDialog from "@/components/AccountDeleteDialog";
+import PasskeySignInDialog from "@/components/daidai-yokocho/PasskeySignInDialog";
+import PasskeyRecoveryDialog from "@/components/daidai-yokocho/PasskeyRecoveryDialog";
 
 export default function LoginPage() {
     return (
@@ -24,6 +28,8 @@ function LoginPageContent() {
     const [user, setUser] = useState<User | null>(null);
     const [ready, setReady] = useState(false);
     const [showDeleteDialog, setShowDeleteDialog] = useState(false);
+    const [showPasskeySignIn, setShowPasskeySignIn] = useState(false);
+    const [showPasskeyRecovery, setShowPasskeyRecovery] = useState(false);
 
     const deleted = searchParams.get("deleted");
 
@@ -38,6 +44,7 @@ function LoginPageContent() {
 
     const { buttonContainerRef, error, resolver, code, handleCodeChange, submitTotpCode, submitting, cancelMfa } =
         useGoogleSignIn(redirectIfSignedIn);
+    const { submitting: registeringPasskey, error: passkeyRegisterError, registerWithPasskey } = usePasskeyAuth();
 
     const handleAccountDeleted = async (mode: "requested" | "immediate") => {
         setShowDeleteDialog(false);
@@ -153,10 +160,66 @@ function LoginPageContent() {
                     )}
                     <p className="text-gray-500 mb-2">DaiDaiアカウント（Google）でログインします。</p>
                     <div ref={buttonContainerRef} />
+                    <div className="w-full border-t border-gray-200 my-2" />
+                    <button
+                        type="button"
+                        onClick={() => setShowPasskeySignIn(true)}
+                        className="flex items-center justify-center gap-2 w-full max-w-xs px-4 py-2.5 rounded-full border border-gray-300 text-sm text-gray-700 hover:bg-gray-50 transition-colors"
+                    >
+                        <KeyRound className="w-4 h-4" />
+                        パスキーでログイン
+                    </button>
+                    <button
+                        type="button"
+                        disabled={registeringPasskey}
+                        onClick={async () => {
+                            try {
+                                await registerWithPasskey();
+                                redirectIfSignedIn();
+                            } catch {
+                                // エラー表示はpasskeyRegisterErrorに反映済み
+                            }
+                        }}
+                        className="text-sm text-gray-500 hover:text-gray-800 transition-colors disabled:opacity-50"
+                    >
+                        {registeringPasskey ? "作成中..." : "Rhing Seedでアカウントを作成"}
+                    </button>
+                    <button
+                        type="button"
+                        onClick={() => setShowPasskeyRecovery(true)}
+                        className="text-sm text-gray-500 hover:text-gray-800 transition-colors"
+                    >
+                        パスキーが使えない場合
+                    </button>
+                    {passkeyRegisterError && <p className="text-sm text-red-600">{passkeyRegisterError}</p>}
                 </div>
             )}
 
             {error && <p className="mt-6 text-sm text-red-600">{error}</p>}
+
+            <AnimatePresence>
+                {showPasskeySignIn && (
+                    <PasskeySignInDialog
+                        onClose={() => setShowPasskeySignIn(false)}
+                        onSignedIn={() => {
+                            setShowPasskeySignIn(false);
+                            redirectIfSignedIn();
+                        }}
+                    />
+                )}
+            </AnimatePresence>
+
+            <AnimatePresence>
+                {showPasskeyRecovery && (
+                    <PasskeyRecoveryDialog
+                        onClose={() => setShowPasskeyRecovery(false)}
+                        onRecovered={() => {
+                            setShowPasskeyRecovery(false);
+                            redirectIfSignedIn();
+                        }}
+                    />
+                )}
+            </AnimatePresence>
         </div>
     );
 }
