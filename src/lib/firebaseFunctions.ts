@@ -1,6 +1,12 @@
 "use client";
 
 import { getFunctions, httpsCallable } from "firebase/functions";
+import type {
+    PublicKeyCredentialCreationOptionsJSON,
+    PublicKeyCredentialRequestOptionsJSON,
+    RegistrationResponseJSON,
+    AuthenticationResponseJSON,
+} from "@simplewebauthn/browser";
 import { firebaseApp } from "@/lib/firebase";
 
 // DaiDai репоのfunctions/src/index.ts参照。書き込みはFirestore/Storageの
@@ -66,4 +72,54 @@ export async function createCheckoutSession(data: {
 }): Promise<{ url?: string; granted?: boolean }> {
     const result = await httpsCallable(functions, "createCheckoutSession")(data);
     return result.data as { url?: string; granted?: boolean };
+}
+
+// パスキー（WebAuthn）ログイン・新規作成・復旧。DaiDai本体の
+// functions/src/index.ts・lib/repositories/auth_repository.dartと同じ
+// callable・入出力形式（region: asia-northeast1、DaiDai側と揃える）。
+
+export async function beginPasskeyRegistration(): Promise<{
+    challengeId: string;
+    options: PublicKeyCredentialCreationOptionsJSON;
+}> {
+    const result = await httpsCallable(functions, "beginPasskeyRegistration")();
+    return result.data as { challengeId: string; options: PublicKeyCredentialCreationOptionsJSON };
+}
+
+export async function finishPasskeyRegistration(data: {
+    challengeId: string;
+    attestationResponse: RegistrationResponseJSON;
+}): Promise<{ customToken: string }> {
+    const result = await httpsCallable(functions, "finishPasskeyRegistration")(data);
+    return result.data as { customToken: string };
+}
+
+export async function beginPasskeyAuthentication(data: {
+    rhingSeed: string;
+}): Promise<{ challengeId: string; options: PublicKeyCredentialRequestOptionsJSON }> {
+    const result = await httpsCallable(functions, "beginPasskeyAuthentication")(data);
+    return result.data as { challengeId: string; options: PublicKeyCredentialRequestOptionsJSON };
+}
+
+export async function finishPasskeyAuthentication(data: {
+    challengeId: string;
+    assertionResponse: AuthenticationResponseJSON;
+}): Promise<{ customToken: string }> {
+    const result = await httpsCallable(functions, "finishPasskeyAuthentication")(data);
+    return result.data as { customToken: string };
+}
+
+export async function beginPasskeyRecovery(data: {
+    rhingSeed: string;
+}): Promise<{ recoveryId: string; questions: string[] }> {
+    const result = await httpsCallable(functions, "beginPasskeyRecovery")(data);
+    return result.data as { recoveryId: string; questions: string[] };
+}
+
+export async function finishPasskeyRecovery(data: {
+    recoveryId: string;
+    answers: string[];
+}): Promise<{ customToken: string }> {
+    const result = await httpsCallable(functions, "finishPasskeyRecovery")(data);
+    return result.data as { customToken: string };
 }

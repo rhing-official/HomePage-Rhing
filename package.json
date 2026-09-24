@@ -9,6 +9,7 @@
     "lint": "eslint"
   },
   "dependencies": {
+    "@simplewebauthn/browser": "^13.3.0",
     "chart.js": "^4.5.1",
     "embla-carousel-react": "^8.6.0",
     "firebase": "^12.17.1",

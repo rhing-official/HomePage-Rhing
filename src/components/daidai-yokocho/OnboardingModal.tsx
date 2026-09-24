@@ -111,7 +111,7 @@ export default function OnboardingModal({
                             value={nickname}
                             onChange={(e) => setNickname(e.target.value)}
                             maxLength={20}
-                            placeholder="未設定の場合は「名無しさん」と表示されます"
+                            placeholder="未設定では「風吹けば名無し」となります"
                             className="w-full rounded-lg border border-gray-200 pl-4 pr-9 py-2 bg-white/70"
                         />
                         {nickname && (

@@ -4,6 +4,7 @@ import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import { doc, getDoc } from "firebase/firestore";
 import { motion, AnimatePresence } from "framer-motion";
+import { KeyRound } from "lucide-react";
 import { db } from "@/lib/firebase";
 import { auth, onAuthStateChanged, signOut, type User } from "@/lib/firebaseAuth";
 import { useGoogleSignIn } from "@/hooks/useGoogleSignIn";
@@ -11,6 +12,9 @@ import AccountDeleteDialog from "@/components/AccountDeleteDialog";
 import PersonIcon from "./PersonIcon";
 import ProfileEditModal from "./ProfileEditModal";
 import OnboardingModal from "./OnboardingModal";
+import PasskeySignInDialog from "./PasskeySignInDialog";
+import PasskeyRecoveryDialog from "./PasskeyRecoveryDialog";
+import { usePasskeyAuth } from "@/hooks/usePasskeyAuth";
 
 interface OwnProfile {
     rhingSeed: string;
@@ -51,8 +55,11 @@ export default function DaidaiYokochoMenu() {
     const [showDeleteDialog, setShowDeleteDialog] = useState(false);
     const [showProfileEdit, setShowProfileEdit] = useState(false);
     const [showOnboarding, setShowOnboarding] = useState(false);
+    const [showPasskeySignIn, setShowPasskeySignIn] = useState(false);
+    const [showPasskeyRecovery, setShowPasskeyRecovery] = useState(false);
     const { buttonContainerRef, error, resolver, code, handleCodeChange, submitTotpCode, submitting, cancelMfa } =
         useGoogleSignIn();
+    const { submitting: registeringPasskey, error: passkeyRegisterError, registerWithPasskey } = usePasskeyAuth();
 
     useEffect(() => onAuthStateChanged(auth, (u) => {
         setUser(u);
@@ -190,8 +197,48 @@ export default function DaidaiYokochoMenu() {
                                         </div>
                                     </form>
                                 ) : (
-                                    <div className="flex justify-center">
+                                    <div className="flex flex-col items-center gap-3">
                                         <div ref={buttonContainerRef} />
+                                        <div className="w-full border-t border-gray-200/70" />
+                                        <button
+                                            type="button"
+                                            onClick={() => {
+                                                setOpen(false);
+                                                setShowPasskeySignIn(true);
+                                            }}
+                                            className="flex items-center justify-center gap-2 w-full px-4 py-2 rounded-full border border-gray-300 text-sm text-gray-700 hover:bg-white/70 transition-colors"
+                                        >
+                                            <KeyRound className="w-4 h-4" />
+                                            パスキーでログイン
+                                        </button>
+                                        <button
+                                            type="button"
+                                            disabled={registeringPasskey}
+                                            onClick={async () => {
+                                                try {
+                                                    await registerWithPasskey();
+                                                    setOpen(false);
+                                                } catch {
+                                                    // エラー表示はpasskeyRegisterErrorに反映済み
+                                                }
+                                            }}
+                                            className="text-xs text-gray-500 hover:text-gray-800 transition-colors disabled:opacity-50"
+                                        >
+                                            {registeringPasskey ? "作成中..." : "Rhing Seedでアカウントを作成"}
+                                        </button>
+                                        <button
+                                            type="button"
+                                            onClick={() => {
+                                                setOpen(false);
+                                                setShowPasskeyRecovery(true);
+                                            }}
+                                            className="text-xs text-gray-500 hover:text-gray-800 transition-colors"
+                                        >
+                                            パスキーが使えない場合
+                                        </button>
+                                        {passkeyRegisterError && (
+                                            <p className="text-xs text-red-600">{passkeyRegisterError}</p>
+                                        )}
                                     </div>
                                 )}
                                 {error && <p className="mt-2 text-xs text-red-600 px-1">{error}</p>}
@@ -262,6 +309,24 @@ export default function DaidaiYokochoMenu() {
                             setProfile((prev) => (prev ? { ...prev, ...next, onboarded: true } : prev));
                             setShowOnboarding(false);
                         }}
+                    />
+                </AnimatePresence>
+            )}
+
+            {showPasskeySignIn && (
+                <AnimatePresence>
+                    <PasskeySignInDialog
+                        onClose={() => setShowPasskeySignIn(false)}
+                        onSignedIn={() => setShowPasskeySignIn(false)}
+                    />
+                </AnimatePresence>
+            )}
+
+            {showPasskeyRecovery && (
+                <AnimatePresence>
+                    <PasskeyRecoveryDialog
+                        onClose={() => setShowPasskeyRecovery(false)}
+                        onRecovered={() => setShowPasskeyRecovery(false)}
                     />
                 </AnimatePresence>
             )}
