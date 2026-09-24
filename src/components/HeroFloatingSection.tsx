@@ -193,8 +193,9 @@ export default function HeroFloatingSection() {
 
     const currentViewport = isMounted ? viewport : "desktop";
 
+    // layout.tsxの<main>に追加した上余白（ヘッダーとの間隔調整用）をこのセクションだけ打ち消し、従来の見た目を維持する
     return (
-        <section className="h-[80vh] flex items-center justify-center px-6 relative overflow-hidden">
+        <section className="h-[80vh] flex items-center justify-center px-6 relative overflow-hidden -mt-28 lg:-mt-40">
 
             {/* 20個の反重力フローティングガラスカードをマッピングで描画 */}
             {floatingItems.map((item, index) => {

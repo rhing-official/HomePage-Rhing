@@ -8,7 +8,7 @@ export const metadata: Metadata = {
 const disclaimers = [
     {
         title: "サービスの提供について",
-        content: "Rhingは、本サービスの安定的な提供に努めますが、サーバーメンテナンス、システム障害、不可抗力（天災、戦争、通信障害等）が発生した場合、サービスを停止することがあります。サービス停止による損害について、Rhingは一切の責任を负いません。"
+        content: "Rhingは、本サービスの安定的な提供に努めますが、サーバーメンテナンス・システム障害・天災・通信障害などが発生した場合、サービスを停止することがあります。サービス停止による損害について、Rhingは一切の責任を負いません。"
     },
     {
         title: "コンテンツについて",
@@ -17,6 +17,10 @@ const disclaimers = [
     {
         title: "セキュリティについて",
         content: "Rhingは、最善のセキュリティ対策を講じますが、完全な安全性を保証するものではありません。不正アクセスやデータ漏洩による損害について、Rhingの故意または重過失がある場合を除き、責任を負いません。"
+    },
+    {
+        title: "アカウントの復旧について",
+        content: "Rhingは氏名・電話番号・メールアドレス等の個人情報を一切収集していないため、ユーザー自身の不注意によりログイン情報(Rhing Seed等)を紛失し、ログインができなくなった場合、本人確認を行う手段が無くアカウントを復旧することができません。これによりユーザーに生じた損害について、Rhingは一切の責任を負いません。"
     },
     {
         title: "リンク先について",
@@ -30,10 +34,12 @@ const disclaimers = [
 
 export default function DisclaimerPage() {
     return (
-        <div className="container mx-auto px-6 py-32 max-w-4xl">
+        <div className="container mx-auto px-6 pb-32 max-w-4xl">
             {/* ページタイトル */}
             {/* 🌟 修正ポイント1: タイトルエリアをガラスカードのデザインに変更 */}
-            <div className="mb-24 text-center py-10 bg-white/40 backdrop-blur-md border border-white/80 shadow-md shadow-gray-200/20 rounded-3xl">
+            <div className="mb-24 relative flex flex-col items-center justify-center text-center py-10 px-8 md:px-14 md:min-h-44 lg:min-h-52 bg-white/40 backdrop-blur-md border border-white/80 shadow-md shadow-gray-200/20 rounded-3xl">
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img src="/illustrations/terms.svg" alt="" className="hidden md:block absolute left-8 md:left-14 top-1/2 -translate-y-1/2 w-40 lg:w-48 h-auto" />
                 <h1 className="text-4xl md:text-5xl font-bold tracking-widest text-gray-900 mb-4">DISCLAIMER</h1>
                 <p className="text-gray-500 tracking-wider text-sm">免責事項</p>
             </div>

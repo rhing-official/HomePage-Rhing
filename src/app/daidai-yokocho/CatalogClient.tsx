@@ -7,12 +7,12 @@ import StickerPackCard from "@/components/StickerPackCard";
 
 type SearchField = "all" | "name" | "nickname" | "id" | "tag";
 
-// プルダウンの表示順は「全て→パック名→呼び名→ID→タグ」の指定順。
+// プルダウンの表示順は「全て→パック名→呼び名→Rhing Seed→タグ」の指定順。
 const SEARCH_FIELD_OPTIONS: { value: SearchField; label: string; placeholder: string }[] = [
     { value: "all", label: "全て", placeholder: "パック名・タグ・クリエイターで検索" },
     { value: "name", label: "パック名", placeholder: "パック名で検索" },
     { value: "nickname", label: "呼び名", placeholder: "クリエイターの呼び名で検索" },
-    { value: "id", label: "ID", placeholder: "クリエイターIDで検索" },
+    { value: "id", label: "Rhing Seed", placeholder: "クリエイターのRhing Seedで検索" },
     { value: "tag", label: "タグ", placeholder: "タグで検索" },
 ];
 
@@ -28,12 +28,12 @@ function matchesField(
         case "nickname":
             return (creator?.nickname ?? "").toLowerCase().includes(q);
         case "id":
-            return (creator?.rhingId ?? "").toLowerCase().includes(q);
+            return (creator?.rhingSeed ?? "").toLowerCase().includes(q);
         case "tag":
             return pack.tags.some((tag) => tag.toLowerCase().includes(q));
         case "all":
         default:
-            return [pack.name, ...pack.tags, creator?.nickname ?? "", creator?.rhingId ?? ""]
+            return [pack.name, ...pack.tags, creator?.nickname ?? "", creator?.rhingSeed ?? ""]
                 .join(" ")
                 .toLowerCase()
                 .includes(q);

@@ -87,7 +87,7 @@ export default function DolcePage() {
     return (
         <div className="w-full bg-[#fdfbf7] text-gray-800 pb-32">
             {/* ヒーローエリア */}
-            <div className="container mx-auto px-6 py-24 text-center">
+            <div className="container mx-auto px-6 pb-24 text-center">
                 <h1 className="text-4xl md:text-5xl font-bold tracking-widest text-gray-900 mb-4">dolce</h1>
                 <p className="text-xl md:text-2xl tracking-[0.2em] mb-8">「本と、甘美な贅沢を。」</p>
                 <p className="text-gray-600 leading-relaxed text-pretty max-w-xl mx-auto mb-16">

@@ -51,7 +51,7 @@ export default function FollowedCreatorsPage() {
 
     return (
         <div className="w-full pb-24">
-            <div className="container mx-auto px-6 pt-24 lg:pt-28 pb-16 max-w-4xl">
+            <div className="container mx-auto px-6 pb-16 max-w-4xl">
                 <h1 className="text-3xl font-bold tracking-widest text-gray-900 mb-12">フォロー中のクリエイター</h1>
 
                 {loading ? (
@@ -86,9 +86,11 @@ export default function FollowedCreatorsPage() {
                                     )}
                                     <div className="min-w-0">
                                         <p className="font-bold text-gray-900 truncate">
-                                            {creator.nickname ?? creator.rhingId}
+                                            {creator.nickname ?? (creator.rhingSeed && `@${creator.rhingSeed}`)}
                                         </p>
-                                        <p className="text-xs text-gray-400 truncate">@{creator.rhingId}</p>
+                                        {creator.nickname && creator.rhingSeed && (
+                                            <p className="text-xs text-gray-400 truncate">@{creator.rhingSeed}</p>
+                                        )}
                                     </div>
                                 </Link>
                                 <button

@@ -10,33 +10,29 @@ import { useGoogleSignIn } from "@/hooks/useGoogleSignIn";
 import AccountDeleteDialog from "@/components/AccountDeleteDialog";
 import PersonIcon from "./PersonIcon";
 import ProfileEditModal from "./ProfileEditModal";
+import OnboardingModal from "./OnboardingModal";
 
 interface OwnProfile {
-    rhingId: string;
+    rhingSeed: string;
     nickname: string | null;
     iconUrl: string | null;
+    onboarded: boolean;
 }
 
 // users/{uid}はログイン済みユーザーなら誰でも読めるため、本人の分もクライアント
-// から直接読む（Cloud Functions側projectCreatorProfileと同じ簡易解決ロジック：
-// 工房カードは見ず、蔵のアクティブ素材のみを使う）。daidai横丁専用の
-// daidaiNickname/daidaiIconUrl（任意設定）があればDaiDaiのアクティブ素材より
-// 優先する（2026-08-16追加、Cloud Functions側buildCreatorProfileFieldsと同じ解決順）。
+// から直接読む。呼び名・アイコンはdaidai横丁専用のdaidaiNickname/daidaiIconUrl
+// のみを見る（DaiDai本体の身だしなみ=icons[]/nicknames[]は借用しない。
+// 初回ログイン時にOnboardingModalで本人に設定してもらう設計のため）。
 async function fetchOwnProfile(uid: string): Promise<OwnProfile | null> {
     try {
         const snapshot = await getDoc(doc(db, "users", uid));
         if (!snapshot.exists()) return null;
         const data = snapshot.data();
-        const nicknames: { id?: string; text?: string }[] = Array.isArray(data.nicknames) ? data.nicknames : [];
-        const icons: { id?: string; url?: string }[] = Array.isArray(data.icons) ? data.icons : [];
-        const activeNickname = nicknames.find((n) => n.id === data.activeNicknameId);
-        const activeIcon = icons.find((i) => i.id === data.activeIconId);
-        const daidaiNickname = typeof data.daidaiNickname === "string" ? data.daidaiNickname : null;
-        const daidaiIconUrl = typeof data.daidaiIconUrl === "string" ? data.daidaiIconUrl : null;
         return {
-            rhingId: typeof data.rhingId === "string" ? data.rhingId : "",
-            nickname: daidaiNickname ?? (typeof activeNickname?.text === "string" ? activeNickname.text : null),
-            iconUrl: daidaiIconUrl ?? (typeof activeIcon?.url === "string" ? activeIcon.url : null),
+            rhingSeed: typeof data.rhingSeed === "string" ? data.rhingSeed : "",
+            nickname: typeof data.daidaiNickname === "string" ? data.daidaiNickname : null,
+            iconUrl: typeof data.daidaiIconUrl === "string" ? data.daidaiIconUrl : null,
+            onboarded: data.daidaiOnboarded === true,
         };
     } catch {
         return null;
@@ -54,6 +50,7 @@ export default function DaidaiYokochoMenu() {
     const [profile, setProfile] = useState<OwnProfile | null>(null);
     const [showDeleteDialog, setShowDeleteDialog] = useState(false);
     const [showProfileEdit, setShowProfileEdit] = useState(false);
+    const [showOnboarding, setShowOnboarding] = useState(false);
     const { buttonContainerRef, error, resolver, code, handleCodeChange, submitTotpCode, submitting, cancelMfa } =
         useGoogleSignIn();
 
@@ -66,7 +63,11 @@ export default function DaidaiYokochoMenu() {
         if (!user) return;
         let cancelled = false;
         fetchOwnProfile(user.uid).then((p) => {
-            if (!cancelled) setProfile(p);
+            if (cancelled) return;
+            setProfile(p);
+            // 初回ログイン（daidaiOnboarded未達成）ならアカウントメニューを
+            // 開かなくても自動でオンボーディングを表示する。
+            if (p && !p.onboarded) setShowOnboarding(true);
         });
         return () => {
             cancelled = true;
@@ -147,8 +148,8 @@ export default function DaidaiYokochoMenu() {
                                             <p className="font-bold text-gray-900 truncate">
                                                 {displayProfile?.nickname ?? user.displayName ?? "DaiDaiアカウント"}
                                             </p>
-                                            {displayProfile?.rhingId && (
-                                                <p className="text-xs text-gray-400 truncate">{displayProfile.rhingId}</p>
+                                            {displayProfile?.rhingSeed && (
+                                                <p className="text-xs text-gray-400 truncate">@{displayProfile.rhingSeed}</p>
                                             )}
                                         </div>
                                     </button>
@@ -242,12 +243,24 @@ export default function DaidaiYokochoMenu() {
                         current={{
                             nickname: displayProfile?.nickname ?? null,
                             iconUrl: displayProfile?.iconUrl ?? null,
-                            rhingId: displayProfile?.rhingId ?? "",
+                            rhingSeed: displayProfile?.rhingSeed ?? "",
                         }}
                         onClose={() => setShowProfileEdit(false)}
                         onSaved={(next) => {
                             setProfile((prev) => (prev ? { ...prev, ...next } : prev));
                             setShowProfileEdit(false);
+                        }}
+                    />
+                </AnimatePresence>
+            )}
+
+            {showOnboarding && user && (
+                <AnimatePresence>
+                    <OnboardingModal
+                        uid={user.uid}
+                        onDone={(next) => {
+                            setProfile((prev) => (prev ? { ...prev, ...next, onboarded: true } : prev));
+                            setShowOnboarding(false);
                         }}
                     />
                 </AnimatePresence>

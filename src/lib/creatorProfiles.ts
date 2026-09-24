@@ -12,7 +12,7 @@ import { db } from "@/lib/firebase";
 
 export interface CreatorProfile {
     userId: string;
-    rhingId: string;
+    rhingSeed: string;
     nickname: string | null;
     iconUrl: string | null;
     statusMessage: string | null;
@@ -22,7 +22,7 @@ export interface CreatorProfile {
 function toCreatorProfile(id: string, data: DocumentData): CreatorProfile {
     return {
         userId: id,
-        rhingId: typeof data.rhingId === "string" ? data.rhingId : "",
+        rhingSeed: typeof data.rhingSeed === "string" ? data.rhingSeed : "",
         nickname: typeof data.nickname === "string" ? data.nickname : null,
         iconUrl: typeof data.iconUrl === "string" ? data.iconUrl : null,
         statusMessage: typeof data.statusMessage === "string" ? data.statusMessage : null,

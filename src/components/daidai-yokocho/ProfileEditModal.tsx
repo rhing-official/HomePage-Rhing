@@ -8,7 +8,7 @@ import { uploadDaidaiProfileIcon } from "@/lib/firebaseStorage";
 interface CurrentProfile {
     nickname: string | null;
     iconUrl: string | null;
-    rhingId: string;
+    rhingSeed: string;
 }
 
 // 呼び出し元が<AnimatePresence>で囲んで表示/非表示を切り替える前提のモーダル本体
@@ -122,29 +122,31 @@ export default function ProfileEditModal({
 
                 <label className="flex flex-col gap-1.5 text-sm text-gray-600">
                     呼び名
-                    <div className="flex gap-2">
+                    <div className="relative">
                         <input
                             value={nickname}
                             onChange={(e) => setNickname(e.target.value)}
                             maxLength={20}
-                            placeholder="未設定(DaiDaiの呼び名を使用)"
-                            className="flex-1 rounded-lg border border-gray-200 px-4 py-2 bg-white/70"
+                            placeholder="未設定の場合は「名無しさん」と表示されます"
+                            className="w-full rounded-lg border border-gray-200 pl-4 pr-9 py-2 bg-white/70"
                         />
-                        <button
-                            type="button"
-                            onClick={() => setNickname("")}
-                            disabled={!nickname}
-                            className="text-xs px-4 py-1.5 rounded-full border border-gray-300 text-gray-400 hover:bg-gray-50 transition disabled:opacity-40 disabled:cursor-not-allowed"
-                        >
-                            クリア
-                        </button>
+                        {nickname && (
+                            <button
+                                type="button"
+                                onClick={() => setNickname("")}
+                                aria-label="呼び名をクリア"
+                                className="absolute right-2 top-1/2 -translate-y-1/2 w-6 h-6 flex items-center justify-center rounded-full text-gray-400 hover:bg-gray-100 hover:text-gray-600 transition"
+                            >
+                                ×
+                            </button>
+                        )}
                     </div>
                 </label>
 
                 <label className="flex flex-col gap-1.5 text-sm text-gray-600">
-                    ID
+                    Rhing Seed
                     <input
-                        value={current.rhingId}
+                        value={current.rhingSeed}
                         disabled
                         className="rounded-lg border border-gray-200 px-4 py-2 bg-gray-50 text-gray-400"
                     />

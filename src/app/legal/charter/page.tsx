@@ -7,24 +7,26 @@ export const metadata: Metadata = {
 
 // 条文を配列で管理することで、コードをスッキリさせます
 const articles = [
-    { title: "前文", content: "Rhingは、ユーザー一人ひとりの自由と尊厳を守り、表現者が正当な対価を得られる、透明で持続可能なデジタル空間を創造します。私たちは、広告やデータ売却に依存せず、ユーザーとの信頼関係に基づくサブスクリプションモデルを採用し、すべてのステークホルダーに誠実であることを誓います。" },
-    { title: "第一条：ユーザーの自由と尊厳", content: "Rhingは、いかなる権力や資本からもユーザーの自由を守る。運営による発言の不当な削除や改ざんは、これを永久に禁ずる。ユーザーは自らの意思で情報を発信し、交流し、表現する権利を有する。" },
-    { title: "第二条：情報の独立", content: "ユーザーのプライバシーは、国家や企業による情報の独占・買収から死守する。国との連携においても、個人情報の開示や管理権限の譲渡には、未来永劫応じない。マイナンバー、電話番号、住所の登録・連携は、これを一切行わない。" },
-    { title: "第三条：クリエイターの正当な利益", content: "「守る」という言葉は、表現者の権利と生活、速度そして利益も守ることを意味する。巨大なプラットフォームによる搾取を排除し、クリエイターに正当な対価が届く仕組みを維持する。手数料は最小限に抑え、透明性を保つ。" },
-    { title: "第四条：個人情報の不保持", content: "マイナンバー、電話番号、住所、メールアドレス、位置情報の登録・連携は、これを一切行わない。ユーザーは匿名性を保ちながら、信頼できるID（Rhing seed）を持つ権利を有する。" },
-    { title: "第五条：美学としての「整う」", content: "広告や過剰な機能を排除し、情報の視認性と使い心地を最優先する。ユーザーの時間を奪う「ごちゃごちゃ感」を許さない。シンプルで美しく、本質的な価値を提供する。" },
-    { title: "第六条：透明性と説明責任", content: "運営方針、収益構造、データの取り扱いについて、ユーザーに対して常に透明であることを約束する。重要な変更については事前に説明し、ユーザーの意見を尊重する。" },
+    { title: "前文", content: "Rhingは、ユーザー個々の自由と尊厳を守り、表現者が正当な対価を得られる、透明で持続可能なデジタル空間を創造します。広告やデータ売却に依存せず、ユーザーとの信頼関係に基づくサブスクリプションモデルを採用し、全ての関係者に誠実であることを誓います。" },
+    { title: "第一条：ユーザーの自由と尊厳", content: "Rhingは、いかなる権力や資本からもユーザーの自由を守る。運営による発言の削除や改竄は、これを永久に禁ずる。ユーザーは自らの意思で情報を発信し、交流し、表現する権利を有する。" },
+    { title: "第二条：情報の独立", content: "ユーザーのプライバシーは、国家や企業による情報の独占・買収から守るものとする。国との連携においても、個人情報の開示や管理権限の譲渡には応じない。マイナンバー・電話番号・住所の登録は行わない。" },
+    { title: "第三条：クリエイターの正当な利益", content: "「守る」という言葉は、表現者の権利・生活・利益も守ることを意味する。巨大なプラットフォームによる搾取を排除し、彼らに正当な対価が届く仕組みを維持する。手数料は最小限に抑え、透明性を保つ。" },
+    { title: "第四条：個人情報の不保持", content: "マイナンバー・電話番号・住所・メールアドレス・位置情報の登録は一切行わない。ユーザーは匿名性を保ちながら、信頼できるIDとしてRhing Seedを持つ権利を有する。" },
+    { title: "第五条：美学としての「整う」", content: "広告や過剰な機能を排除し、情報の視認性と使い心地を最優先する。ユーザーの時間を奪う「ごちゃごちゃ感」を許さず、本質的な価値を提供する。" },
+    { title: "第六条：透明性と説明責任", content: "運営方針・収益構造・データの取り扱いについて常に透明であることを約束する。重要な変更については事前に説明し、ユーザーの意見を取り入れる。" },
     { title: "第七条：買収と売却の禁止", content: "Rhingは、いかなる買収や事業売却にも応じない。ユーザーとの信頼関係を守るため、この憲章に反する資本や権力の介入を拒否する。" },
 ];
 
 export default function CharterPage() {
     return (
-        <div className="container mx-auto px-6 py-32 max-w-4xl">
+        <div className="container mx-auto px-6 pb-32 max-w-4xl">
             {/* 
               🌟 修正ポイント1: ページタイトルをガラスカードのデザインに変更
               - bg-white/40 (半透明), backdrop-blur-md (ぼかし), border-white/80, shadow-md
             */}
-            <div className="mb-24 text-center py-10 bg-white/40 backdrop-blur-md border border-white/80 shadow-md shadow-gray-200/20 rounded-3xl">
+            <div className="mb-24 relative flex flex-col items-center justify-center text-center py-10 px-8 md:px-14 md:min-h-44 lg:min-h-52 bg-white/40 backdrop-blur-md border border-white/80 shadow-md shadow-gray-200/20 rounded-3xl">
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img src="/illustrations/terms.svg" alt="" className="hidden md:block absolute left-8 md:left-14 top-1/2 -translate-y-1/2 w-40 lg:w-48 h-auto" />
                 <h1 className="text-4xl md:text-5xl font-bold tracking-widest text-gray-900 mb-4">CHARTER</h1>
                 <p className="text-gray-500 tracking-wider text-sm">Rhing憲章</p>
             </div>

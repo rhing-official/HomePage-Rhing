@@ -7,10 +7,12 @@ export const metadata: Metadata = {
 
 export default function PrivacyPolicyPage() {
     return (
-        <div className="container mx-auto px-6 py-32 max-w-4xl">
+        <div className="container mx-auto px-6 pb-32 max-w-4xl">
             {/* タイトル */}
             {/* 🌟 修正ポイント1: タイトルエリアをガラスカードのデザインに変更 */}
-            <div className="mb-24 text-center py-10 bg-white/40 backdrop-blur-md border border-white/80 shadow-md shadow-gray-200/20 rounded-3xl">
+            <div className="mb-24 relative flex flex-col items-center justify-center text-center py-10 px-8 md:px-14 md:min-h-44 lg:min-h-52 bg-white/40 backdrop-blur-md border border-white/80 shadow-md shadow-gray-200/20 rounded-3xl">
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img src="/illustrations/terms.svg" alt="" className="hidden xl:block absolute right-full -mr-10 top-1/2 -translate-y-1/2 w-40 h-auto" />
                 <h1 className="text-4xl md:text-5xl font-bold tracking-widest text-gray-900 mb-4">PRIVACY POLICY</h1>
                 <p className="text-gray-500 tracking-wider text-sm">プライバシーポリシー</p>
             </div>
@@ -27,11 +29,11 @@ export default function PrivacyPolicyPage() {
                 <section className="bg-white/40 backdrop-blur-md p-8 md:p-12 border border-white/80 border-l-4 border-l-gray-900 shadow-md shadow-gray-200/20 rounded-r-2xl hover:bg-white/60 hover:shadow-xl hover:shadow-blue-300/10 transition-all duration-500">
                     <h2 className="text-2xl font-black text-gray-900 mb-8 tracking-wide border-b border-gray-900/10 pb-4">基本方針</h2>
                     <p className="text-gray-700 leading-loose text-lg font-medium mb-6">
-                        Rhingは、ユーザーのプライバシーを最優先します。私たちは、以下の情報を一切収集しません。
+                        Rhingは、ユーザーのプライバシーを尊重します。以下の情報を一切収集しません。
                     </p>
                     {/* 🌟 修正ポイント3: リスト項目自体も重なりのある半透明ガラス調（bg-white/50 border-white/40）に */}
                     <ul className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-gray-700">
-                        {["メールアドレス", "電話番号", "住所", "位置情報", "マイナンバー"].map((item) => (
+                        {["メールアドレス", "電話番号", "住所", "位置情報", "マイナンバー", "氏名"].map((item) => (
                             <li key={item} className="flex items-center gap-3 bg-white/50 border border-white/40 p-4 rounded-lg">
                                 <span className="text-red-500 font-bold">・</span> {item}
                             </li>
@@ -54,9 +56,7 @@ export default function PrivacyPolicyPage() {
                             </thead>
                             <tbody className="text-gray-700">
                                 {[
-                                    { k: "Rhing ID", p: "アカウント識別", t: "アカウント削除まで" },
-                                    { k: "パスワード（ハッシュ化）", p: "認証", t: "アカウント削除まで" },
-                                    { k: "メッセージ内容", p: "サービス提供", t: "ユーザーが削除するまで" },
+                                    { k: "Rhing Seed", p: "アカウント識別", t: "アカウント削除まで" },
                                     { k: "決済情報", p: "購入履歴管理", t: "法令で定められた期間" },
                                     { k: "デバイスID", p: "セキュリティ", t: "アカウント削除まで" },
                                 ].map((row, i) => (
@@ -80,14 +80,14 @@ export default function PrivacyPolicyPage() {
                             <h4 className="text-2xl font-bold text-gray-900 mb-6">1. 暗号化</h4>
                             <ul className="list-disc pl-6 space-y-3 leading-relaxed text-lg text-gray-700">
                                 <li>すべての通信はTLS 1.3で暗号化</li>
-                                <li>メッセージはE2E暗号化（運営も閲覧不可）</li>
+                                <li>メッセージはE2E暗号化し、運営も閲覧不可</li>
                             </ul>
                         </div>
 
                         <div className="mb-16"> {/* 2. 第三者提供 */}
                             <h4 className="text-2xl font-bold text-gray-900 mb-6">2. 第三者提供</h4>
                             <ul className="list-disc pl-6 space-y-3 leading-relaxed text-lg text-gray-700">
-                                <li>Rhingは、ユーザーの個人情報を第三者に提供・売却しません</li>
+                                <li>Rhingは、ユーザーの個人情報を第三者に提供・売却しない</li>
                                 <li>法令に基づく開示請求があった場合も、最小限の範囲で対応</li>
                             </ul>
                         </div>
@@ -95,7 +95,7 @@ export default function PrivacyPolicyPage() {
                         <div> {/* 3. データ削除 */}
                             <h4 className="text-2xl font-bold text-gray-900 mb-6">3. データ削除</h4>
                             <ul className="list-disc pl-6 space-y-3 leading-relaxed text-lg text-gray-700">
-                                <li>アカウント削除時、3時間以内に全データを完全削除</li>
+                                <li>アカウント削除時、即時または30日以内に全データを完全削除</li>
                             </ul>
                         </div>
                     </div>

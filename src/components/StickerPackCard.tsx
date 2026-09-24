@@ -65,7 +65,7 @@ export default function StickerPackCard({
                             <div className="w-5 h-5 rounded-full bg-gray-200 shrink-0" />
                         )}
                         <span className="text-xs text-gray-500 group-hover/creator:text-blue-600 transition-colors truncate">
-                            {creator.nickname ?? creator.rhingId}
+                            {creator.nickname ?? (creator.rhingSeed && `@${creator.rhingSeed}`)}
                         </span>
                     </Link>
                 ) : null}
