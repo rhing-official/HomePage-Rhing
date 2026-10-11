@@ -56,7 +56,7 @@ export default function NotFound() {
                     className="mb-16 text-center py-10 bg-white/40 backdrop-blur-md border border-white/80 shadow-md shadow-gray-200/20 rounded-3xl"
                 >
                     <h1 className="text-4xl md:text-5xl font-bold tracking-widest text-gray-900 mb-4">404 MUSEUM</h1>
-                    <p className="text-gray-500 tracking-wider text-sm">お探しの展示は見つかりませんでした</p>
+                    <p className="text-gray-500 tracking-wider text-sm">お探しのページは見つかりませんでした</p>
                 </motion.div>
 
                 <motion.div
@@ -66,9 +66,9 @@ export default function NotFound() {
                     className="mb-16 text-center bg-white/40 backdrop-blur-md border border-white/80 shadow-md shadow-gray-200/20 rounded-3xl p-8 md:p-10"
                 >
                     <p className="text-gray-600 leading-relaxed">
-                        本日は「存在しないページ」特別展を開催しております。
+                        本日は存在しないページ特別展を開催しております。
                         <br />
-                        あいにく、お探しの作品(ページ)は見当たりませんでした。
+                        お探しのページは見当たりませんでした。
                         <br />
                         URLをご確認のうえ、常設展示からお探しください。
                     </p>
