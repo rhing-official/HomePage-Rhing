@@ -22,7 +22,7 @@ export default function Header() {
                     <Link href="/" className="inline-block">
                         <Image
                             src="/Rhing logo.svg"
-                            alt="Rhing Logo"
+                            alt="Rhing"
                             width={240}
                             height={80}
                             priority

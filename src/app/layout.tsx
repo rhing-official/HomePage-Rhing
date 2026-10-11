@@ -15,6 +15,16 @@ const kiwiMaru = Kiwi_Maru({
 export const metadata = {
     title: "Rhing",
     description: "Rhing Web",
+    openGraph: { siteName: "Rhing" },
+};
+
+// Googleの検索結果に表示されるサイト名を「Rhing」にするための構造化データ
+const websiteJsonLd = {
+    "@context": "https://schema.org",
+    "@type": "WebSite",
+    name: "Rhing",
+    alternateName: ["リング"],
+    url: "https://rhing.jp/",
 };
 
 export default function RootLayout({
@@ -37,6 +47,11 @@ export default function RootLayout({
             <body className="min-h-screen flex flex-col justify-between bg-[#fcfbf7] font-sans">
                 {/* Google Identity Services（daidai横丁のGoogleログインボタン用） */}
                 <Script src="https://accounts.google.com/gsi/client" strategy="afterInteractive" />
+
+                <script
+                    type="application/ld+json"
+                    dangerouslySetInnerHTML={{ __html: JSON.stringify(websiteJsonLd) }}
+                />
 
                 {/* ヘッダーの読み込み */}
                 <Header />

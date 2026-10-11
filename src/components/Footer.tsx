@@ -33,7 +33,7 @@ export default function Footer() {
                     <Link href="/">
                         <Image
                             src="/Rhing logo.svg"
-                            alt="Rhing Logo"
+                            alt="Rhing"
                             width={1000}
                             height={1000}
                         />
