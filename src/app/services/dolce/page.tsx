@@ -16,6 +16,7 @@ import {
     ArrowRight,
 } from "lucide-react";
 import ScreenshotPlaceholder from "./ScreenshotPlaceholder";
+import EnvironmentList from "@/components/EnvironmentList";
 
 export const metadata: Metadata = {
     title: "dolce | Rhing",
@@ -291,6 +292,15 @@ export default function DolcePage() {
                         );
                     })}
                 </div>
+                <EnvironmentList
+                    className="mt-10 max-w-sm mx-auto text-left"
+                    items={[
+                        { os: "Windows 11" },
+                        { os: "Zorin OS 18", detail: "Linux" },
+                        { os: "Android 16" },
+                    ]}
+                    checkedAt="2026/9/15"
+                />
             </section>
 
             {/* これからのdolce */}
