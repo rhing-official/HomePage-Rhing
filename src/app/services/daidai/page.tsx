@@ -2,6 +2,7 @@ import { Metadata } from "next";
 import { ArrowRight } from "lucide-react";
 import { AudienceProvider } from "./AudienceContext";
 import AudienceContent, { AudienceHeader } from "./AudienceContent";
+import EnvironmentList from "@/components/EnvironmentList";
 
 export const metadata: Metadata = {
     title: "DaiDai | Rhing",
@@ -88,6 +89,16 @@ export default function DaiDaiPage() {
                                 );
                             })}
                         </div>
+                        <EnvironmentList
+                            className="mt-8 pt-6 border-t border-gray-200"
+                            items={[
+                                { os: "iPadOS 27 beta", detail: "Floorp" },
+                                { os: "Android 16", detail: "Firefox" },
+                                { os: "Zorin OS 18", detail: "Floorp・Vivaldi" },
+                            ]}
+                            note="Web版をブラウザで確認した結果です（括弧内は使用したブラウザ）。"
+                            checkedAt="2026/10/12"
+                        />
                     </div>
                 </div>
             </div>

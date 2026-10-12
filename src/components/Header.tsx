@@ -34,7 +34,7 @@ export default function Header() {
 
             {/* ナビゲーションエリア */}
             <header className="fixed top-6 right-6 lg:right-8 z-50 pointer-events-none">
-                {/* 
+                {/*
                   🌟 変更：PC用のナビゲーションバーを美しい半透明のガラスデザインに変更
                   - bg-white/80, backdrop-blur-md, border-white/80
                 */}
@@ -42,12 +42,13 @@ export default function Header() {
                     <NavLink href="/">TOP</NavLink>
                     <NavLink href="/about">ABOUT</NavLink>
                     <NavLink href="/services">SERVICES</NavLink>
+                    <NavLink href="/donate">DONATE</NavLink>
                     <NavLink href="/daidai-yokocho">daidai横丁</NavLink>
                     <NavLink href="https://note.com/rhing_official/all">NEWS</NavLink>
                 </nav>
 
-                {/* 
-                  🌟 変更：ハンバーガーボタンもガラス風デザインに変更 
+                {/*
+                  🌟 変更：ハンバーガーボタンもガラス風デザインに変更
                   - bg-white/80, backdrop-blur-sm, border-white/60, shadow-blue-300/10
                 */}
                 <button
@@ -67,10 +68,10 @@ export default function Header() {
                 {isOpen && (
                     <>
                         <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} onClick={() => setIsOpen(false)} className="fixed inset-0 bg-black/20 z-[70] pointer-events-auto" />
-                        {/* 
+                        {/*
                           🌟 変更1：メニュー本体を半透明の磨りガラスデザインに変更
                           - bg-white/80, backdrop-blur-md, border-l border-white/40
-                          
+
                           🌟 変更2：右スワイプで閉じる高機能ドラッグ処理を追加
                           - drag="x" で横方向のみドラッグ可能に。
                           - 右側（画面外）へのみ最大256pxスライドできるように制限。
@@ -98,6 +99,7 @@ export default function Header() {
                             <NavLink href="/about" onClick={() => setIsOpen(false)}>ABOUT</NavLink>
                             <NavLink href="/services" onClick={() => setIsOpen(false)}>SERVICES</NavLink>
                             <NavLink href="/daidai-yokocho" onClick={() => setIsOpen(false)}>daidai横丁</NavLink>
+                            <NavLink href="/donate" onClick={() => setIsOpen(false)}>DONATE</NavLink>
                             {/* 🌟 リンク先をPC版と合わせて公式noteに統一しました */}
                             <NavLink href="https://note.com/rhing_official/all" onClick={() => setIsOpen(false)}>NEWS</NavLink>
                         </motion.nav>
