@@ -12,7 +12,7 @@ export const metadata: Metadata = {
 type Platform = { name: string; status: "available" | "planned"; url?: string };
 
 const platforms: Platform[] = [
-    { name: "Web", status: "available", url: "https://dai-dai-phi.vercel.app" },
+    { name: "Web", status: "available", url: "https://daidai.rhing.jp" },
     { name: "Android", status: "planned" },
     { name: "iOS", status: "planned" },
     { name: "Windows", status: "planned" },
@@ -36,7 +36,7 @@ export default function DaiDaiPage() {
             <div className="container mx-auto px-6 pb-24 max-w-5xl">
                 <div className="flex flex-col lg:flex-row gap-8 items-stretch">
                     <a
-                        href="https://dai-dai-phi.vercel.app"
+                        href="https://daidai.rhing.jp"
                         target="_blank"
                         rel="noopener noreferrer"
                         className="group block lg:w-2/5 bg-white/50 backdrop-blur-md border border-white/80 shadow-md shadow-gray-200/40 hover:bg-white/80 hover:border-white hover:shadow-xl hover:shadow-orange-300/10 transition-all duration-500 rounded-lg overflow-hidden relative p-8"

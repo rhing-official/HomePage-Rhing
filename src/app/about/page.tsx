@@ -43,7 +43,7 @@ export default function AboutPage() {
                 </h2>
 
                 <div className="w-full">
-                    <dl className="divide-y divide-gray-200 border-t border-b border-gray-200">
+                    <dl className="divide-y divide-gray-200 border-b border-gray-200">
                         {/* 団体名 */}
                         <div className="py-8 flex flex-col md:flex-row gap-4 md:gap-12 hover:bg-gray-50 transition-colors px-4">
                             <dt className="w-48 shrink-0 font-bold text-gray-900 tracking-wider">団体名</dt>
@@ -129,7 +129,7 @@ export default function AboutPage() {
                 </h2>
 
                 <div className="w-full">
-                    <dl className="divide-y divide-gray-200 border-t border-b border-gray-200">
+                    <dl className="divide-y divide-gray-200 border-b border-gray-200">
                         {/* 販売事業者 */}
                         <div className="py-8 flex flex-col md:flex-row gap-4 md:gap-12 hover:bg-gray-50 transition-colors px-4">
                             <dt className="w-48 shrink-0 font-bold text-gray-900 tracking-wider">販売事業者</dt>
@@ -168,7 +168,7 @@ export default function AboutPage() {
                         {/* 販売価格 */}
                         <div className="py-8 flex flex-col md:flex-row gap-4 md:gap-12 hover:bg-gray-50 transition-colors px-4">
                             <dt className="w-48 shrink-0 font-bold text-gray-900 tracking-wider">販売価格</dt>
-                            <dd className="text-gray-700">各商品ページに記載の税込価格</dd>
+                            <dd className="text-gray-700">各商品ページに記載の価格</dd>
                         </div>
 
                         {/* 商品代金以外の必要料金 */}
@@ -209,7 +209,9 @@ export default function AboutPage() {
                         {/* 動作環境 */}
                         <div className="py-8 flex flex-col md:flex-row gap-4 md:gap-12 hover:bg-gray-50 transition-colors px-4">
                             <dt className="w-48 shrink-0 font-bold text-gray-900 tracking-wider">動作環境</dt>
-                            <dd className="text-gray-700">daidai横丁内でご利用いただけます</dd>
+                            <dd className="text-gray-700">
+                                <Link href="/services/daidai" className="underline hover:text-gray-900 transition-colors">DaiDai</Link>でご利用いただけます
+                            </dd>
                         </div>
                     </dl>
                 </div>

@@ -63,8 +63,9 @@ export default function DonatePage() {
                 </h2>
                 <div className="bg-[#f8f8f8] p-8 md:p-14 rounded-2xl">
                     <p className="text-gray-700 leading-loose text-lg">
-                        Rhingは、広告に頼らず、あなたのデータを売却しない形でサービスを運営する事を目指しています。
+                        Rhingは広告に頼らず、あなたのデータを売却しない形でサービスを運営する事を目指しています。
                         頂いた寄付は、サービスの開発・運営の継続に役立てます。
+                        かもしれませんし、代表者のお小遣いになるかもしれません。
                     </p>
                     {/* TODO: 具体的な使い道（サーバー費用など）は方針が決まり次第ここに追記する */}
                 </div>
@@ -102,7 +103,7 @@ export default function DonatePage() {
                     FAQ
                     <span className="block text-sm text-gray-500 font-normal mt-2 tracking-normal">よくある質問</span>
                 </h2>
-                <dl className="divide-y divide-gray-200 border-t border-b border-gray-200">
+                <dl className="divide-y divide-gray-200 border-b border-gray-200">
                     {faqs.map((faq) => (
                         <div key={faq.q} className="py-8 px-4">
                             <dt className="font-bold text-gray-900 tracking-wider mb-3">{faq.q}</dt>
