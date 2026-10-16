@@ -9,16 +9,6 @@ export const metadata: Metadata = {
 // サービス一覧のデータ
 const services = [
     {
-        id: "dolce",
-        name: "dolce",
-        tagline: "本と、甘美な贅沢を。",
-        category: "Book Reader",
-        description: "カスタマイズが豊富で、複数プラットフォームを跨いで同じ使用感で使えます。現在はAndroid・Windows・Linuxで利用可能です。",
-        features: ["CBZ,PDFの読み込み", "設定のカスタマイズ", "ローカル完結", "Android,Linux,Windows対応", "iOS,macOS対応予定"],
-        link: "/services/dolce",
-        bgColor: "bg-gray-200/60",
-    },
-    {
         id: "daidai",
         name: "DaiDai",
         tagline: "整う、守る、私に馴染む。",
@@ -27,6 +17,16 @@ const services = [
         features: ["厳重なプライバシー保護", "広告なし", "電話番号・メアド不要", "Web対応", "Android,Linux,Windows,iOS,macOS対応予定"],
         link: "/services/daidai",
         bgColor: "bg-gray-300/60",
+    },
+    {
+        id: "dolce",
+        name: "dolce",
+        tagline: "本と、甘美な贅沢を。",
+        category: "Book Reader",
+        description: "カスタマイズが豊富で、複数プラットフォームを跨いで同じ使用感で使えます。現在はAndroid・Windows・Linuxで利用可能です。",
+        features: ["CBZ,PDFの読み込み", "設定のカスタマイズ", "ローカル完結", "Android,Linux,Windows対応", "iOS,macOS対応予定"],
+        link: "/services/dolce",
+        bgColor: "bg-gray-200/60",
     }
 ];
 
@@ -51,7 +51,7 @@ export default function ServicesPage() {
                             key={service.id}
                             className="container mx-auto px-6 max-w-5xl bg-white/40 backdrop-blur-md border border-white/80 shadow-md shadow-gray-200/30 rounded-3xl overflow-hidden p-8 md:p-12 lg:p-16"
                         >
-                            {/* 
+                            {/*
                               🌟 修正ポイント:
                               `lg:flex-row-reverse` を固定値として指定します。
                               これにより、PC・タブレット横（lg以上）のときに、

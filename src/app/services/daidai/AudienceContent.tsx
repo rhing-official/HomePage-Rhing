@@ -93,7 +93,7 @@ const pillars = [
     {
         icon: ShieldCheck,
         title: "個人情報を収集しない",
-        desc: "メールアドレス・電話番号・位置情報を一切収集しない設計。Google/Appleアカウントやパスキーだけで使えます。",
+        desc: "メールアドレス・電話番号・位置情報を一切収集しない設計です。",
     },
     {
         icon: Ban,
@@ -103,7 +103,7 @@ const pillars = [
     {
         icon: KeyRound,
         title: "かんたん・安全なログイン",
-        desc: "Google/Appleアカウント、またはパスキーだけで使えます。面倒な新規登録は不要です。",
+        desc: "Google/Appleアカウント、またはパスキーだけで使えます。2段階認証にも対応しています。",
     },
 ];
 
@@ -116,14 +116,11 @@ const featureRoadmapBadge: Record<FeatureStatus, string> = {
 };
 
 const featureRoadmap: { name: string; status: FeatureStatus }[] = [
-    { name: "Appleアカウントでのログイン", status: "近日実装予定" },
-    { name: "友達解除（アンフレンド）", status: "近日実装予定" },
-    { name: "パソコン・スマートフォン以外の端末への通知対応", status: "近日実装予定" },
-    { name: "工房で作ったプロフィールカードの活用場面の拡充", status: "近日実装予定" },
-    { name: "大容量ファイルの直接送信", status: "近日実装予定" },
-    { name: "表示言語切り替えの全画面対応", status: "近日実装予定" },
+    { name: "Appleでのログイン", status: "近日実装予定" },
+    { name: "コンピューター・スマートフォン以外の端末への通知対応", status: "近日実装予定" },
+    { name: "大容量ファイルの直接送信", status: "将来実装予定" },
     { name: "パスキーログインの正式対応", status: "近日実装予定" },
-    { name: "極みプラン（有料プラン）の提供開始", status: "近日実装予定" },
+    { name: "極みプランの提供開始", status: "将来実装予定" },
     { name: "誰でも参加できる広場など、コミュニティ機能の拡張", status: "将来実装予定" },
     { name: "災害時の安否確認", status: "将来実装予定" },
     { name: "より高性能なノイズキャンセリング", status: "将来実装予定" },
@@ -315,7 +312,7 @@ function GeneralContent() {
                 <ul className="space-y-2 text-left max-w-xs mx-auto mb-6">
                     <li className="flex items-center gap-3 text-gray-700 text-sm">
                         <span className="w-1.5 h-1.5 bg-[#EE7800] rounded-full shrink-0" />
-                        既読の非表示
+                        既読機能OFF
                     </li>
                     <li className="flex items-center gap-3 text-gray-700 text-sm">
                         <span className="w-1.5 h-1.5 bg-[#EE7800] rounded-full shrink-0" />
