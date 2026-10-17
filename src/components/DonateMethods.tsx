@@ -64,6 +64,7 @@ export default function DonateMethods() {
                         <li>金額は、決済画面で自由に入力できます（50円以上）。</li>
                         <li>お支払い後の返金はできません。</li>
                         <li>決済は、Stripe の決済画面（外部サイト）で行います。</li>
+                        <li>お支払い額の1%は、Rhingが Stripe Climate を通じて、CO₂ の除去に寄付します（追加の負担はありません）。</li>
                     </ul>
                     <a
                         href={STRIPE_DONATION_URL}
