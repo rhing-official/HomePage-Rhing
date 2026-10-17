@@ -1,5 +1,6 @@
 import { Metadata } from "next";
 import Link from "next/link";
+import DonateMethods from "@/components/DonateMethods";
 
 // 支払い機能の公開準備が整うまで検索に出さない
 export const metadata: Metadata = {
@@ -8,21 +9,22 @@ export const metadata: Metadata = {
     robots: { index: false, follow: false },
 };
 
-// 金額はいずれも仮の目安（受付開始時に確定する）
-const amounts = [
-    { label: "ちょっと応援", amount: "500円" },
-    { label: "しっかり応援", amount: "1,000円" },
-    { label: "たっぷり応援", amount: "3,000円" },
-];
-
 const faqs = [
     {
         q: "寄付はいつから受け付けますか？",
-        a: "現在準備中です。受付を開始した際は、noteとDiscord公式サーバーでお知らせします。",
+        a: "クレジットカード・デビットカード・ビットコインでの寄付は、現在受け付けています。PayPayは準備中で、受付を開始した際は、noteとDiscord公式サーバーでお知らせします。",
     },
     {
         q: "寄付をすると何か特典はありますか？",
         a: "特典の有無は受付開始までに決定し、このページに記載します。",
+    },
+    {
+        q: "カードでの寄付に、最低額はありますか？",
+        a: "50円以上で、金額はご自身で入力できます。お支払い後の返金はできません。",
+    },
+    {
+        q: "ビットコインでの寄付に、最低額はありますか？",
+        a: "ネットワーク手数料の都合で、最低額があります。目安は約0.0002625BTC（円換算で約3,000円台、為替により変動）です。ネットワーク手数料はお支払いになる方の負担で、お支払い後の返金はできません。",
     },
     {
         q: "寄付は税控除の対象になりますか？",
@@ -39,20 +41,13 @@ export default function DonatePage() {
                 <p className="text-gray-500 tracking-wider text-sm">寄付・支援</p>
             </div>
 
-            {/* 準備中の案内 */}
+            {/* 受付状況の案内 */}
             <div className="mb-16 text-center bg-white/40 backdrop-blur-md border border-white/80 shadow-md shadow-gray-200/20 rounded-3xl p-8 md:p-10">
-                <p className="text-gray-900 font-bold tracking-wider mb-2">現在、寄付の受付は準備中です</p>
+                <p className="text-gray-900 font-bold tracking-wider mb-2">現在は、クレジットカード・デビットカード・ビットコインで受け付けています</p>
                 <p className="text-gray-600 leading-relaxed text-sm">
-                    お支払いの仕組みを整えている最中のため、まだ寄付はできません。<br className="hidden md:block" />
-                    開始までしばらくお待ちください。<br className="hidden md:block" />
-                    支払い方法は以下を予定しています。
+                    PayPayは準備中です。<br className="hidden md:block" />
+                    受付を開始した際は、noteとDiscord公式サーバーでお知らせします。
                 </p>
-                <ul className="mt-4 inline-block text-left list-disc pl-5 text-gray-700 text-sm leading-loose">
-                    <li>クレジットカード</li>
-                    <li>デビットカード</li>
-                    <li>PayPay</li>
-                    <li>ビットコイン</li>
-                </ul>
             </div>
 
             {/* 趣旨 */}
@@ -71,30 +66,13 @@ export default function DonatePage() {
                 </div>
             </section>
 
-            {/* 金額の目安 */}
+            {/* お支払い方法 */}
             <section className="mb-24">
                 <h2 className="text-2xl font-bold mb-10 tracking-widest border-b border-gray-200 pb-4 text-gray-900">
-                    AMOUNT
-                    <span className="block text-sm text-gray-500 font-normal mt-2 tracking-normal">金額の目安</span>
+                    METHOD
+                    <span className="block text-sm text-gray-500 font-normal mt-2 tracking-normal">お支払い方法を選ぶ</span>
                 </h2>
-                <div className="grid grid-cols-1 sm:grid-cols-3 gap-6">
-                    {amounts.map((item) => (
-                        <div
-                            key={item.amount}
-                            className="bg-white/40 backdrop-blur-md border border-white/80 shadow-md shadow-gray-200/20 rounded-3xl p-8 text-center"
-                        >
-                            <p className="text-gray-500 text-sm tracking-wider mb-3">{item.label}</p>
-                            <p className="text-2xl font-bold text-gray-900 mb-6">{item.amount}</p>
-                            <button
-                                type="button"
-                                disabled
-                                className="w-full rounded-full bg-gray-200 text-gray-400 py-2 text-sm tracking-wider cursor-not-allowed"
-                            >
-                                準備中
-                            </button>
-                        </div>
-                    ))}
-                </div>
+                <DonateMethods />
             </section>
 
             {/* よくある質問 */}

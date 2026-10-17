@@ -33,12 +33,15 @@ export default function PrivacyPolicyPage() {
                     </p>
                     {/* 🌟 修正ポイント3: リスト項目自体も重なりのある半透明ガラス調（bg-white/50 border-white/40）に */}
                     <ul className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-gray-700">
-                        {["メールアドレス", "電話番号", "住所", "位置情報", "マイナンバー", "氏名"].map((item) => (
+                        {["メールアドレス", "電話番号", "詳細な住所（番地など）", "現在地（GPS・IPアドレスからの推定を含む）", "マイナンバー", "氏名"].map((item) => (
                             <li key={item} className="flex items-center gap-3 bg-white/50 border border-white/40 p-4 rounded-lg">
                                 <span className="text-red-500 font-bold">・</span> {item}
                             </li>
                         ))}
                     </ul>
+                    <p className="text-gray-700 leading-loose mt-6">
+                        ただし、一部の機能のため、お住まいの国・地域（居住地）のみ、ユーザー自身の申告に基づいて保存します。詳しくは下記「収集する情報」をご覧ください。
+                    </p>
                 </section>
 
                 {/* 収集する情報テーブル */}
@@ -59,6 +62,7 @@ export default function PrivacyPolicyPage() {
                                     { k: "Rhing Seed", p: "アカウント識別", t: "アカウント削除まで" },
                                     { k: "決済情報", p: "購入履歴管理", t: "法令で定められた期間" },
                                     { k: "デバイスID", p: "セキュリティ", t: "アカウント削除まで" },
+                                    { k: "居住地（国・都道府県・タイムゾーン）", p: "伝書鳩（予定）・安否確認（予定）・利用地域の把握（国単位の集計のみ）", t: "アカウント削除まで" },
                                 ].map((row, i) => (
                                     <tr key={i} className="border-b border-gray-900/10 hover:bg-white/50 transition-colors">
                                         <td className="p-4 font-bold">{row.k}</td>
@@ -69,6 +73,14 @@ export default function PrivacyPolicyPage() {
                             </tbody>
                         </table>
                     </div>
+
+                    <h3 className="text-lg font-bold text-gray-900 mt-10 mb-4">居住地について</h3>
+                    <ul className="list-disc pl-6 space-y-2 leading-relaxed text-gray-700">
+                        <li>国は必須です。都道府県は日本の場合のみ、タイムゾーンは時差が複数ある国の場合のみ、任意で申告します。</li>
+                        <li>ユーザー自身の申告に基づくもので、現在地（GPS・IPアドレスからの推定）は使わず、番地などの詳細な住所も取得しません。</li>
+                        <li>本人だけが読める領域に保存し、他のユーザーには表示されません。</li>
+                        <li>DaiDaiアプリの設定からいつでも変更でき、アカウント削除時に他のデータと一緒に削除されます。</li>
+                    </ul>
                 </section>
 
                 {/* データの取り扱い */}
