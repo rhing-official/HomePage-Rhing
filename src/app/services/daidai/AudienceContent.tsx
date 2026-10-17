@@ -93,7 +93,7 @@ const pillars = [
     {
         icon: ShieldCheck,
         title: "個人情報を収集しない",
-        desc: "メールアドレス・電話番号・位置情報を一切収集しない設計です。",
+        desc: "メールアドレス・電話番号・現在地を一切収集しない設計です。",
     },
     {
         icon: Ban,
@@ -120,9 +120,9 @@ const featureRoadmap: { name: string; status: FeatureStatus }[] = [
     { name: "コンピューター・スマートフォン以外の端末への通知対応", status: "近日実装予定" },
     { name: "大容量ファイルの直接送信", status: "将来実装予定" },
     { name: "パスキーログインの正式対応", status: "近日実装予定" },
-    { name: "極みプランの提供開始", status: "将来実装予定" },
+    { name: "極みプランの提供開始", status: "近日実装予定" },
     { name: "誰でも参加できる広場など、コミュニティ機能の拡張", status: "将来実装予定" },
-    { name: "災害時の安否確認", status: "将来実装予定" },
+    { name: "災害時の安否確認", status: "近日実装予定" },
     { name: "より高性能なノイズキャンセリング", status: "将来実装予定" },
     { name: "通話品質向上のための通信基盤の強化", status: "将来実装予定" },
     { name: "既読表示の細かい設定", status: "将来実装予定" },
@@ -378,7 +378,7 @@ function GeekContent() {
                     </h2>
                     <ul className="space-y-4 text-gray-600 leading-relaxed text-sm">
                         <li>
-                            メールアドレス・電話番号・位置情報を一切収集しない設計です。アカウントはGoogle/Apple認証への委任、またはパスキー（WebAuthn、DaiDai自身がRelying Partyとして運用）のみで成立させており、DaiDai自身はパスワード等の認証情報を保持しません。
+                            メールアドレス・電話番号・現在地を一切収集しない設計です。アカウントはGoogle/Apple認証への委任、またはパスキー（WebAuthn、DaiDai自身がRelying Partyとして運用）のみで成立させており、DaiDai自身はパスワード等の認証情報を保持しません。
                         </li>
                         <li>
                             2段階認証は、Firebase AuthenticationのMulti-Factor Authentication機能を利用し、認証アプリによるワンタイムパスコードのみ対応しています。

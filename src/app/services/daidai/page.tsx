@@ -92,7 +92,7 @@ export default function DaiDaiPage() {
                         <EnvironmentList
                             className="mt-8 pt-6 border-t border-gray-200"
                             items={[
-                                { os: "iPadOS 27 beta", detail: "Floorp" },
+                                { os: "iPadOS 27 β", detail: "Floorp" },
                                 { os: "Android 16", detail: "Firefox" },
                                 { os: "Zorin OS 18", detail: "Floorp・Vivaldi" },
                             ]}

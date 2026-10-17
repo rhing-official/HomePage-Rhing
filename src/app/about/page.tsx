@@ -168,19 +168,19 @@ export default function AboutPage() {
                         {/* 販売価格 */}
                         <div className="py-8 flex flex-col md:flex-row gap-4 md:gap-12 hover:bg-gray-50 transition-colors px-4">
                             <dt className="w-48 shrink-0 font-bold text-gray-900 tracking-wider">販売価格</dt>
-                            <dd className="text-gray-700">各商品ページに記載の価格</dd>
+                            <dd className="text-gray-700">各商品ページに記載の価格（寄付の場合は、寄付ページでご自身が入力した金額）</dd>
                         </div>
 
                         {/* 商品代金以外の必要料金 */}
                         <div className="py-8 flex flex-col md:flex-row gap-4 md:gap-12 hover:bg-gray-50 transition-colors px-4">
                             <dt className="w-48 shrink-0 font-bold text-gray-900 tracking-wider">商品代金以外の必要料金</dt>
-                            <dd className="text-gray-700">別途手数料が発生する場合は各商品ページに明記します</dd>
+                            <dd className="text-gray-700">別途手数料が発生する場合は各商品ページに明記します。ビットコインでの寄付の場合、ネットワーク手数料はお支払いになる方の負担です</dd>
                         </div>
 
                         {/* 支払方法 */}
                         <div className="py-8 flex flex-col md:flex-row gap-4 md:gap-12 hover:bg-gray-50 transition-colors px-4">
                             <dt className="w-48 shrink-0 font-bold text-gray-900 tracking-wider">支払方法</dt>
-                            <dd className="text-gray-700">クレジットカード決済</dd>
+                            <dd className="text-gray-700">商品の購入: クレジットカード決済／寄付: クレジットカード・デビットカード・PayPay・ビットコイン</dd>
                         </div>
 
                         {/* 支払時期 */}
@@ -199,7 +199,7 @@ export default function AboutPage() {
                         <div className="py-8 flex flex-col md:flex-row gap-4 md:gap-12 hover:bg-gray-50 transition-colors px-4">
                             <dt className="w-48 shrink-0 font-bold text-gray-900 tracking-wider">返品・キャンセル</dt>
                             <dd className="text-gray-700">
-                                デジタルコンテンツの性質上、購入後の返品・キャンセルはお受けできません。
+                                デジタルコンテンツの性質上、購入後の返品・キャンセルはお受けできません。寄付についても、お支払い後の返金・キャンセルはできません。
                                 不具合がある場合は、<Link href="/contact?type=user" className="underline hover:text-gray-900 transition-colors">
                                     お問い合わせフォーム
                                 </Link>よりご連絡ください
