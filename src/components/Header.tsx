@@ -43,6 +43,7 @@ export default function Header() {
                     <NavLink href="/about">ABOUT</NavLink>
                     <NavLink href="/services">SERVICES</NavLink>
                     <NavLink href="/donate">DONATE</NavLink>
+                    <NavLink href="/financial">FINANCIAL</NavLink>
                     <NavLink href="/daidai-yokocho">daidai横丁</NavLink>
                     <NavLink href="https://note.com/rhing_official/all">NEWS</NavLink>
                 </nav>
@@ -100,6 +101,7 @@ export default function Header() {
                             <NavLink href="/services" onClick={() => setIsOpen(false)}>SERVICES</NavLink>
                             <NavLink href="/daidai-yokocho" onClick={() => setIsOpen(false)}>daidai横丁</NavLink>
                             <NavLink href="/donate" onClick={() => setIsOpen(false)}>DONATE</NavLink>
+                            <NavLink href="/financial" onClick={() => setIsOpen(false)}>FINANCIAL</NavLink>
                             {/* 🌟 リンク先をPC版と合わせて公式noteに統一しました */}
                             <NavLink href="https://note.com/rhing_official/all" onClick={() => setIsOpen(false)}>NEWS</NavLink>
                         </motion.nav>

@@ -11,6 +11,7 @@ const menuCards = [
     { title: "団体概要・理念", en: "ABOUT", href: "/about", desc: "Rhingの理念と組織について" },
     { title: "サービス紹介", en: "SERVICES", href: "/services", desc: "アプリケーションなど" },
     { title: "寄付・支援", en: "DONATE", href: "/donate", desc: "Rhingの活動を支援する" },
+    { title: "収支報告", en: "FINANCIAL", href: "/financial", desc: "Rhingの収支を公開" },
 ];
 
 export default async function Home() {
@@ -23,7 +24,7 @@ export default async function Home() {
 
             {/* 導線エリア*/}
             <section className="container mx-auto px-4 py-16">
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-4 max-w-[1352px] mx-auto">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4 max-w-4xl mx-auto">
                     {menuCards.map((card, index) => (
                         <Link
                             key={index}
