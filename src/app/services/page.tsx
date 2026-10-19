@@ -19,6 +19,16 @@ const services = [
         bgColor: "bg-gray-300/60",
     },
     {
+        id: "daidai-yokocho",
+        name: "daidai横丁",
+        tagline: "ぺったんが集まる、小さな横丁。",
+        category: "Store",
+        description: "DaiDaiで使えるぺったん（スタンプ）を、探して、入手できるストア。当面は、無料のぺったんを配布しています。クリエイターは、作ったぺったんを出品できます。",
+        features: ["DaiDaiで使えるぺったん", "当面は無料", "クリエイターが出品可能", "DaiDaiのアカウントで利用"],
+        link: "/services/daidai-yokocho",
+        bgColor: "bg-gray-200/60",
+    },
+    {
         id: "dolce",
         name: "dolce",
         tagline: "本と、甘美な贅沢を。",

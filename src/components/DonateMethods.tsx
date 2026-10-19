@@ -85,6 +85,8 @@ export default function DonateMethods() {
                         <li>ネットワーク手数料の都合で、最低額があります。目安は約0.0002625BTC です。</li>
                         <li>ネットワーク手数料は、お支払いになる方の負担です。価格変動があり、お支払い後の返金はできません。</li>
                         <li>決済は、NOWPayments の寄付ページ（外部サイト）で行います。</li>
+                        <li>少額の寄付は、カードからお願いします（ビットコインは、最低額が高めです）。</li>
+                        <li>お支払い後、しばらく経っても反映されないなどの場合は、<a href="/contact?type=user" className="underline underline-offset-4 hover:text-gray-900 transition-colors">お問い合わせ</a>からご連絡ください。</li>
                     </ul>
                     <a
                         href={BITCOIN_DONATION_URL}

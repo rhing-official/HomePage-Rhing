@@ -40,7 +40,7 @@ export default function PrivacyPolicyPage() {
                         ))}
                     </ul>
                     <p className="text-gray-700 leading-loose mt-6">
-                        ただし、一部の機能のため、お住まいの国・地域（居住地）のみ、ユーザー自身の申告に基づいて保存します。詳しくは下記「収集する情報」をご覧ください。
+                        ただし、決済（購入・寄付）の際は、決済代行事業者のStripeが、決済に必要な情報（メールアドレス、カード名義、カード情報など）を取得します。また、一部の機能のため、お住まいの国・地域（居住地）のみ、ユーザー自身の申告に基づいて保存します。詳しくは下記「収集する情報」をご覧ください。
                     </p>
                 </section>
 
@@ -60,7 +60,7 @@ export default function PrivacyPolicyPage() {
                             <tbody className="text-gray-700">
                                 {[
                                     { k: "Rhing Seed", p: "アカウント識別", t: "アカウント削除まで" },
-                                    { k: "決済情報", p: "購入履歴管理", t: "法令で定められた期間" },
+                                    { k: "決済情報（メールアドレス、カード名義など）", p: "決済の処理・購入履歴管理・領収の通知（Stripeが取得）", t: "法令で定められた期間" },
                                     { k: "デバイスID", p: "セキュリティ", t: "アカウント削除まで" },
                                     { k: "居住地（国・都道府県・タイムゾーン）", p: "伝書鳩（予定）・安否確認（予定）・利用地域の把握（国単位の集計のみ）", t: "アカウント削除まで" },
                                 ].map((row, i) => (
@@ -73,6 +73,14 @@ export default function PrivacyPolicyPage() {
                             </tbody>
                         </table>
                     </div>
+
+                    <h3 className="text-lg font-bold text-gray-900 mt-10 mb-4">決済時の情報について</h3>
+                    <ul className="list-disc pl-6 space-y-2 leading-relaxed text-gray-700">
+                        <li>決済（購入・寄付）の際は、Stripeの決済画面でメールアドレスの入力が求められます。メールアドレスはStripeが取得し、決済の処理や領収の通知に使われます。</li>
+                        <li>クレジットカード情報はStripeが管理し、Rhingは保持しません。</li>
+                        <li>Rhingは、Stripeの管理画面で、メールアドレスなどの決済に関する情報を確認できます。決済の確認やお問い合わせへの対応のために確認します。</li>
+                        <li>DaiDaiのアカウントの登録・利用には、メールアドレスを使いません。</li>
+                    </ul>
 
                     <h3 className="text-lg font-bold text-gray-900 mt-10 mb-4">居住地について</h3>
                     <ul className="list-disc pl-6 space-y-2 leading-relaxed text-gray-700">
@@ -129,12 +137,17 @@ export default function PrivacyPolicyPage() {
                                 <tr className="border-b border-gray-900/10 hover:bg-white/50 transition-colors">
                                     <td className="p-4 font-bold">Stripe</td>
                                     <td className="p-4">決済処理</td>
-                                    <td className="p-4 text-sm">決済情報（クレジットカード情報はStripeが管理）</td>
+                                    <td className="p-4 text-sm">決済情報（メールアドレス、カード名義、クレジットカード情報など。クレジットカード情報はStripeが管理）</td>
                                 </tr>
                                 <tr className="border-b border-gray-900/10 hover:bg-white/50 transition-colors">
                                     <td className="p-4 font-bold">Google Cloud Platform</td>
                                     <td className="p-4">サーバー・データベース</td>
                                     <td className="p-4 text-sm">メッセージ、ユーザー情報（暗号化済み）</td>
+                                </tr>
+                                <tr className="border-b border-gray-900/10 hover:bg-white/50 transition-colors">
+                                    <td className="p-4 font-bold">NOWPayments</td>
+                                    <td className="p-4">寄付の決済処理（ビットコイン）</td>
+                                    <td className="p-4 text-sm">決済情報（送金元アドレス、金額など）</td>
                                 </tr>
                             </tbody>
                         </table>

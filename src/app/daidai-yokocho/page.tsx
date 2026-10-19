@@ -1,6 +1,7 @@
 import { Metadata } from "next";
 import { getAllStickerPacks } from "@/lib/stickerPacks";
 import CatalogClient from "./CatalogClient";
+import IntroBanner from "@/components/daidai-yokocho/IntroBanner";
 
 export const dynamic = "force-dynamic";
 
@@ -34,6 +35,8 @@ export default async function DaidaiYokochoPage() {
                     <img src="/illustrations/online-shopping.svg" alt="" className="hidden md:block absolute left-0 top-1/2 -translate-y-1/2 w-48 lg:w-56 h-auto" />
                 </div>
             </div>
+
+            <IntroBanner />
 
             <CatalogClient packs={packs} />
         </div>

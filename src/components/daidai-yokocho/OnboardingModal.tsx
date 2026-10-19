@@ -76,6 +76,18 @@ export default function OnboardingModal({
                     <p className="text-sm text-gray-500 mt-1">
                         daidai横丁で表示する呼び名・アイコンを設定しましょう(あとからいつでも変更できます)。
                     </p>
+                    <p className="text-xs text-gray-400 mt-2">
+                        daidai横丁について詳しくは
+                        <a
+                            href="/services/daidai-yokocho"
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="underline underline-offset-2 hover:text-gray-600 transition-colors"
+                        >
+                            こちら
+                        </a>
+                        （新しいタブで開きます）。
+                    </p>
                 </div>
 
                 <div className="flex flex-col items-center gap-2">

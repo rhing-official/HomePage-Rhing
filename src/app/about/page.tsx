@@ -29,7 +29,7 @@ export default function AboutPage() {
                         【団体名の由来について】
                     </h3>
                     <p className="text-gray-700 leading-loose text-lg md:text-xl font-medium">
-                        Rhingという名前は、代表者の故郷であり日本有数の林檎の産地である長野県飯田市の「林檎（りんご）」と、人と人を結ぶ「輪（リング）」に由来しています。<br className="hidden md:block mt-6" />
+                        Rhingという名前は、代表者の故郷である長野県飯田市の「林檎（りんご）」と、人と人を結ぶ「輪（リング）」に由来しています。<br className="hidden md:block mt-6" />
                         我々は、飯田の地で代々受け継がれてきた「結」の精神をデジタル社会に実現することを目指しています。
                     </p>
                 </div>
