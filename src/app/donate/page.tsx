@@ -12,7 +12,7 @@ export const metadata: Metadata = {
 const faqs = [
     {
         q: "寄付はいつから受け付けますか？",
-        a: "クレジットカード・デビットカード・ビットコインでの寄付は、現在受け付けています。PayPayは準備中で、受付を開始した際は、noteとDiscord公式サーバーでお知らせします。",
+        a: "クレジット・デビット、Apple Pay・Google Pay、ビットコインでの寄付は、現在受け付けています。PayPayは準備中で、受付を開始した際は、noteとDiscord公式サーバーでお知らせします。",
     },
     {
         q: "カードでの寄付に、最低額はありますか？",
@@ -24,7 +24,7 @@ const faqs = [
     },
     {
         q: "ご支援の一部が、環境のために寄付されるというのは何ですか？",
-        a: "Stripeを通じたお支払い（カード・PayPay）の金額の1%を、Rhingが、Stripe Climateを通じて、大気中のCO₂を除去する事業へ寄付しています。寄付者に追加の負担はありません。",
+        a: "Stripeを通じたお支払いの金額の1%を、Stripe Climateを通じて、大気中のCO₂を除去する事業へ寄付しています。寄付者に追加の負担はありません。",
     },
     {
         q: "寄付は税控除の対象になりますか？",
@@ -43,7 +43,7 @@ export default function DonatePage() {
 
             {/* 受付状況の案内 */}
             <div className="mb-16 text-center bg-white/40 backdrop-blur-md border border-white/80 shadow-md shadow-gray-200/20 rounded-3xl p-8 md:p-10">
-                <p className="text-gray-900 font-bold tracking-wider mb-2">現在は、クレジットカード・デビットカード・ビットコインで受け付けています</p>
+                <p className="text-gray-900 font-bold tracking-wider mb-2">現在は、クレジット・デビット、Apple Pay・Google Pay、ビットコインで受け付けています</p>
                 <p className="text-gray-600 leading-relaxed text-sm">
                     PayPayは準備中です。<br className="hidden md:block" />
                     受付を開始した際は、noteとDiscord公式サーバーでお知らせします。
@@ -58,10 +58,10 @@ export default function DonatePage() {
                 </h2>
                 <div className="bg-[#f8f8f8] p-8 md:p-14 rounded-2xl">
                     <p className="text-gray-700 leading-loose text-lg">
-                        Rhingは広告に頼らず、あなたのデータを売却しない形でサービスを運営する事を目指しています。
+                        Rhingは広告に頼らず、貴方のデータを売却しない形でサービスを運営する事を目指しています。
                         頂いた寄付は、サービスの開発・運営の継続に役立てます。
                         かもしれませんし、代表者のお小遣いになるかもしれません。
-                        カード・PayPayで支払った場合に限り、Stripe Climateを通じて大気中のCO₂を除去する事業へ寄付しています。
+                        ビットコイン以外の支払い方法では、Stripe Climateを通じて大気中のCO₂を除去する事業へ寄付しています。
                     </p>
                     {/* TODO: 具体的な使い道（サーバー費用など）は方針が決まり次第ここに追記する */}
                 </div>

@@ -44,7 +44,7 @@ export default function RootLayout({
               
               ※bodyの className（Googleフォント等の設定など）は、すでにお使いのものがあればそのまま残して適用してください。
             */}
-            <body className="min-h-screen flex flex-col justify-between bg-[#fcfbf7] font-sans">
+            <body className="min-h-screen flex flex-col justify-between bg-[#fcfbf7] font-sans" suppressHydrationWarning>
                 {/* Google Identity Services（daidai横丁のGoogleログインボタン用） */}
                 <Script src="https://accounts.google.com/gsi/client" strategy="afterInteractive" />
 
