@@ -21,7 +21,7 @@ const services = [
     {
         id: "daidai-yokocho",
         name: "daidai横丁",
-        tagline: "ぺったんが集まる、小さな横丁。",
+        tagline: "ぺったんが集まる、小さな市場。",
         category: "Store",
         description: "DaiDaiで使えるぺったん（スタンプ）を、探して、入手できるストア。当面は、無料のぺったんを配布しています。クリエイターは、作ったぺったんを出品できます。",
         features: ["DaiDaiで使えるぺったん", "当面は無料", "クリエイターが出品可能", "DaiDaiのアカウントで利用"],

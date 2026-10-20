@@ -180,7 +180,7 @@ export default function AboutPage() {
                         {/* 支払方法 */}
                         <div className="py-8 flex flex-col md:flex-row gap-4 md:gap-12 hover:bg-gray-50 transition-colors px-4">
                             <dt className="w-48 shrink-0 font-bold text-gray-900 tracking-wider">支払方法</dt>
-                            <dd className="text-gray-700">商品の購入: クレジットカード決済／寄付: クレジットカード・デビットカード・PayPay・ビットコイン</dd>
+                            <dd className="text-gray-700">商品の購入: クレジットカード決済／寄付: クレジットカード・デビットカード・Apple Pay・Google Pay・PayPay・ビットコイン</dd>
                         </div>
 
                         {/* 支払時期 */}

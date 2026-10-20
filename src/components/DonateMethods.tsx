@@ -7,14 +7,16 @@ const STRIPE_DONATION_URL = "https://buy.stripe.com/8x28wO3FHaw54v0f6p1Jm01";
 // NOWPayments の寄付ページ（寄付者が金額を入力して支払う）
 const BITCOIN_DONATION_URL = "https://nowpayments.io/donation/rhing";
 
-type Method = { id: string; name: string; available: boolean; panel: "stripe" | "bitcoin" };
+type Panel = "stripe" | "wallet" | "bitcoin";
+// name は、項目が複数あるときは、項目ごとに行を分けて表示する
+type Method = { id: string; name: string[]; available: boolean; panel: Panel };
 
 const methods: Method[] = [
-    { id: "credit", name: "クレジットカード", available: true, panel: "stripe" },
-    { id: "debit", name: "デビットカード", available: true, panel: "stripe" },
+    { id: "card", name: ["クレジット", "デビット"], available: true, panel: "stripe" },
+    { id: "wallet", name: ["Apple Pay", "Google Pay"], available: true, panel: "wallet" },
     // PayPayは、Stripeでの有効化（審査）が完了したら available を true にする
-    { id: "paypay", name: "PayPay", available: false, panel: "stripe" },
-    { id: "bitcoin", name: "ビットコイン", available: true, panel: "bitcoin" },
+    { id: "paypay", name: ["PayPay"], available: false, panel: "stripe" },
+    { id: "bitcoin", name: ["ビットコイン"], available: true, panel: "bitcoin" },
 ];
 
 export default function DonateMethods() {
@@ -30,9 +32,13 @@ export default function DonateMethods() {
                         return (
                             <div
                                 key={m.id}
-                                className="border border-gray-300 text-gray-400 rounded-2xl p-6 text-center"
+                                className="flex flex-col items-center justify-center border border-gray-300 text-gray-400 rounded-2xl p-6 text-center"
                             >
-                                <p className="font-bold tracking-wide mb-1">{m.name}</p>
+                                <p className="font-bold tracking-wide mb-1">
+                                    {m.name.map((line) => (
+                                        <span key={line} className="block">{line}</span>
+                                    ))}
+                                </p>
                                 <p className="text-xs tracking-widest">準備中</p>
                             </div>
                         );
@@ -43,27 +49,40 @@ export default function DonateMethods() {
                             type="button"
                             onClick={() => setSelected(isSelected ? null : m.id)}
                             aria-pressed={isSelected}
-                            className={`rounded-2xl p-6 text-center font-bold tracking-wide transition-colors ${
+                            className={`flex flex-col items-center justify-center rounded-2xl p-6 text-center font-bold tracking-wide transition-colors ${
                                 isSelected
                                     ? "bg-gray-900 text-white"
                                     : "bg-white/60 border border-gray-900 text-gray-900 hover:bg-white"
                             }`}
                         >
-                            <p className="mb-1">{m.name}</p>
+                            <p className="mb-1">
+                                {m.name.map((line) => (
+                                    <span key={line} className="block">{line}</span>
+                                ))}
+                            </p>
                             <p className="text-xs tracking-widest font-normal">受付中</p>
                         </button>
                     );
                 })}
             </div>
 
-            {selectedPanel === "stripe" && (
+            {(selectedPanel === "stripe" || selectedPanel === "wallet") && (
                 <div className="mt-8 bg-white/40 backdrop-blur-md border border-white/80 shadow-md shadow-gray-200/20 rounded-3xl p-8 md:p-10">
-                    <h3 className="text-lg font-bold text-gray-900 tracking-wider mb-4">カードで寄付する</h3>
+                    <h3 className="text-lg font-bold text-gray-900 tracking-wider mb-4">
+                        {selectedPanel === "stripe" ? "カードで寄付する" : "Apple Pay・Google Payで寄付する"}
+                    </h3>
                     <ul className="list-disc pl-6 space-y-2 text-gray-700 text-sm leading-relaxed mb-8">
-                        <li>クレジットカード・デビットカードを、同じ決済画面でお使いいただけます。</li>
+                        {selectedPanel === "stripe" ? (
+                            <li>クレジットカード・デビットカードをお使いいただけます。</li>
+                        ) : (
+                            <>
+                                <li>ワンタップで支払えます。お使いの端末・ブラウザが対応している場合に、決済画面の上部にボタンが表示されます（Apple Pay は iPhone・Mac の Safari など、Google Pay は Android の Chrome など）。</li>
+                                <li>対応していない場合も、同じ決済画面で、カードの情報を入力して支払えます。</li>
+                            </>
+                        )}
                         <li>金額は、決済画面で自由に入力できます（50円以上）。</li>
                         <li>お支払い後の返金はできません。</li>
-                        <li>決済は、Stripe の決済画面（外部サイト）で行います。</li>
+                        <li>決済は、Stripe の決済画面（外部サイト）で行います。クレジット・デビットと Apple Pay・Google Pay は、同じ決済画面です。</li>
                         <li>お支払い額の1%は、Rhingが Stripe Climate を通じて、CO₂ の除去に寄付します（追加の負担はありません）。</li>
                     </ul>
                     <a
