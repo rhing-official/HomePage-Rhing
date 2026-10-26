@@ -11,6 +11,7 @@ import {
     type MultiFactorResolver,
 } from "firebase/auth";
 import { auth } from "@/lib/firebaseAuth";
+import { useTotpClipboardAutofill } from "@/hooks/useTotpClipboardAutofill";
 
 // Firebase Console > Authentication > Sign-in method > Google > Web SDKの設定 の値。
 // クライアントに公開される前提の値であり秘密情報ではない（firebase.tsのAPIキー等と同様）。
@@ -103,7 +104,8 @@ export function useGoogleSignIn(onSignedIn?: () => void) {
         // eslint-disable-next-line react-hooks/exhaustive-deps -- buttonContainerが現れた時のみ初期化する
     }, [buttonContainer]);
 
-    const submitTotpCode = async () => {
+    // overrideCode: クリップボードからの自動入力では、状態の更新を待たずに、取り出した6桁をそのまま渡す
+    const submitTotpCode = async (overrideCode?: string) => {
         if (!resolver) return;
         const hint = resolver.hints.find((h) => h.factorId === TotpMultiFactorGenerator.FACTOR_ID);
         if (!hint) {
@@ -113,7 +115,10 @@ export function useGoogleSignIn(onSignedIn?: () => void) {
         setSubmitting(true);
         setError(null);
         try {
-            const assertion = TotpMultiFactorGenerator.assertionForSignIn(hint.uid, code.trim());
+            const assertion = TotpMultiFactorGenerator.assertionForSignIn(
+                hint.uid,
+                (typeof overrideCode === "string" ? overrideCode : code).trim(),
+            );
             await resolver.resolveSignIn(assertion);
             setResolver(null);
             setCode("");
@@ -125,6 +130,15 @@ export function useGoogleSignIn(onSignedIn?: () => void) {
             setSubmitting(false);
         }
     };
+
+    // 2段階認証の入力欄が出ていて、送信中でない間だけ、クリップボードの6桁を自動入力・自動確定する。
+    useTotpClipboardAutofill({
+        active: resolver !== null && !submitting,
+        onCode: (autofilledCode) => {
+            setCode(autofilledCode);
+            void submitTotpCode(autofilledCode);
+        },
+    });
 
     const cancelMfa = () => {
         setResolver(null);
