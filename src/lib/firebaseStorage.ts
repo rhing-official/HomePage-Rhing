@@ -1,6 +1,6 @@
 "use client";
 
-import { getDownloadURL, getStorage, ref, uploadBytes } from "firebase/storage";
+import { deleteObject, getDownloadURL, getStorage, ref, uploadBytes } from "firebase/storage";
 import { firebaseApp } from "@/lib/firebase";
 
 const storage = getStorage(firebaseApp);
@@ -12,6 +12,16 @@ export async function uploadStickerPackAsset(uid: string, file: File): Promise<s
     const storageRef = ref(storage, path);
     await uploadBytes(storageRef, file);
     return getDownloadURL(storageRef);
+}
+
+// ダウンロードURLからStorageのオブジェクトを削除する（下書きの画像の掃除用）。
+// 既に無い・権限が無い等で失敗しても、呼び出し側の処理は止めない。
+export async function deleteStickerPackAssetByUrl(url: string): Promise<void> {
+    try {
+        await deleteObject(ref(storage, url));
+    } catch {
+        // 掃除は、ベストエフォート
+    }
 }
 
 // storage.rulesのdaidaiYokochoProfile/{userId}/...と対応。DaiDai本体の

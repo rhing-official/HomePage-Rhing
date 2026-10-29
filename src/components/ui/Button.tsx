@@ -17,7 +17,7 @@ const variants: Record<ButtonVariant, string> = {
     tonal: "bg-primary-container text-on-primary-container hover:shadow-elevation-1 hover:brightness-95",
     outlined: "border border-outline text-primary hover:bg-primary/8",
     text: "text-primary hover:bg-primary/8",
-    glass: "bg-white/70 backdrop-blur-sm border border-white/80 shadow-elevation-1 text-on-surface-variant hover:text-primary hover:border-primary/30 hover:bg-white/90 hover:shadow-elevation-2",
+    glass: "bg-white/70 backdrop-blur-sm border border-white/80 shadow-elevation-1 text-primary hover:text-primary hover:border-primary/30 hover:bg-white/90 hover:shadow-elevation-2",
 };
 
 type Common = {

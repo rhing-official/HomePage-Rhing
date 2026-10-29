@@ -102,7 +102,7 @@ export default function PurchaseButton({ packId, extra }: { packId: string; extr
     if (status === "owned") {
         return (
             <div className="flex items-center gap-2">
-                <span className="flex-1 text-center bg-emerald-50 text-emerald-700 border border-emerald-200 px-8 py-3.5 rounded-full font-bold">
+                <span className="flex-1 text-center bg-primary-container text-on-primary-container border border-primary/30 px-8 py-3.5 rounded-full font-bold">
                     入手済み
                 </span>
                 {extra}
@@ -128,7 +128,7 @@ export default function PurchaseButton({ packId, extra }: { packId: string; extr
             className={`inline-flex items-center justify-center gap-2 flex-1 px-6 py-3 rounded-full border font-bold transition ${
                 inCart
                     ? "border-primary bg-primary-container text-on-primary-container"
-                    : "border-outline text-on-surface-variant hover:border-primary hover:text-primary"
+                    : "border-primary/50 text-primary hover:bg-primary-container/60"
             }`}
         >
             <ShoppingCart className="w-5 h-5" />

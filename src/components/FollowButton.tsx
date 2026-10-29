@@ -67,8 +67,8 @@ export default function FollowButton({ creatorId }: { creatorId: string }) {
             disabled={submitting}
             className={`px-6 py-2 rounded-full text-sm font-bold transition disabled:opacity-50 disabled:cursor-not-allowed ${
                 status === "following"
-                    ? "bg-white/70 border border-gray-300 text-gray-600 hover:bg-gray-50"
-                    : "bg-blue-600 text-white hover:bg-blue-700 shadow"
+                    ? "bg-white/70 border border-primary/50 text-primary hover:bg-primary-container/60"
+                    : "bg-primary text-on-primary hover:bg-primary/90 shadow"
             }`}
         >
             {status === "following" ? "フォロー中" : "フォローする"}

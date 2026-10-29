@@ -189,7 +189,7 @@ export default function ContactForm() {
                                 setStatus("idle");
                                 setAttachments([]);
                             }}
-                            className="mt-8 px-8 py-3 bg-[#111] hover:bg-gray-800 text-white font-bold rounded-full text-sm transition-colors tracking-widest"
+                            className="mt-8 px-8 py-3 bg-primary hover:bg-primary/90 text-on-primary font-bold rounded-full text-sm transition-colors tracking-widest"
                         >
                             戻る
                         </button>
@@ -294,7 +294,7 @@ export default function ContactForm() {
                                 <button
                                     type="button"
                                     onClick={() => fileInputRef.current?.click()}
-                                    className="text-xs px-4 py-1.5 rounded-full border border-gray-300 text-gray-600 hover:bg-gray-50 transition"
+                                    className="text-xs px-4 py-1.5 rounded-full border border-primary/50 text-primary hover:bg-primary-container/60 transition"
                                 >
                                     画像を選択
                                 </button>
@@ -336,7 +336,7 @@ export default function ContactForm() {
                             <button
                                 type="submit"
                                 disabled={status === "submitting"}
-                                className="w-full md:w-auto px-12 py-4 bg-[#111] hover:bg-gray-800 disabled:bg-gray-400 text-white font-bold rounded-full transition-colors tracking-widest disabled:cursor-not-allowed shadow-md"
+                                className="w-full md:w-auto px-12 py-4 bg-primary hover:bg-primary/90 disabled:bg-gray-400 text-on-primary font-bold rounded-full transition-colors tracking-widest disabled:cursor-not-allowed shadow-md"
                             >
                                 {status === "submitting" ? "送信中..." : "送信する"}
                             </button>

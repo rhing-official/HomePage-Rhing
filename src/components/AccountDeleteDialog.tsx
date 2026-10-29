@@ -92,7 +92,7 @@ export default function AccountDeleteDialog({
                     type="button"
                     onClick={onClose}
                     disabled={submitting}
-                    className="w-full px-5 py-3 rounded-2xl border border-gray-300 text-gray-500 hover:bg-gray-50 transition disabled:opacity-50"
+                    className="w-full px-5 py-3 rounded-2xl border border-primary/50 text-primary hover:bg-primary-container/60 transition disabled:opacity-50"
                 >
                     やめる
                 </button>

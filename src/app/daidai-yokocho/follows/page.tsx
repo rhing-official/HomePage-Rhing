@@ -1,5 +1,6 @@
 "use client";
 
+import { Users } from "lucide-react";
 import { useCallback, useEffect, useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
@@ -52,7 +53,10 @@ export default function FollowedCreatorsPage() {
     return (
         <div className="w-full pb-24">
             <div className="container mx-auto px-6 pb-16 max-w-4xl">
-                <h1 className="text-3xl font-bold tracking-widest text-gray-900 mb-12">フォロー中のクリエイター</h1>
+                <h1 className="flex items-center gap-3 text-3xl font-bold tracking-widest text-gray-900 mb-12">
+                    <Users className="w-7 h-7 shrink-0" aria-hidden />
+                    フォロー中のクリエイター
+                </h1>
 
                 {loading ? (
                     <p className="text-gray-400 text-sm">読み込み中...</p>

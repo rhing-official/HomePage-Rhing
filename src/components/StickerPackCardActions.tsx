@@ -66,19 +66,25 @@ export default function StickerPackCardActions({ packId }: { packId: string }) {
             router.push(`/login?redirect=${encodeURIComponent(`/daidai-yokocho/${packId}`)}`);
             return;
         }
-        if (favoriteStatus === "favorited") {
-            setFavoriteStatus("not-favorited");
-            await removeFavoritePack(user.uid, packId);
-        } else {
-            setFavoriteStatus("favorited");
-            await addFavoritePack(user.uid, packId);
+        // 失敗したとき（自分の出品へのお気に入りは、ルールで拒否される等）は、表示を元に戻す
+        const before = favoriteStatus;
+        try {
+            if (before === "favorited") {
+                setFavoriteStatus("not-favorited");
+                await removeFavoritePack(user.uid, packId);
+            } else {
+                setFavoriteStatus("favorited");
+                await addFavoritePack(user.uid, packId);
+            }
+        } catch {
+            setFavoriteStatus(before);
         }
     };
 
     const cart = useCart();
     const inCart = cart.has(packId);
 
-    // 入手済みでなければ、カートに追加/カートから外す（入手はカートのページ、または詳細ページから）
+    // 入手済みでなければ、カートに追加/カートから外す（入手はカートのページ、または販売ページから）
     const handleCartClick = async (e: React.MouseEvent) => {
         stop(e);
         if (getStatus !== "purchasable") return;

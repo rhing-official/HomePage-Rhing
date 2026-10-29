@@ -40,6 +40,8 @@ export interface StickerPack {
     name: string;
     price: number;
     stickers: Sticker[];
+    // パックの「代表」にするぺったんのstickerId。未設定・不正なときは、先頭のぺったん（getPackCover参照）
+    coverStickerId: string | null;
     category: string;
     tags: string[];
     salesCount: number;
@@ -54,7 +56,11 @@ function toStickerPack(id: string, data: DocumentData): StickerPack {
         creatorId: typeof data.creatorId === "string" ? data.creatorId : "",
         name: typeof data.name === "string" ? data.name : "無題のパック",
         price: typeof data.price === "number" ? data.price : 0,
-        stickers: Array.isArray(data.stickers) ? data.stickers : [],
+        // rolesは後から追加した項目のため、古いパックのステッカーには無い。必ず配列にそろえる
+        stickers: Array.isArray(data.stickers)
+            ? data.stickers.map((s: Sticker) => ({ ...s, roles: Array.isArray(s.roles) ? s.roles : [] }))
+            : [],
+        coverStickerId: typeof data.coverStickerId === "string" ? data.coverStickerId : null,
         category: typeof data.category === "string" ? data.category : "",
         tags: Array.isArray(data.tags) ? data.tags : [],
         salesCount: typeof data.salesCount === "number" ? data.salesCount : 0,
@@ -66,7 +72,7 @@ function toStickerPack(id: string, data: DocumentData): StickerPack {
 
 // stickerPacksはFirestoreルールで公開読み取り可（DaiDai репо firestore.rules参照）。
 // Firebase未設定・ネットワーク不通時でもページがクラッシュしないよう、
-// 呼び出し側の一覧・詳細ページの描画には失敗しても空配列/nullを返す。
+// 呼び出し側の一覧・販売ページの描画には失敗しても空配列/nullを返す。
 
 export async function getAllStickerPacks(): Promise<StickerPack[]> {
     try {
@@ -144,15 +150,20 @@ export async function getOwnedStickerPacks(uid: string): Promise<StickerPack[]> 
     }
 }
 
+// パックの代表になるぺったん。coverStickerIdに一致するものがあればそれ、なければ先頭
+export function getPackCover(pack: Pick<StickerPack, "stickers" | "coverStickerId">): Sticker | undefined {
+    return pack.stickers.find((s) => s.stickerId === pack.coverStickerId) ?? pack.stickers[0];
+}
+
 export function formatPackPrice(price: number): string {
     if (price === 0) return "無料";
     return new Intl.NumberFormat("ja-JP", { style: "currency", currency: "JPY" }).format(price);
 }
 
+// 年月日は「2026/08/13」のように、/で区切る
 export function formatPackDate(ms: number): string {
-    return new Date(ms).toLocaleDateString("ja-JP", {
-        year: "numeric",
-        month: "long",
-        day: "numeric",
-    });
+    const d = new Date(ms);
+    const mm = String(d.getMonth() + 1).padStart(2, "0");
+    const dd = String(d.getDate()).padStart(2, "0");
+    return `${d.getFullYear()}/${mm}/${dd}`;
 }

@@ -3,9 +3,9 @@
 import { useEffect, useMemo, useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { Trash2 } from "lucide-react";
+import { Trash2, ShoppingCart } from "lucide-react";
 import { useCart } from "@/components/CartProvider";
-import { getStickerPackById, isPackOwnedByUser, formatPackPrice, type StickerPack } from "@/lib/stickerPacks";
+import { getStickerPackById, getPackCover, isPackOwnedByUser, formatPackPrice, type StickerPack } from "@/lib/stickerPacks";
 import { checkoutCart, removeFromCart, type CheckoutResult } from "@/lib/cart";
 import Button from "@/components/ui/Button";
 
@@ -71,7 +71,10 @@ export default function CartPage() {
     return (
         <div className="w-full pb-24">
             <div className="container mx-auto px-6 pb-16 max-w-4xl">
-                <h1 className="text-3xl font-bold tracking-widest text-gray-900 mb-12">カート</h1>
+                <h1 className="flex items-center gap-3 text-3xl font-bold tracking-widest text-gray-900 mb-12">
+                    <ShoppingCart className="w-7 h-7 shrink-0" aria-hidden />
+                    カート
+                </h1>
 
                 {loading ? (
                     <p className="text-gray-400 text-sm">読み込み中...</p>
@@ -101,9 +104,9 @@ export default function CartPage() {
                                 >
                                     <Link href={`/daidai-yokocho/${pack.id}`} className="flex items-center gap-4 min-w-0 flex-1">
                                         <div className="w-20 h-20 shrink-0 bg-white rounded-m3-md flex items-center justify-center overflow-hidden">
-                                            {pack.stickers[0]?.imageUrl ? (
+                                            {getPackCover(pack)?.imageUrl ? (
                                                 // eslint-disable-next-line @next/next/no-img-element
-                                                <img src={pack.stickers[0].imageUrl} alt="" className="w-full h-full object-contain p-1" />
+                                                <img src={getPackCover(pack)!.imageUrl} alt="" className="w-full h-full object-contain p-1" />
                                             ) : null}
                                         </div>
                                         <div className="min-w-0">

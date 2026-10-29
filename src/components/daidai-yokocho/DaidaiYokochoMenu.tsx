@@ -113,47 +113,48 @@ export default function DaidaiYokochoMenu() {
 
     return (
         <>
-            <div ref={containerRef} className="fixed top-24 right-6 lg:top-28 lg:right-8 z-40 flex items-start gap-2">
-                {/* ログイン中は、お気に入りとカートを1つのバーにして、1クリックで行ける（モバイルは縦、PCは横） */}
-                {user && (
-                    <nav
-                        aria-label="お気に入りとカート"
-                        className="flex flex-col md:flex-row items-center bg-white/80 backdrop-blur-md rounded-full shadow-lg border border-white/60 shadow-blue-300/10 overflow-hidden"
-                    >
-                        <Link href="/daidai-yokocho/favorites" aria-label="お気に入り" className={quickIconClass}>
-                            <Heart className="w-5 h-5 text-gray-700" />
-                        </Link>
-                        <span aria-hidden className="block h-px w-6 md:h-6 md:w-px bg-gray-300/80" />
-                        <Link
-                            href="/daidai-yokocho/cart"
-                            aria-label={cartCount > 0 ? `カート（${cartCount}件）` : "カート"}
-                            className={`relative ${quickIconClass}`}
-                        >
-                            <ShoppingCart className="w-5 h-5 text-gray-700" />
-                            {cartCount > 0 && (
-                                <span className="pointer-events-none absolute top-1 right-1 min-w-4 h-4 px-1 rounded-full bg-blue-600 text-white text-[10px] font-bold flex items-center justify-center">
-                                    {cartCount}
-                                </span>
-                            )}
-                        </Link>
-                    </nav>
-                )}
-
+            <div ref={containerRef} className="fixed top-24 right-6 lg:top-28 lg:right-8 z-40">
                 <div className="relative">
-                    <button
-                        onClick={() => setOpen((o) => !o)}
-                        aria-label="アカウント設定を開く"
-                        className="block p-0.5 bg-white/80 backdrop-blur-md rounded-full shadow-lg border border-white/60 shadow-blue-300/10 hover:bg-white/90 transition-all duration-300 overflow-hidden"
+                    {/* お気に入り・カート・アカウントを1つのバーにする（モバイルは縦、PCは横）。お気に入りとカートは、ログイン中だけ */}
+                    <nav
+                        aria-label="お気に入り・カート・アカウント"
+                        className="flex flex-col-reverse md:flex-row items-center bg-white/80 backdrop-blur-md rounded-full shadow-lg border border-white/60 shadow-blue-300/10 overflow-hidden"
                     >
-                        {displayProfile?.iconUrl ? (
-                            // eslint-disable-next-line @next/next/no-img-element
-                            <img src={displayProfile.iconUrl} alt="" className="w-11 h-11 rounded-full object-cover" />
-                        ) : (
-                            <span className="flex items-center justify-center w-11 h-11">
-                                <PersonIcon className="w-6 h-6 text-gray-700" />
-                            </span>
+                        {user && (
+                            <>
+                                <Link href="/daidai-yokocho/favorites" aria-label="お気に入り" className={quickIconClass}>
+                                    <Heart className="w-5 h-5 text-gray-700" />
+                                </Link>
+                                <span aria-hidden className="block h-px w-6 md:h-6 md:w-px bg-gray-300/80" />
+                                <Link
+                                    href="/daidai-yokocho/cart"
+                                    aria-label={cartCount > 0 ? `カート（${cartCount}件）` : "カート"}
+                                    className={`relative ${quickIconClass}`}
+                                >
+                                    <ShoppingCart className="w-5 h-5 text-gray-700" />
+                                    {cartCount > 0 && (
+                                        <span className="pointer-events-none absolute top-1 right-1 min-w-4 h-4 px-1 rounded-full bg-blue-600 text-white text-[10px] font-bold flex items-center justify-center">
+                                            {cartCount}
+                                        </span>
+                                    )}
+                                </Link>
+                                <span aria-hidden className="block h-px w-6 md:h-6 md:w-px bg-gray-300/80" />
+                            </>
                         )}
-                    </button>
+                        <button
+                            onClick={() => setOpen((o) => !o)}
+                            aria-label="アカウント設定を開く"
+                            aria-expanded={open}
+                            className={quickIconClass}
+                        >
+                            {displayProfile?.iconUrl ? (
+                                // eslint-disable-next-line @next/next/no-img-element
+                                <img src={displayProfile.iconUrl} alt="" className="w-9 h-9 rounded-full object-cover" />
+                            ) : (
+                                <PersonIcon className="w-6 h-6 text-gray-700" />
+                            )}
+                        </button>
+                    </nav>
 
                 <AnimatePresence>
                     {open && (
@@ -215,14 +216,14 @@ export default function DaidaiYokochoMenu() {
                                             <button
                                                 type="button"
                                                 onClick={cancelMfa}
-                                                className="flex-1 px-4 py-2 rounded-full border border-gray-300 text-gray-500 hover:bg-gray-50 transition text-sm"
+                                                className="flex-1 px-4 py-2 rounded-full border border-primary/50 text-primary hover:bg-primary-container/60 transition text-sm"
                                             >
                                                 キャンセル
                                             </button>
                                             <button
                                                 type="submit"
                                                 disabled={submitting || !code.trim()}
-                                                className="flex-1 bg-amber-500 text-white px-4 py-2 rounded-full hover:bg-amber-600 transition shadow disabled:opacity-50 text-sm"
+                                                className="flex-1 bg-primary text-on-primary px-4 py-2 rounded-full hover:bg-primary/90 transition shadow disabled:opacity-50 text-sm"
                                             >
                                                 {submitting ? "確認中..." : "確認"}
                                             </button>

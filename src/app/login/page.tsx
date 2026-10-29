@@ -76,20 +76,20 @@ function LoginPageContent() {
                     <div className="mt-2 flex flex-col items-stretch gap-2 w-full">
                         <Link
                             href="/daidai-yokocho/owned"
-                            className="px-8 py-3 rounded-full bg-white/70 backdrop-blur-sm border border-white/80 shadow-sm shadow-blue-300/5 text-gray-700 hover:text-blue-600 hover:border-blue-200 hover:bg-white/90 hover:shadow-md hover:shadow-blue-300/15 transition-all duration-300 text-center"
+                            className="px-8 py-3 rounded-full bg-white/70 backdrop-blur-sm border border-white/80 shadow-sm shadow-blue-300/5 text-primary hover:text-primary hover:border-primary/40 hover:bg-white/90 hover:shadow-md hover:shadow-blue-300/15 transition-all duration-300 text-center"
                         >
                             所持しているぺったんを管理
                         </Link>
                         <Link
                             href="/daidai-yokocho/creator"
-                            className="px-8 py-3 rounded-full bg-white/70 backdrop-blur-sm border border-white/80 shadow-sm shadow-blue-300/5 text-gray-700 hover:text-blue-600 hover:border-blue-200 hover:bg-white/90 hover:shadow-md hover:shadow-blue-300/15 transition-all duration-300 text-center"
+                            className="px-8 py-3 rounded-full bg-white/70 backdrop-blur-sm border border-white/80 shadow-sm shadow-blue-300/5 text-primary hover:text-primary hover:border-primary/40 hover:bg-white/90 hover:shadow-md hover:shadow-blue-300/15 transition-all duration-300 text-center"
                         >
                             出品したぺったんを管理
                         </Link>
                     </div>
                     <button
                         onClick={() => signOut()}
-                        className="mt-2 px-8 py-3 rounded-full border border-gray-300 text-gray-700 hover:bg-gray-50 transition"
+                        className="mt-2 px-8 py-3 rounded-full border border-primary/50 text-primary hover:bg-primary-container/60 transition"
                     >
                         ログアウト
                     </button>
@@ -133,14 +133,14 @@ function LoginPageContent() {
                         <button
                             type="button"
                             onClick={cancelMfa}
-                            className="px-6 py-2 rounded-full border border-gray-300 text-gray-500 hover:bg-gray-50 transition"
+                            className="px-6 py-2 rounded-full border border-primary/50 text-primary hover:bg-primary-container/60 transition"
                         >
                             キャンセル
                         </button>
                         <button
                             type="submit"
                             disabled={submitting || !code.trim()}
-                            className="bg-amber-500 text-white px-6 py-2 rounded-full hover:bg-amber-600 transition shadow disabled:opacity-50"
+                            className="bg-primary text-on-primary px-6 py-2 rounded-full hover:bg-primary/90 transition shadow disabled:opacity-50"
                         >
                             {submitting ? "確認中..." : "確認"}
                         </button>
