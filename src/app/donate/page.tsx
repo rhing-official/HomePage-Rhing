@@ -42,7 +42,7 @@ export default function DonatePage() {
             </div>
 
             {/* 受付状況の案内 */}
-            <div className="mb-16 text-center bg-white/40 backdrop-blur-md border border-white/80 shadow-md shadow-gray-200/20 rounded-3xl p-8 md:p-10">
+            <div className="mb-16 text-center bg-white/40 backdrop-blur-md border border-white/80 shadow-elevation-1 rounded-m3-xl p-8 md:p-10">
                 <p className="text-gray-900 font-bold tracking-wider mb-2">現在は、クレジット・デビット、Apple Pay・Google Pay、ビットコインで受け付けています</p>
                 <p className="text-gray-600 leading-relaxed text-sm">
                     PayPayは準備中です。<br className="hidden md:block" />
@@ -56,7 +56,7 @@ export default function DonatePage() {
                     SUPPORT
                     <span className="block text-sm text-gray-500 font-normal mt-2 tracking-normal">Rhingを支援するということ</span>
                 </h2>
-                <div className="bg-[#f8f8f8] p-8 md:p-14 rounded-2xl">
+                <div className="bg-surface-container p-8 md:p-14 rounded-m3-lg">
                     <p className="text-gray-700 leading-loose text-lg">
                         Rhingは広告に頼らず、貴方のデータを売却しない形でサービスを運営する事を目指しています。
                         頂いた寄付は、サービスの開発・運営の継続に役立てます。

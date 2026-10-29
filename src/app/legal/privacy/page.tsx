@@ -10,7 +10,7 @@ export default function PrivacyPolicyPage() {
         <div className="container mx-auto px-6 pb-32 max-w-4xl">
             {/* タイトル */}
             {/* 🌟 修正ポイント1: タイトルエリアをガラスカードのデザインに変更 */}
-            <div className="mb-24 relative flex flex-col items-center justify-center text-center py-10 px-8 md:px-14 md:min-h-44 lg:min-h-52 bg-white/40 backdrop-blur-md border border-white/80 shadow-md shadow-gray-200/20 rounded-3xl">
+            <div className="mb-24 relative flex flex-col items-center justify-center text-center py-10 px-8 md:px-14 md:min-h-44 lg:min-h-52 bg-white/40 backdrop-blur-md border border-white/80 shadow-elevation-1 rounded-m3-xl">
                 {/* eslint-disable-next-line @next/next/no-img-element */}
                 <img src="/illustrations/terms.svg" alt="" className="hidden lg:block absolute -left-10 top-1/2 -translate-y-1/2 w-48 h-auto" />
                 <h1 className="text-4xl md:text-5xl font-bold tracking-widest text-gray-900 mb-4">PRIVACY POLICY</h1>
@@ -26,7 +26,7 @@ export default function PrivacyPolicyPage() {
                   - bg-white/40 (半透明), backdrop-blur-md (ぼかし), border-white/80, shadow-md
                   - 左の黒太線（border-l-4 border-l-gray-900）は維持しています
                 */}
-                <section className="bg-white/40 backdrop-blur-md p-8 md:p-12 border border-white/80 border-l-4 border-l-gray-900 shadow-md shadow-gray-200/20 rounded-r-2xl hover:bg-white/60 hover:shadow-xl hover:shadow-blue-300/10 transition-all duration-500">
+                <section className="bg-white/40 backdrop-blur-md p-8 md:p-12 border border-white/80 border-l-4 border-l-gray-900 shadow-elevation-1 rounded-r-m3-lg hover:bg-white/60 hover:shadow-elevation-3 transition-all duration-500">
                     <h2 className="text-2xl font-black text-gray-900 mb-8 tracking-wide border-b border-gray-900/10 pb-4">基本方針</h2>
                     <p className="text-gray-700 leading-loose text-lg font-medium mb-6">
                         Rhingは、ユーザーのプライバシーを尊重します。以下の情報を一切収集しません。
@@ -45,7 +45,7 @@ export default function PrivacyPolicyPage() {
                 </section>
 
                 {/* 収集する情報テーブル */}
-                <section className="bg-white/40 backdrop-blur-md p-8 md:p-12 border border-white/80 border-l-4 border-l-gray-900 shadow-md shadow-gray-200/20 rounded-r-2xl hover:bg-white/60 hover:shadow-xl hover:shadow-blue-300/10 transition-all duration-500">
+                <section className="bg-white/40 backdrop-blur-md p-8 md:p-12 border border-white/80 border-l-4 border-l-gray-900 shadow-elevation-1 rounded-r-m3-lg hover:bg-white/60 hover:shadow-elevation-3 transition-all duration-500">
                     <h2 className="text-2xl font-black text-gray-900 mb-8 tracking-wide border-b border-gray-900/10 pb-4">収集する情報</h2>
                     <div className="overflow-x-auto">
                         <table className="w-full text-left border-collapse">
@@ -92,7 +92,7 @@ export default function PrivacyPolicyPage() {
                 </section>
 
                 {/* データの取り扱い */}
-                <section className="bg-white/40 backdrop-blur-md p-8 md:p-12 border border-white/80 border-l-4 border-l-gray-900 shadow-md shadow-gray-200/20 rounded-r-2xl hover:bg-white/60 hover:shadow-xl hover:shadow-blue-300/10 transition-all duration-500">
+                <section className="bg-white/40 backdrop-blur-md p-8 md:p-12 border border-white/80 border-l-4 border-l-gray-900 shadow-elevation-1 rounded-r-m3-lg hover:bg-white/60 hover:shadow-elevation-3 transition-all duration-500">
                     <h2 className="text-2xl font-black text-gray-900 mb-12 tracking-wide border-b border-gray-900/10 pb-4">データの取り扱い</h2>
 
                     <div className="text-gray-800">
@@ -122,7 +122,7 @@ export default function PrivacyPolicyPage() {
                 </section>
 
                 {/* 第三者サービステーブル */}
-                <section className="bg-white/40 backdrop-blur-md p-8 md:p-12 border border-white/80 border-l-4 border-l-gray-900 shadow-md shadow-gray-200/20 rounded-r-2xl hover:bg-white/60 hover:shadow-xl hover:shadow-blue-300/10 transition-all duration-500">
+                <section className="bg-white/40 backdrop-blur-md p-8 md:p-12 border border-white/80 border-l-4 border-l-gray-900 shadow-elevation-1 rounded-r-m3-lg hover:bg-white/60 hover:shadow-elevation-3 transition-all duration-500">
                     <h2 className="text-2xl font-black text-gray-900 mb-6 tracking-wide border-b border-gray-900/10 pb-4">第三者サービス</h2>
                     <div className="overflow-x-auto">
                         <table className="w-full text-left border-collapse">
@@ -155,7 +155,7 @@ export default function PrivacyPolicyPage() {
                 </section>
 
                 {/* ユーザーの権利 */}
-                <section className="bg-white/40 backdrop-blur-md p-8 md:p-12 border border-white/80 border-l-4 border-l-gray-900 shadow-md shadow-gray-200/20 rounded-r-2xl hover:bg-white/60 hover:shadow-xl hover:shadow-blue-300/10 transition-all duration-500">
+                <section className="bg-white/40 backdrop-blur-md p-8 md:p-12 border border-white/80 border-l-4 border-l-gray-900 shadow-elevation-1 rounded-r-m3-lg hover:bg-white/60 hover:shadow-elevation-3 transition-all duration-500">
                     <h2 className="text-2xl font-black text-gray-900 mb-6 tracking-wide border-b border-gray-900/10 pb-4">ユーザーの権利</h2>
                     <ul className="list-disc pl-6 space-y-2 text-gray-700 text-lg">
                         <li>データの開示請求</li>

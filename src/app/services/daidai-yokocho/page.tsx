@@ -62,7 +62,7 @@ const steps = [
 
 export default function DaidaiYokochoServicePage() {
     return (
-        <div className="w-full bg-[#fdfbf7] text-gray-800 pb-32">
+        <div className="w-full bg-surface text-gray-800 pb-32">
             {/* ヒーローエリア */}
             <div className="container mx-auto px-6 pb-24 text-center">
                 <h1 className="text-4xl md:text-5xl font-bold tracking-widest text-gray-900 mb-4">daidai横丁</h1>
@@ -98,7 +98,7 @@ export default function DaidaiYokochoServicePage() {
             <section className="container mx-auto px-6 py-16">
                 <div className="grid md:grid-cols-3 gap-8 max-w-5xl mx-auto">
                     {pillars.map((p, i) => (
-                        <div key={i} className="bg-white p-8 rounded-2xl shadow-sm border border-gray-100 text-center">
+                        <div key={i} className="bg-white p-8 rounded-m3-lg shadow-sm border border-gray-100 text-center">
                             <p.icon className="w-8 h-8 mx-auto mb-4 text-gray-700" strokeWidth={1.5} />
                             <h3 className="text-lg font-bold mb-3 text-balance">{p.title}</h3>
                             <p className="text-gray-600 text-sm leading-relaxed text-pretty">{p.desc}</p>
@@ -116,7 +116,7 @@ export default function DaidaiYokochoServicePage() {
                 </p>
                 <div className="grid sm:grid-cols-2 gap-6">
                     {features.map((f, i) => (
-                        <div key={i} className="bg-white p-8 rounded-2xl shadow-sm border border-gray-100">
+                        <div key={i} className="bg-white p-8 rounded-m3-lg shadow-sm border border-gray-100">
                             <f.icon className="w-6 h-6 mb-4 text-gray-700" strokeWidth={1.5} />
                             <h3 className="text-base font-bold mb-2 text-balance">{f.title}</h3>
                             <p className="text-gray-600 text-sm leading-relaxed text-pretty">{f.desc}</p>
@@ -131,7 +131,7 @@ export default function DaidaiYokochoServicePage() {
                 <h2 className="text-2xl font-bold mb-12 tracking-widest text-center text-gray-900">使い方</h2>
                 <div className="grid md:grid-cols-3 gap-6">
                     {steps.map((s) => (
-                        <div key={s.no} className="bg-white p-8 rounded-2xl shadow-sm border border-gray-100 text-center">
+                        <div key={s.no} className="bg-white p-8 rounded-m3-lg shadow-sm border border-gray-100 text-center">
                             <p className="text-xs tracking-[0.3em] text-gray-400 mb-3">{s.no}</p>
                             <h3 className="text-lg font-bold mb-3">{s.title}</h3>
                             <p className="text-gray-600 text-sm leading-relaxed text-pretty">{s.desc}</p>
@@ -161,11 +161,11 @@ export default function DaidaiYokochoServicePage() {
             <section className="container mx-auto px-6 pb-8 max-w-3xl">
                 <Link
                     href="/daidai-yokocho"
-                    className="group block h-64 w-full max-w-sm mx-auto bg-white/50 backdrop-blur-md border border-white/80 shadow-md shadow-gray-200/40 hover:bg-white/80 hover:border-white hover:shadow-xl hover:shadow-blue-300/10 transition-all duration-500 rounded-lg overflow-hidden relative p-8"
+                    className="group block h-64 w-full max-w-sm mx-auto bg-white/50 backdrop-blur-md border border-white/80 shadow-elevation-2 hover:bg-white/80 hover:border-white hover:shadow-elevation-3 transition-all duration-500 rounded-lg overflow-hidden relative p-8"
                 >
                     <div className="relative z-10 h-full flex flex-col justify-between">
                         <div>
-                            <h3 className="text-sm font-bold tracking-widest text-gray-400 group-hover:text-blue-600 transition-colors">
+                            <h3 className="text-sm font-bold tracking-widest text-gray-400 group-hover:text-primary transition-colors">
                                 STORE
                             </h3>
                             <p className="text-2xl font-bold mt-2 text-gray-900 group-hover:text-black transition-colors">
@@ -176,7 +176,7 @@ export default function DaidaiYokochoServicePage() {
                             <span className="text-sm text-gray-500 group-hover:text-gray-400 transition-colors">
                                 ぺったんを探しに行く
                             </span>
-                            <div className="w-10 h-10 rounded-full border border-gray-300 bg-white/40 group-hover:border-blue-600 group-hover:bg-blue-600 group-hover:text-white flex items-center justify-center text-gray-800 transition-all duration-300 transform group-hover:translate-x-2">
+                            <div className="w-10 h-10 rounded-full border border-gray-300 bg-white/40 group-hover:border-primary group-hover:bg-primary group-hover:text-white flex items-center justify-center text-gray-800 transition-all duration-300 transform group-hover:translate-x-2">
                                 <ArrowRight className="w-5 h-5" />
                             </div>
                         </div>

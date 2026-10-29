@@ -18,9 +18,9 @@ export default function StickerPackCard({
         // 入れ子にできない（<a>の中に<a>はHTML的に無効）ため、外枠は<div>にし
         // 「画像・パック名」への遷移リンクと「クリエイター」への遷移リンクを
         // 兄弟要素として分ける。
-        <div className="group flex flex-col bg-white/50 backdrop-blur-md border border-white/70 shadow-sm hover:shadow-xl hover:shadow-blue-300/15 transition-all duration-300 overflow-hidden rounded-2xl">
+        <div className="group flex flex-col bg-white border border-gray-100 shadow-sm hover:shadow-xl hover:shadow-blue-300/15 transition-all duration-300 overflow-hidden rounded-2xl">
             <Link href={`/daidai-yokocho/${pack.id}`} className="flex flex-col">
-                <div className="relative w-full aspect-square bg-gray-100/60 flex items-center justify-center overflow-hidden">
+                <div className="relative w-full aspect-square bg-white flex items-center justify-center overflow-hidden">
                     {pack.stickers[0]?.imageUrl ? (
                         // eslint-disable-next-line @next/next/no-img-element
                         <img

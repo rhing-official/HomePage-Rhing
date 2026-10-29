@@ -5,9 +5,9 @@ import Image from "next/image";
 import { motion, AnimatePresence } from "framer-motion";
 
 const NavLink = ({ href, children, onClick }: { href: string; children: React.ReactNode; onClick?: () => void }) => (
-    <Link href={href} onClick={onClick} className="group relative block py-3 px-4 font-bold text-gray-800 hover:text-blue-600 transition-colors">
+    <Link href={href} onClick={onClick} className="group relative block py-3 px-4 font-bold text-on-surface hover:text-primary transition-colors">
         {children}
-        <span className="absolute bottom-0 left-0 w-0 h-[2px] bg-blue-600 transition-all duration-300 group-hover:w-full"></span>
+        <span className="absolute bottom-0 left-0 w-0 h-[2px] bg-primary transition-all duration-300 ease-m3-standard group-hover:w-full"></span>
     </Link>
 );
 
@@ -38,7 +38,7 @@ export default function Header() {
                   🌟 変更：PC用のナビゲーションバーを美しい半透明のガラスデザインに変更
                   - bg-white/80, backdrop-blur-md, border-white/80
                 */}
-                <nav className="pointer-events-auto hidden lg:flex bg-white/80 backdrop-blur-md shadow-lg shadow-blue-300/10 rounded-full px-6 py-2 border border-white/80">
+                <nav className="pointer-events-auto hidden lg:flex bg-white/80 backdrop-blur-md shadow-elevation-3 rounded-full px-6 py-2 border border-white/80">
                     <NavLink href="/">TOP</NavLink>
                     <NavLink href="/about">ABOUT</NavLink>
                     <NavLink href="/services">SERVICES</NavLink>
@@ -53,7 +53,7 @@ export default function Header() {
                   - bg-white/80, backdrop-blur-sm, border-white/60, shadow-blue-300/10
                 */}
                 <button
-                    className="lg:hidden pointer-events-auto p-3 bg-white/80 backdrop-blur-sm rounded-full shadow-lg border border-white/60 shadow-blue-300/10 hover:bg-white/90 transition-all duration-300"
+                    className="lg:hidden pointer-events-auto p-3 bg-white/80 backdrop-blur-sm rounded-full shadow-elevation-2 border border-white/60 hover:bg-white/90 transition-all duration-300 ease-m3-standard"
                     onClick={() => setIsOpen(true)}
                 >
                     <div className="space-y-1">
@@ -93,7 +93,7 @@ export default function Header() {
                             exit={{ x: "100%" }}
                             transition={{ type: "spring", damping: 25 }}
                             /* 掴んでスライドできることが感覚的にわかるよう、カーソル表現を追加しています */
-                            className="fixed top-0 right-0 w-64 h-full bg-white/80 backdrop-blur-md z-[80] p-10 flex flex-col justify-center gap-6 pointer-events-auto shadow-2xl border-l border-white/40 cursor-grab active:cursor-grabbing select-none"
+                            className="fixed top-0 right-0 w-64 h-full bg-white/80 backdrop-blur-md z-[80] p-10 flex flex-col justify-center gap-6 pointer-events-auto shadow-elevation-3 border-l border-white/40 cursor-grab active:cursor-grabbing select-none"
                         >
                             <button className="absolute top-8 right-8 text-2xl font-bold" onClick={() => setIsOpen(false)}>×</button>
                             <NavLink href="/" onClick={() => setIsOpen(false)}>TOP</NavLink>

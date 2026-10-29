@@ -32,7 +32,7 @@ export function AudienceToggle() {
     return (
         <div className="relative grid grid-cols-2 w-64 border-b border-gray-200">
             <motion.div
-                className="absolute bottom-0 left-0 h-0.5 w-1/2 bg-[#EE7800]"
+                className="absolute bottom-0 left-0 h-0.5 w-1/2 bg-tertiary"
                 animate={{ x: audience === "general" ? 0 : "100%" }}
                 transition={{ type: "spring", stiffness: 500, damping: 35 }}
             />

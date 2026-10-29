@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import Button from "@/components/ui/Button";
 
 // Stripe の決済リンク（寄付者が金額を入力して支払う。クレジットカード・デビットカード、PayPay有効化後はPayPayも）
 const STRIPE_DONATION_URL = "https://buy.stripe.com/8x28wO3FHaw54v0f6p1Jm01";
@@ -32,7 +33,7 @@ export default function DonateMethods() {
                         return (
                             <div
                                 key={m.id}
-                                className="flex flex-col items-center justify-center border border-gray-300 text-gray-400 rounded-2xl p-6 text-center"
+                                className="flex flex-col items-center justify-center border border-gray-300 text-gray-400 rounded-m3-lg p-6 text-center"
                             >
                                 <p className="font-bold tracking-wide mb-1">
                                     {m.name.map((line) => (
@@ -49,10 +50,10 @@ export default function DonateMethods() {
                             type="button"
                             onClick={() => setSelected(isSelected ? null : m.id)}
                             aria-pressed={isSelected}
-                            className={`flex flex-col items-center justify-center rounded-2xl p-6 text-center font-bold tracking-wide transition-colors ${
+                            className={`flex flex-col items-center justify-center rounded-m3-lg p-6 text-center font-bold tracking-wide transition-colors ${
                                 isSelected
-                                    ? "bg-gray-900 text-white"
-                                    : "bg-white/60 border border-gray-900 text-gray-900 hover:bg-white"
+                                    ? "bg-primary text-on-primary"
+                                    : "bg-white/60 border border-outline text-on-surface hover:bg-white hover:border-primary"
                             }`}
                         >
                             <p className="mb-1">
@@ -67,7 +68,7 @@ export default function DonateMethods() {
             </div>
 
             {(selectedPanel === "stripe" || selectedPanel === "wallet") && (
-                <div className="mt-8 bg-white/40 backdrop-blur-md border border-white/80 shadow-md shadow-gray-200/20 rounded-3xl p-8 md:p-10">
+                <div className="mt-8 bg-white/40 backdrop-blur-md border border-white/80 shadow-elevation-1 rounded-m3-xl p-8 md:p-10">
                     <h3 className="text-lg font-bold text-gray-900 tracking-wider mb-4">
                         {selectedPanel === "stripe" ? "カードで寄付する" : "Apple Pay・Google Payで寄付する"}
                     </h3>
@@ -85,19 +86,14 @@ export default function DonateMethods() {
                         <li>決済は、Stripe の決済画面（外部サイト）で行います。クレジット・デビットと Apple Pay・Google Pay は、同じ決済画面です。</li>
                         <li>お支払い額の1%は、Rhingが Stripe Climate を通じて、CO₂ の除去に寄付します（追加の負担はありません）。</li>
                     </ul>
-                    <a
-                        href={STRIPE_DONATION_URL}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="block w-full sm:w-auto sm:inline-block text-center rounded-full bg-gray-900 text-white px-10 py-3 text-sm font-bold tracking-wider hover:bg-gray-700 transition-colors"
-                    >
+                    <Button href={STRIPE_DONATION_URL} size="lg" className="w-full sm:w-auto">
                         決済画面へ進む
-                    </a>
+                    </Button>
                 </div>
             )}
 
             {selectedPanel === "bitcoin" && (
-                <div className="mt-8 bg-white/40 backdrop-blur-md border border-white/80 shadow-md shadow-gray-200/20 rounded-3xl p-8 md:p-10">
+                <div className="mt-8 bg-white/40 backdrop-blur-md border border-white/80 shadow-elevation-1 rounded-m3-xl p-8 md:p-10">
                     <h3 className="text-lg font-bold text-gray-900 tracking-wider mb-4">ビットコインで寄付する</h3>
                     <ul className="list-disc pl-6 space-y-2 text-gray-700 text-sm leading-relaxed mb-8">
                         <li>金額は、寄付ページで自由に入力できます。</li>
@@ -107,14 +103,9 @@ export default function DonateMethods() {
                         <li>少額の寄付は、カードからお願いします（ビットコインは、最低額が高めです）。</li>
                         <li>お支払い後、しばらく経っても反映されないなどの場合は、<a href="/contact?type=user" className="underline underline-offset-4 hover:text-gray-900 transition-colors">お問い合わせ</a>からご連絡ください。</li>
                     </ul>
-                    <a
-                        href={BITCOIN_DONATION_URL}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="block w-full sm:w-auto sm:inline-block text-center rounded-full bg-gray-900 text-white px-10 py-3 text-sm font-bold tracking-wider hover:bg-gray-700 transition-colors"
-                    >
+                    <Button href={BITCOIN_DONATION_URL} size="lg" className="w-full sm:w-auto">
                         寄付ページへ進む
-                    </a>
+                    </Button>
                 </div>
             )}
         </div>
