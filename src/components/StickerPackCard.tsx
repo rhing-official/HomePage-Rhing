@@ -20,33 +20,34 @@ export default function StickerPackCard({
         // 兄弟要素として分ける。
         <div className="group flex flex-col bg-white border border-gray-100 shadow-sm hover:shadow-xl hover:shadow-blue-300/15 transition-all duration-300 overflow-hidden rounded-2xl">
             <Link href={`/daidai-yokocho/${pack.id}`} className="flex flex-col">
-                <div className="relative w-full aspect-square bg-white flex items-center justify-center overflow-hidden">
+                <div className="relative w-full aspect-[4/3] bg-white flex items-center justify-center overflow-hidden">
                     {pack.stickers[0]?.imageUrl ? (
                         // eslint-disable-next-line @next/next/no-img-element
                         <img
                             src={pack.stickers[0].imageUrl}
                             alt={pack.name}
-                            className="w-full h-full object-contain p-6 transition-transform duration-500 group-hover:scale-105"
+                            className="w-full h-full object-contain p-4 transition-transform duration-500 group-hover:scale-105"
                         />
                     ) : (
                         <span className="text-gray-300 text-sm">No Image</span>
                     )}
                     <StickerPackCardActions packId={pack.id} />
                 </div>
-                <div className="px-6 pt-6 flex items-center justify-between gap-2">
-                    <h2 className="text-base font-bold text-gray-900 group-hover:text-blue-600 transition-colors truncate">
-                        {pack.name}
-                    </h2>
+                {/* 価格を一番上、その下にパック名。左端を揃える */}
+                <div className="px-6 pt-3 flex flex-col gap-1">
                     <span className={`text-sm font-bold whitespace-nowrap ${pack.price === 0 ? "text-emerald-600" : "text-amber-600"}`}>
                         {formatPackPrice(pack.price)}
                     </span>
+                    <h2 className="text-base font-bold text-gray-900 group-hover:text-blue-600 transition-colors truncate">
+                        {pack.name}
+                    </h2>
                 </div>
             </Link>
 
-            <div className="px-6 pb-6 flex flex-col gap-3">
+            <div className="px-6 pt-2 pb-6 flex flex-col gap-3">
                 {creator === undefined ? (
                     <div className="flex items-center gap-2 animate-pulse">
-                        <div className="w-5 h-5 rounded-full bg-gray-200" />
+                        <div className="w-5 h-5 -ml-0.5 rounded-full bg-gray-200" />
                         <div className="h-3 w-16 rounded-full bg-gray-200" />
                     </div>
                 ) : creator ? (
@@ -59,10 +60,10 @@ export default function StickerPackCard({
                             <img
                                 src={creator.iconUrl}
                                 alt=""
-                                className="w-5 h-5 rounded-full object-cover shrink-0 border border-white/80"
+                                className="w-5 h-5 -ml-0.5 rounded-full object-cover shrink-0 border border-white/80"
                             />
                         ) : (
-                            <div className="w-5 h-5 rounded-full bg-gray-200 shrink-0" />
+                            <div className="w-5 h-5 -ml-0.5 rounded-full bg-gray-200 shrink-0" />
                         )}
                         <span className="text-xs text-gray-500 group-hover/creator:text-blue-600 transition-colors truncate">
                             {creator.nickname ?? (creator.rhingSeed && `@${creator.rhingSeed}`)}

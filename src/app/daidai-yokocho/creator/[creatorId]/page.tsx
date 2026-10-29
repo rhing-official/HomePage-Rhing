@@ -2,7 +2,8 @@ import { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { getStickerPacksByCreator } from "@/lib/stickerPacks";
 import { getCreatorProfile } from "@/lib/creatorProfiles";
-import StickerPackCard from "@/components/StickerPackCard";
+import CreatorPacks from "./CreatorPacks";
+import SnsLinkList from "@/components/SnsLinkList";
 import FollowButton from "@/components/FollowButton";
 
 export const dynamic = "force-dynamic";
@@ -64,21 +65,7 @@ export default async function CreatorProfilePage({
                             {creator.statusMessage && (
                                 <p className="text-sm text-gray-600 mt-4">{creator.statusMessage}</p>
                             )}
-                            {creator.snsLinkUrls.length > 0 && (
-                                <div className="flex flex-wrap justify-center sm:justify-start gap-3 mt-4">
-                                    {creator.snsLinkUrls.map((url) => (
-                                        <a
-                                            key={url}
-                                            href={url}
-                                            target="_blank"
-                                            rel="noreferrer noopener"
-                                            className="text-xs text-blue-600 hover:text-blue-700 underline decoration-dotted break-all"
-                                        >
-                                            {url}
-                                        </a>
-                                    ))}
-                                </div>
-                            )}
+                            <SnsLinkList urls={creator.snsLinkUrls} />
                             <div className="mt-6">
                                 <FollowButton creatorId={creatorId} />
                             </div>
@@ -86,16 +73,7 @@ export default async function CreatorProfilePage({
                     </div>
                 </div>
 
-                <h2 className="text-lg font-bold text-gray-900 mb-6">出品パック</h2>
-                {packs.length === 0 ? (
-                    <p className="text-gray-500">出品しているパックはありません</p>
-                ) : (
-                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
-                        {packs.map((pack) => (
-                            <StickerPackCard key={pack.id} pack={pack} creator={creator} />
-                        ))}
-                    </div>
-                )}
+                <CreatorPacks packs={packs} creator={creator} />
             </div>
         </div>
     );

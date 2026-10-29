@@ -57,7 +57,7 @@ const emptyMonth = (): MonthData => ({
 const createYear = (): YearData => Object.fromEntries(months.map((m) => [m, emptyMonth()]));
 
 // ============================================================
-// 2026年度（2026年4月〜2027年3月）。すべて未確定。
+// 2026年度（2026年4月〜2027年3月）。全て未確定。
 // ============================================================
 const data2026: YearData = createYear();
 

@@ -94,7 +94,7 @@ export default function CreatorDashboardPage() {
     return (
         <div className="w-full pb-24">
             <div className="container mx-auto px-6 pb-16 max-w-4xl">
-                <h1 className="text-3xl font-bold tracking-widest text-gray-900 mb-12">ぺったんの作成と管理</h1>
+                <h1 className="text-3xl font-bold tracking-widest text-gray-900 mb-12">作成と管理</h1>
 
                 <CreatePackForm
                     uid={user.uid}

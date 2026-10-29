@@ -32,7 +32,7 @@ const pillars = [
     {
         icon: ShieldCheck,
         title: "ローカル完結",
-        desc: "書籍データも設定もすべて端末内に保存。クラウドへのアップロードは一切発生しません。",
+        desc: "書籍データも設定も全て端末内に保存。クラウドへのアップロードは一切発生しません。",
     },
     {
         icon: MonitorSmartphone,

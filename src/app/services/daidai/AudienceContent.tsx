@@ -320,7 +320,7 @@ function GeneralContent() {
                     </li>
                 </ul>
                 <p className="text-xs text-gray-400 tracking-wide">
-                    上記の機能も含め、現在はすべて無料でご利用いただけます。今後、課金が始まる可能性があります。
+                    上記の機能も含め、現在は全て無料でご利用いただけます。今後、課金が始まる可能性があります。
                 </p>
             </div>
 

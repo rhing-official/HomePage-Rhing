@@ -242,7 +242,7 @@ export default function HeroFloatingSection() {
                         }}
                         /*
                           🌟 修正ポイント4:
-                          古い `item.showOnMobile` の複雑な条件分岐クラスをすべて削除しました。
+                          古い `item.showOnMobile` の複雑な条件分岐クラスを全て削除しました。
                           単に各デバイスごとの大きさ（scale-55 / sm:scale-65 / xl:scale-100）を綺麗に指定するだけになり、バグが完全に解消されます。
                         */
                         className="absolute z-10 pointer-events-none scale-45 sm:scale-65 xl:scale-100"

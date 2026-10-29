@@ -4,7 +4,7 @@ import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import { doc, getDoc } from "firebase/firestore";
 import { motion, AnimatePresence } from "framer-motion";
-import { KeyRound } from "lucide-react";
+import { Heart, KeyRound, LogOut, PackageCheck, PenTool, ShoppingCart, Trash2, Users } from "lucide-react";
 import { db } from "@/lib/firebase";
 import { auth, onAuthStateChanged, signOut, type User } from "@/lib/firebaseAuth";
 import { useGoogleSignIn } from "@/hooks/useGoogleSignIn";
@@ -15,6 +15,7 @@ import OnboardingModal from "./OnboardingModal";
 import PasskeySignInDialog from "./PasskeySignInDialog";
 import PasskeyRecoveryDialog from "./PasskeyRecoveryDialog";
 import { usePasskeyAuth } from "@/hooks/usePasskeyAuth";
+import { useCart } from "@/components/CartProvider";
 
 interface OwnProfile {
     rhingSeed: string;
@@ -43,8 +44,12 @@ async function fetchOwnProfile(uid: string): Promise<OwnProfile | null> {
     }
 }
 
+// お気に入り・カートのバーの中の、1つ分のボタン
+const quickIconClass =
+    "flex items-center justify-center w-12 h-12 hover:bg-white/90 transition-colors duration-300";
+
 const menuItemClass =
-    "block w-full text-left px-4 py-2.5 rounded-xl text-sm text-gray-700 font-bold hover:bg-white/70 hover:text-blue-600 transition-colors";
+    "flex items-center gap-3 w-full text-left px-4 py-2.5 rounded-xl text-sm text-gray-700 font-bold hover:bg-white/70 hover:text-blue-600 transition-colors";
 
 export default function DaidaiYokochoMenu() {
     const containerRef = useRef<HTMLDivElement>(null);
@@ -97,6 +102,7 @@ export default function DaidaiYokochoMenu() {
     // 突き合わせる（setState-in-effectを避けるため、effect内ではリセットしない）。
     const displayProfile = user ? profile : null;
 
+    const { count: cartCount } = useCart();
     const close = () => setOpen(false);
 
     const handleAccountDeleted = async () => {
@@ -107,21 +113,47 @@ export default function DaidaiYokochoMenu() {
 
     return (
         <>
-            <div ref={containerRef} className="fixed top-24 right-6 lg:top-28 lg:right-8 z-40">
-                <button
-                    onClick={() => setOpen((o) => !o)}
-                    aria-label="アカウント設定を開く"
-                    className="block p-0.5 bg-white/80 backdrop-blur-md rounded-full shadow-lg border border-white/60 shadow-blue-300/10 hover:bg-white/90 transition-all duration-300 overflow-hidden"
-                >
-                    {displayProfile?.iconUrl ? (
-                        // eslint-disable-next-line @next/next/no-img-element
-                        <img src={displayProfile.iconUrl} alt="" className="w-11 h-11 rounded-full object-cover" />
-                    ) : (
-                        <span className="flex items-center justify-center w-11 h-11">
-                            <PersonIcon className="w-6 h-6 text-gray-700" />
-                        </span>
-                    )}
-                </button>
+            <div ref={containerRef} className="fixed top-24 right-6 lg:top-28 lg:right-8 z-40 flex items-start gap-2">
+                {/* ログイン中は、お気に入りとカートを1つのバーにして、1クリックで行ける（モバイルは縦、PCは横） */}
+                {user && (
+                    <nav
+                        aria-label="お気に入りとカート"
+                        className="flex flex-col md:flex-row items-center bg-white/80 backdrop-blur-md rounded-full shadow-lg border border-white/60 shadow-blue-300/10 overflow-hidden"
+                    >
+                        <Link href="/daidai-yokocho/favorites" aria-label="お気に入り" className={quickIconClass}>
+                            <Heart className="w-5 h-5 text-gray-700" />
+                        </Link>
+                        <span aria-hidden className="block h-px w-6 md:h-6 md:w-px bg-gray-300/80" />
+                        <Link
+                            href="/daidai-yokocho/cart"
+                            aria-label={cartCount > 0 ? `カート（${cartCount}件）` : "カート"}
+                            className={`relative ${quickIconClass}`}
+                        >
+                            <ShoppingCart className="w-5 h-5 text-gray-700" />
+                            {cartCount > 0 && (
+                                <span className="pointer-events-none absolute top-1 right-1 min-w-4 h-4 px-1 rounded-full bg-blue-600 text-white text-[10px] font-bold flex items-center justify-center">
+                                    {cartCount}
+                                </span>
+                            )}
+                        </Link>
+                    </nav>
+                )}
+
+                <div className="relative">
+                    <button
+                        onClick={() => setOpen((o) => !o)}
+                        aria-label="アカウント設定を開く"
+                        className="block p-0.5 bg-white/80 backdrop-blur-md rounded-full shadow-lg border border-white/60 shadow-blue-300/10 hover:bg-white/90 transition-all duration-300 overflow-hidden"
+                    >
+                        {displayProfile?.iconUrl ? (
+                            // eslint-disable-next-line @next/next/no-img-element
+                            <img src={displayProfile.iconUrl} alt="" className="w-11 h-11 rounded-full object-cover" />
+                        ) : (
+                            <span className="flex items-center justify-center w-11 h-11">
+                                <PersonIcon className="w-6 h-6 text-gray-700" />
+                            </span>
+                        )}
+                    </button>
 
                 <AnimatePresence>
                     {open && (
@@ -247,16 +279,29 @@ export default function DaidaiYokochoMenu() {
                             {user && !resolver && (
                                 <div className="flex flex-col gap-0.5 border-t border-gray-200/70 pt-2">
                                     <Link href="/daidai-yokocho/owned" onClick={close} className={menuItemClass}>
-                                        購入済みのぺったん
+                                        <PackageCheck className="w-4 h-4 shrink-0" />
+                                        購入済み
                                     </Link>
                                     <Link href="/daidai-yokocho/follows" onClick={close} className={menuItemClass}>
+                                        <Users className="w-4 h-4 shrink-0" />
                                         フォロー中のクリエイター
                                     </Link>
+                                    <Link href="/daidai-yokocho/cart" onClick={close} className={menuItemClass}>
+                                        <ShoppingCart className="w-4 h-4 shrink-0" />
+                                        <span className="flex-1">カート</span>
+                                        {cartCount > 0 && (
+                                            <span className="min-w-5 h-5 px-1 rounded-full bg-blue-600 text-white text-[10px] flex items-center justify-center">
+                                                {cartCount}
+                                            </span>
+                                        )}
+                                    </Link>
                                     <Link href="/daidai-yokocho/favorites" onClick={close} className={menuItemClass}>
-                                        お気に入りのぺったん
+                                        <Heart className="w-4 h-4 shrink-0" />
+                                        お気に入り
                                     </Link>
                                     <Link href="/daidai-yokocho/creator" onClick={close} className={menuItemClass}>
-                                        ぺったんの作成と管理
+                                        <PenTool className="w-4 h-4 shrink-0" />
+                                        作成と管理
                                     </Link>
                                     <button
                                         onClick={() => {
@@ -265,6 +310,7 @@ export default function DaidaiYokochoMenu() {
                                         }}
                                         className={menuItemClass}
                                     >
+                                        <LogOut className="w-4 h-4 shrink-0" />
                                         ログアウト
                                     </button>
                                     <button
@@ -274,6 +320,7 @@ export default function DaidaiYokochoMenu() {
                                         }}
                                         className={`${menuItemClass} text-red-600 hover:text-red-700`}
                                     >
+                                        <Trash2 className="w-4 h-4 shrink-0" />
                                         アカウント削除
                                     </button>
                                 </div>
@@ -281,6 +328,7 @@ export default function DaidaiYokochoMenu() {
                         </motion.div>
                     )}
                 </AnimatePresence>
+                </div>
             </div>
 
             {showProfileEdit && user && (

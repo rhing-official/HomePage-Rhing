@@ -1,7 +1,7 @@
 import { Github } from "lucide-react";
 
 export const siteConfig = {
-    // ページごとのヘッダーカラー設定（一時的にすべて #333333）
+    // ページごとのヘッダーカラー設定（一時的に全て #333333）
     headerColors: {
         home: "#333333",
         about: "#333333",

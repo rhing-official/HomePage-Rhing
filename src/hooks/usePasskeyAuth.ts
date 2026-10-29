@@ -10,6 +10,8 @@ import {
     finishPasskeyRegistration,
     beginPasskeyAuthentication,
     finishPasskeyAuthentication,
+    beginPasskeyAuthenticationDiscoverable,
+    finishPasskeyAuthenticationDiscoverable,
     beginPasskeyRecovery as beginPasskeyRecoveryCall,
     finishPasskeyRecovery as finishPasskeyRecoveryCall,
 } from "@/lib/firebaseFunctions";
@@ -76,6 +78,25 @@ export function usePasskeyAuth() {
         }
     };
 
+    // Rhing Seedなしでログインする。ブラウザが保存済みのパスキーの候補を出す。
+    // 候補を選ばずに閉じた場合・失敗した場合は、エラーを出さずfalseを返し、
+    // 呼び出し側でRhing Seed入力にフォールバックする。
+    const signInWithDiscoverablePasskey = async (): Promise<boolean> => {
+        setSubmitting(true);
+        setError(null);
+        try {
+            const { challengeId, options } = await beginPasskeyAuthenticationDiscoverable();
+            const assertionResponse = await startAuthentication({ optionsJSON: options });
+            const { customToken } = await finishPasskeyAuthenticationDiscoverable({ challengeId, assertionResponse });
+            await signInWithCustomToken(auth, customToken);
+            return true;
+        } catch {
+            return false;
+        } finally {
+            setSubmitting(false);
+        }
+    };
+
     const beginRecovery = async (rhingSeed: string): Promise<PasskeyRecoveryQuestions | null> => {
         setSubmitting(true);
         setError(null);
@@ -110,6 +131,7 @@ export function usePasskeyAuth() {
         setError,
         registerWithPasskey,
         signInWithPasskey,
+        signInWithDiscoverablePasskey,
         beginRecovery,
         submitRecoveryAnswers,
     };
