@@ -106,7 +106,7 @@ export default function PasskeyRecoveryDialog({
                         type="button"
                         onClick={onClose}
                         disabled={submitting}
-                        className="flex-1 px-5 py-3 rounded-2xl border border-gray-300 text-gray-500 hover:bg-gray-50 transition disabled:opacity-50"
+                        className="flex-1 px-5 py-3 rounded-2xl border border-primary/50 text-primary hover:bg-primary-container/60 transition disabled:opacity-50"
                     >
                         キャンセル
                     </button>
@@ -114,7 +114,7 @@ export default function PasskeyRecoveryDialog({
                         type="button"
                         onClick={questions ? handleSubmit : handleNext}
                         disabled={submitting || (questions ? answers.some((a) => !a.trim()) : !rhingSeed.trim())}
-                        className="flex-1 px-5 py-3 rounded-2xl bg-amber-500 text-white hover:bg-amber-600 transition disabled:opacity-50"
+                        className="flex-1 px-5 py-3 rounded-2xl bg-primary text-on-primary hover:bg-primary/90 transition disabled:opacity-50"
                     >
                         {submitting ? "処理中..." : questions ? "復旧する" : "次へ"}
                     </button>

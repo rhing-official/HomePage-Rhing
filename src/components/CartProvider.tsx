@@ -76,7 +76,12 @@ export default function CartProvider({ children }: { children: React.ReactNode }
 
     const remove = useCallback<CartContextValue["remove"]>(
         async (packId) => {
-            if (user) await removeFromCart(user.uid, packId);
+            if (!user) return;
+            try {
+                await removeFromCart(user.uid, packId);
+            } catch {
+                // 外せなかったときは、そのままにする（監視で、実際の状態が反映される）
+            }
         },
         [user],
     );

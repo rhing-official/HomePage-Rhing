@@ -19,7 +19,7 @@ function Chip({ active, onClick, children }: { active: boolean; onClick: () => v
             className={`px-3.5 py-1.5 rounded-full text-sm border transition ${
                 active
                     ? "bg-primary text-on-primary border-primary"
-                    : "bg-white/70 text-gray-600 border-gray-200 hover:border-primary hover:text-primary"
+                    : "bg-white/70 text-primary border-primary/30 hover:bg-primary-container/60"
             }`}
         >
             {children}

@@ -121,13 +121,13 @@ export default function NotFound() {
                 >
                     <Link
                         href="/"
-                        className="px-12 py-4 bg-[#111] hover:bg-gray-800 text-white font-bold rounded-full text-center transition-colors tracking-widest shadow-md"
+                        className="px-12 py-4 bg-primary hover:bg-primary/90 text-on-primary font-bold rounded-full text-center transition-colors tracking-widest shadow-md"
                     >
                         トップページへ戻る
                     </Link>
                     <Link
                         href="/contact"
-                        className="px-12 py-4 border border-gray-300 text-gray-600 hover:bg-white/60 font-bold rounded-full text-center transition-colors tracking-widest"
+                        className="px-12 py-4 border border-primary/50 text-primary hover:bg-primary-container/60 font-bold rounded-full text-center transition-colors tracking-widest"
                     >
                         お問い合わせ
                     </Link>

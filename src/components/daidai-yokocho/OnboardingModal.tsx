@@ -110,7 +110,7 @@ export default function OnboardingModal({
                     <button
                         type="button"
                         onClick={() => fileInputRef.current?.click()}
-                        className="text-xs px-4 py-1.5 rounded-full border border-gray-300 text-gray-600 hover:bg-gray-50 transition"
+                        className="text-xs px-4 py-1.5 rounded-full border border-primary/50 text-primary hover:bg-primary-container/60 transition"
                     >
                         画像を選択
                     </button>
@@ -146,7 +146,7 @@ export default function OnboardingModal({
                         type="button"
                         onClick={handleSkip}
                         disabled={submitting}
-                        className="flex-1 px-5 py-3 rounded-2xl border border-gray-300 text-gray-500 hover:bg-gray-50 transition disabled:opacity-50"
+                        className="flex-1 px-5 py-3 rounded-2xl border border-primary/50 text-primary hover:bg-primary-container/60 transition disabled:opacity-50"
                     >
                         スキップ
                     </button>
@@ -154,7 +154,7 @@ export default function OnboardingModal({
                         type="button"
                         onClick={handleSave}
                         disabled={submitting}
-                        className="flex-1 px-5 py-3 rounded-2xl bg-amber-500 text-white hover:bg-amber-600 transition disabled:opacity-50"
+                        className="flex-1 px-5 py-3 rounded-2xl bg-primary text-on-primary hover:bg-primary/90 transition disabled:opacity-50"
                     >
                         {submitting ? "保存中..." : "設定する"}
                     </button>

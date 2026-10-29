@@ -3,7 +3,7 @@ import type { ComponentProps } from "react";
 export type BadgeTone = "neutral" | "primary" | "tertiary";
 
 const tones: Record<BadgeTone, string> = {
-    neutral: "bg-surface-container text-on-surface-variant border border-outline-variant",
+    neutral: "bg-primary-container text-on-primary-container",
     primary: "bg-primary-container text-on-primary-container",
     tertiary: "bg-tertiary/10 text-tertiary",
 };

@@ -1,5 +1,6 @@
 "use client";
 
+import { PackageCheck } from "lucide-react";
 import { useCallback, useEffect, useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
@@ -46,7 +47,10 @@ export default function OwnedStickerPacksPage() {
     return (
         <div className="w-full pb-24">
             <div className="container mx-auto px-6 pb-16 max-w-4xl">
-                <h1 className="text-3xl font-bold tracking-widest text-gray-900 mb-12">購入済み</h1>
+                <h1 className="flex items-center gap-3 text-3xl font-bold tracking-widest text-gray-900 mb-12">
+                    <PackageCheck className="w-7 h-7 shrink-0" aria-hidden />
+                    購入済み
+                </h1>
 
                 {loadingPacks ? (
                     <p className="text-gray-400 text-sm">読み込み中...</p>
@@ -130,7 +134,7 @@ function OwnedPackCard({
                                 type="button"
                                 onClick={() => setConfirming(false)}
                                 disabled={uninstalling}
-                                className="text-sm px-5 py-1.5 rounded-full border border-gray-300 text-gray-500 hover:bg-gray-50 transition disabled:opacity-50"
+                                className="text-sm px-5 py-1.5 rounded-full border border-primary/50 text-primary hover:bg-primary-container/60 transition disabled:opacity-50"
                             >
                                 やめる
                             </button>

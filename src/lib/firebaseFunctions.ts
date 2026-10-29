@@ -27,6 +27,7 @@ export async function createStickerPack(data: {
     stickers: StickerInput[];
     category: string;
     tags: string[];
+    coverStickerId?: string;
 }): Promise<{ packId: string }> {
     const result = await httpsCallable(functions, "createStickerPack")(data);
     return result.data as { packId: string };
@@ -34,8 +35,9 @@ export async function createStickerPack(data: {
 
 export async function updateStickerPackMeta(data: {
     packId: string;
-    name: string;
-    price: number;
+    name?: string;
+    price?: number;
+    coverStickerId?: string;
 }): Promise<void> {
     await httpsCallable(functions, "updateStickerPackMeta")(data);
 }
@@ -45,6 +47,11 @@ export async function addStickersToStickerPack(data: {
     stickers: StickerInput[];
 }): Promise<void> {
     await httpsCallable(functions, "addStickersToStickerPack")(data);
+}
+
+// 販売ページの閲覧を1回数える（出品者にだけ見せる閲覧回数）。出品者本人の閲覧は、サーバー側で数えない
+export async function recordStickerPackView(data: { packId: string }): Promise<void> {
+    await httpsCallable(functions, "recordStickerPackView")(data);
 }
 
 export async function createStickerPackReport(data: {

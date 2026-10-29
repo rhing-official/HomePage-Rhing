@@ -3,14 +3,24 @@
 import { useState } from "react";
 import { AnimatePresence } from "framer-motion";
 import { Maximize2 } from "lucide-react";
-import type { Sticker } from "@/lib/stickerPacks";
+import { getPackCover, type Sticker } from "@/lib/stickerPacks";
 import ImageViewer from "@/components/ImageViewer";
 
 // 商品画像のギャラリー。大きな画像1枚と、切り替え用のサムネイル
-export default function PackGallery({ stickers, packName }: { stickers: Sticker[]; packName: string }) {
+export default function PackGallery({
+    stickers,
+    coverStickerId = null,
+    packName,
+}: {
+    stickers: Sticker[];
+    coverStickerId?: string | null;
+    packName: string;
+}) {
     const [index, setIndex] = useState(0);
     const [viewerOpen, setViewerOpen] = useState(false);
-    const items = stickers.filter((s) => s.imageUrl);
+    // パックの代表を最初に表示する（保存されている並びは変えない）
+    const cover = getPackCover({ stickers, coverStickerId });
+    const items = [...(cover ? [cover] : []), ...stickers.filter((s) => s !== cover)].filter((s) => s.imageUrl);
     if (items.length === 0) {
         return (
             <div className="aspect-square w-full rounded-m3-lg bg-white border border-gray-100 flex items-center justify-center text-gray-300 text-sm">

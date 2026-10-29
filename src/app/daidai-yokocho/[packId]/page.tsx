@@ -6,6 +6,7 @@ import { getCreatorProfile } from "@/lib/creatorProfiles";
 import PurchaseButton from "@/components/PurchaseButton";
 import FavoriteButton from "@/components/FavoriteButton";
 import PackGallery from "@/components/PackGallery";
+import PackViewTracker from "@/components/PackViewTracker";
 import StickerPackCard from "@/components/StickerPackCard";
 
 export const dynamic = "force-dynamic";
@@ -56,6 +57,8 @@ export default async function StickerPackDetailPage({
     return (
         <div className="w-full pb-24">
             <div className="container mx-auto px-6 max-w-6xl">
+                <PackViewTracker packId={pack.id} />
+
                 {purchase === "success" && (
                     <div className="mb-6 rounded-m3-md border border-emerald-200 bg-emerald-50 text-emerald-700 px-6 py-4 text-sm font-bold">
                         ご購入ありがとうございます。DaiDaiアプリでぺったんが使えるようになりました。
@@ -69,7 +72,7 @@ export default async function StickerPackDetailPage({
 
                 <div className="grid grid-cols-1 md:grid-cols-[minmax(0,1.15fr)_minmax(0,1fr)] gap-8 lg:gap-14 items-start">
                     {/* 左: 画像 */}
-                    <PackGallery stickers={pack.stickers} packName={pack.name} />
+                    <PackGallery stickers={pack.stickers} coverStickerId={pack.coverStickerId} packName={pack.name} />
 
                     {/* 右: 商品情報と購入（PCでは追従） */}
                     <div className="md:sticky md:top-28 flex flex-col gap-6">

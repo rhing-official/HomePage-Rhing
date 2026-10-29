@@ -1,6 +1,6 @@
 import Link from "next/link";
 import type { StickerPack } from "@/lib/stickerPacks";
-import { formatPackPrice } from "@/lib/stickerPacks";
+import { formatPackPrice, getPackCover } from "@/lib/stickerPacks";
 import type { CreatorProfile } from "@/lib/creatorProfiles";
 import StickerPackCardActions from "@/components/StickerPackCardActions";
 
@@ -13,6 +13,9 @@ export default function StickerPackCard({
     // null: creatorProfilesが存在しない（非表示）
     creator?: CreatorProfile | null;
 }) {
+    // パックの代表（出品者が選んだぺったん。未設定なら先頭）
+    const cover = getPackCover(pack);
+
     return (
         // カード全体を単一の<Link>にすると、クリエイター行を別リンクとして
         // 入れ子にできない（<a>の中に<a>はHTML的に無効）ため、外枠は<div>にし
@@ -21,10 +24,10 @@ export default function StickerPackCard({
         <div className="group flex flex-col bg-white border border-gray-100 shadow-sm hover:shadow-xl hover:shadow-blue-300/15 transition-all duration-300 overflow-hidden rounded-2xl">
             <Link href={`/daidai-yokocho/${pack.id}`} className="flex flex-col">
                 <div className="relative w-full aspect-[4/3] bg-white flex items-center justify-center overflow-hidden">
-                    {pack.stickers[0]?.imageUrl ? (
+                    {cover?.imageUrl ? (
                         // eslint-disable-next-line @next/next/no-img-element
                         <img
-                            src={pack.stickers[0].imageUrl}
+                            src={cover.imageUrl}
                             alt={pack.name}
                             className="w-full h-full object-contain p-4 transition-transform duration-500 group-hover:scale-105"
                         />
@@ -74,7 +77,7 @@ export default function StickerPackCard({
                 {(pack.category || pack.tags.length > 0) && (
                     <div className="flex flex-wrap gap-2">
                         {pack.category && (
-                            <span className="text-[10px] font-bold bg-gray-50/80 text-gray-500 px-3 py-1 rounded-full uppercase tracking-wider border border-gray-200/50">
+                            <span className="text-[10px] font-bold bg-primary-container text-on-primary-container px-3 py-1 rounded-full uppercase tracking-wider">
                                 {pack.category}
                             </span>
                         )}
