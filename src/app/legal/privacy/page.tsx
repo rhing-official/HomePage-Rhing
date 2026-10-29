@@ -99,7 +99,7 @@ export default function PrivacyPolicyPage() {
                         <div className="mb-16"> {/* 1. 暗号化 */}
                             <h4 className="text-2xl font-bold text-gray-900 mb-6">1. 暗号化</h4>
                             <ul className="list-disc pl-6 space-y-3 leading-relaxed text-lg text-gray-700">
-                                <li>すべての通信はTLS 1.3で暗号化</li>
+                                <li>全ての通信はTLS 1.3で暗号化</li>
                                 <li>メッセージはE2E暗号化し、運営も閲覧不可</li>
                             </ul>
                         </div>

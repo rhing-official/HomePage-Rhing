@@ -33,7 +33,7 @@ export default function PasskeyRecoveryDialog({
     const handleSubmit = async () => {
         if (!questions) return;
         if (answers.some((a) => !a.trim())) {
-            setError("すべての質問に回答してください。");
+            setError("全ての質問に回答してください。");
             return;
         }
         const ok = await submitRecoveryAnswers(questions.recoveryId, answers);

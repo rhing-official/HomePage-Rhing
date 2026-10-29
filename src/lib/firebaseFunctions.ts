@@ -109,6 +109,23 @@ export async function finishPasskeyAuthentication(data: {
     return result.data as { customToken: string };
 }
 
+// Rhing Seedを入力せずに、保存済みのパスキーから選んでログインする（discoverable credential方式）
+export async function beginPasskeyAuthenticationDiscoverable(): Promise<{
+    challengeId: string;
+    options: PublicKeyCredentialRequestOptionsJSON;
+}> {
+    const result = await httpsCallable(functions, "beginPasskeyAuthenticationDiscoverable")();
+    return result.data as { challengeId: string; options: PublicKeyCredentialRequestOptionsJSON };
+}
+
+export async function finishPasskeyAuthenticationDiscoverable(data: {
+    challengeId: string;
+    assertionResponse: AuthenticationResponseJSON;
+}): Promise<{ customToken: string }> {
+    const result = await httpsCallable(functions, "finishPasskeyAuthenticationDiscoverable")(data);
+    return result.data as { customToken: string };
+}
+
 export async function beginPasskeyRecovery(data: {
     rhingSeed: string;
 }): Promise<{ recoveryId: string; questions: string[] }> {

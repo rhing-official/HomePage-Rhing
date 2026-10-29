@@ -4,83 +4,55 @@ import { useEffect, useMemo, useState } from "react";
 import type { StickerPack } from "@/lib/stickerPacks";
 import { getCreatorProfiles, type CreatorProfile } from "@/lib/creatorProfiles";
 import StickerPackCard from "@/components/StickerPackCard";
-
-type SearchField = "all" | "name" | "nickname" | "id" | "tag";
-
-// プルダウンの表示順は「全て→パック名→呼び名→Rhing Seed→タグ」の指定順。
-const SEARCH_FIELD_OPTIONS: { value: SearchField; label: string; placeholder: string }[] = [
-    { value: "all", label: "全て", placeholder: "パック名・タグ・クリエイターで検索" },
-    { value: "name", label: "パック名", placeholder: "パック名で検索" },
-    { value: "nickname", label: "呼び名", placeholder: "クリエイターの呼び名で検索" },
-    { value: "id", label: "Rhing Seed", placeholder: "クリエイターのRhing Seedで検索" },
-    { value: "tag", label: "タグ", placeholder: "タグで検索" },
-];
-
-function matchesField(
-    field: SearchField,
-    q: string,
-    pack: StickerPack,
-    creator: CreatorProfile | undefined,
-): boolean {
-    switch (field) {
-        case "name":
-            return pack.name.toLowerCase().includes(q);
-        case "nickname":
-            return (creator?.nickname ?? "").toLowerCase().includes(q);
-        case "id":
-            return (creator?.rhingSeed ?? "").toLowerCase().includes(q);
-        case "tag":
-            return pack.tags.some((tag) => tag.toLowerCase().includes(q));
-        case "all":
-        default:
-            return [pack.name, ...pack.tags, creator?.nickname ?? "", creator?.rhingSeed ?? ""]
-                .join(" ")
-                .toLowerCase()
-                .includes(q);
-    }
-}
+import BulkAddToCartButton from "@/components/BulkAddToCartButton";
+import PackFilterPanel from "@/components/PackFilterPanel";
+import { applyPackFilters, EMPTY_FILTERS, type PackFilters } from "@/lib/packFilter";
 
 export default function CatalogClient({ packs }: { packs: StickerPack[] }) {
     const [creatorProfiles, setCreatorProfiles] = useState<Map<string, CreatorProfile> | null>(null);
     const [query, setQuery] = useState("");
-    const [searchField, setSearchField] = useState<SearchField>("all");
+    const [filters, setFilters] = useState<PackFilters>(EMPTY_FILTERS);
 
     useEffect(() => {
         const creatorIds = packs.map((p) => p.creatorId);
         getCreatorProfiles(creatorIds).then(setCreatorProfiles);
     }, [packs]);
 
-    const filteredPacks = useMemo(() => {
-        const q = query.trim().toLowerCase();
-        if (!q) return packs;
-        return packs.filter((pack) =>
-            matchesField(searchField, q, pack, creatorProfiles?.get(pack.creatorId)),
-        );
-    }, [packs, creatorProfiles, query, searchField]);
+    const filteredPacks = useMemo(
+        () => applyPackFilters(packs, query, filters, creatorProfiles),
+        [packs, creatorProfiles, query, filters],
+    );
 
-    const currentOption = SEARCH_FIELD_OPTIONS.find((o) => o.value === searchField)!;
+    // 絞り込みパネルに出す、カテゴリとタグの候補（今あるパックから集める）
+    const categories = useMemo(() => Array.from(new Set(packs.map((p) => p.category).filter(Boolean))).sort(), [packs]);
+    const tags = useMemo(() => Array.from(new Set(packs.flatMap((p) => p.tags))).sort(), [packs]);
 
     return (
         <div className="container mx-auto px-6 max-w-6xl">
-            <div className="max-w-lg mx-auto mb-10 flex flex-col sm:flex-row gap-3">
+            <div className="max-w-2xl mx-auto mb-10 flex flex-col gap-4">
                 <input
                     value={query}
                     onChange={(e) => setQuery(e.target.value)}
-                    placeholder={currentOption.placeholder}
-                    className="flex-1 px-5 py-3 rounded-full bg-white/70 backdrop-blur-sm border border-white/80 shadow-sm shadow-blue-300/5 text-sm text-gray-700 placeholder:text-gray-400 focus:outline-none focus:border-blue-200 focus:bg-white/90 transition-all duration-300"
+                    placeholder="検索"
+                    className="w-full px-5 py-3 rounded-full bg-white/70 backdrop-blur-sm border border-white/80 shadow-sm shadow-blue-300/5 text-sm text-gray-700 placeholder:text-gray-400 focus:outline-none focus:border-blue-200 focus:bg-white/90 transition-all duration-300"
                 />
-                <select
-                    value={searchField}
-                    onChange={(e) => setSearchField(e.target.value as SearchField)}
-                    className="px-5 py-3 rounded-full bg-white/70 backdrop-blur-sm border border-white/80 shadow-sm shadow-blue-300/5 text-sm font-bold text-gray-600 focus:outline-none focus:border-blue-200 focus:bg-white/90 transition-all duration-300"
-                >
-                    {SEARCH_FIELD_OPTIONS.map((o) => (
-                        <option key={o.value} value={o.value}>
-                            {o.label}
-                        </option>
-                    ))}
-                </select>
+                <PackFilterPanel
+                    filters={filters}
+                    onChange={setFilters}
+                    categories={categories}
+                    tags={tags}
+                    resultCount={filteredPacks.length}
+                />
             </div>
+
+            {filteredPacks.length > 0 && (
+                <div className="mb-6 flex justify-end">
+                    <BulkAddToCartButton
+                        packs={filteredPacks}
+                        label="表示中のパックを全てカートに追加"
+                    />
+                </div>
+            )}
 
             {filteredPacks.length === 0 ? (
                 <div className="text-center text-gray-500">

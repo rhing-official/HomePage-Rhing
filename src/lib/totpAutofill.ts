@@ -53,7 +53,7 @@ export function createTotpClipboardAutofill({ readText, isActive, onCode }: Totp
                 try {
                     text = await readText();
                 } catch {
-                    denied = true; // 例外はすべて握りつぶし、手入力に任せる
+                    denied = true; // 例外は全て握りつぶし、手入力に任せる
                     return;
                 }
                 if (!isActive()) return;

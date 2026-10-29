@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { motion } from "framer-motion";
 import { usePasskeyAuth } from "@/hooks/usePasskeyAuth";
 
@@ -14,7 +14,23 @@ export default function PasskeySignInDialog({
     onSignedIn: () => void;
 }) {
     const [rhingSeed, setRhingSeed] = useState("");
-    const { submitting, error, signInWithPasskey } = usePasskeyAuth();
+    const { submitting, error, signInWithPasskey, signInWithDiscoverablePasskey } = usePasskeyAuth();
+
+    // ダイアログを開いた時点で、Rhing Seedを入力する前に、保存済みのパスキーの候補を出す。
+    // 選ばずに閉じた場合や対応していない場合は、そのままRhing Seed入力で続けられる。
+    const autoStarted = useRef(false);
+    const onSignedInRef = useRef(onSignedIn);
+    useEffect(() => {
+        onSignedInRef.current = onSignedIn;
+    }, [onSignedIn]);
+    useEffect(() => {
+        if (autoStarted.current) return;
+        autoStarted.current = true;
+        signInWithDiscoverablePasskey().then((ok) => {
+            if (ok) onSignedInRef.current();
+        });
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, []);
 
     const handleSubmit = async () => {
         const seed = rhingSeed.trim().toLowerCase().replace(/^@+/, "");
@@ -43,7 +59,7 @@ export default function PasskeySignInDialog({
                 className="bg-white/90 backdrop-blur-md rounded-3xl shadow-2xl border border-white/80 max-w-sm w-full p-8 flex flex-col gap-5"
             >
                 <h2 className="text-lg font-bold text-gray-900">パスキーでログイン</h2>
-                <p className="text-sm text-gray-600">登録済みのRhing Seedを入力してください。</p>
+                <p className="text-sm text-gray-600">保存済みのパスキーを選んでください。候補が出ない場合は、登録済みのRhing Seedを入力してください。</p>
 
                 <label className="flex flex-col gap-1.5 text-sm text-gray-600">
                     Rhing Seed

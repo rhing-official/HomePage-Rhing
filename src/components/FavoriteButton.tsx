@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { Heart } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { auth, onAuthStateChanged, type User } from "@/lib/firebaseAuth";
 import { isPackFavorited, addFavoritePack, removeFavoritePack } from "@/lib/favorites";
@@ -53,23 +54,25 @@ export default function FavoriteButton({ packId }: { packId: string }) {
         }
     };
 
+    // 記号（ハート）だけで状態が分かるようにする。文字は出さず、読み上げ用のラベルだけ付ける
     if (!authReady || status === "loading") {
         return (
-            <button disabled className="text-sm text-gray-300 cursor-not-allowed">
-                読み込み中...
+            <button disabled aria-label="読み込み中" className="p-2 rounded-full text-gray-300 cursor-not-allowed">
+                <Heart className="w-6 h-6" />
             </button>
         );
     }
 
+    const favorited = status === "favorited";
     return (
         <button
             onClick={handleClick}
             disabled={submitting}
-            className={`text-sm font-bold transition disabled:opacity-50 disabled:cursor-not-allowed ${
-                status === "favorited" ? "text-amber-500" : "text-gray-400 hover:text-amber-500"
-            }`}
+            aria-label={favorited ? "お気に入り解除" : "お気に入りに追加"}
+            aria-pressed={favorited}
+            className="p-2 rounded-full transition hover:bg-gray-100 disabled:opacity-50 disabled:cursor-not-allowed"
         >
-            {status === "favorited" ? "★ お気に入り済み" : "☆ お気に入りに追加"}
+            <Heart className={`w-6 h-6 ${favorited ? "text-rose-500 fill-rose-500" : "text-gray-400"}`} />
         </button>
     );
 }

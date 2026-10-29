@@ -46,7 +46,7 @@ export default function OwnedStickerPacksPage() {
     return (
         <div className="w-full pb-24">
             <div className="container mx-auto px-6 pb-16 max-w-4xl">
-                <h1 className="text-3xl font-bold tracking-widest text-gray-900 mb-12">購入済みのぺったん</h1>
+                <h1 className="text-3xl font-bold tracking-widest text-gray-900 mb-12">購入済み</h1>
 
                 {loadingPacks ? (
                     <p className="text-gray-400 text-sm">読み込み中...</p>

@@ -2,11 +2,12 @@
 
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-import { Heart, Plus, Check } from "lucide-react";
+import { Heart, ShoppingCart, Check } from "lucide-react";
 import { auth, onAuthStateChanged, type User } from "@/lib/firebaseAuth";
 import { isPackFavorited, addFavoritePack, removeFavoritePack } from "@/lib/favorites";
 import { isPackOwnedByUser } from "@/lib/stickerPacks";
-import { createCheckoutSession } from "@/lib/firebaseFunctions";
+import { PACKS_OWNED_EVENT } from "@/lib/bulkAcquire";
+import { useCart } from "@/components/CartProvider";
 
 type FavoriteStatus = "loading" | "favorited" | "not-favorited";
 type GetStatus = "loading" | "owned" | "purchasable";
@@ -18,9 +19,11 @@ export default function StickerPackCardActions({ packId }: { packId: string }) {
     const router = useRouter();
     const [user, setUser] = useState<User | null>(null);
     const [authReady, setAuthReady] = useState(false);
-    const [favoriteStatus, setFavoriteStatus] = useState<FavoriteStatus>("loading");
-    const [getStatus, setGetStatus] = useState<GetStatus>("loading");
-    const [submitting, setSubmitting] = useState(false);
+    const [favoriteState, setFavoriteStatus] = useState<FavoriteStatus>("loading");
+    const [getState, setGetStatus] = useState<GetStatus>("loading");
+    // 未ログインは、お気に入りなし・入手可能として扱う
+    const favoriteStatus: FavoriteStatus = authReady && !user ? "not-favorited" : favoriteState;
+    const getStatus: GetStatus = authReady && !user ? "purchasable" : getState;
 
     useEffect(() => onAuthStateChanged(auth, (u) => {
         setUser(u);
@@ -29,11 +32,7 @@ export default function StickerPackCardActions({ packId }: { packId: string }) {
 
     useEffect(() => {
         if (!authReady) return;
-        if (!user) {
-            setFavoriteStatus("not-favorited");
-            setGetStatus("purchasable");
-            return;
-        }
+        if (!user) return;
         let cancelled = false;
         isPackFavorited(user.uid, packId).then((favorited) => {
             if (!cancelled) setFavoriteStatus(favorited ? "favorited" : "not-favorited");
@@ -45,6 +44,16 @@ export default function StickerPackCardActions({ packId }: { packId: string }) {
             cancelled = true;
         };
     }, [authReady, user, packId]);
+
+    // 一括入手（BulkAcquireButton）で入手済みになったら、表示を更新する
+    useEffect(() => {
+        const onOwned = (e: Event) => {
+            const ids = (e as CustomEvent<{ packIds: string[] }>).detail?.packIds ?? [];
+            if (ids.includes(packId)) setGetStatus("owned");
+        };
+        window.addEventListener(PACKS_OWNED_EVENT, onOwned);
+        return () => window.removeEventListener(PACKS_OWNED_EVENT, onOwned);
+    }, [packId]);
 
     const stop = (e: React.MouseEvent) => {
         e.preventDefault();
@@ -66,26 +75,19 @@ export default function StickerPackCardActions({ packId }: { packId: string }) {
         }
     };
 
-    const handleGetClick = async (e: React.MouseEvent) => {
+    const cart = useCart();
+    const inCart = cart.has(packId);
+
+    // 入手済みでなければ、カートに追加/カートから外す（入手はカートのページ、または詳細ページから）
+    const handleCartClick = async (e: React.MouseEvent) => {
         stop(e);
-        if (getStatus !== "purchasable" || submitting) return;
+        if (getStatus !== "purchasable") return;
         if (!user) {
             router.push(`/login?redirect=${encodeURIComponent(`/daidai-yokocho/${packId}`)}`);
             return;
         }
-        setSubmitting(true);
-        try {
-            const result = await createCheckoutSession({ packId, origin: window.location.origin });
-            if (result.url) {
-                window.location.href = result.url;
-                return;
-            }
-            if (result.granted) {
-                setGetStatus("owned");
-            }
-        } finally {
-            setSubmitting(false);
-        }
+        if (inCart) await cart.remove(packId);
+        else await cart.add(packId);
     };
 
     if (!authReady || favoriteStatus === "loading" || getStatus === "loading") {
@@ -101,20 +103,21 @@ export default function StickerPackCardActions({ packId }: { packId: string }) {
                 className="p-2 rounded-full bg-white/80 backdrop-blur-sm shadow-sm border border-white/70 hover:bg-white/95 transition-colors"
             >
                 <Heart
-                    className={`w-4 h-4 ${favoriteStatus === "favorited" ? "text-amber-500 fill-amber-500" : "text-gray-400"}`}
+                    className={`w-4 h-4 ${favoriteStatus === "favorited" ? "text-rose-500 fill-rose-500" : "text-gray-400"}`}
                 />
             </button>
             <button
                 type="button"
-                onClick={handleGetClick}
-                disabled={getStatus === "owned" || submitting}
-                aria-label={getStatus === "owned" ? "入手済み" : "入手する"}
+                onClick={handleCartClick}
+                disabled={getStatus === "owned"}
+                aria-label={getStatus === "owned" ? "入手済み" : inCart ? "カートから外す" : "カートに追加"}
+                aria-pressed={inCart}
                 className="p-2 rounded-full bg-white/80 backdrop-blur-sm shadow-sm border border-white/70 hover:bg-white/95 transition-colors disabled:cursor-not-allowed disabled:opacity-70"
             >
                 {getStatus === "owned" ? (
                     <Check className="w-4 h-4 text-emerald-600" />
                 ) : (
-                    <Plus className="w-4 h-4 text-gray-500" />
+                    <ShoppingCart className={`w-4 h-4 ${inCart ? "text-blue-600 fill-blue-100" : "text-gray-500"}`} />
                 )}
             </button>
         </div>
