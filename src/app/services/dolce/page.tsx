@@ -86,7 +86,7 @@ const platforms: Platform[] = [
 
 export default function DolcePage() {
     return (
-        <div className="w-full bg-[#fdfbf7] text-gray-800 pb-32">
+        <div className="w-full bg-surface text-gray-800 pb-32">
             {/* ヒーローエリア */}
             <div className="container mx-auto px-6 pb-24 text-center">
                 <h1 className="text-4xl md:text-5xl font-bold tracking-widest text-gray-900 mb-4">dolce</h1>
@@ -122,7 +122,7 @@ export default function DolcePage() {
             <section className="container mx-auto px-6 py-16">
                 <div className="grid md:grid-cols-3 gap-8 max-w-5xl mx-auto">
                     {pillars.map((p, i) => (
-                        <div key={i} className="bg-white p-8 rounded-2xl shadow-sm border border-gray-100 text-center">
+                        <div key={i} className="bg-white p-8 rounded-m3-lg shadow-sm border border-gray-100 text-center">
                             <p.icon className="w-8 h-8 mx-auto mb-4 text-gray-700" strokeWidth={1.5} />
                             <h3 className="text-lg font-bold mb-3 text-balance">{p.title}</h3>
                             <p className="text-gray-600 text-sm leading-relaxed text-pretty">{p.desc}</p>
@@ -216,7 +216,7 @@ export default function DolcePage() {
             </section>
 
             {/* モバイル専用UI（Android） */}
-            <section className="container mx-auto px-6 py-20 bg-white/50 rounded-3xl max-w-6xl">
+            <section className="container mx-auto px-6 py-20 bg-white/50 rounded-m3-xl max-w-6xl">
                 <div className="text-center mb-12">
                     <span className="text-xs font-bold tracking-widest text-gray-500 mb-2 block">ANDROID</span>
                     <h2 className="text-2xl font-bold tracking-wide text-gray-900 text-balance">モバイル専用のUI</h2>
@@ -236,7 +236,7 @@ export default function DolcePage() {
                 {/* 機能タイルグリッド */}
                 <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6 max-w-5xl mx-auto">
                     {mobileFeatures.map((f, i) => (
-                        <div key={i} className="bg-white p-6 rounded-2xl shadow-sm border border-gray-100">
+                        <div key={i} className="bg-white p-6 rounded-m3-lg shadow-sm border border-gray-100">
                             <f.icon className="w-6 h-6 mb-3 text-gray-700" strokeWidth={1.5} />
                             <h3 className="text-base font-bold mb-2 text-gray-900 text-balance">{f.title}</h3>
                             <p className="text-gray-600 text-sm leading-relaxed text-pretty">{f.desc}</p>
@@ -249,12 +249,12 @@ export default function DolcePage() {
             <section className="container mx-auto px-6 py-20 text-center">
                 <h2 className="text-2xl font-bold mb-12 tracking-widest text-gray-900">対応フォーマット</h2>
                 <div className="flex flex-col md:flex-row justify-center gap-8 mb-8 max-w-2xl mx-auto">
-                    <div className="flex-1 bg-white p-8 rounded-2xl shadow-sm border border-gray-100">
+                    <div className="flex-1 bg-white p-8 rounded-m3-lg shadow-sm border border-gray-100">
                         <FileText className="w-8 h-8 mx-auto mb-4 text-gray-700" strokeWidth={1.5} />
                         <h4 className="text-xl font-bold mb-2">PDF (.pdf)</h4>
                         <p className="text-gray-500 text-sm">電子書籍・文書</p>
                     </div>
-                    <div className="flex-1 bg-white p-8 rounded-2xl shadow-sm border border-gray-100">
+                    <div className="flex-1 bg-white p-8 rounded-m3-lg shadow-sm border border-gray-100">
                         <Archive className="w-8 h-8 mx-auto mb-4 text-gray-700" strokeWidth={1.5} />
                         <h4 className="text-xl font-bold mb-2">CBZ (.cbz / .zip)</h4>
                         <p className="text-gray-500 text-sm">コミック・画像集</p>
@@ -270,8 +270,8 @@ export default function DolcePage() {
                     {platforms.map((p) => {
                         const available = p.status === "available";
                         const cardClass = available
-                            ? "bg-gray-900 text-white rounded-2xl p-6 text-center font-bold tracking-wide"
-                            : "border border-gray-300 text-gray-400 rounded-2xl p-6 text-center";
+                            ? "bg-gray-900 text-white rounded-m3-lg p-6 text-center font-bold tracking-wide"
+                            : "border border-gray-300 text-gray-400 rounded-m3-lg p-6 text-center";
                         const content = available ? (
                             p.name
                         ) : (
@@ -314,11 +314,11 @@ export default function DolcePage() {
                     href="https://github.com/rhing-official/dolce"
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="group block h-64 w-full max-w-sm mx-auto bg-white/50 backdrop-blur-md border border-white/80 shadow-md shadow-gray-200/40 hover:bg-white/80 hover:border-white hover:shadow-xl hover:shadow-blue-300/10 transition-all duration-500 rounded-lg overflow-hidden relative p-8"
+                    className="group block h-64 w-full max-w-sm mx-auto bg-white/50 backdrop-blur-md border border-white/80 shadow-elevation-2 hover:bg-white/80 hover:border-white hover:shadow-elevation-3 transition-all duration-500 rounded-lg overflow-hidden relative p-8"
                 >
                     <div className="relative z-10 h-full flex flex-col justify-between">
                         <div>
-                            <h3 className="text-sm font-bold tracking-widest text-gray-400 group-hover:text-blue-600 transition-colors">
+                            <h3 className="text-sm font-bold tracking-widest text-gray-400 group-hover:text-primary transition-colors">
                                 GITHUB
                             </h3>
                             <p className="text-2xl font-bold mt-2 text-gray-900 group-hover:text-black transition-colors">
@@ -329,7 +329,7 @@ export default function DolcePage() {
                             <span className="text-sm text-gray-500 group-hover:text-gray-400 transition-colors">
                                 dolceのリポジトリ
                             </span>
-                            <div className="w-10 h-10 rounded-full border border-gray-300 bg-white/40 group-hover:border-blue-600 group-hover:bg-blue-600 group-hover:text-white flex items-center justify-center text-gray-800 transition-all duration-300 transform group-hover:translate-x-2">
+                            <div className="w-10 h-10 rounded-full border border-gray-300 bg-white/40 group-hover:border-primary group-hover:bg-primary group-hover:text-white flex items-center justify-center text-gray-800 transition-all duration-300 transform group-hover:translate-x-2">
                                 <ArrowRight className="w-5 h-5" />
                             </div>
                         </div>

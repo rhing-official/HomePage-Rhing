@@ -10,7 +10,7 @@ export default function ScreenshotPlaceholder({ label, aspect = "video", classNa
     return (
         // ▼ 実機スクリーンショットが用意できたら、この div を <Image /> コンポーネントに差し替える
         <div
-            className={`${aspectClass} w-full rounded-2xl border-2 border-dashed border-gray-300 bg-gray-100/60 flex items-center justify-center p-6 ${className}`}
+            className={`${aspectClass} w-full rounded-m3-lg border-2 border-dashed border-gray-300 bg-gray-100/60 flex items-center justify-center p-6 ${className}`}
         >
             <span className="text-gray-400 text-sm text-center leading-relaxed tracking-wide">{label}</span>
         </div>

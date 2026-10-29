@@ -43,7 +43,7 @@ export default function Footer() {
                 {/* 右側：リンクエリア */}
                 <div className="w-full lg:w-2/3 relative flex">
                     {/* 背景用のシェイプ（斜めカット） */}
-                    <div className="absolute inset-0 bg-[#f0cabb] lg:[clip-path:polygon(15%_0,100%_0,100%_100%,0_100%)] rounded-t-[3rem] lg:rounded-none"></div>
+                    <div className="absolute inset-0 bg-secondary-container lg:[clip-path:polygon(15%_0,100%_0,100%_100%,0_100%)] rounded-t-m3-xl lg:rounded-none"></div>
 
                     {/* 
                       🌟 修正ポイント2:

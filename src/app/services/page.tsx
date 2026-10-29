@@ -59,7 +59,7 @@ export default function ServicesPage() {
                     return (
                         <section
                             key={service.id}
-                            className="container mx-auto px-6 max-w-5xl bg-white/40 backdrop-blur-md border border-white/80 shadow-md shadow-gray-200/30 rounded-3xl overflow-hidden p-8 md:p-12 lg:p-16"
+                            className="container mx-auto px-6 max-w-5xl bg-white/40 backdrop-blur-md border border-white/80 shadow-md shadow-gray-200/30 rounded-m3-xl overflow-hidden p-8 md:p-12 lg:p-16"
                         >
                             {/*
                               🌟 修正ポイント:
@@ -72,7 +72,7 @@ export default function ServicesPage() {
                                 {/* 画像（モックアップ）エリア（PCでは右側に配置されます） */}
                                 <Link
                                     href={service.link}
-                                    className="w-full lg:w-1/2 aspect-[4/3] md:aspect-[16/9] lg:aspect-square relative group overflow-hidden rounded-2xl shadow-sm block"
+                                    className="w-full lg:w-1/2 aspect-[4/3] md:aspect-[16/9] lg:aspect-square relative group overflow-hidden rounded-m3-lg shadow-sm block"
                                 >
                                     {/* ▼ 実際の画像が用意できたら、ここを <Image /> コンポーネントに差し替えます */}
                                     <div className={`absolute inset-0 w-full h-full ${service.bgColor} flex items-center justify-center transition-transform duration-700 group-hover:scale-105`}>

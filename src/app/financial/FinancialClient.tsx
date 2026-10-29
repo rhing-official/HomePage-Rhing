@@ -146,7 +146,7 @@ export default function FinancialClient({ years }: { years: Record<string, YearD
             </div>
 
             {/* ====== コンテンツエリア ====== */}
-            <div className="bg-[#f8f8f8] p-8 md:p-12 rounded-2xl min-h-[500px]">
+            <div className="bg-surface-container p-8 md:p-12 rounded-m3-lg min-h-[500px]">
                 {isAnnualTab ? (
                     <div className="w-full">
                         <h2 className="text-2xl font-bold mb-8 tracking-widest text-gray-900 text-center">

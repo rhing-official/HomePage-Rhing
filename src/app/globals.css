@@ -7,4 +7,34 @@
     --font-weight-bold: 500;
     --font-weight-extrabold: 500;
     --font-weight-black: 500;
+
+    /* Material Design 3 のカラーロール（配色は現行の色味を引き継ぐ） */
+    --color-surface: #fcfbf7;
+    --color-surface-container: #f8f8f8;
+    --color-on-surface: #111827;
+    --color-on-surface-variant: #4b5563;
+    --color-outline: #9ca3af;
+    --color-outline-variant: #e5e7eb;
+    --color-primary: #2563eb;
+    --color-on-primary: #ffffff;
+    --color-primary-container: #dbeafe;
+    --color-on-primary-container: #1e3a8a;
+    --color-secondary-container: #f0cabb;
+    --color-on-secondary-container: #4a2c20;
+    --color-tertiary: #ee7800;
+    --color-error: #dc2626;
+
+    /* 形状スケール（既存のrounded-*は変えず、M3用の名前を別に用意する） */
+    --radius-m3-sm: 0.5rem;
+    --radius-m3-md: 0.75rem;
+    --radius-m3-lg: 1rem;
+    --radius-m3-xl: 1.75rem;
+
+    /* エレベーション（0〜3の段階） */
+    --shadow-elevation-1: 0 1px 3px 0 rgb(17 24 39 / 0.06), 0 1px 2px -1px rgb(17 24 39 / 0.06);
+    --shadow-elevation-2: 0 4px 10px -2px rgb(17 24 39 / 0.08), 0 2px 4px -2px rgb(17 24 39 / 0.06);
+    --shadow-elevation-3: 0 12px 24px -6px rgb(37 99 235 / 0.14), 0 4px 8px -4px rgb(17 24 39 / 0.08);
+
+    /* モーション（M3の標準イージング） */
+    --ease-m3-standard: cubic-bezier(0.2, 0, 0, 1);
 }

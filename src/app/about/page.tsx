@@ -24,7 +24,7 @@ export default function AboutPage() {
                     <span className="block text-sm text-gray-500 font-normal mt-2 tracking-normal">理念</span>
                 </h2>
 
-                <div className="bg-[#f8f8f8] p-8 md:p-14 rounded-2xl">
+                <div className="bg-surface-container p-8 md:p-14 rounded-m3-lg">
                     <h3 className="text-xl md:text-2xl font-bold mb-8 text-gray-900 tracking-wide border-l-4 border-[#333] pl-4">
                         【団体名の由来について】
                     </h3>

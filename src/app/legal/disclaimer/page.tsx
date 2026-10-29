@@ -37,7 +37,7 @@ export default function DisclaimerPage() {
         <div className="container mx-auto px-6 pb-32 max-w-4xl">
             {/* ページタイトル */}
             {/* 🌟 修正ポイント1: タイトルエリアをガラスカードのデザインに変更 */}
-            <div className="mb-24 relative flex flex-col items-center justify-center text-center py-10 px-8 md:px-14 md:min-h-44 lg:min-h-52 bg-white/40 backdrop-blur-md border border-white/80 shadow-md shadow-gray-200/20 rounded-3xl">
+            <div className="mb-24 relative flex flex-col items-center justify-center text-center py-10 px-8 md:px-14 md:min-h-44 lg:min-h-52 bg-white/40 backdrop-blur-md border border-white/80 shadow-elevation-1 rounded-m3-xl">
                 {/* eslint-disable-next-line @next/next/no-img-element */}
                 <img src="/illustrations/terms.svg" alt="" className="hidden md:block absolute left-8 md:left-14 top-1/2 -translate-y-1/2 w-40 lg:w-48 h-auto" />
                 <h1 className="text-4xl md:text-5xl font-bold tracking-widest text-gray-900 mb-4">DISCLAIMER</h1>
@@ -55,7 +55,7 @@ export default function DisclaimerPage() {
                     */
                     <section
                         key={index}
-                        className="bg-white/40 backdrop-blur-md p-8 md:p-10 border border-white/80 border-l-4 border-l-gray-900 shadow-md shadow-gray-200/20 rounded-r-2xl hover:bg-white/60 hover:shadow-xl hover:shadow-blue-300/10 transition-all duration-500"
+                        className="bg-white/40 backdrop-blur-md p-8 md:p-10 border border-white/80 border-l-4 border-l-gray-900 shadow-elevation-1 rounded-r-m3-lg hover:bg-white/60 hover:shadow-elevation-3 transition-all duration-500"
                     >
                         {/* 🌟 区切り線をガラスの透過率に合うように微調整 */}
                         <h3 className="text-xl font-bold text-gray-900 mb-6 tracking-wide border-b border-gray-900/10 pb-4">

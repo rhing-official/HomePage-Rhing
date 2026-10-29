@@ -16,7 +16,7 @@ export default function CreatorPolicyPage() {
         <div className="container mx-auto px-6 pb-32 max-w-4xl">
             {/* ページタイトル */}
             {/* 🌟 修正ポイント1: タイトルエリアをガラスカードのデザインに変更 */}
-            <div className="mb-24 relative flex flex-col items-center justify-center text-center py-10 px-8 md:px-14 md:min-h-44 lg:min-h-52 bg-white/40 backdrop-blur-md border border-white/80 shadow-md shadow-gray-200/20 rounded-3xl">
+            <div className="mb-24 relative flex flex-col items-center justify-center text-center py-10 px-8 md:px-14 md:min-h-44 lg:min-h-52 bg-white/40 backdrop-blur-md border border-white/80 shadow-elevation-1 rounded-m3-xl">
                 {/* eslint-disable-next-line @next/next/no-img-element */}
                 <img src="/illustrations/terms.svg" alt="" className="hidden lg:block absolute -left-10 top-1/2 -translate-y-1/2 w-48 h-auto" />
                 <h1 className="text-4xl md:text-5xl font-bold tracking-widest text-gray-900 mb-4">CREATOR POLICY</h1>
@@ -30,7 +30,7 @@ export default function CreatorPolicyPage() {
                   🌟 修正ポイント2: セクションカードをガラスデザインに変更
                   - bg-white/40 (半透明), backdrop-blur-md, border-white/80
                 */}
-                <section className="bg-white/40 backdrop-blur-md p-8 md:p-12 border border-white/80 border-l-4 border-l-gray-900 shadow-md shadow-gray-200/20 rounded-r-2xl hover:bg-white/60 hover:shadow-xl hover:shadow-blue-300/10 transition-all duration-500">
+                <section className="bg-white/40 backdrop-blur-md p-8 md:p-12 border border-white/80 border-l-4 border-l-gray-900 shadow-elevation-1 rounded-r-m3-lg hover:bg-white/60 hover:shadow-elevation-3 transition-all duration-500">
                     <h2 className="text-2xl font-black text-gray-900 mb-8 tracking-wide border-b border-gray-900/10 pb-4">作品内での使用許可</h2>
                     <p className="text-gray-700 leading-loose text-lg font-medium mb-10">
                         Rhingは、クリエイターによる自由な表現を尊重します。以下の条件で、商用・非商用を問わず、Rhingのロゴやサービス名を作品内で使用することを無償で許可します。
@@ -66,7 +66,7 @@ export default function CreatorPolicyPage() {
                 </section>
 
                 {/* 方針 */}
-                <section className="bg-white/40 backdrop-blur-md p-8 md:p-12 border border-white/80 border-l-4 border-l-gray-900 shadow-md shadow-gray-200/20 rounded-r-2xl hover:bg-white/60 hover:shadow-xl hover:shadow-blue-300/10 transition-all duration-500">
+                <section className="bg-white/40 backdrop-blur-md p-8 md:p-12 border border-white/80 border-l-4 border-l-gray-900 shadow-elevation-1 rounded-r-m3-lg hover:bg-white/60 hover:shadow-elevation-3 transition-all duration-500">
                     <h2 className="text-2xl font-black text-gray-900 mb-6 tracking-wide border-b border-gray-900/10 pb-4">方針</h2>
                     <ul className="list-disc pl-6 space-y-4 text-gray-700 leading-relaxed text-lg font-medium">
                         <li>表現の自由を最大限尊重し、作品内での使用について事前許可は不要です。</li>
@@ -75,7 +75,7 @@ export default function CreatorPolicyPage() {
                 </section>
 
                 {/* ダウンロード */}
-                <section className="bg-white/40 backdrop-blur-md p-8 md:p-12 border border-white/80 border-l-4 border-l-gray-900 shadow-md shadow-gray-200/20 rounded-r-2xl hover:bg-white/60 hover:shadow-xl hover:shadow-blue-300/10 transition-all duration-500">
+                <section className="bg-white/40 backdrop-blur-md p-8 md:p-12 border border-white/80 border-l-4 border-l-gray-900 shadow-elevation-1 rounded-r-m3-lg hover:bg-white/60 hover:shadow-elevation-3 transition-all duration-500">
                     <h2 className="text-2xl font-black text-gray-900 mb-8 tracking-wide border-b border-gray-900/10 pb-4">ダウンロード</h2>
                     <p className="text-gray-700 leading-loose text-lg font-medium mb-8">
                         ロゴ素材をブランドごとにダウンロードできます。

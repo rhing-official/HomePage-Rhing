@@ -110,7 +110,7 @@ const pillars = [
 type FeatureStatus = "近日実装予定" | "将来実装予定" | "検討中";
 
 const featureRoadmapBadge: Record<FeatureStatus, string> = {
-    近日実装予定: "text-[#EE7800] bg-[#EE7800]/10",
+    近日実装予定: "text-tertiary bg-tertiary/10",
     将来実装予定: "text-gray-500 bg-gray-100",
     検討中: "text-gray-400 border border-gray-300",
 };
@@ -152,7 +152,7 @@ function FeatureRoadmapSection({ id }: { id: string }) {
             <h2 className="text-2xl font-bold mb-8 tracking-widest text-gray-900">未実装の機能について</h2>
             <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
                 {(["近日実装予定", "将来実装予定", "検討中"] as const).map((status) => (
-                    <div key={status} className="bg-white rounded-2xl shadow-sm border border-gray-100 p-6">
+                    <div key={status} className="bg-white rounded-m3-lg shadow-sm border border-gray-100 p-6">
                         <span className={`inline-block text-xs font-bold tracking-wide rounded-full px-3 py-1 mb-4 ${featureRoadmapBadge[status]}`}>
                             {status}
                         </span>
@@ -167,7 +167,7 @@ function FeatureRoadmapSection({ id }: { id: string }) {
                         </ul>
                     </div>
                 ))}
-                <div className="bg-gray-50 rounded-2xl border border-gray-100 p-6">
+                <div className="bg-gray-50 rounded-m3-lg border border-gray-100 p-6">
                     <span className="inline-block text-xs font-bold tracking-wide rounded-full px-3 py-1 mb-4 text-gray-400 border border-gray-300">
                         実装しない機能
                     </span>
@@ -199,8 +199,8 @@ function GeneralContent() {
             {/* 3支柱ブロック */}
             <div id="pillars" className="grid md:grid-cols-3 gap-8 mb-24 scroll-mt-8">
                 {pillars.map((p, i) => (
-                    <div key={i} className="bg-white p-8 rounded-2xl shadow-sm border border-gray-100 text-center">
-                        <p.icon className="w-8 h-8 mx-auto mb-4 text-[#EE7800]" strokeWidth={1.5} />
+                    <div key={i} className="bg-white p-8 rounded-m3-lg shadow-sm border border-gray-100 text-center">
+                        <p.icon className="w-8 h-8 mx-auto mb-4 text-tertiary" strokeWidth={1.5} />
                         <h3 className="text-lg font-bold mb-3 text-balance">{p.title}</h3>
                         <p className="text-gray-600 text-sm leading-relaxed text-pretty">{p.desc}</p>
                     </div>
@@ -277,7 +277,7 @@ function GeneralContent() {
             </div>
 
             {/* スクリーンショットギャラリー */}
-            <div id="screenshots" className="bg-white/50 rounded-3xl p-8 md:p-12 mb-24 scroll-mt-8">
+            <div id="screenshots" className="bg-white/50 rounded-m3-xl p-8 md:p-12 mb-24 scroll-mt-8">
                 <div className="text-center mb-12">
                     <span className="text-xs font-bold tracking-widest text-gray-500 mb-2 block">SCREENSHOTS</span>
                     <h2 className="text-2xl font-bold tracking-wide text-gray-900 text-balance">アプリの画面</h2>
@@ -294,8 +294,8 @@ function GeneralContent() {
             {/* その他の機能タイル */}
             <div id="more" className="grid md:grid-cols-2 lg:grid-cols-3 gap-6 mb-24 scroll-mt-8">
                 {moreFeatures.map((f, i) => (
-                    <div key={i} className="bg-white p-6 rounded-2xl shadow-sm border border-gray-100">
-                        <f.icon className="w-6 h-6 mb-3 text-[#EE7800]" strokeWidth={1.5} />
+                    <div key={i} className="bg-white p-6 rounded-m3-lg shadow-sm border border-gray-100">
+                        <f.icon className="w-6 h-6 mb-3 text-tertiary" strokeWidth={1.5} />
                         <h3 className="text-base font-bold mb-2 text-gray-900 text-balance">{f.title}</h3>
                         <p className="text-gray-600 text-sm leading-relaxed text-pretty">{f.desc}</p>
                     </div>
@@ -303,19 +303,19 @@ function GeneralContent() {
             </div>
 
             {/* 極みプラン */}
-            <div id="plan" className="bg-white rounded-2xl shadow-sm border border-gray-100 p-8 md:p-12 text-center max-w-2xl mx-auto mb-24 scroll-mt-8">
-                <span className="inline-block text-xs font-bold tracking-widest text-[#EE7800] bg-[#EE7800]/10 rounded-full px-4 py-1 mb-4">
+            <div id="plan" className="bg-white rounded-m3-lg shadow-sm border border-gray-100 p-8 md:p-12 text-center max-w-2xl mx-auto mb-24 scroll-mt-8">
+                <span className="inline-block text-xs font-bold tracking-widest text-tertiary bg-tertiary/10 rounded-full px-4 py-1 mb-4">
                     現在機能制限なしで無料開放中
                 </span>
                 <h3 className="text-2xl font-bold text-gray-900 mb-2">極み プラン</h3>
                 <p className="text-gray-400 text-sm mb-6">￥300 / 月（将来価格）</p>
                 <ul className="space-y-2 text-left max-w-xs mx-auto mb-6">
                     <li className="flex items-center gap-3 text-gray-700 text-sm">
-                        <span className="w-1.5 h-1.5 bg-[#EE7800] rounded-full shrink-0" />
+                        <span className="w-1.5 h-1.5 bg-tertiary rounded-full shrink-0" />
                         既読機能OFF
                     </li>
                     <li className="flex items-center gap-3 text-gray-700 text-sm">
-                        <span className="w-1.5 h-1.5 bg-[#EE7800] rounded-full shrink-0" />
+                        <span className="w-1.5 h-1.5 bg-tertiary rounded-full shrink-0" />
                         1080pの高画質ビデオ通話
                     </li>
                 </ul>
@@ -355,7 +355,7 @@ function GeekContent() {
                 <div id="stack" className="scroll-mt-8">
                     <span className="text-xs font-bold tracking-widest text-gray-500 mb-2 block">TECH STACK</span>
                     <h2 className="text-2xl font-bold mb-8 tracking-wide text-gray-900">技術スタック</h2>
-                    <div className="overflow-x-auto bg-white rounded-2xl shadow-sm border border-gray-100">
+                    <div className="overflow-x-auto bg-white rounded-m3-lg shadow-sm border border-gray-100">
                         <table className="w-full text-left">
                             <tbody className="text-gray-600">
                                 {techStack.map((row, i) => (
@@ -373,7 +373,7 @@ function GeekContent() {
                 <div id="security" className="scroll-mt-8">
                     <span className="text-xs font-bold tracking-widest text-gray-500 mb-2 block">PRIVACY & SECURITY</span>
                     <h2 className="text-2xl font-bold mb-8 tracking-wide text-gray-900 flex items-center gap-3">
-                        <Lock className="w-5 h-5 text-[#EE7800]" strokeWidth={1.5} />
+                        <Lock className="w-5 h-5 text-tertiary" strokeWidth={1.5} />
                         プライバシー・セキュリティ設計
                     </h2>
                     <ul className="space-y-4 text-gray-600 leading-relaxed text-sm">
@@ -396,7 +396,7 @@ function GeekContent() {
                 <div id="architecture" className="scroll-mt-8">
                     <span className="text-xs font-bold tracking-widest text-gray-500 mb-2 block">ARCHITECTURE</span>
                     <h2 className="text-2xl font-bold mb-8 tracking-wide text-gray-900 flex items-center gap-3">
-                        <Network className="w-5 h-5 text-[#EE7800]" strokeWidth={1.5} />
+                        <Network className="w-5 h-5 text-tertiary" strokeWidth={1.5} />
                         アーキテクチャ
                     </h2>
                     <ul className="space-y-4 text-gray-600 leading-relaxed text-sm">
@@ -416,7 +416,7 @@ function GeekContent() {
                 <div id="roadmap" className="scroll-mt-8">
                     <span className="text-xs font-bold tracking-widest text-gray-500 mb-2 block">ROADMAP</span>
                     <h2 className="text-2xl font-bold mb-8 tracking-wide text-gray-900">実装ロードマップ</h2>
-                    <div className="overflow-x-auto bg-white rounded-2xl shadow-sm border border-gray-100 mb-6">
+                    <div className="overflow-x-auto bg-white rounded-m3-lg shadow-sm border border-gray-100 mb-6">
                         <table className="w-full text-left">
                             <thead>
                                 <tr className="border-b border-gray-100 text-gray-400 text-xs uppercase tracking-widest">
@@ -451,11 +451,11 @@ function GeekContent() {
                         href="https://github.com/rhing-official/DaiDai"
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="group block h-64 w-full max-w-sm mx-auto bg-white/50 backdrop-blur-md border border-white/80 shadow-md shadow-gray-200/40 hover:bg-white/80 hover:border-white hover:shadow-xl hover:shadow-orange-300/10 transition-all duration-500 rounded-lg overflow-hidden relative p-8"
+                        className="group block h-64 w-full max-w-sm mx-auto bg-white/50 backdrop-blur-md border border-white/80 shadow-elevation-2 hover:bg-white/80 hover:border-white hover:shadow-xl hover:shadow-orange-300/10 transition-all duration-500 rounded-lg overflow-hidden relative p-8"
                     >
                         <div className="relative z-10 h-full flex flex-col justify-between">
                             <div>
-                                <h3 className="text-sm font-bold tracking-widest text-gray-400 group-hover:text-[#EE7800] transition-colors">
+                                <h3 className="text-sm font-bold tracking-widest text-gray-400 group-hover:text-tertiary transition-colors">
                                     GITHUB
                                 </h3>
                                 <p className="text-2xl font-bold mt-2 text-gray-900 group-hover:text-black transition-colors">
@@ -466,7 +466,7 @@ function GeekContent() {
                                 <span className="text-sm text-gray-500 group-hover:text-gray-400 transition-colors">
                                     DaiDaiのリポジトリ
                                 </span>
-                                <div className="w-10 h-10 rounded-full border border-gray-300 bg-white/40 group-hover:border-[#EE7800] group-hover:bg-[#EE7800] group-hover:text-white flex items-center justify-center text-gray-800 transition-all duration-300 transform group-hover:translate-x-2">
+                                <div className="w-10 h-10 rounded-full border border-gray-300 bg-white/40 group-hover:border-tertiary group-hover:bg-tertiary group-hover:text-white flex items-center justify-center text-gray-800 transition-all duration-300 transform group-hover:translate-x-2">
                                     <ArrowRight className="w-5 h-5" />
                                 </div>
                             </div>
