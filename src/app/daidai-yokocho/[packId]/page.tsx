@@ -110,6 +110,7 @@ export default async function StickerPackDetailPage({
                         <ul className="text-xs text-gray-500 leading-relaxed list-disc pl-5 space-y-1">
                             <li>入手すると、DaiDaiアプリでこのぺったんが使えるようになります。</li>
                             <li>入手したぺったんは、「購入済みのぺったん」から確認できます。</li>
+                            {pack.price > 0 && <li>18歳未満の方は、保護者の同意を得てからご購入ください。</li>}
                         </ul>
 
                         {/* 商品情報 */}

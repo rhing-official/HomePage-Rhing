@@ -180,7 +180,7 @@ export default function AboutPage() {
                         {/* 支払方法 */}
                         <div className="py-8 flex flex-col md:flex-row gap-4 md:gap-12 hover:bg-gray-50 transition-colors px-4">
                             <dt className="w-48 shrink-0 font-bold text-gray-900 tracking-wider">支払方法</dt>
-                            <dd className="text-gray-700">商品の購入: クレジットカード決済／寄付: クレジットカード・デビットカード・Apple Pay・Google Pay・PayPay・ビットコイン</dd>
+                            <dd className="text-gray-700">商品の購入: クレジットカード決済<br />寄付: クレジットカード・デビットカード・Apple Pay・Google Pay・PayPay・ビットコイン</dd>
                         </div>
 
                         {/* 支払時期 */}
@@ -200,17 +200,10 @@ export default function AboutPage() {
                             <dt className="w-48 shrink-0 font-bold text-gray-900 tracking-wider">返品・キャンセル</dt>
                             <dd className="text-gray-700">
                                 デジタルコンテンツの性質上、購入後の返品・キャンセルはお受けできません。寄付についても、お支払い後の返金・キャンセルはできません。
-                                不具合がある場合は、<Link href="/contact?type=user" className="underline hover:text-gray-900 transition-colors">
+                                ただし、法律上認められる場合（18歳未満の方が保護者の同意なく購入した場合の取消など）を除きます。
+                                取消のご相談や不具合がある場合は、<Link href="/contact?type=user" className="underline hover:text-gray-900 transition-colors">
                                     お問い合わせフォーム
                                 </Link>よりご連絡ください
-                            </dd>
-                        </div>
-
-                        {/* 動作環境 */}
-                        <div className="py-8 flex flex-col md:flex-row gap-4 md:gap-12 hover:bg-gray-50 transition-colors px-4">
-                            <dt className="w-48 shrink-0 font-bold text-gray-900 tracking-wider">動作環境</dt>
-                            <dd className="text-gray-700">
-                                <Link href="/services/daidai" className="underline hover:text-gray-900 transition-colors">DaiDai</Link>でご利用いただけます
                             </dd>
                         </div>
                     </dl>
