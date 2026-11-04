@@ -1,44 +1,11 @@
 import { Metadata } from "next";
-import Link from "next/link";
+import { Suspense } from "react";
+import ServicesTabs from "./ServicesTabs";
 
 export const metadata: Metadata = {
     title: "サービス紹介 | Rhing",
     description: "Rhingが提供するサービスについて",
 };
-
-// サービス一覧のデータ
-const services = [
-    {
-        id: "daidai",
-        name: "DaiDai",
-        tagline: "整う、守る、私に馴染む。",
-        category: "Messages",
-        description: "プライバシーを守る、メッセージアプリ。広告なし、電話番号・メールアドレス不要で、あなたのデータを売却しません。家族や友人との語らいから、コミュニティでの交流まで、安心して繋がれる場所を提供します。",
-        features: ["厳重なプライバシー保護", "広告なし", "電話番号・メアド不要", "Web対応", "Android,Linux,Windows,iOS,macOS対応予定"],
-        link: "/services/daidai",
-        bgColor: "bg-gray-300/60",
-    },
-    {
-        id: "daidai-yokocho",
-        name: "daidai横丁",
-        tagline: "ぺったんが集まる、小さな市場。",
-        category: "Store",
-        description: "DaiDaiで使えるぺったん（スタンプ）を、探して、入手できるストア。当面は、無料のぺったんを配布しています。クリエイターは、作ったぺったんを出品できます。",
-        features: ["DaiDaiで使えるぺったん", "当面は無料", "クリエイターが出品可能", "DaiDaiのアカウントで利用"],
-        link: "/services/daidai-yokocho",
-        bgColor: "bg-gray-200/60",
-    },
-    {
-        id: "dolce",
-        name: "dolce",
-        tagline: "本と、甘美な贅沢を。",
-        category: "Book Reader",
-        description: "カスタマイズが豊富で、複数プラットフォームを跨いで同じ使用感で使えます。現在はAndroid・Windows・Linuxで利用可能です。",
-        features: ["CBZ,PDFの読み込み", "設定のカスタマイズ", "ローカル完結", "Android,Linux,Windows対応", "iOS,macOS対応予定"],
-        link: "/services/dolce",
-        bgColor: "bg-gray-200/60",
-    }
-];
 
 export default function ServicesPage() {
     return (
@@ -53,70 +20,9 @@ export default function ServicesPage() {
                 </div>
             </div>
 
-            {/* サービス一覧セクション */}
-            <div className="flex flex-col gap-20">
-                {services.map((service) => {
-                    return (
-                        <section
-                            key={service.id}
-                            className="container mx-auto px-6 max-w-5xl bg-white/40 backdrop-blur-md border border-white/80 shadow-md shadow-gray-200/30 rounded-m3-xl overflow-hidden p-8 md:p-12 lg:p-16"
-                        >
-                            {/*
-                              🌟 修正ポイント:
-                              `lg:flex-row-reverse` を固定値として指定します。
-                              これにより、PC・タブレット横（lg以上）のときに、
-                              HTMLの記述順に関わらず「文章（テキスト）が左、画像が右」で統一されます。
-                            */}
-                            <div className="flex flex-col lg:flex-row-reverse gap-12 lg:gap-16 items-center">
-
-                                {/* 画像（モックアップ）エリア（PCでは右側に配置されます） */}
-                                <Link
-                                    href={service.link}
-                                    className="w-full lg:w-1/2 aspect-[4/3] md:aspect-[16/9] lg:aspect-square relative group overflow-hidden rounded-m3-lg shadow-sm block"
-                                >
-                                    {/* ▼ 実際の画像が用意できたら、ここを <Image /> コンポーネントに差し替えます */}
-                                    <div className={`absolute inset-0 w-full h-full ${service.bgColor} flex items-center justify-center transition-transform duration-700 group-hover:scale-105`}>
-                                        <span className="text-gray-400 font-bold tracking-widest text-xl border border-gray-400 p-4 transition-colors group-hover:text-gray-600 group-hover:border-gray-600">
-                                            {service.name} Image
-                                        </span>
-                                    </div>
-                                </Link>
-
-                                {/* テキストエリア（PCでは左側に配置されます） */}
-                                <div className="w-full lg:w-1/2 flex flex-col justify-center">
-                                    <span className="text-xs font-bold tracking-widest text-gray-500 mb-2 block">
-                                        {service.category}
-                                    </span>
-
-                                    {/* キャッチコピー */}
-                                    <p className="text-lg font-medium text-gray-400 mb-2 tracking-widest">
-                                        {service.tagline}
-                                    </p>
-
-                                    <h2 className="text-4xl md:text-5xl font-bold text-gray-900 mb-8 tracking-wider">
-                                        {service.name}
-                                    </h2>
-
-                                    <p className="text-gray-700 leading-relaxed text-base mb-8">
-                                        {service.description}
-                                    </p>
-
-                                    {/* 特徴リスト */}
-                                    <ul className="space-y-3 mb-0">
-                                        {service.features.map((feature, i) => (
-                                            <li key={i} className="flex items-center text-gray-600 font-medium">
-                                                <span className="w-1.5 h-1.5 bg-[#111] rounded-full mr-3 block"></span>
-                                                {feature}
-                                            </li>
-                                        ))}
-                                    </ul>
-                                </div>
-
-                            </div>
-                        </section>
-                    );
-                })}
-            </div>
+            <Suspense>
+                <ServicesTabs />
+            </Suspense>
         </div>
     );
 }
