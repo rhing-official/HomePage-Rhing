@@ -1,10 +1,11 @@
 "use client";
 
 import { Star } from "lucide-react";
-import { useEffect, useMemo, useRef } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import type { StickerRoleOption } from "@/lib/stickerRoles";
 import { uploadStickerPackAsset } from "@/lib/firebaseStorage";
 import type { StickerInput } from "@/lib/firebaseFunctions";
+import { STICKER_ALLOWED_TYPES, STICKER_MAX_BYTES, STICKER_MAX_SIDE_PX, validateStickerImage } from "@/lib/stickerImageSpec";
 
 // 画像1枚と、それに設定する役割id（未設定は空配列、単一選択UIのため常に0〜1件）の組。
 // 新しく選んだ画像（file）か、下書きから復元したアップロード済みの画像（uploaded）のどちらか。
@@ -61,6 +62,8 @@ export default function StickerImagePicker({
     onCoverChange?: (index: number) => void;
 }) {
     const inputRef = useRef<HTMLInputElement>(null);
+    // 規格に合わず追加できなかった画像と、その理由
+    const [rejected, setRejected] = useState<string[]>([]);
     // 新規の画像はobjectURL、アップロード済みの画像は、保存されているURLを使う
     const previews = useMemo(
         () => entries.map((entry) => (entry.file ? URL.createObjectURL(entry.file) : (entry.uploaded?.imageUrl ?? ""))),
@@ -78,13 +81,21 @@ export default function StickerImagePicker({
             <input
                 ref={inputRef}
                 type="file"
-                accept="image/*"
+                accept={STICKER_ALLOWED_TYPES.join(",")}
                 multiple
                 className="hidden"
-                onChange={(e) => {
-                    const newEntries = Array.from(e.target.files ?? []).map((file) => ({ file, roles: [] }));
-                    onChange([...entries, ...newEntries]);
+                onChange={async (e) => {
+                    const files = Array.from(e.target.files ?? []);
                     e.target.value = "";
+                    const accepted: StickerDraft[] = [];
+                    const errors: string[] = [];
+                    for (const file of files) {
+                        const reason = await validateStickerImage(file);
+                        if (reason) errors.push(`${file.name}: ${reason}`);
+                        else accepted.push({ file, roles: [] });
+                    }
+                    setRejected(errors);
+                    if (accepted.length > 0) onChange([...entries, ...accepted]);
                 }}
             />
             <button
@@ -94,6 +105,16 @@ export default function StickerImagePicker({
             >
                 {label}
             </button>
+            <p className="text-xs text-gray-500">
+                PNG・WebP・JPEG・GIF／長辺{STICKER_MAX_SIDE_PX}px以下／1枚{STICKER_MAX_BYTES / 1024 / 1024}MBまで
+            </p>
+            {rejected.length > 0 && (
+                <ul className="text-xs text-red-600 space-y-0.5" role="alert">
+                    {rejected.map((r) => (
+                        <li key={r}>{r}</li>
+                    ))}
+                </ul>
+            )}
             {entries.length > 0 && (
                 <div className="flex flex-wrap gap-3">
                     {entries.map((entry, i) => (
