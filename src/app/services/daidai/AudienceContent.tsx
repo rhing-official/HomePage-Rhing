@@ -447,31 +447,39 @@ function GeekContent() {
                 <div id="github" className="scroll-mt-8">
                     <span className="text-xs font-bold tracking-widest text-gray-500 mb-2 block">REPOSITORY</span>
                     <h2 className="text-2xl font-bold mb-8 tracking-wide text-gray-900">リポジトリ</h2>
-                    <a
-                        href="https://github.com/rhing-official/DaiDai"
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="group block h-64 w-full max-w-sm mx-auto bg-white/50 backdrop-blur-md border border-white/80 shadow-elevation-2 hover:bg-white/80 hover:border-white hover:shadow-xl hover:shadow-orange-300/10 transition-all duration-500 rounded-lg overflow-hidden relative p-8"
-                    >
-                        <div className="relative z-10 h-full flex flex-col justify-between">
-                            <div>
-                                <h3 className="text-sm font-bold tracking-widest text-gray-400 group-hover:text-tertiary transition-colors">
-                                    GITHUB
-                                </h3>
-                                <p className="text-2xl font-bold mt-2 text-gray-900 group-hover:text-black transition-colors">
-                                    開発の様子を見る
-                                </p>
-                            </div>
-                            <div className="flex items-end justify-between">
-                                <span className="text-sm text-gray-500 group-hover:text-gray-400 transition-colors">
-                                    DaiDaiのリポジトリ
-                                </span>
-                                <div className="w-10 h-10 rounded-full border border-gray-300 bg-white/40 group-hover:border-tertiary group-hover:bg-tertiary group-hover:text-white flex items-center justify-center text-gray-800 transition-all duration-300 transform group-hover:translate-x-2">
-                                    <ArrowRight className="w-5 h-5" />
+                    <div className="flex flex-col sm:flex-row gap-6 justify-center items-center sm:items-stretch">
+                        {[
+                            { href: "https://github.com/rhing-official/DaiDai", label: "GITHUB", title: "開発の様子を見る", caption: "DaiDaiのリポジトリ" },
+                            { href: "https://gitdiagram.com/rhing-official/daidai", label: "DIAGRAM", title: "構成を図解する", caption: "GitDiagramでコードの構成を見る" },
+                        ].map((card) => (
+                            <a
+                                key={card.href}
+                                href={card.href}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="group block h-64 w-full max-w-sm bg-white/50 backdrop-blur-md border border-white/80 shadow-elevation-2 hover:bg-white/80 hover:border-white hover:shadow-xl hover:shadow-orange-300/10 transition-all duration-500 rounded-lg overflow-hidden relative p-8"
+                            >
+                                <div className="relative z-10 h-full flex flex-col justify-between">
+                                    <div>
+                                        <h3 className="text-sm font-bold tracking-widest text-gray-400 group-hover:text-tertiary transition-colors">
+                                            {card.label}
+                                        </h3>
+                                        <p className="text-2xl font-bold mt-2 text-gray-900 group-hover:text-black transition-colors">
+                                            {card.title}
+                                        </p>
+                                    </div>
+                                    <div className="flex items-end justify-between">
+                                        <span className="text-sm text-gray-500 group-hover:text-gray-400 transition-colors">
+                                            {card.caption}
+                                        </span>
+                                        <div className="w-10 h-10 shrink-0 rounded-full border border-gray-300 bg-white/40 group-hover:border-tertiary group-hover:bg-tertiary group-hover:text-white flex items-center justify-center text-gray-800 transition-all duration-300 transform group-hover:translate-x-2">
+                                            <ArrowRight className="w-5 h-5" />
+                                        </div>
+                                    </div>
                                 </div>
-                            </div>
-                        </div>
-                    </a>
+                            </a>
+                        ))}
+                    </div>
                 </div>
             </div>
         </div>

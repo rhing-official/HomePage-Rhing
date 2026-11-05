@@ -38,3 +38,26 @@
     /* モーション（M3の標準イージング） */
     --ease-m3-standard: cubic-bezier(0.2, 0, 0, 1);
 }
+
+/* 画面遷移で、新しいページが滲んで現れる（template.tsx）。
+   fill-modeをbackwardsにして、終わった後にfilterを残さない（残すと、中のposition: fixedの基準が変わる） */
+@keyframes page-blur-in {
+    from {
+        opacity: 0;
+        filter: blur(12px);
+    }
+    to {
+        opacity: 1;
+        filter: blur(0);
+    }
+}
+
+.page-blur-in {
+    animation: page-blur-in 0.4s ease-in-out backwards;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .page-blur-in {
+        animation: none;
+    }
+}

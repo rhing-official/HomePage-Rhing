@@ -310,31 +310,39 @@ export default function DolcePage() {
                     <p>現在はAndroid・Windows・Linuxを中心に開発を進めています。iOS・macOSへの対応も計画中です。</p>
                     <p>ローカル完結・プライバシー重視という方針は変えず、これからも使いやすいリーダーを目指していきます。</p>
                 </div>
-                <a
-                    href="https://github.com/rhing-official/dolce"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="group block h-64 w-full max-w-sm mx-auto bg-white/50 backdrop-blur-md border border-white/80 shadow-elevation-2 hover:bg-white/80 hover:border-white hover:shadow-elevation-3 transition-all duration-500 rounded-lg overflow-hidden relative p-8"
-                >
-                    <div className="relative z-10 h-full flex flex-col justify-between">
-                        <div>
-                            <h3 className="text-sm font-bold tracking-widest text-gray-400 group-hover:text-primary transition-colors">
-                                GITHUB
-                            </h3>
-                            <p className="text-2xl font-bold mt-2 text-gray-900 group-hover:text-black transition-colors">
-                                開発の様子を見る
-                            </p>
-                        </div>
-                        <div className="flex items-end justify-between">
-                            <span className="text-sm text-gray-500 group-hover:text-gray-400 transition-colors">
-                                dolceのリポジトリ
-                            </span>
-                            <div className="w-10 h-10 rounded-full border border-gray-300 bg-white/40 group-hover:border-primary group-hover:bg-primary group-hover:text-white flex items-center justify-center text-gray-800 transition-all duration-300 transform group-hover:translate-x-2">
-                                <ArrowRight className="w-5 h-5" />
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 justify-items-center">
+                    {[
+                        { href: "https://github.com/rhing-official/dolce", label: "GITHUB", title: "開発の様子を見る", caption: "dolceのリポジトリ" },
+                        { href: "https://gitdiagram.com/rhing-official/dolce", label: "DIAGRAM", title: "構成を図解する", caption: "GitDiagramでコードの構成を見る" },
+                    ].map((card) => (
+                        <a
+                            key={card.href}
+                            href={card.href}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="group block h-64 w-full max-w-sm bg-white/50 backdrop-blur-md border border-white/80 shadow-elevation-2 hover:bg-white/80 hover:border-white hover:shadow-elevation-3 transition-all duration-500 rounded-lg overflow-hidden relative p-8"
+                        >
+                            <div className="relative z-10 h-full flex flex-col justify-between">
+                                <div>
+                                    <h3 className="text-sm font-bold tracking-widest text-gray-400 group-hover:text-primary transition-colors">
+                                        {card.label}
+                                    </h3>
+                                    <p className="text-2xl font-bold mt-2 text-gray-900 group-hover:text-black transition-colors">
+                                        {card.title}
+                                    </p>
+                                </div>
+                                <div className="flex items-end justify-between gap-3">
+                                    <span className="text-sm text-gray-500 group-hover:text-gray-400 transition-colors">
+                                        {card.caption}
+                                    </span>
+                                    <div className="w-10 h-10 shrink-0 rounded-full border border-gray-300 bg-white/40 group-hover:border-primary group-hover:bg-primary group-hover:text-white flex items-center justify-center text-gray-800 transition-all duration-300 transform group-hover:translate-x-2">
+                                        <ArrowRight className="w-5 h-5" />
+                                    </div>
+                                </div>
                             </div>
-                        </div>
-                    </div>
-                </a>
+                        </a>
+                    ))}
+                </div>
             </section>
         </div>
     );

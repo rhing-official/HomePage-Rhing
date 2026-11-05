@@ -10,7 +10,7 @@ export const metadata: Metadata = {
 const contents = [
     { href: "#about", label: "ぺったんとは" },
     { href: "#howto", label: "使い方" },
-    { href: "#creators", label: "クリエイターの方へ" },
+    { href: "#github", label: "仕組みを見る" },
 ];
 
 const pillars = [
@@ -140,23 +140,6 @@ export default function DaidaiYokochoServicePage() {
                 </div>
             </section>
 
-            {/* クリエイターの方へ */}
-            <section id="creators" className="container mx-auto px-6 py-20 text-left max-w-3xl">
-                <span className="text-xs font-bold tracking-widest text-gray-500 mb-2 block">FOR CREATORS</span>
-                <h2 className="text-2xl font-bold mb-6 tracking-widest text-gray-900">クリエイターの方へ</h2>
-                <div className="space-y-2 text-gray-600 mb-8">
-                    <p>作ったぺったんは、ログインして「作成と管理」のページから、daidai横丁に出品できます。</p>
-                    <p>有料パックの出品は準備中です。当面は、無料のぺったんのみ出品できます。</p>
-                    <p>
-                        出品にあたってのルールは、
-                        <Link href="/legal/creator" className="underline underline-offset-4 hover:text-gray-900 transition-colors">
-                            クリエイター向けポリシー
-                        </Link>
-                        をご覧ください。
-                    </p>
-                </div>
-            </section>
-
             {/* ストアへ */}
             <section className="container mx-auto px-6 pb-8 max-w-3xl">
                 <Link
@@ -182,6 +165,49 @@ export default function DaidaiYokochoServicePage() {
                         </div>
                     </div>
                 </Link>
+            </section>
+
+            {/* リポジトリ */}
+            <section id="github" className="container mx-auto px-6 pt-16 pb-8 max-w-5xl scroll-mt-8">
+                <span className="text-xs font-bold tracking-widest text-gray-500 mb-2 block text-center">REPOSITORY</span>
+                <h2 className="text-2xl font-bold mb-4 tracking-widest text-center text-gray-900">仕組みを見る</h2>
+                <p className="text-gray-600 leading-relaxed text-center max-w-xl mx-auto mb-10">
+                    daidai横丁の画面は、このサイトのリポジトリにあります。購入や出品の権限のルール、処理の部分は、DaiDaiのリポジトリにあります。
+                </p>
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-6 justify-items-center">
+                    {[
+                        { href: "https://github.com/rhing-official/HomePage-Rhing", label: "GITHUB", title: "画面を見る", caption: "このサイトのリポジトリ" },
+              { href: "https://gitdiagram.com/rhing-official/homepage-rhing", label: "DIAGRAM", title: "構成を図解する", caption: "GitDiagramでこのサイトの構成を見る" },
+                        { href: "https://github.com/rhing-official/DaiDai", label: "GITHUB", title: "ルールと処理を見る", caption: "DaiDaiのリポジトリ" },
+                    ].map((card) => (
+                        <a
+                            key={card.href}
+                            href={card.href}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="group block h-64 w-full max-w-sm bg-white/50 backdrop-blur-md border border-white/80 shadow-elevation-2 hover:bg-white/80 hover:border-white hover:shadow-elevation-3 transition-all duration-500 rounded-lg overflow-hidden relative p-8"
+                        >
+                            <div className="relative z-10 h-full flex flex-col justify-between">
+                                <div>
+                                    <h3 className="text-sm font-bold tracking-widest text-gray-400 group-hover:text-primary transition-colors">
+                                        {card.label}
+                                    </h3>
+                                    <p className="text-2xl font-bold mt-2 text-gray-900 group-hover:text-black transition-colors">
+                                        {card.title}
+                                    </p>
+                                </div>
+                                <div className="flex items-end justify-between gap-3">
+                                    <span className="text-sm text-gray-500 group-hover:text-gray-400 transition-colors">
+                                        {card.caption}
+                                    </span>
+                                    <div className="w-10 h-10 shrink-0 rounded-full border border-gray-300 bg-white/40 group-hover:border-primary group-hover:bg-primary group-hover:text-white flex items-center justify-center text-gray-800 transition-all duration-300 transform group-hover:translate-x-2">
+                                        <ArrowRight className="w-5 h-5" />
+                                    </div>
+                                </div>
+                            </div>
+                        </a>
+                    ))}
+                </div>
             </section>
         </div>
     );
