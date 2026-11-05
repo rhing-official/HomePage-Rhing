@@ -10,6 +10,7 @@
 
     /* Material Design 3 のカラーロール（配色は現行の色味を引き継ぐ） */
     --color-surface: #fcfbf7;
+    --color-surface-tint: #c6e07a;
     --color-surface-container: #f8f8f8;
     --color-on-surface: #111827;
     --color-on-surface-variant: #4b5563;
@@ -53,11 +54,50 @@
 }
 
 .page-blur-in {
+    position: relative;
+    isolation: isolate;
     animation: page-blur-in 0.4s ease-in-out backwards;
 }
 
 @media (prefers-reduced-motion: reduce) {
     .page-blur-in {
+        animation: none;
+    }
+}
+
+/* 画面遷移のたびに、ページ全体に薄い黄緑の水玉がぽつぽつと現れ、そのまま残る（template.tsx、PageDots.tsx）。
+   ヘッダー・フッターには掛けず、ページ（.page-blur-inの範囲）の中だけに敷く。
+   - .page-bleed-areaがページの範囲で切り抜く
+   - .page-blur-inをisolationで独立させ、z-index: -1の水玉をページの中身の下に敷く
+   不透明度は水玉ごとにインラインで指定している。終わった状態が通常の状態なので、fill-modeはbackwardsでよい */
+@keyframes page-dot {
+    from {
+        transform: scale(0);
+        filter: blur(6px);
+    }
+    to {
+        transform: scale(1);
+        filter: blur(0);
+    }
+}
+
+.page-bleed-area {
+    position: absolute;
+    inset: 0;
+    overflow: clip;
+    pointer-events: none;
+    z-index: -1;
+}
+
+.page-dot {
+    position: absolute;
+    border-radius: 9999px;
+    background: var(--color-surface-tint);
+    animation: page-dot 0.8s ease-out backwards;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .page-dot {
         animation: none;
     }
 }

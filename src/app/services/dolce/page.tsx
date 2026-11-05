@@ -86,7 +86,7 @@ const platforms: Platform[] = [
 
 export default function DolcePage() {
     return (
-        <div className="w-full bg-surface text-gray-800 pb-32">
+        <div className="w-full text-gray-800 pb-32">
             {/* ヒーローエリア */}
             <div className="container mx-auto px-6 pb-24 text-center">
                 <h1 className="text-4xl md:text-5xl font-bold tracking-widest text-gray-900 mb-4">dolce</h1>
