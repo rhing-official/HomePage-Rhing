@@ -1,3 +1,7 @@
 node_modules/
 .next/
 .env*.local
+
+# 公開しない（ローカルのみ）
+/CLAUDE.md
+/文書/日記.md
