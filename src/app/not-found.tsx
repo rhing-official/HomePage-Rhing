@@ -70,7 +70,7 @@ export default function NotFound() {
                         <br />
                         お探しのページは見当たりませんでした。
                         <br />
-                        URLをご確認のうえ、常設展示からお探しください。
+                        URLをご確認の上、常設展示からお探しください。
                     </p>
                 </motion.div>
             </div>
