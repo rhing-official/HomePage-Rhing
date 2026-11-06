@@ -40,14 +40,24 @@ const appServices = [
 
 const contractServices = [
     {
-        id: "contract",
-        name: "受託開発",
+        id: "contract-web",
+        name: "HP制作",
         tagline: "維持費はドメイン代だけ。",
-        category: "Contract",
+        category: "Contract / Web",
         description: "WordPressを使わず、HTML・CSS・TypeScriptで一から作るホームページ制作を承ります。無料のホスティングを使うため、サーバー代は0円。維持費はドメイン代だけです。",
-        features: ["フルスクラッチ実装", "サーバー代0円", "27,500円から", "アプリ開発もご相談ください"],
-        link: "/services/contract",
+        features: ["フルスクラッチ実装", "サーバー代0円", "27,500円から", "機能を選ぶと見積もりが出ます"],
+        link: "/services/contract/web",
         bgColor: "bg-gray-200/60",
+    },
+    {
+        id: "contract-app",
+        name: "アプリ制作",
+        tagline: "範囲を決めた、定額で。",
+        category: "Contract / App",
+        description: "用途がはっきりした小さなアプリを、Flutterで制作します。WebとAndroidに対応でき、機能と画面を先に決めて、その範囲で定額にします。",
+        features: ["Flutterで制作", "Web・Android対応", "100,000円〜", "機能を選ぶと見積もりが出ます"],
+        link: "/services/contract/app",
+        bgColor: "bg-gray-300/60",
     },
 ];
 

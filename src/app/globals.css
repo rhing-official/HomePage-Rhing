@@ -54,6 +54,8 @@
 }
 
 .page-blur-in {
+    /* mainいっぱいに伸ばし、短いページでもフッターの上端まで水玉の領域にする */
+    flex: 1 0 auto;
     position: relative;
     isolation: isolate;
     animation: page-blur-in 0.4s ease-in-out backwards;
@@ -87,6 +89,8 @@
     overflow: clip;
     pointer-events: none;
     z-index: -1;
+    /* 端で水玉が真っ二つに切れないよう、上下の端（大きい水玉の高さ分）で透明にする */
+    mask-image: linear-gradient(to bottom, transparent 0, #000 120px, #000 calc(100% - 120px), transparent 100%);
 }
 
 .page-dot {

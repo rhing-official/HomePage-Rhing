@@ -264,7 +264,7 @@ export default function ContactForm() {
                         {/* 共通項目：お問い合わせ内容 */}
                         <div>
                             <label htmlFor="message" className="block text-sm font-bold text-gray-700 mb-2">お問い合わせ内容 <span className="text-red-500 ml-1 text-xs font-normal">必須</span></label>
-                            <textarea id="message" name="お問い合わせ内容" required rows={6} className="w-full px-4 py-3 bg-white/50 border border-white/80 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:bg-white/80 transition-all resize-none" placeholder="お問い合わせ内容をご記入ください。"></textarea>
+                            <textarea id="message" name="お問い合わせ内容" required rows={6} defaultValue={(searchParams.get("message") ?? "").slice(0, 1000)} className="w-full px-4 py-3 bg-white/50 border border-white/80 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:bg-white/80 transition-all resize-none" placeholder="お問い合わせ内容をご記入ください。"></textarea>
                         </div>
 
                         {/* 画像添付：ファイル選択・ドラッグ&ドロップ・クリップボード貼り付け(Ctrl+V)に対応 */}
