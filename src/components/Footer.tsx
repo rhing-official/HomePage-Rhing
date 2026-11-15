@@ -85,6 +85,8 @@ export default function Footer() {
                             </h3>
                             <ul className="space-y-4 pl-2">
                                 <li><UnderlineLink href={siteConfig.socialLinks.note} external>note</UnderlineLink></li>
+                                <li><UnderlineLink href={siteConfig.socialLinks.qiita} external>Qiita</UnderlineLink></li>
+                                <li><UnderlineLink href={siteConfig.socialLinks.zenn} external>Zenn</UnderlineLink></li>
                                 <li><UnderlineLink href={siteConfig.socialLinks.github} external>GitHub</UnderlineLink></li>
                                 <li><UnderlineLink href={siteConfig.socialLinks.discord} external>Discord</UnderlineLink></li>
                             </ul>

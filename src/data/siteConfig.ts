@@ -18,6 +18,8 @@ export const siteConfig = {
     // SNSリンク
     socialLinks: {
         note: "https://note.com/rhing_official",
+        qiita: "https://qiita.com/rhing_official",
+        zenn: "https://zenn.dev/rhing_official",
         youtube: "https://www.youtube.com/@rhing_official",
         instagram: "https://www.instagram.com/rhing_official/",
         x: "https://x.com/rhing_official",

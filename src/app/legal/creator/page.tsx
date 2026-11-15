@@ -1,4 +1,5 @@
 import { Metadata } from "next";
+import Link from "next/link";
 import { Download } from "lucide-react";
 
 export const metadata: Metadata = {
@@ -6,9 +7,12 @@ export const metadata: Metadata = {
     description: "Rhingのロゴやサービス名を作品内で使用する際のポリシーです。",
 };
 
-// 今後DaiDai等を追加する場合はここに { name: "DaiDai", href: "/downloads/logos/daidai.zip" } のように追記する
-const logoKits = [
+// ロゴ素材を追加する場合は、public/downloads/logos/ にzipを置いて、ここに追記する
+// page: サービス名をクリックしたときに開く、サービスの紹介ページ（無いものは文字のみ）
+const logoKits: { name: string; href: string; page?: string }[] = [
     { name: "Rhing", href: "/downloads/logos/rhing.zip" },
+    { name: "DaiDai", href: "/downloads/logos/daidai.zip", page: "/services/daidai" },
+    { name: "dolce", href: "/downloads/logos/dolce.zip", page: "/services/dolce" },
 ];
 
 export default function CreatorPolicyPage() {
@@ -84,7 +88,13 @@ export default function CreatorPolicyPage() {
                         {logoKits.map((kit) => (
                             <div key={kit.name} className="aspect-square flex flex-col bg-white/90 border border-gray-200 rounded-xl overflow-hidden shadow-sm hover:shadow-md transition-shadow duration-300">
                                 <div className="flex-1 flex items-center justify-center bg-blue-50/60">
-                                    <span className="font-bold text-gray-900 text-lg">{kit.name}</span>
+                                    {kit.page ? (
+                                        <Link href={kit.page} className="font-bold text-gray-900 text-lg underline decoration-gray-300 underline-offset-4 hover:text-primary hover:decoration-primary transition-colors">
+                                            {kit.name}
+                                        </Link>
+                                    ) : (
+                                        <span className="font-bold text-gray-900 text-lg">{kit.name}</span>
+                                    )}
                                 </div>
                                 <div className="flex-1 flex items-center justify-center p-4 border-t border-gray-200">
                                     <a

@@ -152,7 +152,7 @@ export default function ContactForm() {
                     className={`px-8 py-4 text-center font-bold tracking-widest transition-colors ${activeTab === "user" ? "border-b-2 border-blue-600 text-blue-600" : "text-gray-400 hover:text-gray-600"
                         } disabled:opacity-50`}
                 >
-                    ユーザー向け
+                    利用者向け
                 </button>
                 <button
                     disabled={status === "submitting"}
