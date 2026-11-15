@@ -9,11 +9,11 @@ export const metadata: Metadata = {
     description: "整う、守る、私に馴染む。個人情報を収集しない、プライバシーファーストなメッセージアプリ",
 };
 
-type Platform = { name: string; status: "available" | "planned"; url?: string };
+type Platform = { name: string; status: "available" | "planned"; url?: string; note?: string };
 
 const platforms: Platform[] = [
     { name: "Web", status: "available", url: "https://daidai.rhing.jp" },
-    { name: "Android", status: "planned" },
+    { name: "Android", status: "available", url: "https://github.com/rhing-official/DaiDai/releases/tag/v1.0.0-beta.1", note: "APKのみ" },
     { name: "iOS", status: "planned" },
     { name: "Windows", status: "planned" },
     { name: "Linux", status: "planned" },
@@ -70,7 +70,14 @@ export default function DaiDaiPage() {
                                     ? "bg-white text-gray-800 border border-gray-200 hover:bg-tertiary/10 hover:border-tertiary/30 rounded-xl p-5 text-center font-bold tracking-wide transition-colors duration-300"
                                     : "border border-gray-200 text-gray-400 rounded-xl p-5 text-center";
                                 const content = available ? (
-                                    p.name
+                                    p.note ? (
+                                        <>
+                                            <p>{p.name}</p>
+                                            <p className="text-xs font-medium tracking-widest text-gray-500 mt-1">{p.note}</p>
+                                        </>
+                                    ) : (
+                                        p.name
+                                    )
                                 ) : (
                                     <>
                                         <p className="font-bold tracking-wide mb-1">{p.name}</p>
@@ -95,8 +102,9 @@ export default function DaiDaiPage() {
                                 { os: "iPadOS 27 β", detail: "Floorp" },
                                 { os: "Android 16", detail: "Firefox" },
                                 { os: "Zorin OS 18", detail: "Floorp・Vivaldi" },
+                                { os: "motorola edge 50s pro", detail: "Android 16・APK" },
                             ]}
-                            note="Web版をブラウザで確認した結果です（括弧内は使用したブラウザ）。"
+                            note="Web版はブラウザ、motorola edge 50s proはAPKで確認した結果です（括弧内は使用したブラウザ、またはOSと配布形式）。"
                             checkedAt="2026/10/12"
                         />
                     </div>
