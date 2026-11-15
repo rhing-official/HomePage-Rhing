@@ -1,11 +1,25 @@
 "use client";
 
 import Link from "next/link";
+import Image from "next/image";
 import { AnimatePresence, motion } from "framer-motion";
 import { useRouter, useSearchParams } from "next/navigation";
 
+interface Service {
+    id: string;
+    name: string;
+    tagline: string;
+    category: string;
+    description: string;
+    features: string[];
+    link: string;
+    bgColor: string;
+    // 画像（public/ 以下のパス）。無いときは、仮のプレースホルダーを出す
+    image?: string;
+}
+
 // サービス一覧のデータ
-const appServices = [
+const appServices: Service[] = [
     {
         id: "daidai",
         name: "DaiDai",
@@ -15,16 +29,18 @@ const appServices = [
         features: ["厳重なプライバシー保護", "広告なし", "電話番号・メアド不要", "Web対応", "Android,Linux,Windows,iOS,macOS対応予定"],
         link: "/services/daidai",
         bgColor: "bg-gray-300/60",
+        image: "/logos/daidai.png",
     },
     {
         id: "daidai-yokocho",
         name: "daidai横丁",
         tagline: "ぺったんが集まる、小さな市場。",
         category: "Store",
-        description: "DaiDaiで使えるぺったん（スタンプ）を、探して、入手できるストア。当面は、無料のぺったんを配布しています。クリエイターは、作ったぺったんを出品できます。",
+        description: "DaiDaiで使えるぺったんを、探して、入手できるストア。当面は、無料のぺったんを配布しています。クリエイターは、作ったぺったんを出品できます。",
         features: ["DaiDaiで使えるぺったん", "当面は無料", "クリエイターが出品可能", "DaiDaiのアカウントで利用"],
         link: "/services/daidai-yokocho",
         bgColor: "bg-gray-200/60",
+        image: "/logos/daidai-yokocho.png",
     },
     {
         id: "dolce",
@@ -35,10 +51,11 @@ const appServices = [
         features: ["CBZ,PDFの読み込み", "設定のカスタマイズ", "ローカル完結", "Android,Linux,Windows対応", "iOS,macOS対応予定"],
         link: "/services/dolce",
         bgColor: "bg-gray-200/60",
+        image: "/logos/dolce.png",
     }
 ];
 
-const contractServices = [
+const contractServices: Service[] = [
     {
         id: "contract-web",
         name: "HP制作",
@@ -48,6 +65,7 @@ const contractServices = [
         features: ["フルスクラッチ実装", "サーバー代0円", "27,500円から", "機能を選ぶと見積もりが出ます"],
         link: "/services/contract/web",
         bgColor: "bg-gray-200/60",
+        image: "/illustrations/website-setup.svg",
     },
     {
         id: "contract-app",
@@ -58,6 +76,7 @@ const contractServices = [
         features: ["Flutterで制作", "Web・Android対応", "100,000円〜", "機能を選ぶと見積もりが出ます"],
         link: "/services/contract/app",
         bgColor: "bg-gray-300/60",
+        image: "/illustrations/mobile-app.svg",
     },
 ];
 
@@ -130,12 +149,24 @@ export default function ServicesTabs() {
                                     href={service.link}
                                     className="w-full lg:w-1/2 aspect-[4/3] md:aspect-[16/9] lg:aspect-square relative group overflow-hidden rounded-m3-lg shadow-sm block"
                                 >
-                                    {/* ▼ 実際の画像が用意できたら、ここを <Image /> コンポーネントに差し替えます */}
-                                    <div className={`absolute inset-0 w-full h-full ${service.bgColor} flex items-center justify-center transition-transform duration-700 group-hover:scale-105`}>
-                                        <span className="text-gray-400 font-bold tracking-widest text-xl border border-gray-400 p-4 transition-colors group-hover:text-gray-600 group-hover:border-gray-600">
-                                            {service.name} Image
-                                        </span>
-                                    </div>
+                                    {service.image ? (
+                                        <div className="absolute inset-0 w-full h-full bg-white transition-transform duration-700 group-hover:scale-105">
+                                            <Image
+                                                src={service.image}
+                                                alt={`${service.name}の画像`}
+                                                fill
+                                                sizes="(min-width: 1024px) 40vw, 90vw"
+                                                className="object-contain p-8 md:p-10"
+                                            />
+                                        </div>
+                                    ) : (
+                                        // ▼ 画像が用意できたら、サービスの image に public/ 以下のパスを入れる
+                                        <div className={`absolute inset-0 w-full h-full ${service.bgColor} flex items-center justify-center transition-transform duration-700 group-hover:scale-105`}>
+                                            <span className="text-gray-400 font-bold tracking-widest text-xl border border-gray-400 p-4 transition-colors group-hover:text-gray-600 group-hover:border-gray-600">
+                                                {service.name} Image
+                                            </span>
+                                        </div>
+                                    )}
                                 </Link>
 
                                 {/* テキストエリア（PCでは左側に配置されます） */}

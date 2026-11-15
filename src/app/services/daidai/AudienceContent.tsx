@@ -53,6 +53,7 @@ const generalContents: ContentsItem[] = [
     { href: "#more", label: "その他の機能" },
     { href: "#plan", label: "極みプラン" },
     { href: "#future", label: "未実装の機能について" },
+    { href: "#notification", label: "電気通信事業の届出" },
 ];
 
 const geekContents: ContentsItem[] = [
@@ -62,6 +63,7 @@ const geekContents: ContentsItem[] = [
     { href: "#roadmap", label: "実装ロードマップ" },
     { href: "#pending", label: "未実装の機能について" },
     { href: "#github", label: "リポジトリ" },
+    { href: "#notification", label: "電気通信事業の届出" },
 ];
 
 export function AudienceHeader() {

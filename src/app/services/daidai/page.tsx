@@ -114,6 +114,31 @@ export default function DaiDaiPage() {
                     <AudienceContent />
                 </section>
             </AudienceProvider>
+
+            {/* 電気通信事業の届出（一般向け/ギーク向けのどちらでも表示する） */}
+            <section id="notification" className="container mx-auto px-6 pt-8 pb-8 max-w-5xl scroll-mt-8">
+                <span className="text-xs font-bold tracking-widest text-gray-500 mb-2 block">NOTIFICATION</span>
+                <h2 className="text-2xl font-bold mb-6 tracking-wide text-gray-900">電気通信事業の届出</h2>
+                <div className="bg-white/50 backdrop-blur-md border border-white/80 shadow-elevation-2 rounded-lg p-8">
+                    <p className="text-gray-700 leading-relaxed mb-6">
+                        DaiDaiは、電気通信事業法に基づく電気通信事業の届出を、総務大臣に対して行っています。
+                    </p>
+                    <dl className="text-sm border-t border-gray-200">
+                        <div className="flex gap-4 py-3 border-b border-gray-100">
+                            <dt className="w-24 shrink-0 text-gray-500">届出番号</dt>
+                            <dd className="text-gray-800 font-bold tracking-wider">E-08-05840</dd>
+                        </div>
+                        <div className="flex gap-4 py-3 border-b border-gray-100">
+                            <dt className="w-24 shrink-0 text-gray-500">届出年月日</dt>
+                            <dd className="text-gray-800">2026年10月5日</dd>
+                        </div>
+                        <div className="flex gap-4 py-3 border-b border-gray-100">
+                            <dt className="w-24 shrink-0 text-gray-500">届出者</dt>
+                            <dd className="text-gray-800">Rhing（畑中 新）</dd>
+                        </div>
+                    </dl>
+                </div>
+            </section>
         </div>
     );
 }
