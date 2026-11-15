@@ -119,21 +119,36 @@ const featureRoadmapBadge: Record<FeatureStatus, string> = {
 
 const featureRoadmap: { name: string; status: FeatureStatus }[] = [
     { name: "Appleでのログイン", status: "近日実装予定" },
-    { name: "コンピューター・スマートフォン以外の端末への通知対応", status: "近日実装予定" },
-    { name: "大容量ファイルの直接送信", status: "将来実装予定" },
+    { name: "iPhone・Mac・Windows・Linuxでの通知対応", status: "近日実装予定" },
     { name: "パスキーログインの正式対応", status: "近日実装予定" },
-    { name: "極みプランの提供開始", status: "近日実装予定" },
-    { name: "誰でも参加できる広場など、コミュニティ機能の拡張", status: "将来実装予定" },
+    { name: "カードがなくても買える、極みの期間パス（PayPayなど）", status: "近日実装予定" },
     { name: "災害時の安否確認", status: "近日実装予定" },
-    { name: "より高性能なノイズキャンセリング", status: "将来実装予定" },
+    { name: "より高性能なノイズキャンセリング", status: "近日実装予定" },
+    { name: "読み込み中の表示をより自然に", status: "近日実装予定" },
+    { name: "使い方ガイドの追加（寄合・安全とプライバシー・極み）", status: "近日実装予定" },
+    { name: "表示言語にマンダリンを追加", status: "近日実装予定" },
+    { name: "通知音・着信音の拡充", status: "近日実装予定" },
+    { name: "既読表示の細かい設定（極みプラン向け）", status: "近日実装予定" },
+    { name: "誰でも参加できる広場など、コミュニティ機能の拡張", status: "将来実装予定" },
     { name: "通話品質向上のための通信基盤の強化", status: "将来実装予定" },
-    { name: "既読表示の細かい設定", status: "将来実装予定" },
+    { name: "大容量ファイルの直接送信", status: "将来実装予定" },
     { name: "1080p高画質ビデオ通話（極みプラン向け）", status: "将来実装予定" },
+    { name: "画面の配置のカスタマイズ・極み限定カラーなど、極みプランの特典の追加", status: "将来実装予定" },
     { name: "より進んだメッセージの暗号化", status: "将来実装予定" },
+    { name: "画面共有機能", status: "将来実装予定" },
+    { name: "通知タイミングの詳細設定", status: "将来実装予定" },
+    { name: "ドイツ語・オランダ語・イタリア語・スペイン語・ポルトガル語の表示言語", status: "将来実装予定" },
+    { name: "新しいUIスタイル（回路風）", status: "将来実装予定" },
+    { name: "画面を切り替えるときの、部品のアニメーション", status: "将来実装予定" },
+    { name: "共有ノートの使い心地をObsidianにさらに近づける", status: "将来実装予定" },
+    { name: "画像・動画の拡大表示のなめらかさの向上", status: "将来実装予定" },
+    { name: "祝日・祭日の画像表示", status: "将来実装予定" },
+    { name: "タブレットのマウスなど、「戻る」「進む」操作の対応拡大", status: "将来実装予定" },
+    { name: "認証アプリ上でのRhingのアイコン表示", status: "将来実装予定" },
+    { name: "不正利用の検知の強化", status: "将来実装予定" },
     { name: "ブラウザの「戻る」操作での画面復元", status: "検討中" },
-    { name: "アイコンのアニメーション対応", status: "検討中" },
-    { name: "画面共有機能", status: "検討中" },
-    { name: "通知タイミングの詳細設定", status: "検討中" },
+    { name: "送信前の画像編集（トリミング・回転・モザイク・落書き）", status: "検討中" },
+    { name: "Rhing Seedでの友達追加のあり方の見直し", status: "検討中" },
 ];
 
 const notPlannedFeatures = [
@@ -144,7 +159,7 @@ const notPlannedFeatures = [
     "マイナンバー連携",
     "着せ替え機能",
     "メーラー機能",
-    "フォーラム機能",
+    "一方的な友達解除（ブロックで対応）",
 ];
 
 function FeatureRoadmapSection({ id }: { id: string }) {
@@ -152,30 +167,36 @@ function FeatureRoadmapSection({ id }: { id: string }) {
         <div id={id} className="scroll-mt-8">
             <span className="text-xs font-bold tracking-widest text-gray-500 mb-2 block">UNIMPLEMENTED FEATURES</span>
             <h2 className="text-2xl font-bold mb-8 tracking-widest text-gray-900">未実装の機能について</h2>
-            <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
+            <div className="flex flex-col gap-6">
                 {(["近日実装予定", "将来実装予定", "検討中"] as const).map((status) => (
-                    <div key={status} className="bg-white rounded-m3-lg shadow-sm border border-gray-100 p-6">
-                        <span className={`inline-block text-xs font-bold tracking-wide rounded-full px-3 py-1 mb-4 ${featureRoadmapBadge[status]}`}>
-                            {status}
-                        </span>
-                        <ul className="space-y-3">
+                    <div key={status} className="bg-white rounded-m3-lg shadow-sm border border-gray-100 p-6 md:p-8 flex flex-col md:flex-row gap-4 md:gap-10">
+                        <div className="md:w-40 shrink-0">
+                            <span className={`inline-block text-xs font-bold tracking-wide rounded-full px-3 py-1 ${featureRoadmapBadge[status]}`}>
+                                {status}
+                            </span>
+                        </div>
+                        <ul className="flex-1 grid sm:grid-cols-2 lg:grid-cols-3 gap-x-8 gap-y-3">
                             {featureRoadmap
                                 .filter((f) => f.status === status)
                                 .map((f) => (
-                                    <li key={f.name} className="text-sm text-gray-600 leading-relaxed">
+                                    <li key={f.name} className="flex items-start gap-3 text-sm text-gray-600 leading-relaxed">
+                                        <span className="w-1.5 h-1.5 bg-tertiary rounded-full shrink-0 mt-2" />
                                         {f.name}
                                     </li>
                                 ))}
                         </ul>
                     </div>
                 ))}
-                <div className="bg-gray-50 rounded-m3-lg border border-gray-100 p-6">
-                    <span className="inline-block text-xs font-bold tracking-wide rounded-full px-3 py-1 mb-4 text-gray-400 border border-gray-300">
-                        実装しない機能
-                    </span>
-                    <ul className="space-y-3">
+                <div className="bg-gray-50 rounded-m3-lg border border-gray-100 p-6 md:p-8 flex flex-col md:flex-row gap-4 md:gap-10">
+                    <div className="md:w-40 shrink-0">
+                        <span className="inline-block text-xs font-bold tracking-wide rounded-full px-3 py-1 text-gray-400 border border-gray-300">
+                            実装しない機能
+                        </span>
+                    </div>
+                    <ul className="flex-1 grid sm:grid-cols-2 lg:grid-cols-3 gap-x-8 gap-y-3">
                         {notPlannedFeatures.map((f) => (
-                            <li key={f} className="text-sm text-gray-400 leading-relaxed">
+                            <li key={f} className="flex items-start gap-3 text-sm text-gray-400 leading-relaxed">
+                                <span className="w-1.5 h-1.5 bg-gray-300 rounded-full shrink-0 mt-2" />
                                 {f}
                             </li>
                         ))}
@@ -307,22 +328,29 @@ function GeneralContent() {
             {/* 極みプラン */}
             <div id="plan" className="bg-white rounded-m3-lg shadow-sm border border-gray-100 p-8 md:p-12 text-center max-w-2xl mx-auto mb-24 scroll-mt-8">
                 <span className="inline-block text-xs font-bold tracking-widest text-tertiary bg-tertiary/10 rounded-full px-4 py-1 mb-4">
-                    現在機能制限なしで無料開放中
+                    ご利用いただけます
                 </span>
                 <h3 className="text-2xl font-bold text-gray-900 mb-2">極み プラン</h3>
-                <p className="text-gray-400 text-sm mb-6">￥300 / 月（将来価格）</p>
-                <ul className="space-y-2 text-left max-w-xs mx-auto mb-6">
-                    <li className="flex items-center gap-3 text-gray-700 text-sm">
-                        <span className="w-1.5 h-1.5 bg-tertiary rounded-full shrink-0" />
-                        既読機能OFF
-                    </li>
-                    <li className="flex items-center gap-3 text-gray-700 text-sm">
-                        <span className="w-1.5 h-1.5 bg-tertiary rounded-full shrink-0" />
-                        1080pの高画質ビデオ通話
-                    </li>
+                <p className="text-gray-500 text-sm mb-6">￥300 / 月</p>
+                <ul className="space-y-2 text-left w-fit max-w-full mx-auto mb-6">
+                    {["既読の非表示", "限定フォント10種", "プロフィールカード・SNSのリンクの上限を拡大", "複数アカウントの切り替え"].map((feature) => (
+                        <li key={feature} className="flex items-center gap-3 text-gray-700 text-sm">
+                            <span className="w-1.5 h-1.5 bg-tertiary rounded-full shrink-0" />
+                            {feature}
+                        </li>
+                    ))}
                 </ul>
-                <p className="text-xs text-gray-400 tracking-wide">
-                    上記の機能も含め、現在は全て無料でご利用いただけます。今後、課金が始まる可能性があります。
+                <a
+                    href="https://daidai.rhing.jp"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-flex items-center justify-center gap-2 bg-tertiary text-white px-8 py-3 rounded-full font-bold tracking-wider hover:bg-tertiary/90 hover:shadow-elevation-2 transition-all mb-4"
+                >
+                    アプリで購入する
+                    <ArrowRight className="w-5 h-5" />
+                </a>
+                <p className="text-xs text-gray-400 tracking-wide leading-relaxed">
+                    ログインして、アプリの「設定」の「アカウント」から、購入と契約の管理ができます。特典は、今後も追加していく予定です。
                 </p>
             </div>
 

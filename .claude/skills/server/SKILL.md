@@ -24,7 +24,7 @@ description: ローカルのNext.js開発サーバー(next dev)を、起動中�
 
 ## 3. 開発サーバーを起動
 
-- リポジトリルートで、ログを`/tmp/homepage-dev.log`に書き出しながら`npm run dev`をバックグラウンド実行する(`npm run dev > /tmp/homepage-dev.log 2>&1`を、Bashツールの`run_in_background: true`で実行する。`/hotrestart`がこのログを読む)。
+- リポジトリルートで、ログを`/tmp/homepage-dev.log`に書き出しながら`npm run dev`をバックグラウンド実行する(`npm run dev > /tmp/homepage-dev.log 2>&1`を、Bashツールの`run_in_background: true`・`timeout: 7200000`（2時間。既定の30分だと途中で止まる）で実行する。`/hotrestart`がこのログを読む)。
 - 起動直後の`/tmp/homepage-dev.log`を数秒〜十数秒待って確認し、"Ready"等の起動完了メッセージと実際に待ち受けているポート番号を把握する。
 - 起動失敗(エラーで終了、ポート競合が解決できない等)の場合はログの内容をそのままユーザーに提示する。
 
