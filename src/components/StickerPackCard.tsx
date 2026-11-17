@@ -3,6 +3,8 @@ import type { StickerPack } from "@/lib/stickerPacks";
 import { formatPackPrice, getPackCover } from "@/lib/stickerPacks";
 import type { CreatorProfile } from "@/lib/creatorProfiles";
 import StickerPackCardActions from "@/components/StickerPackCardActions";
+import LoadingImage from "@/components/LoadingImage";
+import { Skeleton } from "@/components/Skeleton";
 
 export default function StickerPackCard({
     pack,
@@ -25,8 +27,7 @@ export default function StickerPackCard({
             <Link href={`/daidai-yokocho/${pack.id}`} className="flex flex-col">
                 <div className="relative w-full aspect-[4/3] bg-white flex items-center justify-center overflow-hidden">
                     {cover?.imageUrl ? (
-                        // eslint-disable-next-line @next/next/no-img-element
-                        <img
+                        <LoadingImage
                             src={cover.imageUrl}
                             alt={pack.name}
                             className="w-full h-full object-contain p-4 transition-transform duration-500 group-hover:scale-105"
@@ -49,9 +50,9 @@ export default function StickerPackCard({
 
             <div className="px-6 pt-2 pb-6 flex flex-col gap-3">
                 {creator === undefined ? (
-                    <div className="flex items-center gap-2 animate-pulse">
-                        <div className="w-5 h-5 -ml-0.5 rounded-full bg-gray-200" />
-                        <div className="h-3 w-16 rounded-full bg-gray-200" />
+                    <div className="flex items-center gap-2">
+                        <Skeleton className="w-5 h-5 -ml-0.5 rounded-full" />
+                        <Skeleton className="h-3 w-16 rounded-full" />
                     </div>
                 ) : creator ? (
                     <Link

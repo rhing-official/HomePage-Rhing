@@ -5,6 +5,7 @@ import { AnimatePresence } from "framer-motion";
 import { Maximize2 } from "lucide-react";
 import { getPackCover, type Sticker } from "@/lib/stickerPacks";
 import ImageViewer from "@/components/ImageViewer";
+import LoadingImage from "@/components/LoadingImage";
 
 // 商品画像のギャラリー。大きな画像1枚と、切り替え用のサムネイル
 export default function PackGallery({
@@ -38,8 +39,8 @@ export default function PackGallery({
                 aria-label="画像を全画面で表示"
                 className="relative aspect-square w-full rounded-m3-lg bg-white border border-gray-100 shadow-elevation-1 flex items-center justify-center overflow-hidden cursor-zoom-in"
             >
-                {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img src={current.imageUrl} alt={current.name || packName} className="w-full h-full object-contain p-6" />
+                {/* keyで、画像が切り替わるたびに、読み込み前のパルスからやり直す */}
+                <LoadingImage key={current.imageUrl} src={current.imageUrl} alt={current.name || packName} className="w-full h-full object-contain p-6" />
                 <span className="absolute bottom-3 right-3 p-2 rounded-full bg-white/80 shadow-elevation-1 text-gray-500" aria-hidden>
                     <Maximize2 className="w-4 h-4" />
                 </span>
@@ -53,12 +54,11 @@ export default function PackGallery({
                                 onClick={() => setIndex(i)}
                                 aria-label={`${sticker.name || `${i + 1}枚目`}を表示`}
                                 aria-current={i === index}
-                                className={`aspect-square w-full rounded-m3-md bg-white overflow-hidden border-2 transition ${
+                                className={`relative aspect-square w-full rounded-m3-md bg-white overflow-hidden border-2 transition ${
                                     i === index ? "border-primary" : "border-gray-100 hover:border-outline"
                                 }`}
                             >
-                                {/* eslint-disable-next-line @next/next/no-img-element */}
-                                <img src={sticker.imageUrl} alt="" className="w-full h-full object-contain p-1" />
+                                <LoadingImage src={sticker.imageUrl} alt="" className="w-full h-full object-contain p-1" />
                             </button>
                         </li>
                     ))}

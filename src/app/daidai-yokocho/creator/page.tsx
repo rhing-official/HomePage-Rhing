@@ -19,6 +19,7 @@ import { formatJstDateTime, getMyDeletionRequests, type PackDeletionRequest } fr
 import CreatePackForm from "@/components/daidai-yokocho/CreatePackForm";
 import { deletePackDraft, deletePackEditDraft, listPackDrafts, listPackEditDraftIds, type PackDraft } from "@/lib/packDrafts";
 import { getPackViewCount } from "@/lib/packStats";
+import { ThumbRowSkeleton } from "@/components/Skeleton";
 
 const CREATOR_PATH = "/daidai-yokocho/creator";
 
@@ -207,7 +208,7 @@ export default function CreatorDashboardPage() {
                     </div>
 
                     {loadingPacks ? (
-                        <p className="text-gray-400 text-sm">読み込み中...</p>
+                        <ThumbRowSkeleton />
                     ) : visibleItems.length === 0 ? (
                         <p className="text-gray-400 text-sm">
                             {items.length === 0 ? "まだパックを作成していません。" : "条件に一致するパックがありません。"}

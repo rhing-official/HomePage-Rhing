@@ -7,6 +7,8 @@ import { useRouter } from "next/navigation";
 import { auth, onAuthStateChanged, type User } from "@/lib/firebaseAuth";
 import { getOwnedStickerPacks, formatPackPrice, type StickerPack } from "@/lib/stickerPacks";
 import { uninstallStickerPack } from "@/lib/firebaseFunctions";
+import { PackPanelListSkeleton } from "@/components/Skeleton";
+import LoadingImage from "@/components/LoadingImage";
 
 const OWNED_PATH = "/daidai-yokocho/owned";
 
@@ -53,7 +55,7 @@ export default function OwnedStickerPacksPage() {
                 </h1>
 
                 {loadingPacks ? (
-                    <p className="text-gray-400 text-sm">読み込み中...</p>
+                    <PackPanelListSkeleton />
                 ) : packs.length === 0 ? (
                     <p className="text-gray-400 text-sm">
                         まだぺったんを所持していません。
@@ -114,10 +116,9 @@ function OwnedPackCard({
 
             <div className="grid grid-cols-6 sm:grid-cols-8 gap-2">
                 {pack.stickers.map((sticker, i) => (
-                    <div key={sticker.stickerId || i} className="aspect-square bg-white/60 border border-white/80 rounded-lg overflow-hidden">
+                    <div key={sticker.stickerId || i} className="relative aspect-square bg-white/60 border border-white/80 rounded-lg overflow-hidden">
                         {sticker.imageUrl && (
-                            // eslint-disable-next-line @next/next/no-img-element
-                            <img src={sticker.imageUrl} alt={sticker.name} className="w-full h-full object-contain p-1" />
+                            <LoadingImage src={sticker.imageUrl} alt={sticker.name} className="w-full h-full object-contain p-1" />
                         )}
                     </div>
                 ))}

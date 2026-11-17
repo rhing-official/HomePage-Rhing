@@ -11,6 +11,7 @@ import { useGoogleSignIn } from "@/hooks/useGoogleSignIn";
 import AccountDeleteDialog from "@/components/AccountDeleteDialog";
 import PersonIcon from "./PersonIcon";
 import ProfileEditModal from "./ProfileEditModal";
+import { Skeleton } from "@/components/Skeleton";
 import OnboardingModal from "./OnboardingModal";
 import PasskeySignInDialog from "./PasskeySignInDialog";
 import PasskeyRecoveryDialog from "./PasskeyRecoveryDialog";
@@ -62,7 +63,11 @@ export default function DaidaiYokochoMenu() {
     const [open, setOpen] = useState(false);
     const [user, setUser] = useState<User | null>(null);
     const [authReady, setAuthReady] = useState(false);
-    const [profile, setProfile] = useState<OwnProfile | null>(null);
+    // どのアカウントの、プロフィールを読み込んだか（uidで突き合わせて、読み込み中と、失敗・未設定を区別する）。
+    // profile: null は、読み込みに失敗した、またはドキュメントが無い場合
+    const [profileState, setProfileState] = useState<{ uid: string; profile: OwnProfile | null } | null>(null);
+    const setProfile = (update: (prev: OwnProfile | null) => OwnProfile | null) =>
+        setProfileState((s) => (s ? { ...s, profile: update(s.profile) } : s));
     const [showDeleteDialog, setShowDeleteDialog] = useState(false);
     const [showProfileEdit, setShowProfileEdit] = useState(false);
     const [showOnboarding, setShowOnboarding] = useState(false);
@@ -82,7 +87,7 @@ export default function DaidaiYokochoMenu() {
         let cancelled = false;
         fetchOwnProfile(user.uid).then(async (p) => {
             if (cancelled) return;
-            setProfile(p);
+            setProfileState({ uid: user.uid, profile: p });
             // 初回ログイン（daidaiOnboarded未達成）ならアカウントメニューを
             // 開かなくても自動でオンボーディングを表示する。ただし、管理者のアカウント
             // （管理者クレーム、DaiDaiが管理者に居住地アンケートを出さないのと同じ）には出さない。
@@ -114,7 +119,10 @@ export default function DaidaiYokochoMenu() {
 
     // ログアウト直後も直前のプロフィールを表示し続けないよう、描画時にuserと
     // 突き合わせる（setState-in-effectを避けるため、effect内ではリセットしない）。
-    const displayProfile = user ? profile : null;
+    const profileLoaded = !!user && profileState?.uid === user.uid;
+    const displayProfile = profileLoaded ? profileState.profile : null;
+    // ログイン済みで、プロフィールを読み込み中（呼び名・アイコンが、あとから変わってちらつくのを避ける）
+    const profileLoading = !!user && authReady && !profileLoaded;
 
     const { count: cartCount } = useCart();
     const close = () => setOpen(false);
@@ -161,7 +169,9 @@ export default function DaidaiYokochoMenu() {
                             aria-expanded={open}
                             className={quickIconClass}
                         >
-                            {displayProfile?.iconUrl ? (
+                            {profileLoading ? (
+                                <Skeleton className="w-9 h-9 rounded-full" />
+                            ) : displayProfile?.iconUrl ? (
                                 // eslint-disable-next-line @next/next/no-img-element
                                 <img src={displayProfile.iconUrl} alt="" className="w-9 h-9 rounded-full object-cover" />
                             ) : (
@@ -188,7 +198,9 @@ export default function DaidaiYokochoMenu() {
                                         }}
                                         className="flex items-center gap-3 px-1 py-1.5 w-full rounded-xl hover:bg-white/70 transition-colors"
                                     >
-                                        {displayProfile?.iconUrl ? (
+                                        {profileLoading ? (
+                                            <Skeleton className="w-12 h-12 rounded-full shrink-0" />
+                                        ) : displayProfile?.iconUrl ? (
                                             // eslint-disable-next-line @next/next/no-img-element
                                             <img
                                                 src={displayProfile.iconUrl}
@@ -199,11 +211,20 @@ export default function DaidaiYokochoMenu() {
                                             <div className="w-12 h-12 rounded-full bg-gray-200 shrink-0" />
                                         )}
                                         <div className="min-w-0 text-left">
-                                            <p className="font-bold text-gray-900 truncate">
-                                                {displayProfile?.nickname ?? user.displayName ?? "DaiDaiアカウント"}
-                                            </p>
-                                            {displayProfile?.rhingSeed && (
-                                                <p className="text-xs text-gray-400 truncate">@{displayProfile.rhingSeed}</p>
+                                            {profileLoading ? (
+                                                <div className="flex flex-col gap-1.5">
+                                                    <Skeleton className="h-4 w-28 rounded-full" />
+                                                    <Skeleton className="h-3 w-16 rounded-full" />
+                                                </div>
+                                            ) : (
+                                                <>
+                                                    <p className="font-bold text-gray-900 truncate">
+                                                        {displayProfile?.nickname ?? user.displayName ?? "DaiDaiアカウント"}
+                                                    </p>
+                                                    {displayProfile?.rhingSeed && (
+                                                        <p className="text-xs text-gray-400 truncate">@{displayProfile.rhingSeed}</p>
+                                                    )}
+                                                </>
                                             )}
                                         </div>
                                     </button>

@@ -9,6 +9,7 @@ import { getFavoritedStickerPacks, removeFavoritePack } from "@/lib/favorites";
 import type { StickerPack } from "@/lib/stickerPacks";
 import { getCreatorProfiles, type CreatorProfile } from "@/lib/creatorProfiles";
 import StickerPackCard from "@/components/StickerPackCard";
+import { PackGridSkeleton } from "@/components/Skeleton";
 
 const FAVORITES_PATH = "/daidai-yokocho/favorites";
 
@@ -62,7 +63,7 @@ export default function FavoritePacksPage() {
                 </h1>
 
                 {loading ? (
-                    <p className="text-gray-400 text-sm">読み込み中...</p>
+                    <PackGridSkeleton count={3} />
                 ) : packs.length === 0 ? (
                     <p className="text-gray-400 text-sm">
                         まだお気に入りのパックがありません。

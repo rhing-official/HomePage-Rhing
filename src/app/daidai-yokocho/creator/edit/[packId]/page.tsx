@@ -7,6 +7,7 @@ import { getStickerPackById, type StickerPack } from "@/lib/stickerPacks";
 import { getStickerRoles, type StickerRoleOption } from "@/lib/stickerRoles";
 import PackEditHeader from "@/components/daidai-yokocho/PackEditHeader";
 import PackEditor from "@/components/daidai-yokocho/PackEditor";
+import { EditorSkeleton } from "@/components/Skeleton";
 
 const CREATOR_PATH = "/daidai-yokocho/creator";
 
@@ -63,7 +64,7 @@ export default function EditPackPage({ params }: { params: Promise<{ packId: str
                 <PackEditHeader status="published" />
 
                 {loading ? (
-                    <p className="text-gray-400 text-sm">読み込み中...</p>
+                    <EditorSkeleton />
                 ) : !editable ? (
                     <p className="text-gray-500 text-sm">編集できるパックが見つかりません。</p>
                 ) : (

@@ -7,6 +7,7 @@ import { useRouter } from "next/navigation";
 import { auth, onAuthStateChanged, type User } from "@/lib/firebaseAuth";
 import { getFollowedCreatorIds, unfollowCreator } from "@/lib/follows";
 import { getCreatorProfiles, type CreatorProfile } from "@/lib/creatorProfiles";
+import { ListRowSkeleton } from "@/components/Skeleton";
 
 const FOLLOWS_PATH = "/daidai-yokocho/follows";
 
@@ -59,7 +60,7 @@ export default function FollowedCreatorsPage() {
                 </h1>
 
                 {loading ? (
-                    <p className="text-gray-400 text-sm">読み込み中...</p>
+                    <ListRowSkeleton />
                 ) : creators.length === 0 ? (
                     <p className="text-gray-400 text-sm">
                         まだ誰もフォローしていません。

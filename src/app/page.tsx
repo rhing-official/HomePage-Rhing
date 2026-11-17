@@ -1,3 +1,4 @@
+import { Suspense } from "react";
 import Link from "next/link";
 import { ArrowRight } from "lucide-react";
 import HeroFloatingSection from "@/components/HeroFloatingSection";
@@ -7,6 +8,7 @@ import Badge from "@/components/ui/Badge";
 import TrendingStickerPacks from "@/components/TrendingStickerPacks";
 import CartProvider from "@/components/CartProvider";
 import { getTrendingStickerPacks } from "@/lib/stickerPacks";
+import { PackGridSkeleton } from "@/components/Skeleton";
 
 export const dynamic = "force-dynamic";
 
@@ -18,9 +20,36 @@ const menuCards = [
     { title: "収支報告", en: "FINANCIAL", href: "/financial", desc: "収支を閲覧する" },
 ];
 
-export default async function Home() {
-    const trendingPacks = await getTrendingStickerPacks(5);
+// 「人気のぺったん」の見出し（取得中の枠と、取得後で共通）
+function TrendingHeader() {
+    return (
+        <div className="flex flex-col items-center mb-16">
+            <p className="text-sm font-bold text-gray-400 tracking-[0.2em] mb-2 uppercase">DAIDAI YOKOCHO</p>
+            <h2 className="text-3xl font-bold tracking-widest text-gray-900 mb-8">daidai横丁で人気のぺったん</h2>
 
+            <Button href="/daidai-yokocho" variant="glass">
+                全て見る →
+            </Button>
+        </div>
+    );
+}
+
+// 人気パックの取得（Firestore）を待つ間も、ページの他の部分を先に出せるよう、
+// この部分だけを非同期にして、<Suspense>で包む（ストリーミング）
+async function TrendingSection() {
+    const trendingPacks = await getTrendingStickerPacks(5);
+    if (trendingPacks.length === 0) return null;
+    return (
+        <section className="container mx-auto px-4 py-24 max-w-screen-2xl">
+            <TrendingHeader />
+            <CartProvider>
+                <TrendingStickerPacks packs={trendingPacks} />
+            </CartProvider>
+        </section>
+    );
+}
+
+export default function Home() {
     return (
         <div className="w-full">
             {/* ヒーローエリア */}
@@ -58,23 +87,17 @@ export default async function Home() {
                 </div>
             </section>
 
-            {/* daidai横丁：売れ筋ぺったん */}
-            {trendingPacks.length > 0 && (
-                <section className="container mx-auto px-4 py-24 max-w-screen-2xl">
-                    <div className="flex flex-col items-center mb-16">
-                        <p className="text-sm font-bold text-gray-400 tracking-[0.2em] mb-2 uppercase">DAIDAI YOKOCHO</p>
-                        <h2 className="text-3xl font-bold tracking-widest text-gray-900 mb-8">daidai横丁で人気のぺったん</h2>
-
-                        <Button href="/daidai-yokocho" variant="glass">
-                            全て見る →
-                        </Button>
-                    </div>
-
-                    <CartProvider>
-                        <TrendingStickerPacks packs={trendingPacks} />
-                    </CartProvider>
-                </section>
-            )}
+            {/* daidai横丁：売れ筋ぺったん（取得中は、枠だけを先に出す） */}
+            <Suspense
+                fallback={
+                    <section className="container mx-auto px-4 py-24 max-w-screen-2xl">
+                        <TrendingHeader />
+                        <PackGridSkeleton count={5} wide />
+                    </section>
+                }
+            >
+                <TrendingSection />
+            </Suspense>
 
             <section className="container mx-auto px-4 py-24 max-w-screen-2xl">
                 {/* 見出しと「全てのニュース」ボタン */}

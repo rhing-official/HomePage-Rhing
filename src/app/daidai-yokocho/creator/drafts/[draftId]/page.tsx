@@ -8,6 +8,7 @@ import { getStickerRoles, type StickerRoleOption } from "@/lib/stickerRoles";
 import { getPackDraft, type PackDraft } from "@/lib/packDrafts";
 import PackEditHeader from "@/components/daidai-yokocho/PackEditHeader";
 import CreatePackForm from "@/components/daidai-yokocho/CreatePackForm";
+import { EditorSkeleton } from "@/components/Skeleton";
 
 const CREATOR_PATH = "/daidai-yokocho/creator";
 
@@ -60,7 +61,7 @@ export default function EditDraftPage({ params }: { params: Promise<{ draftId: s
                 <PackEditHeader status="draft" />
 
                 {loading ? (
-                    <p className="text-gray-400 text-sm">読み込み中...</p>
+                    <EditorSkeleton />
                 ) : !draft ? (
                     <p className="text-gray-500 text-sm">編集できる下書きが見つかりません。</p>
                 ) : (

@@ -8,6 +8,7 @@ import { useCart } from "@/components/CartProvider";
 import { getStickerPackById, getPackCover, isPackOwnedByUser, formatPackPrice, type StickerPack } from "@/lib/stickerPacks";
 import { checkoutCart, removeFromCart, type CheckoutResult } from "@/lib/cart";
 import Button from "@/components/ui/Button";
+import { ThumbRowSkeleton } from "@/components/Skeleton";
 
 const CART_PATH = "/daidai-yokocho/cart";
 
@@ -77,7 +78,7 @@ export default function CartPage() {
                 </h1>
 
                 {loading ? (
-                    <p className="text-gray-400 text-sm">読み込み中...</p>
+                    <ThumbRowSkeleton />
                 ) : packs.length === 0 ? (
                     <div className="flex flex-col items-start gap-3">
                         {result ? (

@@ -3,6 +3,7 @@
 import { useCallback, useEffect, useState } from "react";
 import Link from "next/link";
 import NotFound from "@/app/not-found";
+import { ListRowSkeleton } from "@/components/Skeleton";
 import { auth, onAuthStateChanged, type User } from "@/lib/firebaseAuth";
 import DateTimePickerDialog from "@/components/daidai-yokocho/DateTimePickerDialog";
 import { parseDateKey, weekdayName } from "@/lib/calendarGrid";
@@ -300,7 +301,7 @@ export default function AdminClient() {
     const count = (n: number) => (loaded ? `（${n}）` : "");
     const renderRows = (list: PackDeletionRequest[], empty: string) =>
         !loaded && list.length === 0 ? (
-            <p className="text-sm text-gray-400">読み込み中…</p>
+            <ListRowSkeleton count={2} />
         ) : list.length === 0 ? (
             <p className="text-sm text-gray-500">{empty}</p>
         ) : (
