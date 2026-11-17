@@ -13,7 +13,9 @@ import {
     type StickerPack,
 } from "@/lib/stickerPacks";
 import { getStickerRoles, type StickerRoleOption } from "@/lib/stickerRoles";
-import { deleteStickerPack } from "@/lib/firebaseFunctions";
+import { deleteStickerPack, requestStickerPackDeletion } from "@/lib/firebaseFunctions";
+import DeletionRequestDialog from "@/components/daidai-yokocho/DeletionRequestDialog";
+import { formatJstDateTime, getMyDeletionRequests, type PackDeletionRequest } from "@/lib/packDeletion";
 import CreatePackForm from "@/components/daidai-yokocho/CreatePackForm";
 import { deletePackDraft, deletePackEditDraft, listPackDrafts, listPackEditDraftIds, type PackDraft } from "@/lib/packDrafts";
 import { getPackViewCount } from "@/lib/packStats";
@@ -48,6 +50,9 @@ export default function CreatorDashboardPage() {
     const [editDraftIds, setEditDraftIds] = useState<Set<string>>(new Set());
     const [deletingId, setDeletingId] = useState<string | null>(null);
     const [viewCounts, setViewCounts] = useState<Map<string, number | null>>(new Map());
+    // 利用者のいるパックの削除の申請（パックのIDごと）と、申請の入力を開いているパック
+    const [deletionRequests, setDeletionRequests] = useState<Map<string, PackDeletionRequest>>(new Map());
+    const [requestTarget, setRequestTarget] = useState<StickerPack | null>(null);
 
     useEffect(() => onAuthStateChanged(auth, (u) => {
         setUser(u);
@@ -64,7 +69,9 @@ export default function CreatorDashboardPage() {
     const reloadPacks = useCallback(async (uid: string) => {
         setLoadingPacks(true);
         try {
-            setPacks(await getStickerPacksByCreator(uid));
+            const [loaded, requests] = await Promise.all([getStickerPacksByCreator(uid), getMyDeletionRequests(uid)]);
+            setPacks(loaded);
+            setDeletionRequests(requests);
         } finally {
             setLoadingPacks(false);
         }
@@ -103,7 +110,11 @@ export default function CreatorDashboardPage() {
     if (!ready || !user) return null;
 
     const handleDeletePack = async (pack: StickerPack) => {
-        if (pack.ownerCount > 0) return;
+        // 利用者のいるパックは、直接は削除できない。削除を運営へ申請する
+        if (pack.ownerCount > 0) {
+            setRequestTarget(pack);
+            return;
+        }
         if (!window.confirm(`「${pack.name}」を削除しますか？画像も削除され、元に戻せません。`)) return;
         setDeletingId(pack.id);
         try {
@@ -116,6 +127,24 @@ export default function CreatorDashboardPage() {
         } finally {
             setDeletingId(null);
         }
+    };
+
+    // 削除の申請の状態に応じた、削除ボタンの表示。利用者がいなければ「削除」、いれば「削除を申請」
+    const deleteButtonState = (pack: StickerPack): { label: string; disabled: boolean; note?: string } => {
+        const request = deletionRequests.get(pack.id);
+        if (pack.deleteScheduledAt || request?.status === "scheduled") {
+            const at = pack.deleteScheduledAt ?? request?.scheduledDeleteAt ?? null;
+            return { label: "削除予定", disabled: true, note: at ? `${formatJstDateTime(at)}に削除されます` : "削除が予定されています" };
+        }
+        if (request?.status === "pending") return { label: "申請中", disabled: true, note: "削除を申請中です（運営が確認します）" };
+        if (request?.status === "failed") return { label: "対応中", disabled: true, note: "削除の処理に失敗しました。運営が対応します" };
+        if (pack.ownerCount > 0) {
+            if (request?.status === "rejected") {
+                return { label: "もう一度申請", disabled: false, note: `削除の申請は却下されました${request.decisionNote ? `：${request.decisionNote}` : ""}` };
+            }
+            return { label: "削除を申請", disabled: false };
+        }
+        return { label: "削除", disabled: false };
     };
 
     // 公開中のパックと下書きを、更新が新しい順に、1つの一覧にする
@@ -215,6 +244,9 @@ export default function CreatorDashboardPage() {
                                                     編集中の下書きあり
                                                 </span>
                                             )}
+                                            {deleteButtonState(item.pack).note && (
+                                                <p className="relative z-10 mt-1 text-xs font-bold text-red-600">{deleteButtonState(item.pack).note}</p>
+                                            )}
                                             <p className="text-xs text-gray-500 mt-1">
                                                 {formatPackPrice(item.pack.price)} ・ 閲覧回数 {viewCounts.get(item.pack.id) ?? "-"} ・ 利用者数 {item.pack.ownerCount}
                                             </p>
@@ -226,16 +258,21 @@ export default function CreatorDashboardPage() {
                                             <Pencil className="w-4 h-4" aria-hidden />
                                             編集
                                         </Link>
-                                        {/* 利用しているユーザーがいるパックは削除できないので、グレーアウトする */}
-                                        <button
-                                            type="button"
-                                            disabled={item.pack.ownerCount > 0 || deletingId === item.pack.id}
-                                            title={item.pack.ownerCount > 0 ? "現在利用しているユーザーがいるため削除できません" : undefined}
-                                            onClick={() => handleDeletePack(item.pack)}
-                                            className="relative z-10 shrink-0 text-sm font-bold text-red-600 hover:text-red-800 transition-colors disabled:text-gray-300 disabled:cursor-not-allowed disabled:hover:text-gray-300"
-                                        >
-                                            {deletingId === item.pack.id ? "削除中..." : "削除"}
-                                        </button>
+                                        {/* 利用者のいるパックは、直接は削除できない（運営へ申請する）。状態によって、グレーアウトする */}
+                                        {(() => {
+                                            const state = deleteButtonState(item.pack);
+                                            return (
+                                                <button
+                                                    type="button"
+                                                    disabled={state.disabled || deletingId === item.pack.id}
+                                                    title={state.note}
+                                                    onClick={() => handleDeletePack(item.pack)}
+                                                    className="relative z-10 shrink-0 text-sm font-bold text-red-600 hover:text-red-800 transition-colors disabled:text-gray-300 disabled:cursor-not-allowed disabled:hover:text-gray-300"
+                                                >
+                                                    {deletingId === item.pack.id ? "削除中..." : state.label}
+                                                </button>
+                                            );
+                                        })()}
                                     </div>
                                 ) : (
                     
@@ -288,6 +325,18 @@ export default function CreatorDashboardPage() {
                     )}
                 </div>
             </div>
+            {requestTarget && (
+                <DeletionRequestDialog
+                    packName={requestTarget.name}
+                    ownerCount={requestTarget.ownerCount}
+                    onClose={() => setRequestTarget(null)}
+                    onSubmit={async (reason) => {
+                        await requestStickerPackDeletion({ packId: requestTarget.id, reason });
+                        setRequestTarget(null);
+                        await reloadPacks(user.uid);
+                    }}
+                />
+            )}
         </div>
     );
 }

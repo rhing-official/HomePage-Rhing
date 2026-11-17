@@ -65,6 +65,27 @@ export async function deleteStickerPack(data: { packId: string }): Promise<void>
     await httpsCallable(functions, "deleteStickerPack")(data);
 }
 
+// 利用者のいるパックの削除を、運営へ申請する（理由は必須・200文字まで）
+export async function requestStickerPackDeletion(data: { packId: string; reason: string }): Promise<void> {
+    await httpsCallable(functions, "requestStickerPackDeletion")(data);
+}
+
+// 削除の申請を承認し、削除する日時（ISO文字列、今から24時間以上先）を指定する（管理者のみ）。入手した人だけにお知らせが送られる
+export async function approveStickerPackDeletion(data: { packId: string; deleteAt: string }): Promise<{ notified: number }> {
+    const result = await httpsCallable<typeof data, { notified?: number }>(functions, "approveStickerPackDeletion")(data);
+    return { notified: result.data?.notified ?? 0 };
+}
+
+// 削除の申請を却下する（管理者のみ）。理由は任意で、出品者に表示される
+export async function rejectStickerPackDeletion(data: { packId: string; note?: string }): Promise<void> {
+    await httpsCallable(functions, "rejectStickerPackDeletion")(data);
+}
+
+// 承認済みの削除の予定を取り消す（管理者のみ）
+export async function cancelScheduledPackDeletion(data: { packId: string }): Promise<void> {
+    await httpsCallable(functions, "cancelScheduledPackDeletion")(data);
+}
+
 export async function uninstallStickerPack(data: { packId: string }): Promise<void> {
     await httpsCallable(functions, "uninstallStickerPack")(data);
 }

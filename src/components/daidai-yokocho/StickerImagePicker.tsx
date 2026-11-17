@@ -2,6 +2,8 @@
 
 import { Star } from "lucide-react";
 import { useEffect, useMemo, useRef, useState } from "react";
+import { AnimatePresence } from "framer-motion";
+import ImageViewer from "@/components/ImageViewer";
 import type { StickerRoleOption } from "@/lib/stickerRoles";
 import { uploadStickerPackAsset } from "@/lib/firebaseStorage";
 import type { StickerInput } from "@/lib/firebaseFunctions";
@@ -64,6 +66,8 @@ export default function StickerImagePicker({
     const inputRef = useRef<HTMLInputElement>(null);
     // 規格に合わず追加できなかった画像と、その理由
     const [rejected, setRejected] = useState<string[]>([]);
+    // 拡大表示している画像の番号（nullなら閉じている）
+    const [viewerIndex, setViewerIndex] = useState<number | null>(null);
     // 新規の画像はobjectURL、アップロード済みの画像は、保存されているURLを使う
     const previews = useMemo(
         () => entries.map((entry) => (entry.file ? URL.createObjectURL(entry.file) : (entry.uploaded?.imageUrl ?? ""))),
@@ -106,7 +110,7 @@ export default function StickerImagePicker({
                 {label}
             </button>
             <p className="text-xs text-gray-500">
-                PNG・WebP・JPEG・GIF／長辺{STICKER_MAX_SIDE_PX}px以下／1枚{STICKER_MAX_BYTES / 1024 / 1024}MBまで
+                PNG・WebP・JPEG・GIF／長辺{STICKER_MAX_SIDE_PX}px以下／1枚{STICKER_MAX_BYTES / 1024 / 1024}MBまで。画像をクリックすると、拡大して見られます
             </p>
             {rejected.length > 0 && (
                 <ul className="text-xs text-red-600 space-y-0.5" role="alert">
@@ -121,8 +125,15 @@ export default function StickerImagePicker({
                         <div key={i} className="flex flex-col items-center gap-1 w-20">
                             <div className="relative w-16 h-16 rounded-lg overflow-hidden border border-gray-200 bg-white/70">
                                 {previews[i] && (
-                                    // eslint-disable-next-line @next/next/no-img-element
-                                    <img src={previews[i]} alt={draftEntryName(entry)} className="w-full h-full object-contain" />
+                                    <button
+                                        type="button"
+                                        onClick={() => setViewerIndex(i)}
+                                        aria-label={`${draftEntryName(entry)}を拡大して表示`}
+                                        className="absolute inset-0 w-full h-full cursor-zoom-in"
+                                    >
+                                        {/* eslint-disable-next-line @next/next/no-img-element */}
+                                        <img src={previews[i]} alt="" className="w-full h-full object-contain" />
+                                    </button>
                                 )}
                                 {onCoverChange && (
                                     <button
@@ -162,6 +173,16 @@ export default function StickerImagePicker({
                     ))}
                 </div>
             )}
+            <AnimatePresence>
+                {viewerIndex !== null && viewerIndex < entries.length && (
+                    <ImageViewer
+                        images={entries.map((entry, i) => ({ url: previews[i], name: draftEntryName(entry) }))}
+                        index={viewerIndex}
+                        onIndexChange={setViewerIndex}
+                        onClose={() => setViewerIndex(null)}
+                    />
+                )}
+            </AnimatePresence>
         </div>
     );
 }

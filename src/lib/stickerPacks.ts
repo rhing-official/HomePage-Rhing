@@ -46,6 +46,8 @@ export interface StickerPack {
     tags: string[];
     salesCount: number;
     ownerCount: number;
+    // 運営が承認した、削除の予定の日時（ミリ秒）。あれば、新しく入手できない
+    deleteScheduledAt: number | null;
     createdAt: number | null;
     updatedAt: number | null;
 }
@@ -65,6 +67,7 @@ function toStickerPack(id: string, data: DocumentData): StickerPack {
         tags: Array.isArray(data.tags) ? data.tags : [],
         salesCount: typeof data.salesCount === "number" ? data.salesCount : 0,
         ownerCount: typeof data.ownerCount === "number" ? data.ownerCount : 0,
+        deleteScheduledAt: data.deleteScheduledAt instanceof Timestamp ? data.deleteScheduledAt.toMillis() : null,
         createdAt: data.createdAt instanceof Timestamp ? data.createdAt.toMillis() : null,
         updatedAt: data.updatedAt instanceof Timestamp ? data.updatedAt.toMillis() : null,
     };
