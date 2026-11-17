@@ -64,6 +64,13 @@ export function toJstInput(date: Date): string {
     return shifted.toISOString().slice(0, 16);
 }
 
+// 日本時間の「2026/11/17 12:34」（/で区切る）。管理画面の申請時間など、時刻を正確に見せたいとき用
+export function formatJstSlash(ms: number): string {
+    const j = new Date(ms + JST_OFFSET_MS);
+    const pad = (n: number) => String(n).padStart(2, "0");
+    return `${j.getUTCFullYear()}/${pad(j.getUTCMonth() + 1)}/${pad(j.getUTCDate())} ${pad(j.getUTCHours())}:${pad(j.getUTCMinutes())}`;
+}
+
 // 日本時間の「何月何日何時（何分）」。分が0なら省く（Cloud Functionsの定型文と同じ）
 export function formatJstDateTime(ms: number): string {
     const j = new Date(ms + JST_OFFSET_MS);

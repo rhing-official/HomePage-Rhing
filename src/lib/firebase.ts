@@ -1,5 +1,5 @@
 import { getApp, getApps, initializeApp, type FirebaseOptions } from "firebase/app";
-import { getFirestore } from "firebase/firestore";
+import { getFirestore, initializeFirestore } from "firebase/firestore";
 import { isAuthRedirectHost } from "@/lib/authRedirect";
 
 // DaiDaiアプリと同一のFirebaseプロジェクト（daidai-rhing）を使う。
@@ -22,4 +22,16 @@ const firebaseConfig: FirebaseOptions = {
 };
 
 export const firebaseApp = getApps().length ? getApp() : initializeApp(firebaseConfig);
-export const db = getFirestore(firebaseApp);
+
+// WebChannelのストリーミングが通らない環境（VPN・プロキシ・一部のネットワーク）で、
+// 「Could not reach Cloud Firestore backend」となりオフライン扱いになるのを避けるため、
+// ストリーミングに失敗したら、HTTPのロングポーリングへ自動で切り替える（2026-11-17）。
+// 二重に初期化するとエラーになる（開発中のホットリロード等）ので、その場合は既存のものを使う。
+function createFirestore() {
+    try {
+        return initializeFirestore(firebaseApp, { experimentalAutoDetectLongPolling: true });
+    } catch {
+        return getFirestore(firebaseApp);
+    }
+}
+export const db = createFirestore();

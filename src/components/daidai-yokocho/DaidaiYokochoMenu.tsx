@@ -32,7 +32,10 @@ interface OwnProfile {
 async function fetchOwnProfile(uid: string): Promise<OwnProfile | null> {
     try {
         const snapshot = await getDoc(doc(db, "users", uid));
-        if (!snapshot.exists()) return null;
+        if (!snapshot.exists()) {
+            console.warn("プロフィール（users/{uid}）がありません:", uid);
+            return null;
+        }
         const data = snapshot.data();
         return {
             rhingSeed: typeof data.rhingSeed === "string" ? data.rhingSeed : "",
@@ -40,7 +43,9 @@ async function fetchOwnProfile(uid: string): Promise<OwnProfile | null> {
             iconUrl: typeof data.daidaiIconUrl === "string" ? data.daidaiIconUrl : null,
             onboarded: data.daidaiOnboarded === true,
         };
-    } catch {
+    } catch (err) {
+        // VPN・拡張機能などでFirestoreに届かないときも、ここに来る（画面は、Googleの表示名で代用する）
+        console.error("プロフィールを読み込めませんでした:", err);
         return null;
     }
 }

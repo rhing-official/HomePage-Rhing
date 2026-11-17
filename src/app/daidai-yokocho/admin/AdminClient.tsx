@@ -2,14 +2,11 @@
 
 import { useCallback, useEffect, useState } from "react";
 import Link from "next/link";
-import { AnimatePresence } from "framer-motion";
 import NotFound from "@/app/not-found";
 import { auth, onAuthStateChanged, type User } from "@/lib/firebaseAuth";
 import DateTimePickerDialog from "@/components/daidai-yokocho/DateTimePickerDialog";
 import { parseDateKey, weekdayName } from "@/lib/calendarGrid";
-import ImageViewer, { type ViewerImage } from "@/components/ImageViewer";
 import { getCreatorProfiles, type CreatorProfile } from "@/lib/creatorProfiles";
-import { getStickerPackById } from "@/lib/stickerPacks";
 import {
     approveStickerPackDeletion,
     cancelScheduledPackDeletion,
@@ -19,6 +16,7 @@ import {
     requestNoticePreview,
     deletionStatusLabel,
     formatJstDateTime,
+    formatJstSlash,
     listDeletionRequests,
     parseJstInput,
     toJstInput,
@@ -27,6 +25,7 @@ import {
 } from "@/lib/packDeletion";
 
 const DEFAULT_NOTICE_DAYS = 7;
+const SLOW_LOAD_MS = 15000; // これを超えても読み込みが終わらなければ、接続の案内を出す
 const cardClass = "bg-white/40 backdrop-blur-md border border-white/80 shadow-elevation-1 rounded-m3-xl";
 
 type AccessState = "loading" | "denied" | "admin";
@@ -55,8 +54,6 @@ function RequestRow({
     const [urgent, setUrgent] = useState(false);
     const [busy, setBusy] = useState(false);
     const [error, setError] = useState<string | null>(null);
-    const [viewerImages, setViewerImages] = useState<ViewerImage[] | null>(null);
-    const [viewerIndex, setViewerIndex] = useState(0);
 
     const run = async (task: () => Promise<void>) => {
         setBusy(true);
@@ -74,17 +71,6 @@ function RequestRow({
     const isSticker = request.kind === "sticker";
     const stickerArg = isSticker ? { stickerId: request.stickerId } : {};
     const targetLabel = isSticker ? `「${request.packName}」の「${request.stickerName}」` : `「${request.packName}」`;
-    const openImages = () =>
-        run(async () => {
-            const pack = await getStickerPackById(request.packId);
-            // 1枚の削除の申請は、そのぺったんだけを見せる
-            const target = (pack?.stickers ?? []).filter((s) => s.imageUrl && (!isSticker || s.stickerId === request.stickerId));
-            const images = target.map((s) => ({ url: s.imageUrl, name: s.name || request.packName }));
-            if (images.length === 0) throw new Error("確認できる画像がありません（すでに削除されている可能性があります）");
-            setViewerIndex(0);
-            setViewerImages(images);
-        });
-
     const approve = () => {
         if (urgent) {
             const preview = requestNoticePreview(request, Date.now(), true);
@@ -169,8 +155,12 @@ function RequestRow({
 
     return (
         <li className={`${cardClass} p-5 flex flex-col gap-3`}>
-            <div className="flex flex-wrap items-baseline gap-x-3 gap-y-1">
-                <Link href={`/daidai-yokocho/${request.packId}`} className="font-bold text-gray-900 hover:text-primary transition-colors">
+            <div className="flex flex-wrap items-center gap-x-3 gap-y-1">
+                {/* パック名は大きく、押しやすく（販売ページを開いて、画像を確認できる） */}
+                <Link
+                    href={`/daidai-yokocho/${request.packId}`}
+                    className="text-xl font-bold text-gray-900 hover:text-primary underline underline-offset-4 decoration-gray-300 hover:decoration-primary transition-colors py-1"
+                >
                     {request.packName || request.packId}
                     {isSticker && <span className="font-normal text-gray-600">の「{request.stickerName || request.stickerId}」</span>}
                 </Link>
@@ -182,7 +172,7 @@ function RequestRow({
                 </span>
                 <span className="text-xs text-gray-500">
                     出品者 {creator} ・ 利用者 {request.ownerCount}人
-                    {request.requestedAt ? ` ・ 申請 ${formatJstDateTime(request.requestedAt)}` : ""}
+                    {request.requestedAt ? ` ・ 申請 ${formatJstSlash(request.requestedAt)}` : ""}
                 </span>
             </div>
             <p className="text-sm text-gray-700 whitespace-pre-wrap break-words">理由: {request.reason || "（なし）"}</p>
@@ -220,18 +210,7 @@ function RequestRow({
                     </button>
                 </div>
             )}
-            {(request.status === "pending" || request.status === "scheduled" || request.status === "failed") && (
-                <button type="button" disabled={busy} onClick={openImages} className="self-start text-xs font-bold text-primary underline underline-offset-4">
-                    {isSticker ? "ぺったんの画像を確認する" : "パックの画像を確認する"}
-                </button>
-            )}
             {error && <p className="text-sm text-red-600" role="alert">{error}</p>}
-
-            <AnimatePresence>
-                {viewerImages && (
-                    <ImageViewer images={viewerImages} index={viewerIndex} onIndexChange={setViewerIndex} onClose={() => setViewerImages(null)} />
-                )}
-            </AnimatePresence>
         </li>
     );
 }
@@ -252,6 +231,11 @@ export default function AdminClient() {
     const [requests, setRequests] = useState<PackDeletionRequest[]>([]);
     const [creators, setCreators] = useState<Map<string, CreatorProfile>>(new Map());
     const [loadError, setLoadError] = useState<string | null>(null);
+    // 何回目の読み込みまで終わったか（refreshKeyと同じなら、読み込み済み）。接続できていないのと、
+    // 本当に0件なのを区別するため、終わるまでは「読み込み中」を出す
+    const [loadedKey, setLoadedKey] = useState<number | null>(null);
+    // 読み込みが長く終わらないとき（VPN・拡張機能・ネットワークでFirestoreに届かない等）の案内
+    const [slow, setSlow] = useState(false);
 
     // 管理者かどうかは、ログイン中のアカウントの管理者クレーム（admin: true、DaiDaiの管理画面と同じ）で見る。
     // ここの判定は表示を切り替えるだけで、実際の権限は、Cloud Functionsとfirestore.rulesが判定する
@@ -279,6 +263,7 @@ export default function AdminClient() {
     useEffect(() => {
         if (access !== "admin") return;
         let cancelled = false;
+        const slowTimer = window.setTimeout(() => setSlow(true), SLOW_LOAD_MS);
         listDeletionRequests()
             .then(async (list) => {
                 const profiles = await getCreatorProfiles(list.map((r) => r.creatorId));
@@ -286,12 +271,16 @@ export default function AdminClient() {
                 setRequests(list);
                 setCreators(profiles);
                 setLoadError(null);
+                setSlow(false);
+                setLoadedKey(refreshKey);
             })
             .catch((err) => {
                 if (!cancelled) setLoadError(err instanceof Error ? err.message : "申請を読み込めませんでした");
-            });
+            })
+            .finally(() => window.clearTimeout(slowTimer));
         return () => {
             cancelled = true;
+            window.clearTimeout(slowTimer);
         };
     }, [access, refreshKey]);
 
@@ -307,8 +296,12 @@ export default function AdminClient() {
         .sort((a, b) => (a.scheduledDeleteAt ?? 0) - (b.scheduledDeleteAt ?? 0));
     const history = requests.filter((r) => r.status === "completed" || r.status === "rejected" || r.status === "cancelled").slice(0, 50);
 
+    const loaded = loadedKey === refreshKey;
+    const count = (n: number) => (loaded ? `（${n}）` : "");
     const renderRows = (list: PackDeletionRequest[], empty: string) =>
-        list.length === 0 ? (
+        !loaded && list.length === 0 ? (
+            <p className="text-sm text-gray-400">読み込み中…</p>
+        ) : list.length === 0 ? (
             <p className="text-sm text-gray-500">{empty}</p>
         ) : (
             <ul className="flex flex-col gap-4">
@@ -324,11 +317,19 @@ export default function AdminClient() {
                 <h1 className="text-2xl font-bold text-gray-900 tracking-wider">管理画面</h1>
                 <p className="text-sm text-gray-500 mt-1">daidai横丁のパックの削除の申請を、確認して承認・却下します。</p>
             </div>
+            <p className="text-xs text-gray-400 -mt-6">
+                ログイン中: {user.email ?? "（メールアドレスなし）"}（{user.uid.slice(0, 8)}）
+            </p>
             {loadError && <p className="text-sm text-red-600" role="alert">{loadError}</p>}
-            <Section title={`申請中（${pending.length}）`} hint="承認すると、指定した日時に完全に削除され、入手した人には、その前にお知らせが届きます。日時は、今から24時間以上先にしてください。">
+            {slow && !loaded && !loadError && (
+                <p className="text-sm text-amber-700" role="status">
+                    Firestoreに接続できていません。VPN・ブラウザの拡張機能（広告ブロッカー）・ネットワークを確認してください。
+                </p>
+            )}
+            <Section title={`申請中${count(pending.length)}`} hint="承認すると、指定した日時に完全に削除され、入手した人には、その前にお知らせが届きます。日時は、今から24時間以上先にしてください。">
                 {renderRows(pending, "申請中のパックはありません")}
             </Section>
-            <Section title={`削除予定（${scheduled.length}）`}>{renderRows(scheduled, "削除が予定されているパックはありません")}</Section>
+            <Section title={`削除予定${count(scheduled.length)}`}>{renderRows(scheduled, "削除が予定されているパックはありません")}</Section>
             <Section title="処理済み（直近50件）">{renderRows(history, "処理済みの申請はありません")}</Section>
         </div>
     );

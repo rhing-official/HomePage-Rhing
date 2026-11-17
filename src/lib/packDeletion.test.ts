@@ -7,6 +7,7 @@ import {
     validateStickerRemoval,
     deletionStatusLabel,
     formatJstDateTime,
+    formatJstSlash,
     parseJstInput,
     toDeletionRequest,
     toJstInput,
@@ -101,5 +102,12 @@ describe("緊急の削除のお知らせ", () => {
         expect(requestNoticePreview({ kind: "sticker", packName: "春のパック", stickerName: "ねこ" }, ms, true)).toBe(
             "「春のパック」というぺったんパックの中の「ねこ」をお使いの利用者の方に連絡します。緊急の対応のため、まもなく使えなくなります。",
         );
+    });
+});
+
+describe("formatJstSlash", () => {
+    it("日本時間を「YYYY/MM/DD HH:mm」で出す（0埋め、日付をまたぐ）", () => {
+        expect(formatJstSlash(new Date("2026-11-17T03:04:00.000Z").getTime())).toBe("2026/11/17 12:04");
+        expect(formatJstSlash(new Date("2026-12-31T16:00:00.000Z").getTime())).toBe("2027/01/01 01:00");
     });
 });
