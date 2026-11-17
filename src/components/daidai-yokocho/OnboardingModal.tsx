@@ -4,6 +4,7 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import { motion } from "framer-motion";
 import { updateDaidaiProfile } from "@/lib/daidaiProfile";
 import { uploadDaidaiProfileIcon } from "@/lib/firebaseStorage";
+import ModalPortal from "@/components/ModalPortal";
 
 // 初回ログイン時に一度だけ表示する、daidai横丁専用の呼び名・アイコンの設定
 // モーダル（DaiDai本体の身だしなみは借用しない設計への移行に伴い追加）。
@@ -58,6 +59,7 @@ export default function OnboardingModal({
     };
 
     return (
+        <ModalPortal>
         <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
@@ -161,5 +163,6 @@ export default function OnboardingModal({
                 </div>
             </motion.div>
         </motion.div>
+        </ModalPortal>
     );
 }

@@ -1,5 +1,6 @@
 import { getApp, getApps, initializeApp, type FirebaseOptions } from "firebase/app";
 import { getFirestore } from "firebase/firestore";
+import { isAuthRedirectHost } from "@/lib/authRedirect";
 
 // DaiDaiアプリと同一のFirebaseプロジェクト（daidai-rhing）を使う。
 // これらの値はクライアントに公開される前提の設定値であり秘密情報ではない
@@ -9,7 +10,11 @@ import { getFirestore } from "firebase/firestore";
 // デフォルト値として埋め込んでいる。
 const firebaseConfig: FirebaseOptions = {
     apiKey: process.env.NEXT_PUBLIC_FIREBASE_API_KEY ?? "AIzaSyAuX1o4MrRfacN4sQ_TMYrMl7PZXydQni4",
-    authDomain: process.env.NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN ?? "daidai-rhing.firebaseapp.com",
+    // 本番ドメインでは、自ドメインを認証画面のドメインにする（next.config.tsのrewritesで中継。リダイレクトでのGoogleログイン用）
+    authDomain:
+        typeof window !== "undefined" && isAuthRedirectHost(window.location.hostname)
+            ? window.location.hostname
+            : (process.env.NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN ?? "daidai-rhing.firebaseapp.com"),
     projectId: process.env.NEXT_PUBLIC_FIREBASE_PROJECT_ID ?? "daidai-rhing",
     storageBucket: process.env.NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET ?? "daidai-rhing.firebasestorage.app",
     messagingSenderId: process.env.NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID ?? "380243513330",

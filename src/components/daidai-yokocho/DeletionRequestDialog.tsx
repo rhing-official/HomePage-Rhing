@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { DELETION_TEXT_MAX, validateDeletionReason } from "@/lib/packDeletion";
+import ModalPortal from "@/components/ModalPortal";
 
 // 利用者のいるパックの削除を、運営へ申請する。理由（必須・200文字まで）を入力して送る
 export default function DeletionRequestDialog({
@@ -39,6 +40,7 @@ export default function DeletionRequestDialog({
     };
 
     return (
+        <ModalPortal>
         <div className="fixed inset-0 bg-black/20 z-[100] flex items-center justify-center p-4" role="dialog" aria-modal="true" aria-label="削除の申請">
             <div className="w-full max-w-md bg-white rounded-m3-xl shadow-elevation-3 p-6 flex flex-col gap-4">
                 <h2 className="text-lg font-bold text-gray-900">
@@ -70,5 +72,6 @@ export default function DeletionRequestDialog({
                 </div>
             </div>
         </div>
+        </ModalPortal>
     );
 }

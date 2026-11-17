@@ -6,11 +6,15 @@ import {
     GoogleAuthProvider,
     TotpMultiFactorGenerator,
     getMultiFactorResolver,
+    getRedirectResult,
     signInWithCredential,
+    signInWithRedirect,
+    type UserCredential,
     type MultiFactorError,
     type MultiFactorResolver,
 } from "firebase/auth";
 import { auth } from "@/lib/firebaseAuth";
+import { isAuthRedirectHost } from "@/lib/authRedirect";
 import { useTotpClipboardAutofill } from "@/hooks/useTotpClipboardAutofill";
 import { parseTotpCode } from "@/lib/totpAutofill";
 
@@ -35,6 +39,13 @@ const GOOGLE_CLIENT_ID =
 // 発生した（Chromeでもサードパーティストレージ制限が有効だと同様の症状になる）。
 // GISはFedCMを念頭に設計されており、FirebaseのiframeブリッジをバイパスしてIDトークンを
 // 直接取得できるため、この種のブロックの影響を受けない。
+// リダイレクトでログインして戻ってきた時の結果は、ページ読み込みごとに一度だけ取得し、複数の呼び出し側
+// （メニューとログイン画面）で共有する（DaiDaiの`awaitWebRedirectResult`と同じ）
+let redirectResultPromise: Promise<UserCredential | null> | null = null;
+function awaitRedirectResult(): Promise<UserCredential | null> {
+    return (redirectResultPromise ??= getRedirectResult(auth));
+}
+
 export function useGoogleSignIn(onSignedIn?: () => void) {
     const [buttonContainer, setButtonContainer] = useState<HTMLDivElement | null>(null);
     // callback ref: 呼び出し元のJSXでこのdivが実際に描画されている間だけ
@@ -44,9 +55,16 @@ export function useGoogleSignIn(onSignedIn?: () => void) {
     const [resolver, setResolver] = useState<MultiFactorResolver | null>(null);
     const [code, setCode] = useState("");
     const [submitting, setSubmitting] = useState(false);
+    // ログインの方式。本番ドメインは、同じタブのリダイレクト、それ以外はGISのボタン（ポップアップ）。
+    // ハイドレーションのずれを避けるため、マウント後に決める（それまでは、ボタンを出さない）
+    const [mode, setMode] = useState<"pending" | "redirect" | "gis">("pending");
+    const [redirecting, setRedirecting] = useState(false);
+    useEffect(() => {
+        setMode(isAuthRedirectHost(window.location.hostname) ? "redirect" : "gis");
+    }, []);
 
     useEffect(() => {
-        if (!buttonContainer) return;
+        if (!buttonContainer || mode !== "gis") return;
 
         const handleCredential = async (response: { credential?: string }) => {
             setError(null);
@@ -103,7 +121,48 @@ export function useGoogleSignIn(onSignedIn?: () => void) {
             cancelled = true;
         };
         // eslint-disable-next-line react-hooks/exhaustive-deps -- buttonContainerが現れた時のみ初期化する
-    }, [buttonContainer]);
+    }, [buttonContainer, mode]);
+
+    // 同じタブでGoogleの画面へ移る。ログイン後は、この画面に戻り、下の効果で結果を受け取る
+    const startGoogleRedirect = async () => {
+        setError(null);
+        setResolver(null);
+        setRedirecting(true);
+        try {
+            await signInWithRedirect(auth, new GoogleAuthProvider());
+        } catch (err) {
+            console.error("Googleログインへの移動に失敗しました:", err);
+            setError(err instanceof FirebaseError ? err.code : "ログインに失敗しました");
+            setRedirecting(false);
+        }
+    };
+
+    // リダイレクトで戻ってきた時の結果を受け取る（成功なら認証状態に反映済み）
+    useEffect(() => {
+        if (mode !== "redirect") return;
+        let cancelled = false;
+        awaitRedirectResult()
+            .then((credential) => {
+                if (!cancelled && credential) onSignedIn?.();
+            })
+            .catch((err) => {
+                if (cancelled) return;
+                if (err instanceof FirebaseError && err.code === "auth/multi-factor-auth-required") {
+                    try {
+                        setResolver(getMultiFactorResolver(auth, err as MultiFactorError));
+                    } catch {
+                        setError("2段階認証の準備に失敗しました");
+                    }
+                    return;
+                }
+                console.error("Googleログインに失敗しました:", err);
+                setError(err instanceof FirebaseError ? err.code : "ログインに失敗しました");
+            });
+        return () => {
+            cancelled = true;
+        };
+        // eslint-disable-next-line react-hooks/exhaustive-deps -- onSignedInは、最初の呼び出しのものでよい（結果の受け取りは1回だけ）
+    }, [mode]);
 
     // overrideCode: クリップボードからの自動入力では、状態の更新を待たずに、取り出した6桁をそのまま渡す
     const submitTotpCode = async (overrideCode?: string) => {
@@ -162,5 +221,5 @@ export function useGoogleSignIn(onSignedIn?: () => void) {
         setCode(value.normalize("NFKC").slice(0, 6));
     };
 
-    return { buttonContainerRef, error, resolver, code, setCode, handleCodeChange, handleCodePaste, submitTotpCode, submitting, cancelMfa };
+    return { mode, redirecting, startGoogleRedirect, buttonContainerRef, error, resolver, code, setCode, handleCodeChange, handleCodePaste, submitTotpCode, submitting, cancelMfa };
 }

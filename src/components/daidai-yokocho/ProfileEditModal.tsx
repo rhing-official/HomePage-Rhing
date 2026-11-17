@@ -4,6 +4,7 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import { motion } from "framer-motion";
 import { updateDaidaiProfile } from "@/lib/daidaiProfile";
 import { uploadDaidaiProfileIcon } from "@/lib/firebaseStorage";
+import ModalPortal from "@/components/ModalPortal";
 
 interface CurrentProfile {
     nickname: string | null;
@@ -62,6 +63,7 @@ export default function ProfileEditModal({
     };
 
     return (
+        <ModalPortal>
         <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
@@ -175,5 +177,6 @@ export default function ProfileEditModal({
                 </div>
             </motion.div>
         </motion.div>
+        </ModalPortal>
     );
 }

@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { motion } from "framer-motion";
 import { usePasskeyAuth, type PasskeyRecoveryQuestions } from "@/hooks/usePasskeyAuth";
+import ModalPortal from "@/components/ModalPortal";
 
 // DaiDai本体（lib/features/auth/passkey_recovery_dialog.dart）と同じ文言・
 // 2段階フロー（Rhing Seed→秘密の質問）のWeb版。「新しいパスキーを登録
@@ -41,6 +42,7 @@ export default function PasskeyRecoveryDialog({
     };
 
     return (
+        <ModalPortal>
         <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
@@ -121,5 +123,6 @@ export default function PasskeyRecoveryDialog({
                 </div>
             </motion.div>
         </motion.div>
+        </ModalPortal>
     );
 }

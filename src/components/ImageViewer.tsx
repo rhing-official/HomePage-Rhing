@@ -2,7 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
-import { motion } from "framer-motion";
+import { AnimatePresence, motion } from "framer-motion";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 
 export interface ViewerImage {
@@ -161,6 +161,15 @@ function ZoomableImage({
     );
 }
 
+// 画像を送るときの、横のスライド（DaiDaiアプリの拡大表示と同じ、200ms・easeInOut）。
+// 次へ送ると、今の画像が左へ出て、次の画像が右から入る（前へ送るときは逆）。directionは、次へ=1・前へ=-1
+const slideVariants = {
+    enter: (direction: number) => ({ x: `${direction * 100}%` }),
+    center: { x: "0%" },
+    exit: (direction: number) => ({ x: `${-direction * 100}%` }),
+};
+const slideTransition = { duration: 0.2, ease: "easeInOut" } as const;
+
 // 画像の全画面ビューア。拡大・移動、左右のスワイプ（PCは矢印キー・ボタン）で前後の画像へ。閉じるボタンは無く、画像の外側のタップ・下スワイプ・Escで閉じる。
 // 背景は、DaiDaiアプリと同じ、下の画面をぼかして（sigma 18）薄い暗幕（黒45%）で透かす
 export default function ImageViewer({
@@ -174,16 +183,26 @@ export default function ImageViewer({
     onIndexChange: (index: number) => void;
     onClose: () => void;
 }) {
+    // 送りの向き（スライドの向きに使う）。向きは、送る操作が、画像を切り替える直前に決める
+    const [direction, setDirection] = useState<1 | -1>(1);
     const go = (dir: -1 | 1) => {
         const next = index + dir;
-        if (next >= 0 && next < images.length) onIndexChange(next);
+        if (next >= 0 && next < images.length) {
+            setDirection(dir);
+            onIndexChange(next);
+        }
     };
 
     useEffect(() => {
         const onKey = (e: KeyboardEvent) => {
             if (e.key === "Escape") onClose();
-            else if (e.key === "ArrowLeft" && index > 0) onIndexChange(index - 1);
-            else if (e.key === "ArrowRight" && index < images.length - 1) onIndexChange(index + 1);
+            else if (e.key === "ArrowLeft" && index > 0) {
+                setDirection(-1);
+                onIndexChange(index - 1);
+            } else if (e.key === "ArrowRight" && index < images.length - 1) {
+                setDirection(1);
+                onIndexChange(index + 1);
+            }
         };
         window.addEventListener("keydown", onKey);
         const prevOverflow = document.body.style.overflow;
@@ -214,13 +233,27 @@ export default function ImageViewer({
             className="fixed inset-0 z-[120] bg-black/45 backdrop-blur-[18px]"
         >
             <motion.div
-                className="absolute inset-0"
+                className="absolute inset-0 overflow-hidden"
                 initial={{ filter: "blur(14px)" }}
                 animate={{ filter: "blur(0px)" }}
                 exit={{ filter: "blur(14px)" }}
                 transition={{ duration: 0.3, ease: [0.2, 0, 0, 1] }}
             >
-                <ZoomableImage key={index} image={current} onSwipe={go} onBackdropTap={onClose} />
+                {/* 開いた直後は動かさず（initial={false}）、画像を送るときだけ、向きに合わせてスライドする */}
+                <AnimatePresence initial={false} custom={direction}>
+                    <motion.div
+                        key={index}
+                        className="absolute inset-0"
+                        custom={direction}
+                        variants={slideVariants}
+                        initial="enter"
+                        animate="center"
+                        exit="exit"
+                        transition={slideTransition}
+                    >
+                        <ZoomableImage image={current} onSwipe={go} onBackdropTap={onClose} />
+                    </motion.div>
+                </AnimatePresence>
             </motion.div>
 
             {images.length > 1 && (

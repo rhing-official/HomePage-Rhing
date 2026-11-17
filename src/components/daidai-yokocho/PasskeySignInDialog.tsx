@@ -3,6 +3,7 @@
 import { useEffect, useRef, useState } from "react";
 import { motion } from "framer-motion";
 import { usePasskeyAuth } from "@/hooks/usePasskeyAuth";
+import ModalPortal from "@/components/ModalPortal";
 
 // DaiDai本体（lib/features/auth/passkey_sign_in_dialog.dart）と同じ文言・
 // フローのWeb版。ProfileEditModal.tsxと同じ中央配置のガラス調モーダル。
@@ -44,6 +45,7 @@ export default function PasskeySignInDialog({
     };
 
     return (
+        <ModalPortal>
         <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
@@ -99,5 +101,6 @@ export default function PasskeySignInDialog({
                 </div>
             </motion.div>
         </motion.div>
+        </ModalPortal>
     );
 }

@@ -32,6 +32,7 @@ export interface PackDeletionRequest {
 // DaiDaiリポジトリ functions/src/packDeletion.ts と同じ値
 export const DELETION_TEXT_MAX = 200;
 export const DELETION_MIN_NOTICE_MS = 24 * 60 * 60 * 1000;
+export const DELETION_MAX_AHEAD_MS = 366 * 24 * 60 * 60 * 1000;
 
 const JST_OFFSET_MS = 9 * 60 * 60 * 1000;
 
@@ -48,6 +49,7 @@ export function validateDeleteAt(date: Date, now: Date): string | null {
     if (date.getTime() - now.getTime() < DELETION_MIN_NOTICE_MS) {
         return "削除する日時は、今から24時間以上先にしてください（利用者へ知らせる期間のため）";
     }
+    if (date.getTime() - now.getTime() > DELETION_MAX_AHEAD_MS) return "削除する日時は、1年以内にしてください";
     return null;
 }
 

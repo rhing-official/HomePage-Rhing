@@ -5,6 +5,8 @@ import Link from "next/link";
 import { AnimatePresence } from "framer-motion";
 import NotFound from "@/app/not-found";
 import { auth, onAuthStateChanged, type User } from "@/lib/firebaseAuth";
+import DateTimePickerDialog from "@/components/daidai-yokocho/DateTimePickerDialog";
+import { parseDateKey, weekdayName } from "@/lib/calendarGrid";
 import ImageViewer, { type ViewerImage } from "@/components/ImageViewer";
 import { getCreatorProfiles, type CreatorProfile } from "@/lib/creatorProfiles";
 import { getStickerPackById } from "@/lib/stickerPacks";
@@ -14,7 +16,6 @@ import {
     rejectStickerPackDeletion,
 } from "@/lib/firebaseFunctions";
 import {
-    DELETION_MIN_NOTICE_MS,
     requestNoticePreview,
     deletionStatusLabel,
     formatJstDateTime,
@@ -49,6 +50,7 @@ function RequestRow({
     onChanged: () => Promise<void>;
 }) {
     const [deleteAt, setDeleteAt] = useState(defaultDeleteAtInput);
+    const [pickingDate, setPickingDate] = useState(false);
     const [busy, setBusy] = useState(false);
     const [error, setError] = useState<string | null>(null);
     const [viewerImages, setViewerImages] = useState<ViewerImage[] | null>(null);
@@ -116,17 +118,29 @@ function RequestRow({
         });
     };
 
+    const deleteAtParts = parseDateKey(deleteAt.slice(0, 10));
     const dateInput = (
-        <label className="flex flex-col gap-1 text-xs text-gray-500">
+        <div className="flex flex-col gap-1 text-xs text-gray-500">
             削除する日時（日本時間）
-            <input
-                type="datetime-local"
-                value={deleteAt}
-                min={toJstInput(new Date(Date.now() + DELETION_MIN_NOTICE_MS))}
-                onChange={(e) => setDeleteAt(e.target.value)}
-                className="rounded-lg border border-gray-200 bg-white/70 px-3 py-2 text-sm text-gray-800"
-            />
-        </label>
+            <button
+                type="button"
+                onClick={() => setPickingDate(true)}
+                className="rounded-lg border border-gray-200 bg-white/70 px-3 py-2 text-sm text-gray-800 text-left hover:bg-white transition-colors"
+            >
+                {deleteAtParts.month}月{deleteAtParts.day}日（{weekdayName(deleteAtParts.year, deleteAtParts.month, deleteAtParts.day)}）{deleteAt.slice(11, 16)}
+            </button>
+            {pickingDate && (
+                <DateTimePickerDialog
+                    value={deleteAt}
+                    onClose={() => setPickingDate(false)}
+                    onSubmit={(v) => {
+                        setDeleteAt(v);
+                        setError(null);
+                        setPickingDate(false);
+                    }}
+                />
+            )}
+        </div>
     );
     const button = "px-4 py-2 rounded-full text-sm font-bold transition-colors disabled:opacity-50";
 

@@ -16,6 +16,7 @@ import PasskeySignInDialog from "./PasskeySignInDialog";
 import PasskeyRecoveryDialog from "./PasskeyRecoveryDialog";
 import { usePasskeyAuth } from "@/hooks/usePasskeyAuth";
 import { useCart } from "@/components/CartProvider";
+import GoogleSignInButton from "@/components/GoogleSignInButton";
 
 interface OwnProfile {
     rhingSeed: string;
@@ -62,7 +63,7 @@ export default function DaidaiYokochoMenu() {
     const [showOnboarding, setShowOnboarding] = useState(false);
     const [showPasskeySignIn, setShowPasskeySignIn] = useState(false);
     const [showPasskeyRecovery, setShowPasskeyRecovery] = useState(false);
-    const { buttonContainerRef, error, resolver, code, handleCodeChange, handleCodePaste, submitTotpCode, submitting, cancelMfa } =
+    const { mode, redirecting, startGoogleRedirect, buttonContainerRef, error, resolver, code, handleCodeChange, handleCodePaste, submitTotpCode, submitting, cancelMfa } =
         useGoogleSignIn();
     const { submitting: registeringPasskey, error: passkeyRegisterError, registerWithPasskey } = usePasskeyAuth();
 
@@ -74,12 +75,20 @@ export default function DaidaiYokochoMenu() {
     useEffect(() => {
         if (!user) return;
         let cancelled = false;
-        fetchOwnProfile(user.uid).then((p) => {
+        fetchOwnProfile(user.uid).then(async (p) => {
             if (cancelled) return;
             setProfile(p);
             // 初回ログイン（daidaiOnboarded未達成）ならアカウントメニューを
-            // 開かなくても自動でオンボーディングを表示する。
-            if (p && !p.onboarded) setShowOnboarding(true);
+            // 開かなくても自動でオンボーディングを表示する。ただし、管理者のアカウント
+            // （管理者クレーム、DaiDaiが管理者に居住地アンケートを出さないのと同じ）には出さない。
+            // 呼び名・アイコンは、メニューから後で設定できる。
+            if (p && !p.onboarded) {
+                const isAdmin = await user
+                    .getIdTokenResult()
+                    .then((token) => token.claims.admin === true)
+                    .catch(() => false);
+                if (!cancelled && !isAdmin) setShowOnboarding(true);
+            }
         });
         return () => {
             cancelled = true;
@@ -234,7 +243,7 @@ export default function DaidaiYokochoMenu() {
                                     </form>
                                 ) : (
                                     <div className="flex flex-col items-center gap-3">
-                                        <div ref={buttonContainerRef} />
+                                        <GoogleSignInButton mode={mode} redirecting={redirecting} onRedirect={startGoogleRedirect} containerRef={buttonContainerRef} />
                                         <div className="w-full border-t border-gray-200/70" />
                                         <button
                                             type="button"

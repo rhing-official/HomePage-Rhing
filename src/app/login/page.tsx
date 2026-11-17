@@ -11,6 +11,7 @@ import { usePasskeyAuth } from "@/hooks/usePasskeyAuth";
 import AccountDeleteDialog from "@/components/AccountDeleteDialog";
 import PasskeySignInDialog from "@/components/daidai-yokocho/PasskeySignInDialog";
 import PasskeyRecoveryDialog from "@/components/daidai-yokocho/PasskeyRecoveryDialog";
+import GoogleSignInButton from "@/components/GoogleSignInButton";
 
 export default function LoginPage() {
     return (
@@ -42,7 +43,7 @@ function LoginPageContent() {
         }
     };
 
-    const { buttonContainerRef, error, resolver, code, handleCodeChange, handleCodePaste, submitTotpCode, submitting, cancelMfa } =
+    const { mode, redirecting, startGoogleRedirect, buttonContainerRef, error, resolver, code, handleCodeChange, handleCodePaste, submitTotpCode, submitting, cancelMfa } =
         useGoogleSignIn(redirectIfSignedIn);
     const { submitting: registeringPasskey, error: passkeyRegisterError, registerWithPasskey } = usePasskeyAuth();
 
@@ -162,7 +163,7 @@ function LoginPageContent() {
                         </p>
                     )}
                     <p className="text-gray-500 mb-2">DaiDaiアカウント（Google）でログインします。</p>
-                    <div ref={buttonContainerRef} />
+                    <GoogleSignInButton mode={mode} redirecting={redirecting} onRedirect={startGoogleRedirect} containerRef={buttonContainerRef} />
                     <div className="w-full border-t border-gray-200 my-2" />
                     <button
                         type="button"

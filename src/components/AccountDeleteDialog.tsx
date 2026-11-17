@@ -4,6 +4,7 @@ import { useState } from "react";
 import { motion } from "framer-motion";
 import { hasOwnedGroups, requestAccountDeletion } from "@/lib/account";
 import { deleteAccountImmediately } from "@/lib/firebaseFunctions";
+import ModalPortal from "@/components/ModalPortal";
 
 type DeletionMode = "requested" | "immediate";
 
@@ -51,6 +52,7 @@ export default function AccountDeleteDialog({
     };
 
     return (
+        <ModalPortal>
         <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
@@ -101,5 +103,6 @@ export default function AccountDeleteDialog({
                 {error && <p className="text-sm text-red-600">{error}</p>}
             </motion.div>
         </motion.div>
+        </ModalPortal>
     );
 }
