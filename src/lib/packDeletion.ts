@@ -8,6 +8,11 @@ import { db } from "@/lib/firebase";
 export type PackDeletionStatus = "pending" | "scheduled" | "completed" | "rejected" | "cancelled" | "failed";
 
 export interface PackDeletionRequest {
+    // 文書ID。パックの削除はpackId、ぺったん1枚の削除は「packId__stickerId」
+    requestId: string;
+    kind: "pack" | "sticker";
+    stickerId: string;
+    stickerName: string;
     packId: string;
     packName: string;
     creatorId: string;
@@ -70,6 +75,38 @@ export function deletionNoticePreview(packName: string, deleteAtMs: number): str
     return `「${packName}」というぺったんをお使いの利用者の方に連絡します。${formatJstDateTime(deleteAtMs)}に使えなくなります。`;
 }
 
+// 入手した人へ送られるお知らせの文面（1枚の削除。Cloud Functionsの stickerDeletionNoticeText と同じ）
+export function stickerDeletionNoticePreview(packName: string, stickerName: string, deleteAtMs: number): string {
+    return `「${packName}」というぺったんパックの中の「${stickerName}」をお使いの利用者の方に連絡します。${formatJstDateTime(deleteAtMs)}に使えなくなります。`;
+}
+
+// 申請の種別に合わせた、お知らせの文面
+export function requestNoticePreview(request: Pick<PackDeletionRequest, "kind" | "packName" | "stickerName">, deleteAtMs: number): string {
+    return request.kind === "sticker"
+        ? stickerDeletionNoticePreview(request.packName, request.stickerName, deleteAtMs)
+        : deletionNoticePreview(request.packName, deleteAtMs);
+}
+
+// 申請の文書ID（Cloud Functionsの deletionRequestId と同じ）
+export function deletionRequestId(packId: string, stickerId?: string): string {
+    return stickerId ? `${packId}__${stickerId}` : packId;
+}
+
+// DaiDaiリポジトリ functions/src/index.ts の MIN_STICKERS_PER_PACK と同じ
+export const MIN_STICKERS_PER_PACK = 4;
+
+// パックから1枚を削除してよいか（削除後の枚数の下限、代表は不可）。問題が無ければnull
+export function validateStickerRemoval(stickerIds: string[], stickerId: string, coverStickerId: string | null | undefined): string | null {
+    if (!stickerIds.includes(stickerId)) return "このパックにそのぺったんはありません";
+    if (stickerIds.length - 1 < MIN_STICKERS_PER_PACK) {
+        return `パックには${MIN_STICKERS_PER_PACK}枚以上のぺったんが必要です。パックごと削除する場合は、パックの削除を申請してください`;
+    }
+    if (coverStickerId && coverStickerId === stickerId) {
+        return "代表のぺったんは削除できません。先に、代表を別のぺったんに変えてください";
+    }
+    return null;
+}
+
 export function deletionStatusLabel(status: PackDeletionStatus): string {
     switch (status) {
         case "pending":
@@ -96,6 +133,10 @@ function millis(value: unknown): number | null {
 export function toDeletionRequest(id: string, data: DocumentData): PackDeletionRequest {
     const status = STATUSES.includes(data.status) ? (data.status as PackDeletionStatus) : "pending";
     return {
+        requestId: id,
+        kind: data.kind === "sticker" ? "sticker" : "pack",
+        stickerId: typeof data.stickerId === "string" ? data.stickerId : "",
+        stickerName: typeof data.stickerName === "string" ? data.stickerName : "",
         packId: typeof data.packId === "string" ? data.packId : id,
         packName: typeof data.packName === "string" ? data.packName : "",
         creatorId: typeof data.creatorId === "string" ? data.creatorId : "",

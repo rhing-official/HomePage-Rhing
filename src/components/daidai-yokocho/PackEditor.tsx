@@ -3,10 +3,12 @@
 import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import { Star } from "lucide-react";
+import { AnimatePresence } from "framer-motion";
+import ImageViewer from "@/components/ImageViewer";
 import { formatPackPrice, getPackCover, type StickerPack } from "@/lib/stickerPacks";
 import { getPackViewCount } from "@/lib/packStats";
 import type { StickerRoleOption } from "@/lib/stickerRoles";
-import { updateStickerPackMeta, addStickersToStickerPack, deleteStickerPack } from "@/lib/firebaseFunctions";
+import { updateStickerPackMeta, addStickersToStickerPack, deleteStickerPack, updateStickerRoles } from "@/lib/firebaseFunctions";
 import StickerImagePicker, {
     draftEntryId,
     uploadFiles,
@@ -22,6 +24,8 @@ import {
     type PackEditDraft,
 } from "@/lib/packDrafts";
 import { deleteStickerPackAssetByUrl } from "@/lib/firebaseStorage";
+import StickerRowActions from "@/components/daidai-yokocho/StickerRowActions";
+import { deletionRequestId, getMyDeletionRequests, type PackDeletionRequest } from "@/lib/packDeletion";
 
 interface PackEditorProps {
     pack: StickerPack;
@@ -73,6 +77,34 @@ function PackEditorForm({
         () => (initialDraft?.addedStickers ?? []).map((st) => ({ uploaded: st, roles: st.roles })),
     );
     const [cover, setCover] = useState<CoverChoice>(initialCover);
+    // 公開済みのぺったんの役割の変更（stickerId→役割id、空は「役割なし」）。「役割を保存」まで、ためておく
+    const [roleEdits, setRoleEdits] = useState<Record<string, string>>({});
+    const [savingRoles, setSavingRoles] = useState(false);
+    const [rolesMessage, setRolesMessage] = useState<{ text: string; ok: boolean } | null>(null);
+    const changedRoles = pack.stickers.filter(
+        (s) => s.stickerId in roleEdits && roleEdits[s.stickerId] !== (s.roles?.[0] ?? ""),
+    );
+    const handleSaveRoles = async () => {
+        if (savingRoles || changedRoles.length === 0) return;
+        setSavingRoles(true);
+        setRolesMessage(null);
+        try {
+            await updateStickerRoles({
+                packId: pack.id,
+                roles: changedRoles.map((s) => ({ stickerId: s.stickerId, roles: roleEdits[s.stickerId] ? [roleEdits[s.stickerId]] : [] })),
+            });
+            setRoleEdits({});
+            setRolesMessage({ text: "役割を保存しました", ok: true });
+            onChanged();
+        } catch (err) {
+            setRolesMessage({ text: err instanceof Error ? err.message : "役割の保存に失敗しました", ok: false });
+        } finally {
+            setSavingRoles(false);
+        }
+    };
+
+    // 既存のぺったんの画像の拡大表示（開いている画像の番号）
+    const [viewerIndex, setViewerIndex] = useState<number | null>(null);
 
     // 保存済みの編集内容（下書き）があるか。保存した画像（保存し直したときの掃除用）
     const [hasDraft, setHasDraft] = useState(initialDraft !== null);
@@ -85,6 +117,23 @@ function PackEditorForm({
     const [deleting, setDeleting] = useState(false);
     const [deleteError, setDeleteError] = useState<string | null>(null);
     const canDelete = pack.ownerCount === 0;
+
+    // 自分の削除の申請（ぺったん1枚の分も含む）。申請・差し替えのあとに、読み直す
+    const [requests, setRequests] = useState<Map<string, PackDeletionRequest>>(new Map());
+    const [requestsVersion, setRequestsVersion] = useState(0);
+    useEffect(() => {
+        let cancelled = false;
+        getMyDeletionRequests(uid).then((m) => {
+            if (!cancelled) setRequests(m);
+        });
+        return () => {
+            cancelled = true;
+        };
+    }, [uid, requestsVersion]);
+    const handleRowChanged = () => {
+        setRequestsVersion((v) => v + 1);
+        onChanged();
+    };
 
     // 閲覧回数（出品者にだけ見える。取得できなければ「-」）
     const [viewCount, setViewCount] = useState<number | null | undefined>(undefined);
@@ -265,11 +314,18 @@ function PackEditorForm({
                     {pack.stickers.map((sticker, i) => {
                         const isCover = cover.type === "existing" && sticker.stickerId === cover.id;
                         return (
-                            <div key={sticker.stickerId || i} className="flex flex-col items-center gap-1 w-20">
+                            <div key={sticker.stickerId || i} className="flex flex-col items-center gap-1 w-28">
                                 <div className="relative w-16 h-16 rounded-lg overflow-hidden border border-gray-200 bg-white/70">
                                     {sticker.imageUrl && (
-                                        // eslint-disable-next-line @next/next/no-img-element
-                                        <img src={sticker.imageUrl} alt={sticker.name} className="w-full h-full object-contain" />
+                                        <button
+                                            type="button"
+                                            onClick={() => setViewerIndex(i)}
+                                            aria-label={`${sticker.name || "画像"}を拡大して見る`}
+                                            className="w-full h-full cursor-zoom-in"
+                                        >
+                                            {/* eslint-disable-next-line @next/next/no-img-element */}
+                                            <img src={sticker.imageUrl} alt={sticker.name} className="w-full h-full object-contain" />
+                                        </button>
                                     )}
                                     {/* 新規作成と同じ、★で代表を選ぶボタン（「公開する」まで、公開中のパックは変わらない） */}
                                     <button
@@ -285,16 +341,61 @@ function PackEditorForm({
                                         <Star className={`w-3.5 h-3.5 ${isCover ? "text-amber-500 fill-amber-500" : "text-gray-400"}`} />
                                     </button>
                                 </div>
-                                {sticker.roles?.[0] && (
-                                    <span className="text-[10px] text-gray-400 truncate w-full text-center">
-                                        {roleOptions.find((r) => r.roleId === sticker.roles?.[0])?.name ?? sticker.roles[0]}
-                                    </span>
-                                )}
+                                <StickerRowActions
+                                    pack={pack}
+                                    sticker={sticker}
+                                    uid={uid}
+                                    coverStickerId={defaultCoverId}
+                                    request={requests.get(deletionRequestId(pack.id, sticker.stickerId))}
+                                    onChanged={handleRowChanged}
+                                />
+                                <select
+                                    value={roleEdits[sticker.stickerId] ?? sticker.roles?.[0] ?? ""}
+                                    onChange={(e) => {
+                                        setRoleEdits((prev) => ({ ...prev, [sticker.stickerId]: e.target.value }));
+                                        setRolesMessage(null);
+                                    }}
+                                    aria-label={`${sticker.name || "画像"}の役割`}
+                                    className="w-full text-[11px] rounded border border-gray-200 bg-white/70 px-1 py-0.5"
+                                >
+                                    <option value="">役割なし</option>
+                                    {roleOptions.map((r) => (
+                                        <option key={r.roleId} value={r.roleId}>{r.name}</option>
+                                    ))}
+                                    {/* 一覧に無い役割（古い役割など）が付いているときも、選択肢として残す */}
+                                    {sticker.roles?.[0] && !roleOptions.some((r) => r.roleId === sticker.roles[0]) && (
+                                        <option value={sticker.roles[0]}>{sticker.roles[0]}</option>
+                                    )}
+                                </select>
                             </div>
                         );
                     })}
                 </div>
-                <p className="text-xs text-gray-400">★をつけた画像が、パックの代表（一覧などに最初に出る画像）になります。</p>
+                <p className="text-xs text-gray-400">★をつけた画像が、パックの代表（一覧などに最初に出る画像）になります。画像をクリックすると、拡大して見られます。</p>
+                <div className="flex flex-wrap items-center gap-3">
+                    <button
+                        type="button"
+                        onClick={handleSaveRoles}
+                        disabled={savingRoles || changedRoles.length === 0}
+                        className="rounded-full border border-primary/50 text-primary px-5 py-1.5 text-xs font-bold hover:bg-primary-container/60 transition disabled:opacity-40 disabled:cursor-not-allowed"
+                    >
+                        {savingRoles ? "保存中..." : "役割を保存"}
+                    </button>
+                    {rolesMessage && (
+                        <span className={`text-xs ${rolesMessage.ok ? "text-emerald-700" : "text-red-600"}`} role="status">{rolesMessage.text}</span>
+                    )}
+                </div>
+                <p className="text-xs text-gray-400">役割は、「役割を保存」を押すとすぐに反映されます（「公開する」は不要）。ぺったんの提案で、入力した文に合うぺったんを出すために使われます。</p>
+                <AnimatePresence>
+                    {viewerIndex !== null && viewerIndex < pack.stickers.length && (
+                        <ImageViewer
+                            images={pack.stickers.map((s) => ({ url: s.imageUrl, name: s.name }))}
+                            index={viewerIndex}
+                            onIndexChange={setViewerIndex}
+                            onClose={() => setViewerIndex(null)}
+                        />
+                    )}
+                </AnimatePresence>
             </div>
 
             <div className="flex flex-col gap-2 pt-3 border-t border-white/60">
@@ -310,7 +411,7 @@ function PackEditorForm({
                     }}
                 />
                 <p className="text-xs text-gray-400">
-                    追加する画像は、役割を設定してから、「公開する」で公開中のパックに入ります（追加後の削除・差し替えは不可）。
+                    追加する画像は、役割を設定してから、「公開する」で公開中のパックに入ります（追加済みの画像は、各画像の「差し替え」で変えられます。削除は、利用者がいなければ直接、いれば運営への申請になります）。
                 </p>
             </div>
 

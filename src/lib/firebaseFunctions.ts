@@ -49,6 +49,30 @@ export async function addStickersToStickerPack(data: {
     await httpsCallable(functions, "addStickersToStickerPack")(data);
 }
 
+// 出品者が、利用者のいないパックから、ぺったん1枚を直接削除する（利用者がいるときは、requestStickerPackDeletionにstickerIdを付けて申請する）
+export async function deleteStickerFromPack(data: { packId: string; stickerId: string }): Promise<void> {
+    await httpsCallable(functions, "deleteStickerFromPack")(data);
+}
+
+// ぺったん1枚の画像を差し替える（運営の許可は不要。stickerIdは変わらない。旧画像のファイルは、過去のメッセージのために残る）
+export async function replaceStickerImage(data: {
+    packId: string;
+    stickerId: string;
+    imageUrl: string;
+    name?: string;
+    roles?: string[];
+}): Promise<void> {
+    await httpsCallable(functions, "replaceStickerImage")(data);
+}
+
+// 公開済みのぺったんの役割を、後から付け直す（運営の許可は不要）。渡したぺったんの役割だけを置き換える。空の配列で、役割なしに戻す
+export async function updateStickerRoles(data: {
+    packId: string;
+    roles: { stickerId: string; roles: string[] }[];
+}): Promise<void> {
+    await httpsCallable(functions, "updateStickerRoles")(data);
+}
+
 // 販売ページの閲覧を1回数える（出品者にだけ見せる閲覧回数）。出品者本人の閲覧は、サーバー側で数えない
 export async function recordStickerPackView(data: { packId: string }): Promise<void> {
     await httpsCallable(functions, "recordStickerPackView")(data);
@@ -66,23 +90,23 @@ export async function deleteStickerPack(data: { packId: string }): Promise<void>
 }
 
 // 利用者のいるパックの削除を、運営へ申請する（理由は必須・200文字まで）
-export async function requestStickerPackDeletion(data: { packId: string; reason: string }): Promise<void> {
+export async function requestStickerPackDeletion(data: { packId: string; stickerId?: string; reason: string }): Promise<void> {
     await httpsCallable(functions, "requestStickerPackDeletion")(data);
 }
 
 // 削除の申請を承認し、削除する日時（ISO文字列、今から24時間以上先）を指定する（管理者のみ）。入手した人だけにお知らせが送られる
-export async function approveStickerPackDeletion(data: { packId: string; deleteAt: string }): Promise<{ notified: number }> {
+export async function approveStickerPackDeletion(data: { packId: string; stickerId?: string; deleteAt: string }): Promise<{ notified: number }> {
     const result = await httpsCallable<typeof data, { notified?: number }>(functions, "approveStickerPackDeletion")(data);
     return { notified: result.data?.notified ?? 0 };
 }
 
 // 削除の申請を却下する（管理者のみ）。理由は任意で、出品者に表示される
-export async function rejectStickerPackDeletion(data: { packId: string; note?: string }): Promise<void> {
+export async function rejectStickerPackDeletion(data: { packId: string; stickerId?: string; note?: string }): Promise<void> {
     await httpsCallable(functions, "rejectStickerPackDeletion")(data);
 }
 
 // 承認済みの削除の予定を取り消す（管理者のみ）
-export async function cancelScheduledPackDeletion(data: { packId: string }): Promise<void> {
+export async function cancelScheduledPackDeletion(data: { packId: string; stickerId?: string }): Promise<void> {
     await httpsCallable(functions, "cancelScheduledPackDeletion")(data);
 }
 

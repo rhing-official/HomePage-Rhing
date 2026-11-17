@@ -3,7 +3,7 @@
 import { useEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 import { motion } from "framer-motion";
-import { ChevronLeft, ChevronRight, X } from "lucide-react";
+import { ChevronLeft, ChevronRight } from "lucide-react";
 
 export interface ViewerImage {
     url: string;
@@ -161,7 +161,8 @@ function ZoomableImage({
     );
 }
 
-// 画像の全画面ビューア。拡大・移動、左右のスワイプ（PCは矢印キー・ボタン）で前後の画像へ。×・画像の外側のタップ・下スワイプ・Escで閉じる
+// 画像の全画面ビューア。拡大・移動、左右のスワイプ（PCは矢印キー・ボタン）で前後の画像へ。閉じるボタンは無く、画像の外側のタップ・下スワイプ・Escで閉じる。
+// 背景は、DaiDaiアプリと同じ、下の画面をぼかして（sigma 18）薄い暗幕（黒45%）で透かす
 export default function ImageViewer({
     images,
     index,
@@ -199,27 +200,28 @@ export default function ImageViewer({
     const navButton = "absolute top-1/2 -translate-y-1/2 z-10 p-3 rounded-full bg-white/80 shadow-elevation-2 text-gray-700 hover:bg-white transition disabled:hidden";
 
     return createPortal(
-        // 開くとき・閉じるときに、ぼかしながら、ふわっと現れる・消える（PackGalleryのAnimatePresenceが閉じる動きを待つ）
+        // 背景は、ふわっと現れる・消える（PackGalleryなどのAnimatePresenceが閉じる動きを待つ）。
+        // この要素に`filter`を付けると、中の背景のぼかし（backdrop-filter）が効かなくなるので、
+        // opacityだけにする。ぼかしながら現れる動きは、画像側に付ける
         <motion.div
             role="dialog"
             aria-modal="true"
             aria-label="画像の拡大表示"
-            initial={{ opacity: 0, filter: "blur(14px)" }}
-            animate={{ opacity: 1, filter: "blur(0px)" }}
-            exit={{ opacity: 0, filter: "blur(14px)" }}
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
             transition={{ duration: 0.3, ease: [0.2, 0, 0, 1] }}
-            className="fixed inset-0 z-[120] bg-[#fcfbf7]/97 backdrop-blur-sm"
+            className="fixed inset-0 z-[120] bg-black/45 backdrop-blur-[18px]"
         >
-            <ZoomableImage key={index} image={current} onSwipe={go} onBackdropTap={onClose} />
-
-            <button
-                type="button"
-                onClick={onClose}
-                aria-label="閉じる"
-                className="absolute top-4 right-4 z-10 p-3 rounded-full bg-white/80 shadow-elevation-2 text-gray-700 hover:bg-white transition"
+            <motion.div
+                className="absolute inset-0"
+                initial={{ filter: "blur(14px)" }}
+                animate={{ filter: "blur(0px)" }}
+                exit={{ filter: "blur(14px)" }}
+                transition={{ duration: 0.3, ease: [0.2, 0, 0, 1] }}
             >
-                <X className="w-6 h-6" />
-            </button>
+                <ZoomableImage key={index} image={current} onSwipe={go} onBackdropTap={onClose} />
+            </motion.div>
 
             {images.length > 1 && (
                 <>
@@ -229,7 +231,7 @@ export default function ImageViewer({
                     <button type="button" onClick={() => go(1)} disabled={index === images.length - 1} aria-label="次の画像" className={`${navButton} right-3 hidden md:block`}>
                         <ChevronRight className="w-6 h-6" />
                     </button>
-                    <p className="absolute bottom-6 inset-x-0 text-center text-sm text-gray-600 pointer-events-none">
+                    <p className="absolute bottom-6 inset-x-0 text-center text-sm text-white/80 pointer-events-none">
                         {index + 1} / {images.length}
                     </p>
                 </>

@@ -2,6 +2,9 @@ import { describe, expect, it } from "vitest";
 import {
     DELETION_MIN_NOTICE_MS,
     deletionNoticePreview,
+    deletionRequestId,
+    requestNoticePreview,
+    validateStickerRemoval,
     deletionStatusLabel,
     formatJstDateTime,
     parseJstInput,
@@ -63,5 +66,28 @@ describe("toDeletionRequest / deletionStatusLabel", () => {
         expect(deletionStatusLabel("pending")).toBe("申請中");
         expect(deletionStatusLabel("scheduled")).toBe("削除予定");
         expect(deletionStatusLabel("failed")).toBe("削除に失敗");
+    });
+});
+
+describe("ぺったん1枚の削除", () => {
+    it("申請の文書ID", () => {
+        expect(deletionRequestId("p1")).toBe("p1");
+        expect(deletionRequestId("p1", "s1")).toBe("p1__s1");
+    });
+    it("下限・代表・存在しないIDを拒否する", () => {
+        const ids = ["a", "b", "c", "d", "e"];
+        expect(validateStickerRemoval(ids, "e", "a")).toBeNull();
+        expect(validateStickerRemoval(ids, "x", "a")).not.toBeNull();
+        expect(validateStickerRemoval(ids, "a", "a")).not.toBeNull();
+        expect(validateStickerRemoval(["a", "b", "c", "d"], "d", "a")).not.toBeNull();
+    });
+    it("お知らせの文面は、種別で変わる（サーバーと同じ）", () => {
+        const ms = new Date("2026-12-01T03:00:00.000Z").getTime();
+        expect(requestNoticePreview({ kind: "sticker", packName: "春のパック", stickerName: "ねこ" }, ms)).toBe(
+            "「春のパック」というぺったんパックの中の「ねこ」をお使いの利用者の方に連絡します。12月1日12時に使えなくなります。",
+        );
+        expect(requestNoticePreview({ kind: "pack", packName: "春のパック", stickerName: "" }, ms)).toBe(
+            "「春のパック」というぺったんをお使いの利用者の方に連絡します。12月1日12時に使えなくなります。",
+        );
     });
 });

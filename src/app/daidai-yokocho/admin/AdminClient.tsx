@@ -15,7 +15,7 @@ import {
 } from "@/lib/firebaseFunctions";
 import {
     DELETION_MIN_NOTICE_MS,
-    deletionNoticePreview,
+    requestNoticePreview,
     deletionStatusLabel,
     formatJstDateTime,
     listDeletionRequests,
@@ -67,10 +67,15 @@ function RequestRow({
         }
     };
 
+    const isSticker = request.kind === "sticker";
+    const stickerArg = isSticker ? { stickerId: request.stickerId } : {};
+    const targetLabel = isSticker ? `「${request.packName}」の「${request.stickerName}」` : `「${request.packName}」`;
     const openImages = () =>
         run(async () => {
             const pack = await getStickerPackById(request.packId);
-            const images = (pack?.stickers ?? []).filter((s) => s.imageUrl).map((s) => ({ url: s.imageUrl, name: s.name || request.packName }));
+            // 1枚の削除の申請は、そのぺったんだけを見せる
+            const target = (pack?.stickers ?? []).filter((s) => s.imageUrl && (!isSticker || s.stickerId === request.stickerId));
+            const images = target.map((s) => ({ url: s.imageUrl, name: s.name || request.packName }));
             if (images.length === 0) throw new Error("確認できる画像がありません（すでに削除されている可能性があります）");
             setViewerIndex(0);
             setViewerImages(images);
@@ -83,16 +88,16 @@ function RequestRow({
             setError(problem);
             return;
         }
-        const preview = deletionNoticePreview(request.packName, at.getTime());
+        const preview = requestNoticePreview(request, at.getTime());
         if (
             !window.confirm(
-                `承認して、${formatJstDateTime(at.getTime())}に完全に削除します。\n入手した人（${request.ownerCount}人）に、次のお知らせが届きます。\n\n${preview}\n\n削除すると元に戻せません。よろしいですか？`,
+                `承認して、${targetLabel}を、${formatJstDateTime(at.getTime())}に完全に削除します。\n入手した人（${request.ownerCount}人）に、次のお知らせが届きます。\n\n${preview}\n\n削除すると元に戻せません。よろしいですか？`,
             )
         ) {
             return;
         }
         void run(async () => {
-            await approveStickerPackDeletion({ packId: request.packId, deleteAt: at.toISOString() });
+            await approveStickerPackDeletion({ packId: request.packId, ...stickerArg, deleteAt: at.toISOString() });
         });
     };
 
@@ -100,14 +105,14 @@ function RequestRow({
         const note = window.prompt("却下の理由（出品者に表示されます。空でも却下できます）", "");
         if (note === null) return;
         void run(async () => {
-            await rejectStickerPackDeletion({ packId: request.packId, note });
+            await rejectStickerPackDeletion({ packId: request.packId, ...stickerArg, note });
         });
     };
 
     const cancel = () => {
-        if (!window.confirm(`「${request.packName}」の削除の予定を取り消しますか？パックは残り、入手も再開します。`)) return;
+        if (!window.confirm(`${targetLabel}の削除の予定を取り消しますか？${isSticker ? "ぺったんは残ります。" : "パックは残り、入手も再開します。"}`)) return;
         void run(async () => {
-            await cancelScheduledPackDeletion({ packId: request.packId });
+            await cancelScheduledPackDeletion({ packId: request.packId, ...stickerArg });
         });
     };
 
@@ -130,7 +135,11 @@ function RequestRow({
             <div className="flex flex-wrap items-baseline gap-x-3 gap-y-1">
                 <Link href={`/daidai-yokocho/${request.packId}`} className="font-bold text-gray-900 hover:text-primary transition-colors">
                     {request.packName || request.packId}
+                    {isSticker && <span className="font-normal text-gray-600">の「{request.stickerName || request.stickerId}」</span>}
                 </Link>
+                <span className="text-xs rounded-full bg-gray-100 px-2 py-0.5 font-bold text-gray-600">
+                    {isSticker ? "ぺったん1枚" : "パック"}
+                </span>
                 <span className="text-xs rounded-full bg-primary-container px-2 py-0.5 font-bold text-on-primary-container">
                     {deletionStatusLabel(request.status)}
                 </span>
@@ -176,7 +185,7 @@ function RequestRow({
             )}
             {(request.status === "pending" || request.status === "scheduled" || request.status === "failed") && (
                 <button type="button" disabled={busy} onClick={openImages} className="self-start text-xs font-bold text-primary underline underline-offset-4">
-                    パックの画像を確認する
+                    {isSticker ? "ぺったんの画像を確認する" : "パックの画像を確認する"}
                 </button>
             )}
             {error && <p className="text-sm text-red-600" role="alert">{error}</p>}
@@ -267,7 +276,7 @@ export default function AdminClient() {
         ) : (
             <ul className="flex flex-col gap-4">
                 {list.map((r) => (
-                    <RequestRow key={`${r.packId}-${r.status}`} request={r} creator={creatorLabel(creators.get(r.creatorId), r.creatorId)} onChanged={reload} />
+                    <RequestRow key={`${r.requestId}-${r.status}`} request={r} creator={creatorLabel(creators.get(r.creatorId), r.creatorId)} onChanged={reload} />
                 ))}
             </ul>
         );
