@@ -7,7 +7,7 @@ import {
     requestStickerPackDeletion,
 } from "@/lib/firebaseFunctions";
 import { uploadStickerPackAsset } from "@/lib/firebaseStorage";
-import { validateStickerImage, STICKER_ALLOWED_TYPES } from "@/lib/stickerImageSpec";
+import { prepareStickerImage, STICKER_ALLOWED_TYPES } from "@/lib/stickerImageSpec";
 import { formatJstDateTime, validateStickerRemoval, type PackDeletionRequest } from "@/lib/packDeletion";
 import type { StickerPack } from "@/lib/stickerPacks";
 import DeletionRequestDialog from "@/components/daidai-yokocho/DeletionRequestDialog";
@@ -39,13 +39,14 @@ export default function StickerRowActions({
     const inProgress = request?.status === "pending" || request?.status === "scheduled" || request?.status === "failed";
     const scheduledPack = pack.deleteScheduledAt !== null;
 
-    const handleReplace = async (file: File) => {
+    const handleReplace = async (original: File) => {
         setMessage(null);
-        const problem = await validateStickerImage(file);
-        if (problem) {
-            setMessage({ text: problem, ok: false });
+        const prepared = await prepareStickerImage(original);
+        if ("error" in prepared) {
+            setMessage({ text: prepared.error, ok: false });
             return;
         }
+        const file = prepared.file;
         setBusy(true);
         try {
             const imageUrl = await uploadStickerPackAsset(uid, file);

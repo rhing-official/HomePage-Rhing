@@ -7,7 +7,7 @@ import ImageViewer from "@/components/ImageViewer";
 import type { StickerRoleOption } from "@/lib/stickerRoles";
 import { uploadStickerPackAsset } from "@/lib/firebaseStorage";
 import type { StickerInput } from "@/lib/firebaseFunctions";
-import { STICKER_ALLOWED_TYPES, STICKER_MAX_BYTES, STICKER_MAX_SIDE_PX, validateStickerImage } from "@/lib/stickerImageSpec";
+import { STICKER_ALLOWED_TYPES, STICKER_MAX_BYTES, STICKER_MAX_SIDE_PX, prepareStickerImage } from "@/lib/stickerImageSpec";
 
 // 画像1枚と、それに設定する役割id（未設定は空配列、単一選択UIのため常に0〜1件）の組。
 // 新しく選んだ画像（file）か、下書きから復元したアップロード済みの画像（uploaded）のどちらか。
@@ -94,9 +94,9 @@ export default function StickerImagePicker({
                     const accepted: StickerDraft[] = [];
                     const errors: string[] = [];
                     for (const file of files) {
-                        const reason = await validateStickerImage(file);
-                        if (reason) errors.push(`${file.name}: ${reason}`);
-                        else accepted.push({ file, roles: [] });
+                        const result = await prepareStickerImage(file);
+                        if ("error" in result) errors.push(`${file.name}: ${result.error}`);
+                        else accepted.push({ file: result.file, roles: [] });
                     }
                     setRejected(errors);
                     if (accepted.length > 0) onChange([...entries, ...accepted]);
@@ -110,7 +110,7 @@ export default function StickerImagePicker({
                 {label}
             </button>
             <p className="text-xs text-gray-500">
-                PNG・WebP・JPEG・GIF／長辺{STICKER_MAX_SIDE_PX}px以下／1枚{STICKER_MAX_BYTES / 1024 / 1024}MBまで。画像をクリックすると、拡大して見られます
+                PNG・WebP・JPEG・GIF／長辺{STICKER_MAX_SIDE_PX}px以下（SVGは対象外）／1枚{STICKER_MAX_BYTES / 1024 / 1024}MBまで。画像をクリックすると、拡大して見られます
             </p>
             {rejected.length > 0 && (
                 <ul className="text-xs text-red-600 space-y-0.5" role="alert">

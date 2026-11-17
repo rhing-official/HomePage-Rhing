@@ -16,8 +16,17 @@ describe("checkImageSpec", () => {
         expect(checkImageSpec({ ...ok, size: STICKER_MAX_BYTES })).toBeNull();
         expect(checkImageSpec({ ...ok, size: STICKER_MAX_BYTES + 1 })).toContain("2MB");
     });
+    it("512×512ちょうどは通る", () => {
+        expect(checkImageSpec({ ...ok, width: 512, height: 512 })).toBeNull();
+    });
+    it("SVGは長辺の制限を受けないが、2MBは超えられない", () => {
+        const svg = { ...ok, type: "image/svg+xml" };
+        expect(checkImageSpec({ ...svg, width: 0, height: 0 })).toBeNull();
+        expect(checkImageSpec({ ...svg, width: 4000, height: 4000 })).toBeNull();
+        expect(checkImageSpec({ ...svg, size: STICKER_MAX_BYTES + 1 })).toContain("2MB");
+    });
     it("対応していない形式は弾く", () => {
-        expect(checkImageSpec({ ...ok, type: "image/svg+xml" })).toContain("PNG");
+        expect(checkImageSpec({ ...ok, type: "image/bmp" })).toContain("PNG");
         expect(checkImageSpec({ ...ok, type: "" })).toContain("PNG");
     });
 });
