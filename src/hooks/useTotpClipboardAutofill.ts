@@ -7,6 +7,16 @@ import { createTotpClipboardAutofill } from "@/lib/totpAutofill";
 // 場合は例外になり、totpAutofill側で握りつぶして手入力に任せる。
 const readClipboardText = () => navigator.clipboard.readText();
 
+// ブラウザの権限が「拒否」と分かっているときだけtrue。権限の状態を調べられないブラウザ（Firefox・Safari）はfalse
+const isClipboardBlocked = async () => {
+    try {
+        const status = await navigator.permissions.query({ name: "clipboard-read" as PermissionName });
+        return status.state === "denied";
+    } catch {
+        return false;
+    }
+};
+
 /**
  * 2段階認証（TOTP）の6桁コードの入力欄が表示されている間だけ、クリップボードの6桁を
  * 自動採用する。確認するのは、入力欄が表示された直後（描画後に1回）と、タブ・ウィンドウが
@@ -33,6 +43,7 @@ export function useTotpClipboardAutofill({ active, onCode }: { active: boolean; 
             readText: readClipboardText,
             isActive: () => activeRef.current,
             onCode: (code) => onCodeRef.current(code),
+            isBlocked: isClipboardBlocked,
         });
     }, []);
 
@@ -43,9 +54,9 @@ export function useTotpClipboardAutofill({ active, onCode }: { active: boolean; 
         void autofill.check(); // 表示された直後（描画後）に1回
 
         const onVisibilityChange = () => {
-            if (document.visibilityState === "visible") void autofill.check();
+            if (document.visibilityState === "visible") void autofill.retry();
         };
-        const onFocus = () => void autofill.check();
+        const onFocus = () => void autofill.retry();
         document.addEventListener("visibilitychange", onVisibilityChange);
         window.addEventListener("focus", onFocus);
         return () => {

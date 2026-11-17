@@ -144,4 +144,24 @@ describe("createTotpClipboardAutofill", () => {
         await autofill.check();
         for (const spy of spies) expect(spy).not.toHaveBeenCalled();
     });
+
+    it("1回目の読み取りが失敗しても、前面に戻った時のretryで再度読んで採用する", async () => {
+        const readText = vi.fn().mockRejectedValueOnce(new Error("Document is not focused")).mockResolvedValueOnce("123456");
+        const onCode = vi.fn();
+        const autofill = createTotpClipboardAutofill({ readText, isActive: () => true, onCode });
+        await autofill.check();
+        await autofill.check(); // 拒否済みのcheckは読まない
+        expect(readText).toHaveBeenCalledTimes(1);
+        await autofill.retry();
+        expect(onCode).toHaveBeenCalledWith("123456");
+    });
+
+    it("権限が拒否と分かっているときは、クリップボードを読まない", async () => {
+        const readText = vi.fn().mockResolvedValue("123456");
+        const onCode = vi.fn();
+        const autofill = createTotpClipboardAutofill({ readText, isActive: () => true, onCode, isBlocked: async () => true });
+        await autofill.retry();
+        expect(readText).not.toHaveBeenCalled();
+        expect(onCode).not.toHaveBeenCalled();
+    });
 });

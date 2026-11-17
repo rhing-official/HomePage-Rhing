@@ -12,6 +12,7 @@ import {
 } from "firebase/auth";
 import { auth } from "@/lib/firebaseAuth";
 import { useTotpClipboardAutofill } from "@/hooks/useTotpClipboardAutofill";
+import { parseTotpCode } from "@/lib/totpAutofill";
 
 // Firebase Console > Authentication > Sign-in method > Google > Web SDKの設定 の値。
 // クライアントに公開される前提の値であり秘密情報ではない（firebase.tsのAPIキー等と同様）。
@@ -140,6 +141,15 @@ export function useGoogleSignIn(onSignedIn?: () => void) {
         },
     });
 
+    // 入力欄に6桁を貼り付けた時は、権限が不要なので、全てのブラウザで確定できる（クリップボードの自動読み取りの保険）
+    const handleCodePaste = (pastedText: string): boolean => {
+        const pasted = parseTotpCode(pastedText);
+        if (pasted === null || submitting) return false;
+        setCode(pasted);
+        void submitTotpCode(pasted);
+        return true;
+    };
+
     const cancelMfa = () => {
         setResolver(null);
         setCode("");
@@ -152,5 +162,5 @@ export function useGoogleSignIn(onSignedIn?: () => void) {
         setCode(value.normalize("NFKC").slice(0, 6));
     };
 
-    return { buttonContainerRef, error, resolver, code, setCode, handleCodeChange, submitTotpCode, submitting, cancelMfa };
+    return { buttonContainerRef, error, resolver, code, setCode, handleCodeChange, handleCodePaste, submitTotpCode, submitting, cancelMfa };
 }

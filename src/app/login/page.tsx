@@ -42,7 +42,7 @@ function LoginPageContent() {
         }
     };
 
-    const { buttonContainerRef, error, resolver, code, handleCodeChange, submitTotpCode, submitting, cancelMfa } =
+    const { buttonContainerRef, error, resolver, code, handleCodeChange, handleCodePaste, submitTotpCode, submitting, cancelMfa } =
         useGoogleSignIn(redirectIfSignedIn);
     const { submitting: registeringPasskey, error: passkeyRegisterError, registerWithPasskey } = usePasskeyAuth();
 
@@ -123,6 +123,9 @@ function LoginPageContent() {
                     <input
                         value={code}
                         onChange={(e) => handleCodeChange(e.target.value)}
+                        onPaste={(e) => {
+                            if (handleCodePaste(e.clipboardData.getData("text"))) e.preventDefault();
+                        }}
                         placeholder="123456"
                         inputMode="numeric"
                         maxLength={6}

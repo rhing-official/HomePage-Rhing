@@ -62,7 +62,7 @@ export default function DaidaiYokochoMenu() {
     const [showOnboarding, setShowOnboarding] = useState(false);
     const [showPasskeySignIn, setShowPasskeySignIn] = useState(false);
     const [showPasskeyRecovery, setShowPasskeyRecovery] = useState(false);
-    const { buttonContainerRef, error, resolver, code, handleCodeChange, submitTotpCode, submitting, cancelMfa } =
+    const { buttonContainerRef, error, resolver, code, handleCodeChange, handleCodePaste, submitTotpCode, submitting, cancelMfa } =
         useGoogleSignIn();
     const { submitting: registeringPasskey, error: passkeyRegisterError, registerWithPasskey } = usePasskeyAuth();
 
@@ -206,6 +206,9 @@ export default function DaidaiYokochoMenu() {
                                         <input
                                             value={code}
                                             onChange={(e) => handleCodeChange(e.target.value)}
+                                            onPaste={(e) => {
+                                                if (handleCodePaste(e.clipboardData.getData("text"))) e.preventDefault();
+                                            }}
                                             placeholder="123456"
                                             inputMode="numeric"
                                             maxLength={6}

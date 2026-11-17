@@ -31,9 +31,11 @@ export type TotpClipboardAutofillOptions = {
     isActive: () => boolean;
     /** 6桁のコードを採用した時に呼ばれる（ここで入力欄に入れて確定する） */
     onCode: (code: string) => void;
+    /** ブラウザの権限が「拒否」と分かっているときtrue（権限の確認を繰り返し出さないため）。省略可 */
+    isBlocked?: () => Promise<boolean>;
 };
 
-export function createTotpClipboardAutofill({ readText, isActive, onCode }: TotpClipboardAutofillOptions) {
+export function createTotpClipboardAutofill({ readText, isActive, onCode, isBlocked }: TotpClipboardAutofillOptions) {
     let lastAutofilled: string | null = null; // 直前に自動入力したコード（同じ値では繰り返さない）
     let checking = false; // 確認中の二重実行を防ぐ
     let denied = false; // 権限拒否などで読めないと判明したら、その表示中は再度読まない
@@ -44,11 +46,21 @@ export function createTotpClipboardAutofill({ readText, isActive, onCode }: Totp
             denied = false;
         },
 
+        /**
+         * タブ・ウィンドウが前面に戻った時に呼ぶ。直前の読み取りの失敗（ポップアップの直後で
+         * フォーカスが無かった等）で止まらないよう、拒否済みの状態を解除して、もう一度読む
+         */
+        retry(): Promise<void> {
+            denied = false;
+            return this.check();
+        },
+
         /** クリップボードを1回読み、6桁のコードがあれば採用する。失敗は黙って無視する */
         async check(): Promise<void> {
             if (checking || denied || !isActive()) return;
             checking = true;
             try {
+                if (isBlocked && (await isBlocked().catch(() => false))) return;
                 let text: string;
                 try {
                     text = await readText();
