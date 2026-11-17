@@ -51,6 +51,8 @@ function RequestRow({
 }) {
     const [deleteAt, setDeleteAt] = useState(defaultDeleteAtInput);
     const [pickingDate, setPickingDate] = useState(false);
+    // 緊急: 周知の期間（24時間）を設けず、すぐに削除する（権利侵害など、待てない場合）
+    const [urgent, setUrgent] = useState(false);
     const [busy, setBusy] = useState(false);
     const [error, setError] = useState<string | null>(null);
     const [viewerImages, setViewerImages] = useState<ViewerImage[] | null>(null);
@@ -84,6 +86,20 @@ function RequestRow({
         });
 
     const approve = () => {
+        if (urgent) {
+            const preview = requestNoticePreview(request, Date.now(), true);
+            if (
+                !window.confirm(
+                    `【緊急】承認して、${targetLabel}を、すぐに完全に削除します（お知らせを送ったあと、5分以内に削除されます）。\n入手した人（${request.ownerCount}人）に、次のお知らせが届きます。\n\n${preview}\n\n削除すると元に戻せません。よろしいですか？`,
+                )
+            ) {
+                return;
+            }
+            void run(async () => {
+                await approveStickerPackDeletion({ packId: request.packId, ...stickerArg, urgent: true });
+            });
+            return;
+        }
         const at = parseJstInput(deleteAt);
         const problem = validateDeleteAt(at, new Date());
         if (problem) {
@@ -125,10 +141,17 @@ function RequestRow({
             <button
                 type="button"
                 onClick={() => setPickingDate(true)}
-                className="rounded-lg border border-gray-200 bg-white/70 px-3 py-2 text-sm text-gray-800 text-left hover:bg-white transition-colors"
+                disabled={urgent}
+                className="self-start disabled:opacity-40 disabled:cursor-not-allowed rounded-lg border border-gray-200 bg-white/70 px-3 py-2 text-sm text-gray-800 text-left hover:bg-white transition-colors"
             >
                 {deleteAtParts.month}月{deleteAtParts.day}日（{weekdayName(deleteAtParts.year, deleteAtParts.month, deleteAtParts.day)}）{deleteAt.slice(11, 16)}
             </button>
+            <label className="flex items-start gap-2 mt-1 text-xs text-gray-700 cursor-pointer max-w-xs">
+                <input type="checkbox" checked={urgent} onChange={(e) => setUrgent(e.target.checked)} className="mt-0.5" />
+                <span>
+                    <span className="font-bold text-red-600">緊急</span>（すぐに削除する）。権利侵害など、待てない場合だけ。お知らせは送られ、5分以内に削除されます
+                </span>
+            </label>
             {pickingDate && (
                 <DateTimePickerDialog
                     value={deleteAt}

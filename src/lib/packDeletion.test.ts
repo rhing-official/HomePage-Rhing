@@ -91,3 +91,15 @@ describe("ぺったん1枚の削除", () => {
         );
     });
 });
+
+describe("緊急の削除のお知らせ", () => {
+    it("日時を書かない（パック・1枚。サーバーと同じ）", () => {
+        const ms = new Date("2026-12-01T03:00:00.000Z").getTime();
+        expect(requestNoticePreview({ kind: "pack", packName: "春のパック", stickerName: "" }, ms, true)).toBe(
+            "「春のパック」というぺったんをお使いの利用者の方に連絡します。緊急の対応のため、まもなく使えなくなります。",
+        );
+        expect(requestNoticePreview({ kind: "sticker", packName: "春のパック", stickerName: "ねこ" }, ms, true)).toBe(
+            "「春のパック」というぺったんパックの中の「ねこ」をお使いの利用者の方に連絡します。緊急の対応のため、まもなく使えなくなります。",
+        );
+    });
+});

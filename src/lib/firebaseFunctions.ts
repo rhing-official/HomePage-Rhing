@@ -94,8 +94,8 @@ export async function requestStickerPackDeletion(data: { packId: string; sticker
     await httpsCallable(functions, "requestStickerPackDeletion")(data);
 }
 
-// 削除の申請を承認し、削除する日時（ISO文字列、今から24時間以上先）を指定する（管理者のみ）。入手した人だけにお知らせが送られる
-export async function approveStickerPackDeletion(data: { packId: string; stickerId?: string; deleteAt: string }): Promise<{ notified: number }> {
+// 削除の申請を承認し、削除する日時（ISO文字列、今から24時間以上先）を指定する（管理者のみ）。urgentなら、日時は不要で、すぐに削除される（緊急）。入手した人だけにお知らせが送られる
+export async function approveStickerPackDeletion(data: { packId: string; stickerId?: string; deleteAt?: string; urgent?: boolean }): Promise<{ notified: number }> {
     const result = await httpsCallable<typeof data, { notified?: number }>(functions, "approveStickerPackDeletion")(data);
     return { notified: result.data?.notified ?? 0 };
 }
