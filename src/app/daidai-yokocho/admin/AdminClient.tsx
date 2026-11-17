@@ -3,6 +3,7 @@
 import { useCallback, useEffect, useState } from "react";
 import Link from "next/link";
 import { AnimatePresence } from "framer-motion";
+import NotFound from "@/app/not-found";
 import { auth, onAuthStateChanged, type User } from "@/lib/firebaseAuth";
 import ImageViewer, { type ViewerImage } from "@/components/ImageViewer";
 import { getCreatorProfiles, type CreatorProfile } from "@/lib/creatorProfiles";
@@ -24,11 +25,10 @@ import {
     type PackDeletionRequest,
 } from "@/lib/packDeletion";
 
-const ADMIN_PATH = "/daidai-yokocho/admin";
 const DEFAULT_NOTICE_DAYS = 7;
 const cardClass = "bg-white/40 backdrop-blur-md border border-white/80 shadow-elevation-1 rounded-m3-xl";
 
-type AccessState = "loading" | "signedOut" | "denied" | "admin";
+type AccessState = "loading" | "denied" | "admin";
 
 function creatorLabel(profile: CreatorProfile | undefined, uid: string): string {
     return profile?.nickname ?? (profile?.rhingSeed ? `@${profile.rhingSeed}` : uid.slice(0, 8));
@@ -214,7 +214,7 @@ export default function AdminClient() {
             onAuthStateChanged(auth, (u) => {
                 setUser(u);
                 if (!u) {
-                    setAccess("signedOut");
+                    setAccess("denied");
                     return;
                 }
                 u.getIdTokenResult()
@@ -251,25 +251,9 @@ export default function AdminClient() {
 
     if (access === "loading") return null;
 
-    if (access === "signedOut") {
-        return (
-            <div className="container mx-auto px-6 max-w-3xl text-center text-gray-600 py-16">
-                <p className="mb-4">管理画面を使うには、ログインが必要です。</p>
-                <Link href={`/login?redirect=${encodeURIComponent(ADMIN_PATH)}`} className="font-bold text-primary underline underline-offset-4">
-                    ログインする
-                </Link>
-            </div>
-        );
-    }
-
-    if (access === "denied" || !user) {
-        return (
-            <div className="container mx-auto px-6 max-w-3xl text-center text-gray-600 py-16">
-                <p className="font-bold text-gray-900 mb-2">権限がありません</p>
-                <p className="text-sm">この画面は、運営の管理者だけが使えます。</p>
-            </div>
-        );
-    }
+    // 管理者でなければ（未ログイン・クレーム無し・判定の失敗も）、存在しないURLと同じ404美術館を出す。
+    // 管理画面があること自体を、URLを知っただけの人に教えないため（DaiDaiの/adminと同じ）
+    if (access !== "admin" || !user) return <NotFound />;
 
     const pending = requests.filter((r) => r.status === "pending");
     const scheduled = requests
