@@ -27,6 +27,8 @@ import {
 import { motion, AnimatePresence } from "framer-motion";
 import ScreenshotPlaceholder from "./ScreenshotPlaceholder";
 import CtaCard from "@/components/ui/CtaCard";
+import SectionHeading from "@/components/ui/SectionHeading";
+import ContentsNav, { type ContentsItem } from "@/components/ContentsNav";
 import { useAudience, AudienceToggle } from "./AudienceContext";
 import {
     DataSection,
@@ -36,35 +38,7 @@ import {
     CreatorsSection,
     FaqSection,
     GlossarySection,
-    SectionHeading,
 } from "./TrustSections";
-
-type ContentsItem = { href: string; label: string };
-
-function ContentsNav({ items }: { items: ContentsItem[] }) {
-    return (
-        <div className="w-full max-w-md text-left">
-            <p className="text-xs tracking-[0.3em] text-gray-400 mb-3">CONTENTS</p>
-            <div className="flex flex-col divide-y divide-gray-200 border-t border-b border-gray-200">
-                {items.map((c, i) => (
-                    <a
-                        key={c.href}
-                        href={c.href}
-                        className="group flex items-center justify-between py-4 text-gray-700 hover:text-gray-900 transition-colors"
-                    >
-                        <span className="flex items-center gap-4">
-                            <span className="text-xs text-gray-400 tracking-widest">
-                                {String(i + 1).padStart(2, "0")}
-                            </span>
-                            {c.label}
-                        </span>
-                        <ArrowRight className="w-4 h-4 text-gray-400 group-hover:translate-x-1 group-hover:text-gray-700 transition-transform" strokeWidth={1.5} />
-                    </a>
-                ))}
-            </div>
-        </div>
-    );
-}
 
 const generalContents: ContentsItem[] = [
     { href: "#pillars", label: "選ばれる理由" },
@@ -405,7 +379,7 @@ function GeneralContent() {
                 <span className="inline-block text-xs font-bold tracking-widest text-tertiary bg-tertiary/10 rounded-full px-4 py-1 mb-4">
                     ご利用いただけます
                 </span>
-                <h3 className="text-2xl font-bold text-gray-900 mb-2">極み プラン</h3>
+                <h3 className="text-2xl font-bold text-gray-900 mb-2">極み</h3>
                 <p className="text-gray-500 text-sm mb-6">￥300 / 月</p>
                 <ul className="space-y-2 text-left w-fit max-w-full mx-auto mb-6">
                     {["既読の非表示", "限定フォント10種", "プロフィールカードを3枚から10枚に、SNSのURLの登録上限も拡大", "複数アカウントの切り替え"].map((feature) => (
@@ -567,7 +541,7 @@ function GeekContent() {
                             { href: "https://github.com/rhing-official/DaiDai", label: "GITHUB", title: "開発の様子を見る", caption: "DaiDaiのリポジトリ" },
                             { href: "https://gitdiagram.com/rhing-official/daidai", label: "DIAGRAM", title: "構成を図解する", caption: "コードの構成を見る" },
                         ].map((card) => (
-                            <CtaCard key={card.href} href={card.href} label={card.label} title={card.title} caption={card.caption} />
+                            <CtaCard tone="orange" key={card.href} href={card.href} label={card.label} title={card.title} caption={card.caption} />
                         ))}
                     </div>
                 </div>

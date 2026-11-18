@@ -49,6 +49,7 @@ export default function DaiDaiPage() {
             <div className="container mx-auto px-6 pb-24 max-w-5xl">
                 <div className="flex flex-col lg:flex-row gap-8 items-stretch">
                     <CtaCard
+                        tone="orange"
                         href="https://daidai.rhing.jp"
                         label="WEB"
                         title="今すぐブラウザで試す"

@@ -1,24 +1,12 @@
 import Link from "next/link";
-import { Check, Minus, ChevronDown, ArrowRight, Database, TriangleAlert, Workflow, Scale, CircleHelp, BookOpen, StickyNote, type LucideIcon } from "lucide-react";
+import SectionHeading from "@/components/ui/SectionHeading";
+import { Check, Minus, ChevronDown, ArrowRight, Database, TriangleAlert, Workflow, Scale, CircleHelp, BookOpen, StickyNote } from "lucide-react";
 
 /**
  * DaiDaiページの「信頼」のためのセクション群。
  * 一般向け・ギーク向けの両方から使う（`AudienceContent.tsx`）。
  * 言えること・言えないことを、具体的に、誇張なく書く。未実装の機能は実装済みのように書かない。
  */
-
-/** 節の見出し。アイコンは必須。 */
-export function SectionHeading({ label, title, icon: Icon, mb = "mb-8", center = false }: { label: string; title: string; icon: LucideIcon; mb?: string; center?: boolean }) {
-    return (
-        <>
-            <span className="text-xs font-bold tracking-widest text-gray-500 mb-2 block">{label}</span>
-            <h2 className={`text-2xl font-bold ${mb} tracking-wide text-gray-900 text-balance flex items-center gap-3 ${center ? "justify-center" : ""}`}>
-                <Icon className="w-5 h-5 text-tertiary shrink-0" strokeWidth={1.5} />
-                {title}
-            </h2>
-        </>
-    );
-}
 
 /* ------------------------------------------------------------------ */
 /* 取得する情報と、取得しない情報                                              */

@@ -23,6 +23,7 @@
     --color-secondary-container: #f0cabb;
     --color-on-secondary-container: #4a2c20;
     --color-tertiary: #ee7800;
+    --color-vermilion: #c23326;
     --color-error: #dc2626;
 
     /* 形状スケール（既存のrounded-*は変えず、M3用の名前を別に用意する） */
