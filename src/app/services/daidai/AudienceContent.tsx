@@ -26,6 +26,7 @@ import {
 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import ScreenshotPlaceholder from "./ScreenshotPlaceholder";
+import { screenshots } from "./screenshots";
 import CtaCard from "@/components/ui/CtaCard";
 import SectionHeading from "@/components/ui/SectionHeading";
 import ContentsNav, { type ContentsItem } from "@/components/ContentsNav";
@@ -305,7 +306,7 @@ function GeneralContent() {
                         </ul>
                     </div>
                     <div className="w-full lg:w-1/2">
-                        <ScreenshotPlaceholder label="[SCREENSHOT: デスクトップ(Web) - ホーム画面（一対・広場一覧の左右分割表示）]" aspect="video" />
+                        <ScreenshotPlaceholder label="[SCREENSHOT: デスクトップ(Web) - ホーム画面（一対・広場一覧の左右分割表示）]" aspect="video" {...screenshots.home} />
                     </div>
                 </div>
 
@@ -318,7 +319,7 @@ function GeneralContent() {
                         </p>
                     </div>
                     <div className="w-full lg:w-1/2">
-                        <ScreenshotPlaceholder label="[SCREENSHOT: デスクトップ(Web) - チャット画面（メッセージ内容に応じたぺったん自動提案）]" aspect="video" />
+                        <ScreenshotPlaceholder label="[SCREENSHOT: デスクトップ(Web) - チャット画面（メッセージ内容に応じたぺったん自動提案）]" aspect="photo" {...screenshots.suggest} className="max-w-[451px] mx-auto" />
                     </div>
                 </div>
 
@@ -331,7 +332,7 @@ function GeneralContent() {
                         </p>
                     </div>
                     <div className="w-full lg:w-1/2">
-                        <ScreenshotPlaceholder label="[SCREENSHOT: デスクトップ(Web) - ビデオ通話画面]" aspect="video" />
+                        <ScreenshotPlaceholder label="[SCREENSHOT: デスクトップ(Web) - ビデオ通話画面]" aspect="video" {...screenshots.call} />
                     </div>
                 </div>
 
@@ -344,7 +345,7 @@ function GeneralContent() {
                         </p>
                     </div>
                     <div className="w-full lg:w-1/2">
-                        <ScreenshotPlaceholder label="[SCREENSHOT: デスクトップ(Web) - UIスタイル切り替え（フラット/劇画/ガラスの見た目比較）]" aspect="video" />
+                        <ScreenshotPlaceholder label="[SCREENSHOT: デスクトップ(Web) - UIスタイル切り替え（フラット/劇画/ガラスの見た目比較）]" aspect="video" {...screenshots.style} />
                     </div>
                 </div>
             </div>
@@ -355,11 +356,11 @@ function GeneralContent() {
                     <SectionHeading label="SCREENSHOTS" title="アプリの画面" icon={Smartphone} mb="mb-0" center />
                 </div>
                 <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-4 max-w-5xl mx-auto">
-                    <ScreenshotPlaceholder label="[SCREENSHOT: モバイル - 一対・広場タブ、下部ナビゲーション]" aspect="portrait" />
-                    <ScreenshotPlaceholder label="[SCREENSHOT: モバイル - チャット画面]" aspect="portrait" />
-                    <ScreenshotPlaceholder label="[SCREENSHOT: モバイル - 蔵・仕立て（プロフィール管理画面）]" aspect="portrait" />
-                    <ScreenshotPlaceholder label="[SCREENSHOT: モバイル - 縁結び（招待QRコード画面）]" aspect="portrait" />
-                    <ScreenshotPlaceholder label="[SCREENSHOT: ログイン画面（パスキー・Google/Appleログインの選択肢）]" aspect="portrait" />
+                    <ScreenshotPlaceholder label="[SCREENSHOT: モバイル - 一対・広場タブ、下部ナビゲーション]" aspect="phone" {...screenshots.mobileTalks} />
+                    <ScreenshotPlaceholder label="[SCREENSHOT: モバイル - チャット画面]" aspect="phone" {...screenshots.mobileChat} />
+                    <ScreenshotPlaceholder label="[SCREENSHOT: モバイル - 蔵・仕立て（プロフィール管理画面）]" aspect="phone" {...screenshots.mobileKura} />
+                    <ScreenshotPlaceholder label="[SCREENSHOT: モバイル - 縁結び（招待QRコード画面）]" aspect="phone" {...screenshots.mobileEnmusubi} />
+                    <ScreenshotPlaceholder label="[SCREENSHOT: ログイン画面（パスキー・Google/Appleログインの選択肢）]" aspect="phone" {...screenshots.login} />
                 </div>
             </div>
 

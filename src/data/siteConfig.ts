@@ -24,6 +24,6 @@ export const siteConfig = {
         instagram: "https://www.instagram.com/rhing.official/",
         x: "https://x.com/Rhing_official",
         github: "https://github.com/rhing-official",
-        discord: "https://discord.gg/kKDtnWDJe"
+        discord: "https://discord.gg/BynxXjKKDn"
     }
 };

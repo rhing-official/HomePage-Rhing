@@ -2,6 +2,8 @@ import { Metadata } from "next";
 import CtaCard from "@/components/ui/CtaCard";
 import { AudienceProvider } from "./AudienceContext";
 import AudienceContent, { AudienceHeader } from "./AudienceContent";
+import ScreenshotViewerProvider from "./ScreenshotViewer";
+import { screenshotList } from "./screenshots";
 import EnvironmentList from "@/components/EnvironmentList";
 
 const title = "DaiDai | Rhing";
@@ -116,7 +118,9 @@ export default function DaiDaiPage() {
 
                 {/* 機能紹介（一般向け/ギーク向けでトグル） */}
                 <section className="container mx-auto px-6 py-8">
-                    <AudienceContent />
+                    <ScreenshotViewerProvider images={screenshotList}>
+                        <AudienceContent />
+                    </ScreenshotViewerProvider>
                 </section>
             </AudienceProvider>
         </div>
