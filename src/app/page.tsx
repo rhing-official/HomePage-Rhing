@@ -1,10 +1,9 @@
 import { Suspense } from "react";
-import Link from "next/link";
-import { ArrowRight } from "lucide-react";
 import HeroFloatingSection from "@/components/HeroFloatingSection";
 import { newsList } from "@/data/newsData";
 import Button from "@/components/ui/Button";
 import Badge from "@/components/ui/Badge";
+import CtaCard from "@/components/ui/CtaCard";
 import TrendingStickerPacks from "@/components/TrendingStickerPacks";
 import CartProvider from "@/components/CartProvider";
 import { getTrendingStickerPacks } from "@/lib/stickerPacks";
@@ -58,31 +57,8 @@ export default function Home() {
             {/* 導線エリア*/}
             <section className="container mx-auto px-4 py-16">
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4 max-w-4xl mx-auto">
-                    {menuCards.map((card, index) => (
-                        <Link
-                            key={index}
-                            href={card.href}
-                            className="group block h-64 bg-white/50 backdrop-blur-md border border-white/80 shadow-elevation-2 hover:bg-white/80 hover:border-white hover:shadow-elevation-3 transition-all duration-300 ease-m3-standard rounded-m3-lg overflow-hidden relative p-8"
-                        >
-                            <div className="relative z-10 h-full flex flex-col justify-between">
-                                <div>
-                                    <h2 className="text-sm font-bold tracking-widest text-gray-400 group-hover:text-primary transition-colors">
-                                        {card.en}
-                                    </h2>
-                                    <p className="text-2xl font-bold mt-2 text-gray-900 group-hover:text-black transition-colors">
-                                        {card.title}
-                                    </p>
-                                </div>
-                                <div className="flex items-end justify-between">
-                                    <span className="text-sm text-gray-500 group-hover:text-gray-400 transition-colors">
-                                        {card.desc}
-                                    </span>
-                                    <div className="w-10 h-10 rounded-full border border-gray-300 bg-white/40 group-hover:border-primary group-hover:bg-primary group-hover:text-white flex items-center justify-center text-gray-800 transition-all duration-300 transform group-hover:translate-x-2">
-                                        <ArrowRight className="w-5 h-5" />
-                                    </div>
-                                </div>
-                            </div>
-                        </Link>
+                    {menuCards.map((card) => (
+                        <CtaCard key={card.href} href={card.href} label={card.en} title={card.title} caption={card.desc} heading="h2" />
                     ))}
                 </div>
             </section>

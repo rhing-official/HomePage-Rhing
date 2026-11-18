@@ -1,15 +1,29 @@
 import { Metadata } from "next";
-import Link from "next/link";
+import CtaCard from "@/components/ui/CtaCard";
 import { Gift, KeyRound, Palette, ArrowRight, Search, Heart, UserRound, Sparkles } from "lucide-react";
 
+const title = "daidai横丁 | Rhing";
+const description = "DaiDaiで使えるぺったんのストア、daidai横丁について。当面は無料のぺったんのみで、有料化の際の還元率の目標と、その算出の前提も載せています。";
+
 export const metadata: Metadata = {
-    title: "daidai横丁 | Rhing",
-    description: "DaiDaiで使えるぺったんのストア、daidai横丁について",
+    title,
+    description,
+    alternates: { canonical: "https://rhing.jp/services/daidai-yokocho" },
+    openGraph: {
+        title,
+        description,
+        url: "https://rhing.jp/services/daidai-yokocho",
+        siteName: "Rhing",
+        locale: "ja_JP",
+        type: "website",
+    },
+    twitter: { card: "summary", title, description },
 };
 
 const contents = [
     { href: "#about", label: "ぺったんとは" },
     { href: "#howto", label: "使い方" },
+    { href: "#fee", label: "還元率の算出の前提" },
     { href: "#github", label: "仕組みを見る" },
 ];
 
@@ -140,31 +154,73 @@ export default function DaidaiYokochoServicePage() {
                 </div>
             </section>
 
+            {/* 還元率の算出の前提 */}
+            <section id="fee" className="container mx-auto px-6 py-20 max-w-4xl scroll-mt-8">
+                <span className="text-xs font-bold tracking-widest text-gray-500 mb-2 block text-center">REVENUE SHARE</span>
+                <h2 className="text-2xl font-bold mb-6 tracking-widest text-center text-gray-900">還元率の算出の前提</h2>
+                <p className="text-gray-600 leading-relaxed text-pretty max-w-2xl mx-auto mb-10 text-center">
+                    有料化した際の目標として、購入額の<strong className="font-bold text-gray-800">約91.4%</strong>を出品者に還元することを目指しています。これは概算で、保証するものではありません。当面は無料のぺったんのみで、還元はまだ発生していません。
+                </p>
+
+                <div className="bg-white rounded-m3-lg shadow-sm border border-gray-100 overflow-x-auto mb-8">
+                    <table className="w-full text-left text-sm">
+                        <thead>
+                            <tr className="border-b border-gray-100 text-gray-400 text-xs tracking-widest">
+                                <th className="p-5">項目</th>
+                                <th className="p-5">割合（概算）</th>
+                                <th className="p-5">備考</th>
+                            </tr>
+                        </thead>
+                        <tbody className="text-gray-600">
+                            {[
+                                ["決済手数料（Stripe）", "3.6%", "ブラウザで直接購入する場合"],
+                                ["daidai横丁の手数料", "5.0%", "サービスの維持費"],
+                                ["出品者の取り分", "約91.4%", "100% − 3.6% − 5.0%。目標値で、保証するものではありません"],
+                            ].map((row) => (
+                                <tr key={row[0]} className="border-b last:border-0 border-gray-100 align-top">
+                                    <td className="p-5 font-bold text-gray-800 whitespace-nowrap">{row[0]}</td>
+                                    <td className="p-5 whitespace-nowrap">{row[1]}</td>
+                                    <td className="p-5 leading-relaxed">{row[2]}</td>
+                                </tr>
+                            ))}
+                        </tbody>
+                    </table>
+                </div>
+
+                <div className="grid md:grid-cols-2 gap-6">
+                    <div className="bg-white p-8 rounded-m3-lg shadow-sm border border-gray-100">
+                        <h3 className="text-base font-bold mb-3 text-gray-900">アプリ経由で購入する場合</h3>
+                        <p className="text-gray-600 text-sm leading-relaxed text-pretty">
+                            iOSやGoogle Playのアプリから購入する場合は、ストアに支払う手数料相当を、購入する人の価格に加算する方針です。出品者の取り分は、加算する前の元の価格を基準にします。なお、この仕組みは未実装で、ストア版のアプリも公開していません。
+                        </p>
+                    </div>
+                    <div className="bg-white p-8 rounded-m3-lg shadow-sm border border-gray-100">
+                        <h3 className="text-base font-bold mb-3 text-gray-900">まだ決まっていないこと</h3>
+                        <ul className="space-y-2 text-gray-600 text-sm leading-relaxed">
+                            {[
+                                "消費税の扱い（税込・税抜のどちらを基準にするか）",
+                                "出品者への支払い方法（決済サービスの仕組みを含め、未定です）",
+                                "支払いの時期と、最低支払額",
+                                "返金があった場合の、出品者の取り分の扱い",
+                            ].map((t) => (
+                                <li key={t} className="flex items-start gap-3">
+                                    <span className="w-1.5 h-1.5 bg-gray-400 rounded-full shrink-0 mt-2" />
+                                    {t}
+                                </li>
+                            ))}
+                        </ul>
+                    </div>
+                </div>
+                <p className="text-xs text-gray-400 leading-relaxed mt-6 text-center">
+                    上の数字は、決済サービスの手数料率などをもとにした概算です。確定した内容は、有料化の前にあらためてお知らせします。
+                </p>
+            </section>
+
             {/* ストアへ */}
             <section className="container mx-auto px-6 pb-8 max-w-3xl">
-                <Link
-                    href="/daidai-yokocho"
-                    className="group block h-64 w-full max-w-sm mx-auto bg-white/50 backdrop-blur-md border border-white/80 shadow-elevation-2 hover:bg-white/80 hover:border-white hover:shadow-elevation-3 transition-all duration-500 rounded-lg overflow-hidden relative p-8"
-                >
-                    <div className="relative z-10 h-full flex flex-col justify-between">
-                        <div>
-                            <h3 className="text-sm font-bold tracking-widest text-gray-400 group-hover:text-primary transition-colors">
-                                STORE
-                            </h3>
-                            <p className="text-2xl font-bold mt-2 text-gray-900 group-hover:text-black transition-colors">
-                                daidai横丁を見る
-                            </p>
-                        </div>
-                        <div className="flex items-end justify-between">
-                            <span className="text-sm text-gray-500 group-hover:text-gray-400 transition-colors">
-                                ぺったんを探しに行く
-                            </span>
-                            <div className="w-10 h-10 rounded-full border border-gray-300 bg-white/40 group-hover:border-primary group-hover:bg-primary group-hover:text-white flex items-center justify-center text-gray-800 transition-all duration-300 transform group-hover:translate-x-2">
-                                <ArrowRight className="w-5 h-5" />
-                            </div>
-                        </div>
-                    </div>
-                </Link>
+                <div className="flex justify-center">
+                    <CtaCard href="/daidai-yokocho" label="STORE" title="daidai横丁を見る" caption="ぺったんを探しに行く" />
+                </div>
             </section>
 
             {/* リポジトリ */}
@@ -174,38 +230,13 @@ export default function DaidaiYokochoServicePage() {
                 <p className="text-gray-600 leading-relaxed text-center max-w-xl mx-auto mb-10">
                     daidai横丁の画面は、このサイトのリポジトリにあります。購入や出品の権限のルール、処理の部分は、DaiDaiのリポジトリにあります。
                 </p>
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-6 justify-items-center">
+                <div className="flex flex-wrap justify-center gap-4">
                     {[
                         { href: "https://github.com/rhing-official/HomePage-Rhing", label: "GITHUB", title: "画面を見る", caption: "このサイトのリポジトリ" },
               { href: "https://gitdiagram.com/rhing-official/homepage-rhing", label: "DIAGRAM", title: "構成を図解する", caption: "GitDiagramでこのサイトの構成を見る" },
                         { href: "https://github.com/rhing-official/DaiDai", label: "GITHUB", title: "ルールと処理を見る", caption: "DaiDaiのリポジトリ" },
                     ].map((card) => (
-                        <a
-                            key={card.href}
-                            href={card.href}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className="group block h-64 w-full max-w-sm bg-white/50 backdrop-blur-md border border-white/80 shadow-elevation-2 hover:bg-white/80 hover:border-white hover:shadow-elevation-3 transition-all duration-500 rounded-lg overflow-hidden relative p-8"
-                        >
-                            <div className="relative z-10 h-full flex flex-col justify-between">
-                                <div>
-                                    <h3 className="text-sm font-bold tracking-widest text-gray-400 group-hover:text-primary transition-colors">
-                                        {card.label}
-                                    </h3>
-                                    <p className="text-2xl font-bold mt-2 text-gray-900 group-hover:text-black transition-colors">
-                                        {card.title}
-                                    </p>
-                                </div>
-                                <div className="flex items-end justify-between gap-3">
-                                    <span className="text-sm text-gray-500 group-hover:text-gray-400 transition-colors">
-                                        {card.caption}
-                                    </span>
-                                    <div className="w-10 h-10 shrink-0 rounded-full border border-gray-300 bg-white/40 group-hover:border-primary group-hover:bg-primary group-hover:text-white flex items-center justify-center text-gray-800 transition-all duration-300 transform group-hover:translate-x-2">
-                                        <ArrowRight className="w-5 h-5" />
-                                    </div>
-                                </div>
-                            </div>
-                        </a>
+                        <CtaCard key={card.href} href={card.href} label={card.label} title={card.title} caption={card.caption} />
                     ))}
                 </div>
             </section>

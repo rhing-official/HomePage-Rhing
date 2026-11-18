@@ -21,8 +21,8 @@ export const siteConfig = {
         qiita: "https://qiita.com/rhing_official",
         zenn: "https://zenn.dev/rhing_official",
         youtube: "https://www.youtube.com/@rhing_official",
-        instagram: "https://www.instagram.com/rhing_official/",
-        x: "https://x.com/rhing_official",
+        instagram: "https://www.instagram.com/rhing.official/",
+        x: "https://x.com/Rhing_official",
         github: "https://github.com/rhing-official",
         discord: "https://discord.gg/kKDtnWDJe"
     }

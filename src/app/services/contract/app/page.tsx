@@ -48,7 +48,7 @@ export default function ContractAppPage() {
                 <section className={`${cardClass} p-8 md:p-12`}>
                     <h2 className="text-2xl font-bold text-gray-900 tracking-wider mb-4">制作実績</h2>
                     <p className="text-gray-700 leading-relaxed">
-                        メッセージアプリ「DaiDai」を、Flutter・Firebase・WebRTCで個人で設計・開発・運用しています（Web・Android・Windows・Linuxに対応）。
+                        メッセージアプリ「DaiDai」を、Flutter・Firebase・WebRTCで個人で設計・開発・運用しています（Web・Androidに対応）。
                     </p>
                 </section>
 

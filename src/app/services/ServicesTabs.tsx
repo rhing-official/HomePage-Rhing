@@ -26,7 +26,7 @@ const appServices: Service[] = [
         tagline: "整う、守る、私に馴染む。",
         category: "Messages",
         description: "プライバシーを守る、メッセージアプリ。広告なし、電話番号・メールアドレス不要で、あなたのデータを売却しません。家族や友人との語らいから、コミュニティでの交流まで、安心して繋がれる場所を提供します。",
-        features: ["厳重なプライバシー保護", "広告なし", "電話番号・メアド不要", "Web対応", "Android,Linux,Windows,iOS,macOS対応予定"],
+        features: ["厳重なプライバシー保護", "広告なし", "電話番号・メアド不要", "Web・Android対応", "iOS,Windows,macOS,Linux対応予定"],
         link: "/services/daidai",
         bgColor: "bg-gray-300/60",
         image: "/logos/daidai.png",

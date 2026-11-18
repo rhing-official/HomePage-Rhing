@@ -1,23 +1,36 @@
 import { Metadata } from "next";
-import { ArrowRight } from "lucide-react";
+import CtaCard from "@/components/ui/CtaCard";
 import { AudienceProvider } from "./AudienceContext";
 import AudienceContent, { AudienceHeader } from "./AudienceContent";
 import EnvironmentList from "@/components/EnvironmentList";
 
+const title = "DaiDai | Rhing";
+const description = "整う、守る、私に馴染む。広告なし、電話番号・メールアドレスの入力が不要なメッセージアプリ。何を持ち何を持たないか、まだできていないことも、正直に書いています。";
+
 export const metadata: Metadata = {
-    title: "DaiDai | Rhing",
-    description: "整う、守る、私に馴染む。個人情報を収集しない、プライバシーファーストなメッセージアプリ",
+    title,
+    description,
+    alternates: { canonical: "https://rhing.jp/services/daidai" },
+    openGraph: {
+        title,
+        description,
+        url: "https://rhing.jp/services/daidai",
+        siteName: "Rhing",
+        locale: "ja_JP",
+        type: "website",
+    },
+    twitter: { card: "summary", title, description },
 };
 
 type Platform = { name: string; status: "available" | "planned"; url?: string; note?: string };
 
 const platforms: Platform[] = [
     { name: "Web", status: "available", url: "https://daidai.rhing.jp" },
-    { name: "Android", status: "available", url: "https://github.com/rhing-official/DaiDai/releases/tag/v1.0.0-beta.1", note: "APKのみ" },
+    { name: "Android", status: "available", url: "https://github.com/rhing-official/DaiDai/releases/latest", note: "APKのみ" },
     { name: "iOS", status: "planned" },
     { name: "Windows", status: "planned" },
-    { name: "Linux", status: "planned" },
     { name: "macOS", status: "planned" },
+    { name: "Linux", status: "planned" },
 ];
 
 export default function DaiDaiPage() {
@@ -28,38 +41,21 @@ export default function DaiDaiPage() {
                 <h1 className="text-4xl md:text-5xl font-bold tracking-widest text-gray-900 mb-4">DaiDai</h1>
                 <p className="text-xl md:text-2xl tracking-[0.2em] mb-8 text-tertiary">「整う、守る、私に馴染む。」</p>
                 <p className="text-gray-600 leading-relaxed text-pretty max-w-xl mx-auto">
-                    個人情報を収集しない、プライバシーファーストなメッセージアプリ
+                    広告なし、電話番号・メールアドレスの入力が不要な、プライバシーを大切にするメッセージアプリ
                 </p>
             </div>
 
             {/* CTAカード + 対応プラットフォーム */}
             <div className="container mx-auto px-6 pb-24 max-w-5xl">
                 <div className="flex flex-col lg:flex-row gap-8 items-stretch">
-                    <a
+                    <CtaCard
                         href="https://daidai.rhing.jp"
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="group block lg:w-2/5 bg-white/50 backdrop-blur-md border border-white/80 shadow-elevation-2 hover:bg-white/80 hover:border-white hover:shadow-xl hover:shadow-orange-300/10 transition-all duration-500 rounded-lg overflow-hidden relative p-8"
-                    >
-                        <div className="relative z-10 h-full flex flex-col justify-between">
-                            <div>
-                                <h3 className="text-sm font-bold tracking-widest text-gray-400 group-hover:text-tertiary transition-colors">
-                                    WEB
-                                </h3>
-                                <p className="text-2xl font-bold mt-2 text-gray-900 group-hover:text-black transition-colors">
-                                    今すぐブラウザで試す
-                                </p>
-                            </div>
-                            <div className="flex items-end justify-between mt-8">
-                                <span className="text-sm text-gray-500 group-hover:text-gray-400 transition-colors">
-                                    無料でご利用いただけます
-                                </span>
-                                <div className="w-10 h-10 rounded-full border border-gray-300 bg-white/40 group-hover:border-tertiary group-hover:bg-tertiary group-hover:text-white flex items-center justify-center text-gray-800 transition-all duration-300 transform group-hover:translate-x-2">
-                                    <ArrowRight className="w-5 h-5" />
-                                </div>
-                            </div>
-                        </div>
-                    </a>
+                        label="WEB"
+                        title="今すぐブラウザで試す"
+                        caption="無料でご利用いただけます"
+                        layout="fill"
+                        className="lg:w-2/5"
+                    />
 
                     <div className="lg:w-3/5 bg-white/50 backdrop-blur-md border border-white/80 shadow-elevation-2 rounded-lg p-8">
                         <h2 className="text-lg font-bold mb-6 tracking-widest text-gray-900">対応プラットフォーム</h2>
@@ -105,7 +101,7 @@ export default function DaiDaiPage() {
                                 { os: "motorola edge 50s pro", detail: "Android 16・APK" },
                             ]}
                             note="Web版はブラウザ、motorola edge 50s proはAPKで確認した結果です（括弧内は使用したブラウザ、またはOSと配布形式）。"
-                            checkedAt="2026/10/12"
+                            checkedAt="2026/11/18"
                         />
                     </div>
                 </div>
@@ -122,31 +118,6 @@ export default function DaiDaiPage() {
                     <AudienceContent />
                 </section>
             </AudienceProvider>
-
-            {/* 電気通信事業の届出（一般向け/ギーク向けのどちらでも表示する） */}
-            <section id="notification" className="container mx-auto px-6 pt-8 pb-8 max-w-5xl scroll-mt-8">
-                <span className="text-xs font-bold tracking-widest text-gray-500 mb-2 block">NOTIFICATION</span>
-                <h2 className="text-2xl font-bold mb-6 tracking-wide text-gray-900">電気通信事業の届出</h2>
-                <div className="bg-white/50 backdrop-blur-md border border-white/80 shadow-elevation-2 rounded-lg p-8">
-                    <p className="text-gray-700 leading-relaxed mb-6">
-                        DaiDaiは、電気通信事業法に基づく電気通信事業の届出を、総務大臣に対して行っています。
-                    </p>
-                    <dl className="text-sm border-t border-gray-200">
-                        <div className="flex gap-4 py-3 border-b border-gray-100">
-                            <dt className="w-24 shrink-0 text-gray-500">届出番号</dt>
-                            <dd className="text-gray-800 font-bold tracking-wider">E-08-05840</dd>
-                        </div>
-                        <div className="flex gap-4 py-3 border-b border-gray-100">
-                            <dt className="w-24 shrink-0 text-gray-500">届出年月日</dt>
-                            <dd className="text-gray-800">2026年10月5日</dd>
-                        </div>
-                        <div className="flex gap-4 py-3 border-b border-gray-100">
-                            <dt className="w-24 shrink-0 text-gray-500">届出者</dt>
-                            <dd className="text-gray-800">Rhing（畑中 新）</dd>
-                        </div>
-                    </dl>
-                </div>
-            </section>
         </div>
     );
 }
