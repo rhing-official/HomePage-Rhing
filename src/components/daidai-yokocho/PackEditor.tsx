@@ -171,7 +171,7 @@ function PackEditorForm({
             return null;
         }
         if (priceValue > 0 && priceValue !== pack.price) {
-            setError("有料パックの出品は準備中のため、価格は0円のみ設定できます");
+            setError("有料パックの出品は準備中の為、価格は0円のみ設定出来ます");
             return null;
         }
         return { trimmedName, priceValue };
@@ -371,7 +371,7 @@ function PackEditorForm({
                         );
                     })}
                 </div>
-                <p className="text-xs text-gray-400">★をつけた画像が、パックの代表（一覧などに最初に出る画像）になります。画像をクリックすると、拡大して見られます。</p>
+                <p className="text-xs text-gray-400">★をつけた画像が、パックの代表（一覧等に最初に出る画像）になります。画像をクリックすると、拡大して見られます。</p>
                 <div className="flex flex-wrap items-center gap-3">
                     <button
                         type="button"
@@ -385,7 +385,7 @@ function PackEditorForm({
                         <span className={`text-xs ${rolesMessage.ok ? "text-emerald-700" : "text-red-600"}`} role="status">{rolesMessage.text}</span>
                     )}
                 </div>
-                <p className="text-xs text-gray-400">役割は、「役割を保存」を押すとすぐに反映されます（「公開する」は不要）。ぺったんの提案で、入力した文に合うぺったんを出すために使われます。</p>
+                <p className="text-xs text-gray-400">役割は、「役割を保存」を押すとすぐに反映されます（「公開する」は不要）。ぺったんの提案で、入力した文に合うぺったんを出す為に使われます。</p>
                 <AnimatePresence>
                     {viewerIndex !== null && viewerIndex < pack.stickers.length && (
                         <ImageViewer
@@ -444,7 +444,7 @@ function PackEditorForm({
                 </label>
                 <p className="text-xs text-gray-400 -mt-2">
                     現在の価格: {formatPackPrice(pack.price)}
-                    {pack.price === 0 && "（有料パックの出品は準備中のため、当面は無料のみ設定できます）"}
+                    {pack.price === 0 && "（有料パックの出品は準備中の為、当面は無料のみ設定出来ます）"}
                 </p>
                 {error && <p className="text-xs text-red-600">{error}</p>}
                 {notice && <p className="text-xs text-emerald-700" role="status">{notice}</p>}
@@ -502,7 +502,7 @@ function PackEditorForm({
                         type="button"
                         onClick={() => setConfirmingDelete(true)}
                         disabled={!canDelete}
-                        title={canDelete ? undefined : "現在利用しているユーザーがいるため削除できません"}
+                        title={canDelete ? undefined : "現在利用しているユーザーがいるため削除出来ません"}
                         className="self-start text-sm font-bold text-red-600 hover:text-red-800 transition-colors disabled:text-gray-300 disabled:cursor-not-allowed"
                     >
                         このパックを削除する

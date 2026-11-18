@@ -22,7 +22,7 @@ export default function EnvironmentList({ items, checkedAt, note, className = ""
             </ul>
             <p className="mt-3 text-xs text-gray-400 leading-relaxed">
                 {note && <>{note}<br /></>}
-                {checkedAt}時点の確認結果です。記載のない環境でも動作する場合がありますが、動作を保証するものではありません。
+                {checkedAt}時点の確認結果です。記載のない環境でも動作する場合が有りますが、動作を保証するものではありません。
             </p>
         </div>
     );

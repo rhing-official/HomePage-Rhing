@@ -47,7 +47,7 @@ export default function DeletionRequestDialog({
                     {stickerName ? `「${packName}」の「${stickerName}」の削除を申請` : `「${packName}」の削除を申請`}
                 </h2>
                 <p className="text-sm text-gray-600 leading-relaxed">
-                    {stickerName ? "このパックは" : "このぺったんは"}、{ownerCount}人が利用しているため、直接は削除できません。運営が確認して、承認されると、運営が決めた日時に削除されます。利用している人には、削除の前にお知らせが届きます。
+                    {stickerName ? "このパックは" : "このぺったんは"}、{ownerCount}人が利用している為、直接は削除出来ません。運営が確認して、承認されると、運営が決めた日時に削除されます。利用している人には、削除の前にお知らせが届きます。
                 </p>
                 <label className="flex flex-col gap-1">
                     <span className="text-sm font-bold text-gray-700">削除の理由（必須）</span>

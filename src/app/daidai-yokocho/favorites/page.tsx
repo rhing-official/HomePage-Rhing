@@ -66,7 +66,7 @@ export default function FavoritePacksPage() {
                     <PackGridSkeleton count={3} />
                 ) : packs.length === 0 ? (
                     <p className="text-gray-400 text-sm">
-                        まだお気に入りのパックがありません。
+                        まだお気に入りのパックが有りません。
                         <Link href="/daidai-yokocho" className="text-blue-600 hover:underline ml-1">
                             daidai横丁で探す →
                         </Link>

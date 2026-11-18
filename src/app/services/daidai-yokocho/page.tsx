@@ -36,12 +36,12 @@ const pillars = [
     {
         icon: KeyRound,
         title: "DaiDaiのアカウントで使える",
-        desc: "GoogleやAppleのアカウント、またはパスキーで、DaiDaiのアカウントのまま利用できます。",
+        desc: "GoogleやAppleのアカウント、またはパスキーで、DaiDaiのアカウントのまま利用出来ます。",
     },
     {
         icon: Palette,
-        title: "クリエイターが出品できる",
-        desc: "作ったぺったんを、daidai横丁に出品できます。",
+        title: "クリエイターが出品出来る",
+        desc: "作ったぺったんを、daidai横丁に出品出来ます。",
     },
 ];
 
@@ -64,7 +64,7 @@ const features = [
     {
         icon: Sparkles,
         title: "メッセージに合わせた提案",
-        desc: "ぺったんには役割を設定でき、DaiDaiでメッセージの内容に合わせて、使えそうなぺったんを提案できます。",
+        desc: "ぺったんには役割を設定でき、DaiDaiでメッセージの内容に合わせて、使えそうなぺったんを提案出来ます。",
     },
 ];
 
@@ -82,7 +82,7 @@ export default function DaidaiYokochoServicePage() {
                 <h1 className="text-4xl md:text-5xl font-bold tracking-widest text-gray-900 mb-4">daidai横丁</h1>
                 <p className="text-xl md:text-2xl tracking-[0.2em] mb-8">「ぺったんが集まる、小さな横丁。」</p>
                 <p className="text-gray-600 leading-relaxed text-pretty max-w-xl mx-auto mb-16">
-                    DaiDaiで使えるぺったんを、探して、入手できるストア
+                    DaiDaiで使えるぺったんを、探して、入手出来るストア
                 </p>
 
                 {/* 目次 */}
@@ -126,7 +126,7 @@ export default function DaidaiYokochoServicePage() {
                 <span className="text-xs font-bold tracking-widest text-gray-500 mb-2 block text-center">ABOUT</span>
                 <h2 className="text-2xl font-bold mb-6 tracking-widest text-center text-gray-900">ぺったんとは</h2>
                 <p className="text-gray-600 leading-relaxed text-pretty max-w-2xl mx-auto mb-12 text-center">
-                    ぺったんは、メッセージアプリDaiDaiで使えるスタンプです。daidai横丁では、いろいろなクリエイターのぺったんが並んでいます。
+                    ぺったんは、メッセージアプリDaiDaiで使えるスタンプです。daidai横丁では、色々なクリエイターのぺったんが並んでいます。
                 </p>
                 <div className="grid sm:grid-cols-2 gap-6">
                     {features.map((f, i) => (
@@ -191,7 +191,7 @@ export default function DaidaiYokochoServicePage() {
                     <div className="bg-white p-8 rounded-m3-lg shadow-sm border border-gray-100">
                         <h3 className="text-base font-bold mb-3 text-gray-900">アプリ経由で購入する場合</h3>
                         <p className="text-gray-600 text-sm leading-relaxed text-pretty">
-                            iOSやGoogle Playのアプリから購入する場合は、ストアに支払う手数料相当を、購入する人の価格に加算する方針です。出品者の取り分は、加算する前の元の価格を基準にします。なお、この仕組みは未実装で、ストア版のアプリも公開していません。
+                            iOSやGoogle Playのアプリから購入する場合は、ストアに支払う手数料相当を、購入する人の価格に加算する方針です。出品者の取り分は、加算する前の元の価格を基準にします。尚、この仕組みは未実装で、ストア版のアプリも公開していません。
                         </p>
                     </div>
                     <div className="bg-white p-8 rounded-m3-lg shadow-sm border border-gray-100">
@@ -201,7 +201,7 @@ export default function DaidaiYokochoServicePage() {
                                 "消費税の扱い（税込・税抜のどちらを基準にするか）",
                                 "出品者への支払い方法（決済サービスの仕組みを含め、未定です）",
                                 "支払いの時期と、最低支払額",
-                                "返金があった場合の、出品者の取り分の扱い",
+                                "返金が有った場合の、出品者の取り分の扱い",
                             ].map((t) => (
                                 <li key={t} className="flex items-start gap-3">
                                     <span className="w-1.5 h-1.5 bg-gray-400 rounded-full shrink-0 mt-2" />
@@ -212,7 +212,7 @@ export default function DaidaiYokochoServicePage() {
                     </div>
                 </div>
                 <p className="text-xs text-gray-400 leading-relaxed mt-6 text-center">
-                    上の数字は、決済サービスの手数料率などをもとにした概算です。確定した内容は、有料化の前にあらためてお知らせします。
+                    上の数字は、決済サービスの手数料率等をもとにした概算です。確定した内容は、有料化の前にあらためてお知らせします。
                 </p>
             </section>
 
@@ -228,7 +228,7 @@ export default function DaidaiYokochoServicePage() {
                 <span className="text-xs font-bold tracking-widest text-gray-500 mb-2 block text-center">REPOSITORY</span>
                 <h2 className="text-2xl font-bold mb-4 tracking-widest text-center text-gray-900">仕組みを見る</h2>
                 <p className="text-gray-600 leading-relaxed text-center max-w-xl mx-auto mb-10">
-                    daidai横丁の画面は、このサイトのリポジトリにあります。購入や出品の権限のルール、処理の部分は、DaiDaiのリポジトリにあります。
+                    daidai横丁の画面は、このサイトのリポジトリに有ります。購入や出品の権限のルール、処理の部分は、DaiDaiのリポジトリに有ります。
                 </p>
                 <div className="flex flex-wrap justify-center gap-4">
                     {[

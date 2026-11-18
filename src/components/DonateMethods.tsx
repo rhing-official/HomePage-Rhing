@@ -77,14 +77,14 @@ export default function DonateMethods() {
                             <li>クレジットカード・デビットカードをお使いいただけます。</li>
                         ) : (
                             <>
-                                <li>ワンタップで支払えます。お使いの端末・ブラウザが対応している場合に、決済画面の上部にボタンが表示されます（Apple Pay は iPhone・Mac の Safari など、Google Pay は Android の Chrome など）。</li>
+                                <li>ワンタップで支払えます。お使いの端末・ブラウザが対応している場合に、決済画面の上部にボタンが表示されます（Apple Pay は iPhone・Mac の Safari 等、Google Pay は Android の Chrome 等）。</li>
                                 <li>対応していない場合も、同じ決済画面で、カードの情報を入力して支払えます。</li>
                             </>
                         )}
-                        <li>金額は、決済画面で自由に入力できます（50円以上）。</li>
+                        <li>金額は、決済画面で自由に入力出来ます（50円以上）。</li>
                         <li>お支払い後の返金はできません。</li>
                         <li>決済は、Stripe の決済画面（外部サイト）で行います。クレジット・デビットと Apple Pay・Google Pay は、同じ決済画面です。</li>
-                        <li>お支払い額の1%は、Rhingが Stripe Climate を通じて、CO₂ の除去に寄付します（追加の負担はありません）。</li>
+                        <li>お支払い額の1%は、Rhingが Stripe Climate を通じて、CO₂ の除去に寄付します（追加の負担は有りません）。</li>
                     </ul>
                     <Button href={STRIPE_DONATION_URL} size="lg" className="w-full sm:w-auto">
                         決済画面へ進む
@@ -96,12 +96,12 @@ export default function DonateMethods() {
                 <div className="mt-8 bg-white/40 backdrop-blur-md border border-white/80 shadow-elevation-1 rounded-m3-xl p-8 md:p-10">
                     <h3 className="text-lg font-bold text-gray-900 tracking-wider mb-4">ビットコインで寄付する</h3>
                     <ul className="list-disc pl-6 space-y-2 text-gray-700 text-sm leading-relaxed mb-8">
-                        <li>金額は、寄付ページで自由に入力できます。</li>
-                        <li>ネットワーク手数料の都合で、最低額があります。目安は約0.0002625BTC です。</li>
-                        <li>ネットワーク手数料は、お支払いになる方の負担です。価格変動があり、お支払い後の返金はできません。</li>
+                        <li>金額は、寄付ページで自由に入力出来ます。</li>
+                        <li>ネットワーク手数料の都合で、最低額が有ります。目安は約0.0002625BTC です。</li>
+                        <li>ネットワーク手数料は、お支払いになる方の負担です。価格変動が有り、お支払い後の返金はできません。</li>
                         <li>決済は、NOWPayments の寄付ページ（外部サイト）で行います。</li>
                         <li>少額の寄付は、カードからお願いします（ビットコインは、最低額が高めです）。</li>
-                        <li>お支払い後、しばらく経っても反映されないなどの場合は、<a href="/contact?type=user" className="underline underline-offset-4 hover:text-gray-900 transition-colors">お問い合わせ</a>からご連絡ください。</li>
+                        <li>お支払い後、しばらく経っても反映されない等の場合は、<a href="/contact?type=user" className="underline underline-offset-4 hover:text-gray-900 transition-colors">お問い合わせ</a>からご連絡ください。</li>
                     </ul>
                     <Button href={BITCOIN_DONATION_URL} size="lg" className="w-full sm:w-auto">
                         寄付ページへ進む

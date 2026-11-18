@@ -64,11 +64,11 @@ export default function BulkAddToCartButton({ packs, label }: { packs: StickerPa
             {result && !running && (
                 <p className="text-sm text-gray-600" role="status">
                     {failed ? (
-                        "カートに追加できませんでした。時間をおいてお試しください。"
+                        "カートに追加出来ませんでした。時間をおいてお試しください。"
                     ) : (
                         <>
                             {result.added}件をカートに追加しました
-                            {result.skippedOverLimit > 0 && `（上限のため${result.skippedOverLimit}件は追加できませんでした）`}
+                            {result.skippedOverLimit > 0 && `（上限のため${result.skippedOverLimit}件は追加出来ませんでした）`}
                             {" "}
                             <Link href="/daidai-yokocho/cart" className="text-blue-600 hover:underline">
                                 カートを見る →

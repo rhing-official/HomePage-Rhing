@@ -81,14 +81,14 @@ export function formatJstDateTime(ms: number): string {
 
 // 入手した人へ送られるお知らせの文面（Cloud Functionsの packDeletionNoticeText と同じ。確認用のプレビュー）
 export function deletionNoticePreview(packName: string, deleteAtMs: number, urgent = false): string {
-    if (urgent) return `「${packName}」というぺったんをお使いの利用者の方に連絡します。緊急の対応のため、まもなく使えなくなります。`;
+    if (urgent) return `「${packName}」というぺったんをお使いの利用者の方に連絡します。緊急の対応の為、まもなく使えなくなります。`;
     return `「${packName}」というぺったんをお使いの利用者の方に連絡します。${formatJstDateTime(deleteAtMs)}に使えなくなります。`;
 }
 
 // 入手した人へ送られるお知らせの文面（1枚の削除。Cloud Functionsの stickerDeletionNoticeText と同じ）
 export function stickerDeletionNoticePreview(packName: string, stickerName: string, deleteAtMs: number, urgent = false): string {
     if (urgent) {
-        return `「${packName}」というぺったんパックの中の「${stickerName}」をお使いの利用者の方に連絡します。緊急の対応のため、まもなく使えなくなります。`;
+        return `「${packName}」というぺったんパックの中の「${stickerName}」をお使いの利用者の方に連絡します。緊急の対応の為、まもなく使えなくなります。`;
     }
     return `「${packName}」というぺったんパックの中の「${stickerName}」をお使いの利用者の方に連絡します。${formatJstDateTime(deleteAtMs)}に使えなくなります。`;
 }
@@ -114,12 +114,12 @@ export const MIN_STICKERS_PER_PACK = 4;
 
 // パックから1枚を削除してよいか（削除後の枚数の下限、代表は不可）。問題が無ければnull
 export function validateStickerRemoval(stickerIds: string[], stickerId: string, coverStickerId: string | null | undefined): string | null {
-    if (!stickerIds.includes(stickerId)) return "このパックにそのぺったんはありません";
+    if (!stickerIds.includes(stickerId)) return "このパックにそのぺったんは有りません";
     if (stickerIds.length - 1 < MIN_STICKERS_PER_PACK) {
         return `パックには${MIN_STICKERS_PER_PACK}枚以上のぺったんが必要です。パックごと削除する場合は、パックの削除を申請してください`;
     }
     if (coverStickerId && coverStickerId === stickerId) {
-        return "代表のぺったんは削除できません。先に、代表を別のぺったんに変えてください";
+        return "代表のぺったんは削除出来ません。先に、代表を別のぺったんに変えてください";
     }
     return null;
 }

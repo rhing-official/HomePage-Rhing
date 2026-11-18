@@ -5,7 +5,7 @@ import AudienceContent, { AudienceHeader } from "./AudienceContent";
 import EnvironmentList from "@/components/EnvironmentList";
 
 const title = "DaiDai | Rhing";
-const description = "整う、守る、私に馴染む。広告なし、電話番号・メールアドレスの入力が不要なメッセージアプリ。何を持ち何を持たないか、まだできていないことも、正直に書いています。";
+const description = "整う、守る、私に馴染む。広告なし、電話番号・メールアドレスの入力が不要なメッセージアプリ。取得する情報と取得しない情報、現在の制限事項と今後の予定を、公開しています。";
 
 export const metadata: Metadata = {
     title,

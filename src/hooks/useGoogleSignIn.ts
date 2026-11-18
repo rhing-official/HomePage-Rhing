@@ -70,7 +70,7 @@ export function useGoogleSignIn(onSignedIn?: () => void) {
             setError(null);
             setResolver(null);
             if (!response?.credential) {
-                setError("Googleからのログイン情報を取得できませんでした");
+                setError("Googleからのログイン情報を取得出来ませんでした");
                 return;
             }
             try {
@@ -185,7 +185,7 @@ export function useGoogleSignIn(onSignedIn?: () => void) {
             onSignedIn?.();
         } catch (err) {
             console.error("2段階認証コードの確認に失敗しました:", err);
-            setError(err instanceof FirebaseError ? err.code : "認証コードが正しくありません");
+            setError(err instanceof FirebaseError ? err.code : "認証コードが正しく有りません");
         } finally {
             setSubmitting(false);
         }

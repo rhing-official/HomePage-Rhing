@@ -66,7 +66,7 @@ export default function EditPackPage({ params }: { params: Promise<{ packId: str
                 {loading ? (
                     <EditorSkeleton />
                 ) : !editable ? (
-                    <p className="text-gray-500 text-sm">編集できるパックが見つかりません。</p>
+                    <p className="text-gray-500 text-sm">編集出来るパックが見つかりません。</p>
                 ) : (
                     <PackEditor
                         pack={pack}

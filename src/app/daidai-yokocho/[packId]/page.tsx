@@ -109,7 +109,7 @@ export default async function StickerPackDetailPage({
 
                         <ul className="text-xs text-gray-500 leading-relaxed list-disc pl-5 space-y-1">
                             <li>入手すると、DaiDaiアプリでこのぺったんが使えるようになります。</li>
-                            <li>入手したぺったんは、「購入済みのぺったん」から確認できます。</li>
+                            <li>入手したぺったんは、「購入済みのぺったん」から確認出来ます。</li>
                             {pack.price > 0 && <li>18歳未満の方は、保護者の同意を得てからご購入ください。</li>}
                         </ul>
 
@@ -163,7 +163,7 @@ export default async function StickerPackDetailPage({
                 {/* このクリエイターの、ほかのパック */}
                 {otherPacks.length > 0 && (
                     <section className="mt-20">
-                        <h2 className="text-lg font-bold text-gray-900 tracking-wider mb-6">このクリエイターの、ほかのぺったん</h2>
+                        <h2 className="text-lg font-bold text-gray-900 tracking-wider mb-6">このクリエイターの、他のぺったん</h2>
                         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
                             {otherPacks.map((p) => (
                                 <StickerPackCard key={p.id} pack={p} creator={creator} />

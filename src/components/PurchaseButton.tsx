@@ -64,7 +64,7 @@ export default function PurchaseButton({ packId, extra }: { packId: string; extr
             return;
         }
         const r = await cart.add(packId);
-        if (!r.ok) setError(r.reason === "limit" ? "カートがいっぱいです（50件まで）" : "カートに追加できませんでした");
+        if (!r.ok) setError(r.reason === "limit" ? "カートがいっぱいです（50件まで）" : "カートに追加出来ませんでした");
     };
 
     const handleClick = async () => {

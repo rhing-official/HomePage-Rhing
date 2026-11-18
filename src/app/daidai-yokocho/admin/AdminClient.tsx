@@ -107,7 +107,7 @@ function RequestRow({
     };
 
     const reject = () => {
-        const note = window.prompt("却下の理由（出品者に表示されます。空でも却下できます）", "");
+        const note = window.prompt("却下の理由（出品者に表示されます。空でも却下出来ます）", "");
         if (note === null) return;
         void run(async () => {
             await rejectStickerPackDeletion({ packId: request.packId, ...stickerArg, note });
@@ -136,7 +136,7 @@ function RequestRow({
             <label className="flex items-start gap-2 mt-1 text-xs text-gray-700 cursor-pointer max-w-xs">
                 <input type="checkbox" checked={urgent} onChange={(e) => setUrgent(e.target.checked)} className="mt-0.5" />
                 <span>
-                    <span className="font-bold text-red-600">緊急</span>（すぐに削除する）。権利侵害など、待てない場合だけ。お知らせは送られ、5分以内に削除されます
+                    <span className="font-bold text-red-600">緊急</span>（すぐに削除する）。権利侵害等、待てない場合だけ。お知らせは送られ、5分以内に削除されます
                 </span>
             </label>
             {pickingDate && (
@@ -324,14 +324,14 @@ export default function AdminClient() {
             {loadError && <p className="text-sm text-red-600" role="alert">{loadError}</p>}
             {slow && !loaded && !loadError && (
                 <p className="text-sm text-amber-700" role="status">
-                    Firestoreに接続できていません。VPN・ブラウザの拡張機能（広告ブロッカー）・ネットワークを確認してください。
+                    Firestoreに接続出来ていません。VPN・ブラウザの拡張機能（広告ブロッカー）・ネットワークを確認してください。
                 </p>
             )}
             <Section title={`申請中${count(pending.length)}`} hint="承認すると、指定した日時に完全に削除され、入手した人には、その前にお知らせが届きます。日時は、今から24時間以上先にしてください。">
-                {renderRows(pending, "申請中のパックはありません")}
+                {renderRows(pending, "申請中のパックは有りません")}
             </Section>
-            <Section title={`削除予定${count(scheduled.length)}`}>{renderRows(scheduled, "削除が予定されているパックはありません")}</Section>
-            <Section title="処理済み（直近50件）">{renderRows(history, "処理済みの申請はありません")}</Section>
+            <Section title={`削除予定${count(scheduled.length)}`}>{renderRows(scheduled, "削除が予定されているパックは有りません")}</Section>
+            <Section title="処理済み（直近50件）">{renderRows(history, "処理済みの申請は有りません")}</Section>
         </div>
     );
 }

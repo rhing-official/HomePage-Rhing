@@ -55,18 +55,18 @@ export default function ContactForm() {
     const addAttachments = (files: File[]) => {
         const imageFiles = files.filter((file) => file.type.startsWith("image/"));
         if (imageFiles.length === 0) {
-            setAttachmentError("画像ファイルのみ添付できます。");
+            setAttachmentError("画像ファイルのみ添付出来ます。");
             return;
         }
         const oversized = imageFiles.some((file) => file.size > MAX_ATTACHMENT_SIZE);
         if (oversized) {
-            setAttachmentError("添付できる画像は1枚あたり5MBまでです。");
+            setAttachmentError("添付出来る画像は1枚あたり5MBまでです。");
             return;
         }
         setAttachments((prev) => {
             const next = [...prev, ...imageFiles].slice(0, MAX_ATTACHMENTS);
             if (prev.length + imageFiles.length > MAX_ATTACHMENTS) {
-                setAttachmentError(`添付できる画像は最大${MAX_ATTACHMENTS}枚までです。`);
+                setAttachmentError(`添付出来る画像は最大${MAX_ATTACHMENTS}枚までです。`);
             } else {
                 setAttachmentError(null);
             }

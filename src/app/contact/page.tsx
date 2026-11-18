@@ -16,7 +16,7 @@ export default function ContactPage() {
                 {/*
                   🌟 修正ポイント: タイトルエリアをガラス風カードのデザインに変更
                   - bg-white/40 (半透明), backdrop-blur-md (ぼかし), border-white/80 (細い白境界線), shadow-md を追加
-                  - 丸みのあるデザイン（rounded-3xl）と上下のパディング（py-10）で美しく配置しています
+                  - 丸みの有るデザイン（rounded-3xl）と上下のパディング（py-10）で美しく配置しています
                 */}
                 <div className="mb-16 relative flex flex-col items-center justify-center text-center py-10 px-8 md:px-14 md:min-h-44 lg:min-h-52 bg-white/40 backdrop-blur-md border border-white/80 shadow-md shadow-gray-200/20 rounded-3xl">
                     {/* eslint-disable-next-line @next/next/no-img-element */}

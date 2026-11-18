@@ -76,7 +76,7 @@ export default function OnboardingModal({
                 <div>
                     <h2 className="text-lg font-bold text-gray-900">daidai横丁へようこそ</h2>
                     <p className="text-sm text-gray-500 mt-1">
-                        daidai横丁で表示する呼び名・アイコンを設定しましょう(あとからいつでも変更できます)。
+                        daidai横丁で表示する呼び名・アイコンを設定しましょう(後からいつでも変更出来ます)。
                     </p>
                     <p className="text-xs text-gray-400 mt-2">
                         daidai横丁について詳しくは

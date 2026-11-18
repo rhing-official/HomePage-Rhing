@@ -14,7 +14,7 @@ export const dynamic = "force-dynamic";
 // 導線カード用
 const menuCards = [
     { title: "団体概要・理念", en: "ABOUT", href: "/about", desc: "理念と組織について" },
-    { title: "サービス紹介", en: "SERVICES", href: "/services", desc: "アプリケーションなど" },
+    { title: "サービス紹介", en: "SERVICES", href: "/services", desc: "アプリケーション等" },
     { title: "寄付・支援", en: "DONATE", href: "/donate", desc: "活動を支援する" },
     { title: "収支報告", en: "FINANCIAL", href: "/financial", desc: "収支を閲覧する" },
 ];

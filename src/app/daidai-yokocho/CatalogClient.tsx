@@ -56,7 +56,7 @@ export default function CatalogClient({ packs }: { packs: StickerPack[] }) {
 
             {filteredPacks.length === 0 ? (
                 <div className="text-center text-gray-500">
-                    <p>{packs.length === 0 ? "横丁に並んでいるパックはありません" : "条件に一致するパックが見つかりませんでした"}</p>
+                    <p>{packs.length === 0 ? "横丁に並んでいるパックは有りません" : "条件に一致するパックが見つかりませんでした"}</p>
                 </div>
             ) : (
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">

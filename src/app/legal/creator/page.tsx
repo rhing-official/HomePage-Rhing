@@ -30,14 +30,14 @@ export default function CreatorPolicyPage() {
             <article className="space-y-12">
 
                 {/* ロゴとサービス名の利用 */}
-                {/* 
+                {/*
                   🌟 修正ポイント2: セクションカードをガラスデザインに変更
                   - bg-white/40 (半透明), backdrop-blur-md, border-white/80
                 */}
                 <section className="bg-white/40 backdrop-blur-md p-8 md:p-12 border border-white/80 border-l-4 border-l-gray-900 shadow-elevation-1 rounded-r-m3-lg hover:bg-white/60 hover:shadow-elevation-3 transition-all duration-500">
                     <h2 className="text-2xl font-black text-gray-900 mb-8 tracking-wide border-b border-gray-900/10 pb-4">ロゴとサービス名の利用について</h2>
                     <p className="text-gray-700 leading-loose text-lg font-medium mb-10">
-                        Rhing、DaiDai、dolce、daidai横丁のロゴとサービス名は、事前の許可や連絡なしに、自由に使えます。用意した素材をそのまま使うことも、自分で描き直すことも、変形や加工をすることもできます。作品の中でも外でも、商用でも非商用でも構いません。クレジットの表記も要りません。
+                        Rhingに関するロゴとサービス名は、事前の許可や連絡なしに、自由に使えます。用意した素材をそのまま使うことも、自分で描き直すことも、変形や加工をすることもできます。作品の中でも外でも、商用でも非商用でも構いません。クレジットの表記も要りません。
                     </p>
                     {/* 使用例 */}
                     {/* 🌟 修正ポイント3: 使用例ボックスをグリーンカラーの半透明ガラス仕様に変更 */}
@@ -46,10 +46,10 @@ export default function CreatorPolicyPage() {
                             <span className="mr-2">○</span> 使用例
                         </h4>
                         <ul className="list-disc pl-5 space-y-2 text-green-800 text-sm">
-                            <li>書籍・映像・ゲーム・アプリ・グッズなどでの使用</li>
+                            <li>書籍・映像・ゲーム・アプリ・グッズ等での使用</li>
                             <li>キャラクターが使うアプリとしての描写</li>
                             <li>ロゴの描き直し・変形・加工・パロディ</li>
-                            <li>悪役が使う、犯罪シーンで使う、などの描写</li>
+                            <li>悪役が使う、犯罪シーンで使う、等の描写</li>
                         </ul>
                     </div>
                 </section>
@@ -58,9 +58,8 @@ export default function CreatorPolicyPage() {
                 <section className="bg-white/40 backdrop-blur-md p-8 md:p-12 border border-white/80 border-l-4 border-l-gray-900 shadow-elevation-1 rounded-r-m3-lg hover:bg-white/60 hover:shadow-elevation-3 transition-all duration-500">
                     <h2 className="text-2xl font-black text-gray-900 mb-6 tracking-wide border-b border-gray-900/10 pb-4">方針</h2>
                     <ul className="list-disc pl-6 space-y-4 text-gray-700 leading-relaxed text-lg font-medium">
-                        <li>ロゴやキャラクターなどの権利は、Rhingと代表に帰属したままです。権利を放棄するものではなく、自由な利用を許諾するものです。</li>
-                        <li>他社のサービス名やロゴ、たとえばSNSのロゴは、この方針の対象外です。各社の規定に従ってください。</li>
-                        <li>法令に反する使い方、たとえばなりすましや詐欺に使うことは、この許諾の範囲に含まれません。</li>
+                        <li>ロゴやキャラクター等の権利は、Rhingと代表に帰属します。権利を放棄するものではなく、自由な利用を許諾するものです。</li>
+                        <li>法令に反する使い方、例えばなりすましや詐欺に使うことは、この許諾の範囲に含まれません。</li>
                         <li>営業妨害に該当する描写については、抗議する権利を留保します。</li>
                     </ul>
                 </section>
@@ -69,7 +68,7 @@ export default function CreatorPolicyPage() {
                 <section className="bg-white/40 backdrop-blur-md p-8 md:p-12 border border-white/80 border-l-4 border-l-gray-900 shadow-elevation-1 rounded-r-m3-lg hover:bg-white/60 hover:shadow-elevation-3 transition-all duration-500">
                     <h2 className="text-2xl font-black text-gray-900 mb-8 tracking-wide border-b border-gray-900/10 pb-4">ダウンロード</h2>
                     <p className="text-gray-700 leading-loose text-lg font-medium mb-8">
-                        ロゴ素材をブランドごとにダウンロードできます。
+                        ロゴ素材をブランド毎にダウンロード出来ます。
                     </p>
                     <div className="grid grid-cols-2 sm:grid-cols-3 gap-6">
                         {logoKits.map((kit) => (

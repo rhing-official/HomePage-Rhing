@@ -47,7 +47,7 @@ export default function RootLayout({
               bodyタグの内側で、このように <Header />, <main>, <Footer />, <ScrollToTop /> 
               をそれぞれ元通りに呼び出すことで、画面の上下の表示が完全に復活します。
               
-              ※bodyの className（Googleフォント等の設定など）は、すでにお使いのものがあればそのまま残して適用してください。
+              ※bodyの className（Googleフォント等の設定等）は、既にお使いのものがあればそのまま残して適用してください。
             */}
             <body className="min-h-screen flex flex-col justify-between bg-surface text-on-surface font-sans" suppressHydrationWarning>
                 {/* Google Identity Services（daidai横丁のGoogleログインボタン用） */}

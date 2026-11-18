@@ -152,7 +152,7 @@ export default function ProfileEditModal({
                         disabled
                         className="rounded-lg border border-gray-200 px-4 py-2 bg-gray-50 text-gray-400"
                     />
-                    <span className="text-xs text-gray-400">DaiDaiと共通のため変更できません</span>
+                    <span className="text-xs text-gray-400">DaiDaiと共通のため変更出来ません</span>
                 </label>
 
                 {error && <p className="text-sm text-red-600">{error}</p>}

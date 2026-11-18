@@ -135,7 +135,7 @@ export default function CartPage() {
                                 無料パック {free.length}件
                                 {paid > 0 && (
                                     <span className="text-amber-600 ml-2">
-                                        有料パック{paid}件は、現在購入できません（カートには残ります）
+                                        有料パック{paid}件は、現在購入出来ません（カートには残ります）
                                     </span>
                                 )}
                             </p>

@@ -200,8 +200,8 @@ export default function AboutPage() {
                             <dt className="w-48 shrink-0 font-bold text-gray-900 tracking-wider">返品・キャンセル</dt>
                             <dd className="text-gray-700">
                                 デジタルコンテンツの性質上、購入後の返品・キャンセルはお受けできません。寄付についても、お支払い後の返金・キャンセルはできません。
-                                ただし、法律上認められる場合（18歳未満の方が保護者の同意なく購入した場合の取消など）を除きます。
-                                取消のご相談や不具合がある場合は、<Link href="/contact?type=user" className="underline hover:text-gray-900 transition-colors">
+                                但し、法律上認められる場合（18歳未満の方が保護者の同意なく購入した場合の取消等）を除きます。
+                                取消のご相談や不具合が有る場合は、<Link href="/contact?type=user" className="underline hover:text-gray-900 transition-colors">
                                     お問い合わせフォーム
                                 </Link>よりご連絡ください
                             </dd>

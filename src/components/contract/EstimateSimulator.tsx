@@ -118,7 +118,7 @@ function WebSimulator() {
                 <Section title="ページ数">
                     <Stepper value={pages} min={1} max={WEB_PRICING.maxPages + 1} onChange={setPages} unit="ページ" />
                     <p className="text-xs text-gray-500 mt-3">
-                        4ページまでは同額です（1ページのみは、さらにお安くなります）。5ページ以上は、1ページごとに{formatYen(WEB_PRICING.extraPage.price)}です。
+                        4ページまでは同額です（1ページのみは、更にお安くなります）。5ページ以上は、1ページ毎に{formatYen(WEB_PRICING.extraPage.price)}です。
                     </p>
                 </Section>
                 <Section title="機能">
@@ -195,7 +195,7 @@ function AppSimulator() {
                 <Section title="画面の数">
                     <Stepper value={screens} min={1} max={APP_PRICING.maxScreens + 1} onChange={setScreens} unit="画面" />
                     <p className="text-xs text-gray-500 mt-3">
-                        含まれる画面数を超えた分は、1画面ごとに{formatYen(APP_PRICING.extraScreen.price)}です。
+                        含まれる画面数を超えた分は、1画面毎に{formatYen(APP_PRICING.extraScreen.price)}です。
                     </p>
                 </Section>
                 <Section title="オプション">
@@ -212,7 +212,7 @@ function AppSimulator() {
                         onChange={setStoreSupport}
                         disabled={!hasAndroid}
                         label="ストア公開サポート"
-                        hint={`Google Playへの公開作業をお手伝いします（+${formatYen(APP_PRICING.storeSupport)}）。Androidを選ぶと選べます。審査の通過は保証できません。`}
+                        hint={`Google Playへの公開作業をお手伝いします（+${formatYen(APP_PRICING.storeSupport)}）。Androidを選ぶと選べます。審査の通過は保証出来ません。`}
                     />
                     </div>
                 </Section>

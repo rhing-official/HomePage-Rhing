@@ -51,7 +51,7 @@ const mobileFeatures = [
     {
         icon: PanelBottom,
         title: "下部ナビゲーションピル",
-        desc: "画面下部のピルに主要操作を集約し、片手でも迷わず操作できます。",
+        desc: "画面下部のピルに主要操作を集約し、片手でも迷わず操作出来ます。",
     },
     {
         icon: LayoutGrid,
@@ -314,7 +314,7 @@ export default function DolcePage() {
                 <div className="flex flex-wrap justify-center gap-4">
                     {[
                         { href: "https://github.com/rhing-official/dolce", label: "GITHUB", title: "開発の様子を見る", caption: "dolceのリポジトリ" },
-                        { href: "https://gitdiagram.com/rhing-official/dolce", label: "DIAGRAM", title: "構成を図解する", caption: "GitDiagramでコードの構成を見る" },
+                        { href: "https://gitdiagram.com/rhing-official/dolce", label: "DIAGRAM", title: "構成を図解する", caption: "コードの構成を見る" },
                     ].map((card) => (
                         <CtaCard key={card.href} href={card.href} label={card.label} title={card.title} caption={card.caption} />
                     ))}

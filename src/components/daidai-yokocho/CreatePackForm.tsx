@@ -168,7 +168,7 @@ export default function CreatePackForm({
             </label>
 
             <p className="text-sm text-gray-500 bg-gray-50 border border-gray-200 rounded-lg px-4 py-2.5">
-                価格: 無料（0円）— 有料パックの出品は準備中のため、現在は無料配布のみ対応しています。
+                価格: 無料（0円）— 有料パックの出品は準備中の為、現在は無料配布のみ対応しています。
             </p>
 
             <label className="flex flex-col gap-1.5 text-sm text-gray-600">
@@ -204,7 +204,7 @@ export default function CreatePackForm({
                     onCoverChange={setCoverIndex}
                 />
                 {stickers.length > 0 && (
-                    <p className="text-xs text-gray-400">★をつけた画像が、パックの代表（一覧などに最初に出る画像）になります。</p>
+                    <p className="text-xs text-gray-400">★をつけた画像が、パックの代表（一覧等に最初に出る画像）になります。</p>
                 )}
             </div>
 

@@ -28,11 +28,11 @@ function errorMessageFor(err: unknown, context: "recovery" | "auth"): string {
             case "functions/resource-exhausted":
                 return "試行回数が多すぎます。しばらくしてから再度お試しください。";
             case "functions/invalid-argument":
-                return "入力内容が正しくありません。";
+                return "入力内容が正しく有りません。";
         }
     }
     if (err instanceof WebAuthnError || (err instanceof DOMException && err.name === "NotAllowedError")) {
-        return "パスキーの操作がキャンセルされたか、利用できませんでした。";
+        return "パスキーの操作がキャンセルされたか、利用出来ませんでした。";
     }
     return context === "recovery" ? "復旧に失敗しました。" : "パスキーでのログインに失敗しました。";
 }

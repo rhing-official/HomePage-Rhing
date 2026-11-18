@@ -211,7 +211,7 @@ export default function CreatorDashboardPage() {
                         <ThumbRowSkeleton />
                     ) : visibleItems.length === 0 ? (
                         <p className="text-gray-400 text-sm">
-                            {items.length === 0 ? "まだパックを作成していません。" : "条件に一致するパックがありません。"}
+                            {items.length === 0 ? "まだパックを作成していません。" : "条件に一致するパックが有りません。"}
                         </p>
                     ) : (
                         <div className="flex flex-col gap-4">

@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { Check, Minus, ChevronDown, ArrowRight } from "lucide-react";
+import { Check, Minus, ChevronDown, ArrowRight, Database, TriangleAlert, Workflow, Scale, CircleHelp, BookOpen, StickyNote, type LucideIcon } from "lucide-react";
 
 /**
  * DaiDaiページの「信頼」のためのセクション群。
@@ -7,23 +7,27 @@ import { Check, Minus, ChevronDown, ArrowRight } from "lucide-react";
  * 言えること・言えないことを、具体的に、誇張なく書く。未実装の機能は実装済みのように書かない。
  */
 
-function SectionHeading({ label, title }: { label: string; title: string }) {
+/** 節の見出し。アイコンは必須。 */
+export function SectionHeading({ label, title, icon: Icon, mb = "mb-8", center = false }: { label: string; title: string; icon: LucideIcon; mb?: string; center?: boolean }) {
     return (
         <>
             <span className="text-xs font-bold tracking-widest text-gray-500 mb-2 block">{label}</span>
-            <h2 className="text-2xl font-bold mb-8 tracking-wide text-gray-900 text-balance">{title}</h2>
+            <h2 className={`text-2xl font-bold ${mb} tracking-wide text-gray-900 text-balance flex items-center gap-3 ${center ? "justify-center" : ""}`}>
+                <Icon className="w-5 h-5 text-tertiary shrink-0" strokeWidth={1.5} />
+                {title}
+            </h2>
         </>
     );
 }
 
 /* ------------------------------------------------------------------ */
-/* 何を持ち、何を持たないか                                              */
+/* 取得する情報と、取得しない情報                                              */
 /* ------------------------------------------------------------------ */
 
 const notHeld = [
     "電話番号",
     "現在地。GPSでの取得も、IPアドレスからの推定もしません",
-    "番地などの詳細な住所",
+    "番地等の詳細な住所",
     "マイナンバー",
     "広告の表示と、個人情報の売却",
 ];
@@ -32,46 +36,46 @@ type Held = { name: string; note: string };
 
 // 一般向けは、専門用語や外部サービスの名前（Firebase・Firestore・Stripe・FCMなど）を出さない書き方にする
 const heldGeneral: Held[] = [
-    { name: "Rhing Seed", note: "アカウントを見分けるための名前です。" },
+    { name: "Rhing Seed", note: "アカウントを見分ける為の名前です。" },
     { name: "Google・Appleの識別番号", note: "ログインに使ったGoogleやAppleが発行する識別番号を、ログインの仕組みが保持します。" },
     {
         name: "Googleアカウントのメールアドレス",
         note: "Googleでログインした場合、ログインの仕組みの側に保存されます。Appleでログインした場合は、メールアドレスも名前も受け取りません。",
     },
-    { name: "端末の識別番号", note: "不正な利用を防ぐために使います。" },
-    { name: "メッセージ・画像", note: "サーバー上に保存されます。通信は暗号化されますが、内容はサーバー側で技術的に読めます。くわしくは、下の「正直に書くこと」に書いています。" },
+    { name: "端末の識別番号", note: "不正な利用を防ぐ為に使います。" },
+    { name: "メッセージ・画像", note: "サーバー上に保存されます。通信は暗号化されますが、内容はサーバー側で技術的に読めます。詳細は、下の「現在の制限事項と今後の予定」に書いています。" },
     { name: "居住地", note: "国・都道府県・タイムゾーンを、本人の申告で保存します。本人だけが読める場所に保存し、他の利用者には表示しません。" },
     { name: "ぺったんの閲覧回数", note: "回数だけを記録し、誰が見たかは記録しません。" },
-    { name: "通知の宛先", note: "通知を届けるために使います。" },
-    { name: "決済時のメールアドレス・カード名義", note: "極みなどの購入時に、決済を代行する事業者が取得します。カード情報もその事業者が管理し、DaiDaiは保持しません。" },
+    { name: "通知の宛先", note: "通知を届ける為に使います。" },
+    { name: "決済時のメールアドレス・カード名義", note: "極み等の購入時に、決済を代行する事業者が取得します。カード情報もその事業者が管理し、DaiDaiは保持しません。" },
 ];
 
 const heldGeek: Held[] = [
-    { name: "Rhing Seed", note: "アカウントを見分けるための名前です。" },
+    { name: "Rhing Seed", note: "アカウントを見分ける為の名前です。" },
     { name: "Google・Appleの識別子", note: "ログインに使った提供元が発行する識別子を、認証基盤（Firebase Authentication）が保持します。" },
     {
         name: "Googleアカウントのメールアドレス",
         note: "Googleでログインした場合、認証基盤に保存されます。Appleでログインした場合は、メールアドレスも名前も受け取りません。",
     },
-    { name: "デバイスID", note: "セキュリティのために使います。" },
-    { name: "メッセージ・画像", note: "サーバー上に保存されます。通信は暗号化されますが、内容はサーバー側で技術的に読めます。くわしくは、下の「正直に書くこと」に書いています。" },
+    { name: "デバイスID", note: "セキュリティの為に使います。" },
+    { name: "メッセージ・画像", note: "サーバー上に保存されます。通信は暗号化されますが、内容はサーバー側で技術的に読めます。詳細は、下の「現在の制限事項と今後の予定」に書いています。" },
     { name: "居住地", note: "国・都道府県・タイムゾーンを、本人の申告で保存します。本人だけが読める領域に保存し、他の利用者には表示しません。" },
     { name: "ぺったんの閲覧回数", note: "回数だけを記録し、誰が見たかは記録しません。" },
-    { name: "通知の宛先", note: "FCMトークンを、プッシュ通知を届けるために使います。" },
-    { name: "決済時のメールアドレス・カード名義", note: "極みなどの購入時に、決済代行のStripeが取得します。カード情報はStripeが管理し、DaiDaiは保持しません。" },
+    { name: "通知の宛先", note: "FCMトークンを、プッシュ通知を届ける為に使います。" },
+    { name: "決済時のメールアドレス・カード名義", note: "極み等の購入時に、決済代行のStripeが取得します。カード情報はStripeが管理し、DaiDaiは保持しません。" },
 ];
 
 export function DataSection({ id = "data", geek = false }: { id?: string; geek?: boolean }) {
     const held = geek ? heldGeek : heldGeneral;
     return (
         <div id={id} className="scroll-mt-8">
-            <SectionHeading label="WHAT WE HOLD" title="何を持ち、何を持たないか" />
-            <p className="text-gray-600 text-sm leading-relaxed text-pretty mb-8 max-w-3xl">
-                メールアドレスを画面に表示せず、DaiDai自身の{geek ? "Firestoreのデータベース" : "保存先"}にも保存しません。ただし、下に挙げた情報は扱います。
+            <SectionHeading label="WHAT WE HOLD" title="取得する情報と、取得しない情報" icon={Database} />
+            <p className="text-gray-600 text-sm leading-relaxed mb-8">
+                メールアドレスを画面に表示せず、DaiDai自身の{geek ? "Firestoreのデータベース" : "保存先"}にも保存しません。但し、下に挙げた情報は扱います。
             </p>
-            <div className="grid lg:grid-cols-5 gap-6">
-                <div className="lg:col-span-2 bg-white rounded-m3-lg shadow-sm border border-gray-100 p-6 md:p-8">
-                    <h3 className="text-base font-bold text-gray-900 mb-4">持たないもの</h3>
+            <div className="flex flex-col gap-6">
+                <div className="bg-white rounded-m3-lg shadow-sm border border-gray-100 p-6 md:p-8">
+                    <h3 className="text-base font-bold text-gray-900 mb-4">取得しない情報</h3>
                     <ul className="space-y-3">
                         {notHeld.map((t) => (
                             <li key={t} className="flex items-start gap-3 text-sm text-gray-700 leading-relaxed">
@@ -81,8 +85,8 @@ export function DataSection({ id = "data", geek = false }: { id?: string; geek?:
                         ))}
                     </ul>
                 </div>
-                <div className="lg:col-span-3 bg-white rounded-m3-lg shadow-sm border border-gray-100 p-6 md:p-8">
-                    <h3 className="text-base font-bold text-gray-900 mb-4">持っているもの</h3>
+                <div className="bg-white rounded-m3-lg shadow-sm border border-gray-100 p-6 md:p-8">
+                    <h3 className="text-base font-bold text-gray-900 mb-4">取得している情報</h3>
                     <ul className="space-y-4">
                         {held.map((h) => (
                             <li key={h.name} className="flex items-start gap-3">
@@ -118,7 +122,7 @@ export function HonestSection({ id = "honest", geek = false }: { id?: string; ge
                 <>
                     通信は暗号化されますが、メッセージの内容はサーバー側で技術的に読めます。
                     メッセージのE2E暗号化
-                    は、2027年夏頃を目処に実装する予定です。専門家のセキュリティレビューを経て本番に投入する予定ですが、未計画なので変わる可能性もあります。
+                    は、2027年夏頃を目処に実装する予定です。専門家のセキュリティレビューを経て本番に投入する予定ですが、未計画なので変わる可能性も有ります。
                 </>
             ),
         },
@@ -126,7 +130,7 @@ export function HonestSection({ id = "honest", geek = false }: { id?: string; ge
             title: "運営によるプロフィールの閲覧",
             body: (
                 <>
-                    運営は、既定では利用者のプロフィールを見ない方針です。見る場合は、理由を、通報への対応、不正利用の調査、その他の中から選び、その操作は監査ログに記録されます。これは閲覧を遮断する仕組みではなく、あとから検証するための仕組みです。また、技術的には、ログイン済みの利用者であれば、プロフィールの実データをアプリから直接読める作りになっています。ただし、画面上は、他の利用者に表示しません。
+                    運営は、既定では利用者のプロフィールを見ない方針です。見る場合は、理由を、通報への対応、不正利用の調査、その他の中から選び、その操作は監査ログに記録されます。これは閲覧を遮断する仕組みではなく、後から検証する為の仕組みです。また、技術的には、ログイン済みの利用者であれば、プロフィールの実データをアプリから直接読める作りになっています。但し、画面上は、他の利用者に表示しません。
                     {geek && (
                         <>
                             {" "}
@@ -137,7 +141,7 @@ export function HonestSection({ id = "honest", geek = false }: { id?: string; ge
             ),
         },
         {
-            title: geek ? "データは、GoogleのFirebase上にあります" : "データはGoogle Cloudにあります",
+            title: geek ? "データは、GoogleのFirebase上に有ります" : "データはGoogle Cloudに有ります",
             body: <>将来、自前のサーバーへ移すことを検討していますが、時期は約束しません。</>,
         },
         {
@@ -152,10 +156,7 @@ export function HonestSection({ id = "honest", geek = false }: { id?: string; ge
 
     return (
         <div id={id} className="scroll-mt-8">
-            <SectionHeading label="HONESTY" title="正直に書くこと" />
-            <p className="text-gray-600 text-sm leading-relaxed text-pretty mb-8 max-w-3xl">
-                良いことだけでなく、現時点でできていないことや、限界も書きます。
-            </p>
+            <SectionHeading label="HONESTY" title="現在の制限事項と今後の予定" icon={TriangleAlert} />
             <div className="flex flex-col gap-4">
                 {items.map((it) => (
                     <div key={it.title} className="bg-white rounded-m3-lg shadow-sm border border-gray-100 p-6 md:p-8">
@@ -175,7 +176,7 @@ export function HonestSection({ id = "honest", geek = false }: { id?: string; ge
 const lifecycle: { title: string; body: string }[] = [
     {
         title: "通常のアカウント削除",
-        body: "申請から30日間は情報を保持し、その間にログインすると復元できます。何もしないまま日本時間の31日目の0時になると、サーバーからすべての情報を完全に削除します。",
+        body: "申請から30日間は情報を保持し、その間にログインすると復元出来ます。何もしないまま日本時間の31日目の0時になると、サーバーから全ての情報を完全に削除します。",
     },
     {
         title: "即時のアカウント削除",
@@ -187,7 +188,7 @@ const lifecycle: { title: string; body: string }[] = [
     },
     {
         title: "画像の保存期間",
-        body: "標準画質は、語らいの中では2週間です。アルバムに保存した画像は残ります。極みの高画質は、語らいの中では1週間です。この間、画像はサーバー上にあります。",
+        body: "標準画質は、語らいの中では2週間です。アルバムに保存した画像は残ります。極みの高画質は、語らいの中では1週間です。この間、画像はサーバー上に有ります。",
     },
     {
         title: "絶縁",
@@ -223,7 +224,7 @@ export function NotificationCard() {
 export function LifecycleSection({ id = "lifecycle" }: { id?: string }) {
     return (
         <div id={id} className="scroll-mt-8">
-            <SectionHeading label="DATA LIFECYCLE" title="データの扱いの流れ" />
+            <SectionHeading label="DATA LIFECYCLE" title="データの扱いの流れ" icon={Workflow} />
             <div className="grid md:grid-cols-2 gap-4 mb-8">
                 {lifecycle.map((l) => (
                     <div key={l.title} className="bg-white rounded-m3-lg shadow-sm border border-gray-100 p-6">
@@ -271,7 +272,7 @@ const compareRows: { label: string; cells: Cell[] }[] = [
     {
         label: "メッセージの暗号化",
         cells: [
-            { text: ["E2E暗号化は未実装。通信は暗号化されますが、内容はサーバー側で技術的に読めます。2027年夏頃を目処に実装する予定です。未計画なので、変わる可能性もあります。"], emphasis: true },
+            { text: ["E2E暗号化は未実装。通信は暗号化されますが、内容はサーバー側で技術的に読めます。2027年夏頃を目処に実装する予定です。未計画なので、変わる可能性も有ります。"], emphasis: true },
             {
                 quotes: [
                     "Both users have Letter Sealing enabled in 1-to-1 chats",
@@ -320,7 +321,7 @@ const compareRows: { label: string; cells: Cell[] }[] = [
 export function CompareSection({ id = "compare", geek = false }: { id?: string; geek?: boolean }) {
     return (
         <div id={id} className="scroll-mt-8">
-            <SectionHeading label="COMPARISON" title="他のアプリとの比較" />
+            <SectionHeading label="COMPARISON" title="他のアプリとの比較" icon={Scale} />
             <p className="text-gray-600 text-sm leading-relaxed text-pretty mb-6 max-w-3xl">
                 LINE・Discord・Signalと、公式ページに書かれていることを並べます。他社の欄は、公式ページの原文をそのまま引用し、出典のリンクを付けています。DaiDaiが劣る点は、太字で示した枠に、そのまま載せています。
             </p>
@@ -373,9 +374,9 @@ export function CompareSection({ id = "compare", geek = false }: { id?: string; 
                 </table>
             </div>
             <ul className="mt-4 space-y-1.5 text-xs text-gray-400 leading-relaxed">
-                <li>確認日: 2026年11月18日。他社の欄は、各社の公式ページの記述で、その後に変更されている場合があります。</li>
-                <li>「—」は、公式ページどうしの記述が食い違う、または確認できなかったため、記載していない項目です。</li>
-                <li>Appleでのログインは、本番環境のWeb版でログインできることを確認しています。</li>
+                <li>確認日: 2026年11月18日。他社の欄は、各社の公式ページの記述で、その後に変更されている場合が有ります。</li>
+                <li>「—」は、公式ページ同士の記述が食い違う、または確認できなかった為、記載していない項目です。</li>
+                <li>Appleでのログインは、本番環境のWeb版でログイン出来ることを確認しています。</li>
                 <li>
                     {geek
                         ? "メールアドレスは、画面に表示せず、DaiDai自身のデータベース（Firestore）にも保存しません。Googleでログインした場合は、認証基盤（Firebase Authentication）にGoogleアカウントのメールアドレスが保存されます。"
@@ -394,10 +395,9 @@ export function CompareSection({ id = "compare", geek = false }: { id?: string; 
 export function CreatorsSection({ id = "creators" }: { id?: string }) {
     return (
         <div id={id} className="scroll-mt-8 bg-white rounded-m3-lg shadow-sm border border-gray-100 p-8 md:p-12 max-w-3xl mx-auto w-full">
-            <span className="text-xs font-bold tracking-widest text-gray-500 mb-2 block">FOR CREATORS</span>
-            <h2 className="text-2xl font-bold mb-6 tracking-wide text-gray-900 text-balance">ぺったんを作って、出品する</h2>
+            <SectionHeading label="FOR CREATORS" title="ぺったんを作って、出品する" icon={StickyNote} mb="mb-6" />
             <p className="text-gray-600 text-sm leading-relaxed text-pretty mb-4">
-                作ったぺったんを、daidai横丁に出品できます。有料化した際の目標として、購入額の約91.4%の還元を目指しています。これは概算で、保証するものではありません。
+                作ったぺったんを、daidai横丁に出品出来ます。有料化した際の目標として、購入額の約91.4%の還元を目指しています。これは概算で、保証するものではありません。
             </p>
             <p className="text-gray-600 text-sm leading-relaxed text-pretty mb-6">
                 当面は、無料のぺったんのみを扱います。還元は、まだ発生していません。
@@ -420,19 +420,19 @@ export function CreatorsSection({ id = "creators" }: { id?: string }) {
 const faqs: { q: string; a: string; generalA?: string }[] = [
     {
         q: "なぜGoogleやAppleのアカウントが要るのですか？",
-        a: "DaiDai自身がパスワードを保持しないために、ログインをGoogleやAppleに任せているからです。GoogleやAppleを使いたくない場合は、メールアドレスが要らないパスキーでも、アカウントを作れます。GoogleやAppleでログインすると、DaiDaiを使っている事実がその提供元に伝わります。",
+        a: "DaiDai自身がパスワードを保持しない為に、ログインをGoogleやAppleに任せているからです。GoogleやAppleを使いたくない場合は、メールアドレスが要らないパスキーでも、アカウントを作れます。GoogleやAppleでログインすると、DaiDaiを使っている事実がその提供元に伝わります。",
     },
     {
         q: "機種を変えたら、どうなりますか？",
-        a: "以前と同じ方法でログインすれば、アカウントのデータを引き続き使えます。パスキーは、複数の端末分を前もって登録しておけます。パスキーをなくした場合は、あらかじめ決めた3つの秘密の質問に答えて、復旧できます。",
+        a: "以前と同じ方法でログインすれば、アカウントのデータを引き続き使えます。パスキーは、複数の端末分を前もって登録しておけます。パスキーをなくした場合は、予め決めた3つの秘密の質問に答えて、復旧出来ます。",
     },
     {
         q: "アカウントを削除すると、どうなりますか？",
-        a: "通常の削除は、30日の猶予のあとに完全に削除します。猶予の間は、復元できます。即時削除は、その場で完全に削除し、復元できません。くわしくは「データの扱いの流れ」をご覧ください。",
+        a: "通常の削除は、30日の猶予のあとに完全に削除します。猶予の間は、復元出来ます。即時削除は、その場で完全に削除し、復元出来ません。詳細は「データの扱いの流れ」をご覧ください。",
     },
     {
         q: "メッセージは、誰が読めますか？",
-        a: "その語らいの参加者が読めます。また、現時点ではメッセージのE2E暗号化を実装していないため、内容はサーバー側で技術的に読めます。E2E暗号化は、2027年夏頃を目処に実装する予定ですが、未計画なので、変わる可能性もあります。",
+        a: "その語らいの参加者が読めます。また、現時点ではメッセージのE2E暗号化を実装していない為、内容はサーバー側で技術的に読めます。E2E暗号化は、2027年夏頃を目処に実装する予定ですが、未計画なので、変わる可能性も有ります。",
     },
     {
         q: "対応しているOSは？",
@@ -440,18 +440,18 @@ const faqs: { q: string; a: string; generalA?: string }[] = [
     },
     {
         q: "お金はかかりますか？",
-        a: "基本の機能は無料です。極みプランは月額¥300で、既読の非表示や限定フォントなどが使えます。広告はありません。",
+        a: "基本の機能は無料です。極みプランは月額¥300で、既読の非表示や限定フォント等が使えます。広告は有りません。",
     },
     {
-        q: "通話は、何人まで参加できますか？",
-        a: "広場の通話は、現在は最大5人です。人数を増やすための通信基盤の強化を予定しています。",
+        q: "通話は、何人まで参加出来ますか？",
+        a: "広場の通話は、現在は最大5人です。人数を増やす為の通信基盤の強化を予定しています。",
     },
 ];
 
 export function FaqSection({ id = "faq", geek = false }: { id?: string; geek?: boolean }) {
     return (
         <div id={id} className="scroll-mt-8">
-            <SectionHeading label="FAQ" title="よくある質問" />
+            <SectionHeading label="FAQ" title="よくある質問" icon={CircleHelp} />
             <div className="flex flex-col gap-3">
                 {faqs.map((f) => (
                     <details key={f.q} className="group bg-white rounded-m3-lg shadow-sm border border-gray-100">
@@ -471,7 +471,7 @@ const glossary: [string, string][] = [
     ["一対（いっつい）", "友達との1対1の語らいです。"],
     ["広場（ひろば）", "3人以上のグループです。現在は、友人だけの非公開の広場「裏広場」を使えます。"],
     ["寄合（よりあい）", "語らいの中に作る、話題毎の話し合いの場です。"],
-    ["蔵（くら）", "アイコンや呼び名などの素材を、それぞれ複数個登録しておく場所です。"],
+    ["蔵（くら）", "アイコンや呼び名等の素材を、それぞれ複数個登録しておく場所です。"],
     ["仕立て（したて）", "蔵の素材を組み合わせて、プロフィールカードを作ります。無料では最大3枚、極みプランでは10枚まで作れます。"],
     ["縁結び（えんむすび）", "招待リンクやQRコードで、友達を追加する仕組みです。"],
     ["ぺったん", "DaiDaiで使えるスタンプです。"],
@@ -481,7 +481,7 @@ const glossary: [string, string][] = [
 export function GlossarySection({ id = "glossary" }: { id?: string }) {
     return (
         <div id={id} className="scroll-mt-8">
-            <SectionHeading label="GLOSSARY" title="用語集" />
+            <SectionHeading label="GLOSSARY" title="用語集" icon={BookOpen} />
             <dl className="bg-white rounded-m3-lg shadow-sm border border-gray-100 divide-y divide-gray-100">
                 {glossary.map(([term, desc]) => (
                     <div key={term} className="flex flex-col sm:flex-row gap-1 sm:gap-6 p-5 md:p-6">

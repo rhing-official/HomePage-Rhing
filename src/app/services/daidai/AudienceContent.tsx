@@ -17,6 +17,12 @@ import {
     ChevronDown,
     Mic,
     ScreenShare,
+    Cpu,
+    Hourglass,
+    Route,
+    GitBranch,
+    Palette,
+    Smartphone,
 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import ScreenshotPlaceholder from "./ScreenshotPlaceholder";
@@ -30,6 +36,7 @@ import {
     CreatorsSection,
     FaqSection,
     GlossarySection,
+    SectionHeading,
 } from "./TrustSections";
 
 type ContentsItem = { href: string; label: string };
@@ -61,8 +68,8 @@ function ContentsNav({ items }: { items: ContentsItem[] }) {
 
 const generalContents: ContentsItem[] = [
     { href: "#pillars", label: "選ばれる理由" },
-    { href: "#data", label: "何を持ち、何を持たないか" },
-    { href: "#honest", label: "正直に書くこと" },
+    { href: "#data", label: "取得する情報と、取得しない情報" },
+    { href: "#honest", label: "現在の制限事項と今後の予定" },
     { href: "#features", label: "主な機能" },
     { href: "#screenshots", label: "アプリの画面" },
     { href: "#more", label: "その他の機能" },
@@ -78,8 +85,8 @@ const generalContents: ContentsItem[] = [
 const geekContents: ContentsItem[] = [
     { href: "#stack", label: "技術スタック" },
     { href: "#security", label: "プライバシー・セキュリティ" },
-    { href: "#data", label: "何を持ち、何を持たないか" },
-    { href: "#honest", label: "正直に書くこと" },
+    { href: "#data", label: "取得する情報と、取得しない情報" },
+    { href: "#honest", label: "現在の制限事項と今後の予定" },
     { href: "#lifecycle", label: "データの扱いの流れ・電気通信事業の届出" },
     { href: "#architecture", label: "アーキテクチャ" },
     { href: "#compare", label: "他のアプリとの比較" },
@@ -130,7 +137,7 @@ const pillars: { icon: typeof ShieldCheck; title: string; desc: React.ReactNode 
     {
         icon: Ban,
         title: "広告なし",
-        desc: "広告に邪魔されず、大切な人とのやり取りに集中できます。",
+        desc: "広告に邪魔されず、大切な人とのやり取りに集中出来ます。",
     },
     {
         icon: KeyRound,
@@ -149,7 +156,7 @@ const featureRoadmapBadge: Record<FeatureStatus, string> = {
 
 const featureRoadmap: { name: string; status: FeatureStatus }[] = [
     { name: "iPhone・Mac・Windows・Linuxでの通知対応", status: "近日実装予定" },
-    { name: "カードがなくても買える、極みの期間パス（PayPayなど）", status: "近日実装予定" },
+    { name: "カードが無くても買える、極みの期間パス（PayPay等）", status: "近日実装予定" },
     { name: "災害時の安否確認", status: "近日実装予定" },
   {
     name: "読み込み中の表示をスケルトンスクリーンに", status: "近日実装予定" },
@@ -157,19 +164,20 @@ const featureRoadmap: { name: string; status: FeatureStatus }[] = [
     { name: "表示言語にマンダリンを追加", status: "近日実装予定" },
     { name: "通知音・着信音の拡充", status: "近日実装予定" },
     { name: "既読表示の細かい設定（極み向け）", status: "近日実装予定" },
-    { name: "誰でも参加できる広場など、コミュニティ機能の拡張", status: "将来実装予定" },
+    { name: "各SNSにロゴの使用許可を取り、プロフィールカードに使えるようにする", status: "近日実装予定" },
+    { name: "誰でも参加出来る広場等、コミュニティ機能の拡張", status: "将来実装予定" },
     { name: "広場の通話の人数拡大に向けた通信基盤の強化", status: "将来実装予定" },
     { name: "大容量ファイルの直接送信", status: "将来実装予定" },
     { name: "1080p高画質ビデオ通話（極みプラン向け）", status: "将来実装予定" },
-    { name: "画面の配置のカスタマイズ・極み限定カラーなど、極みプランの特典の追加", status: "将来実装予定" },
+    { name: "画面の配置のカスタマイズ・極み限定カラー等、極みプランの特典の追加", status: "将来実装予定" },
     { name: "通知タイミングの詳細設定", status: "将来実装予定" },
     { name: "ドイツ語・オランダ語・イタリア語・スペイン語・ポルトガル語の表示言語", status: "将来実装予定" },
     { name: "新しいUIスタイル（回路風）", status: "将来実装予定" },
     { name: "画面を切り替えるときの、部品のアニメーション", status: "将来実装予定" },
-    { name: "共有ノートの使い心地をObsidianにさらに近づける", status: "将来実装予定" },
+    { name: "共有ノートの使い心地をObsidianに更に近づける", status: "将来実装予定" },
     { name: "画像・動画の拡大表示のなめらかさの向上", status: "将来実装予定" },
     { name: "祝日・祭日の画像表示", status: "将来実装予定" },
-    { name: "タブレットのマウスなど、「戻る」「進む」操作の対応拡大", status: "将来実装予定" },
+    { name: "タブレットのマウス等、「戻る」「進む」操作の対応拡大", status: "将来実装予定" },
     { name: "認証アプリ上でのRhingのアイコン表示", status: "将来実装予定" },
     { name: "不正利用の検知の強化", status: "将来実装予定" },
     { name: "ブラウザの「戻る」操作での画面復元", status: "検討中" },
@@ -209,8 +217,8 @@ function RoadmapRow({ status, items, muted = false }: { status: FeatureStatus | 
 
 // 一般向けは、外部サービスの名前を出さない言い方にする
 const generalNames: Record<string, string> = {
-    "カードがなくても買える、極みの期間パス（PayPayなど）": "カードがなくても買える、極みの期間パス（スマホ決済など）",
-    "共有ノートの使い心地をObsidianにさらに近づける": "共有ノートの使い心地を、本格的なメモアプリにさらに近づける",
+    "カードが無くても買える、極みの期間パス（PayPay等）": "カードが無くても買える、極みの期間パス（スマホ決済等）",
+    "共有ノートの使い心地をObsidianに更に近づける": "共有ノートの使い心地を、本格的なメモアプリに更に近づける",
 };
 
 function FeatureRoadmapSection({ id }: { id: string }) {
@@ -220,8 +228,7 @@ function FeatureRoadmapSection({ id }: { id: string }) {
     const itemsOf = (status: FeatureStatus) => featureRoadmap.filter((f) => f.status === status).map((f) => label(f.name));
     return (
         <div id={id} className="scroll-mt-8">
-            <span className="text-xs font-bold tracking-widest text-gray-500 mb-2 block">UNIMPLEMENTED FEATURES</span>
-            <h2 className="text-2xl font-bold mb-8 tracking-widest text-gray-900">未実装の機能について</h2>
+            <SectionHeading label="UNIMPLEMENTED FEATURES" title="未実装の機能について" icon={Hourglass} mb="mb-8" />
             <div className="flex flex-col gap-6">
                 <RoadmapRow status="近日実装予定" items={itemsOf("近日実装予定")} />
 
@@ -229,7 +236,7 @@ function FeatureRoadmapSection({ id }: { id: string }) {
                 <div className="bg-white rounded-m3-lg shadow-sm border border-gray-100 p-6 md:p-8 flex flex-col md:flex-row gap-4 md:gap-10">
                     <div className="md:w-40 shrink-0">
                         <span className="inline-block text-xs font-bold tracking-wide rounded-full px-3 py-1 text-gray-600 bg-gray-100">
-                            時期の目処がある予定
+                            時期の目処が有る予定
                         </span>
                     </div>
                     <div className="flex-1 flex items-start gap-3 text-sm text-gray-600 leading-relaxed">
@@ -275,14 +282,14 @@ function FeatureRoadmapSection({ id }: { id: string }) {
 }
 
 const moreFeatures = [
-    { icon: Users, title: "役職・呼び名の色分け", desc: "広場ごとに役職を自由に作り、寄合の管理や招待リンクの発行などの権限と、呼び名の色を細かく設定できます。" },
-    { icon: Layers, title: "蔵・仕立て", desc: "アイコンや呼び名などの素材を蔵に登録しておき、仕立てで組み合わせて、プロフィールカードを作ります。無料では最大3枚、極みプランでは10枚まで作れます。呼び名や一言も、カードごとに設定できます。" },
-    { icon: QrCode, title: "縁結び", desc: "招待リンクやQRコードで、簡単に友達を追加できます。" },
+    { icon: Users, title: "役職・呼び名の色分け", desc: "広場毎に役職を自由に作り、寄合の管理や招待リンクの発行等の権限と、呼び名の色を細かく設定出来ます。" },
+    { icon: Layers, title: "蔵・仕立て", desc: "アイコンや呼び名等の素材を蔵に登録しておき、仕立てで組み合わせて、プロフィールカードを作ります。無料では最大3枚、極みプランでは10枚まで作れます。呼び名や一言も、カード毎に設定出来ます。" },
+    { icon: QrCode, title: "縁結び", desc: "招待リンクやQRコードで、簡単に友達を追加出来ます。" },
     { icon: StickyNote, title: "共有ノート・カレンダー・投票・アルバム", desc: "グループでのメモ共有、予定調整、多数決、写真の保管もアプリ内で完結します。" },
-    { icon: Bell, title: "通知音・着信音のカスタマイズ", desc: "用意された音から選べるほか、自分の音源をアップロードすることもできます。" },
-    { icon: KeyRound, title: "かんたん・安全なログイン", desc: "Google/Appleアカウント、パスキー、2段階認証（認証アプリ対応）、QRコードでのログインに対応しています。Appleでのログインは、本番環境のWeb版でログインできることを確認しています。Android・iOS・macOS・Windowsのアプリ版は、確認できた範囲から順にお知らせします。" },
+    { icon: Bell, title: "通知音・着信音のカスタマイズ", desc: "用意された音から選べる他、自分の音源をアップロードすることもできます。" },
+    { icon: KeyRound, title: "かんたん・安全なログイン", desc: "Google/Appleアカウント、パスキー、2段階認証（認証アプリ対応）、QRコードでのログインに対応しています。Appleでのログインは、本番環境のWeb版でログイン出来ることを確認しています。Android・iOS・macOS・Windowsのアプリ版は、確認出来た範囲から順にお知らせします。" },
     { icon: Mic, title: "通話のノイズ除去", desc: "通話中の雑音を抑えるノイズ除去を使えます。Web版のみで、アプリ版は未対応です。" },
-    { icon: ScreenShare, title: "画面共有", desc: "広場と一対の通話で、画面を共有できます。Web版で使えます。Androidは確認中です。" },
+    { icon: ScreenShare, title: "画面共有", desc: "広場と一対の通話で、画面を共有出来ます。Web,Android版で使えます。" },
 ];
 
 function GeneralContent() {
@@ -308,10 +315,9 @@ function GeneralContent() {
                 {/* 一対・広場 */}
                 <div className="flex flex-col lg:flex-row gap-12 items-center">
                     <div className="w-full lg:w-1/2">
-                        <span className="text-xs font-bold tracking-widest text-gray-500 mb-2 block">TALK</span>
-                        <h2 className="text-2xl font-bold mb-4 tracking-wide text-gray-900 text-balance">一対（いっつい）・広場（ひろば）</h2>
+                        <SectionHeading label="TALK" title="一対（いっつい）・広場（ひろば）" icon={MessageCircle} mb="mb-4" />
                         <p className="text-gray-600 leading-relaxed text-pretty mb-6">
-                            友達との1対1のやりとりは「一対」。一対の中に寄合を複数作って、話題ごとに分けることもできます。
+                            友達との1対1のやりとりは「一対」。一対の中に寄合を複数作って、話題毎に分けることもできます。
                         </p>
                         <ul className="space-y-2">
                             <li className="flex items-center gap-3 text-gray-700 text-sm">
@@ -332,8 +338,7 @@ function GeneralContent() {
                 {/* ぺったん自動提案（配置反転） */}
                 <div className="flex flex-col lg:flex-row-reverse gap-12 items-center">
                     <div className="w-full lg:w-1/2">
-                        <span className="text-xs font-bold tracking-widest text-gray-500 mb-2 block">STICKERS</span>
-                        <h2 className="text-2xl font-bold mb-4 tracking-wide text-gray-900 text-balance">メッセージに合わせて届くぺったん</h2>
+                        <SectionHeading label="STICKERS" title="メッセージに合わせて届くぺったん" icon={StickyNote} mb="mb-4" />
                         <p className="text-gray-600 leading-relaxed text-pretty">
                             メッセージの内容に合わせて使えそうなぺったんを自動で提案してくれます。
                         </p>
@@ -346,8 +351,7 @@ function GeneralContent() {
                 {/* 音声・ビデオ通話 */}
                 <div className="flex flex-col lg:flex-row gap-12 items-center">
                     <div className="w-full lg:w-1/2">
-                        <span className="text-xs font-bold tracking-widest text-gray-500 mb-2 block">CALL</span>
-                        <h2 className="text-2xl font-bold mb-4 tracking-wide text-gray-900 text-balance">音声・ビデオ通話</h2>
+                        <SectionHeading label="CALL" title="音声・ビデオ通話" icon={Mic} mb="mb-4" />
                         <p className="text-gray-600 leading-relaxed text-pretty">
                             一対でも広場でも、音声・ビデオ通話が使えます。
                         </p>
@@ -360,8 +364,7 @@ function GeneralContent() {
                 {/* 見た目切り替え（配置反転） */}
                 <div className="flex flex-col lg:flex-row-reverse gap-12 items-center">
                     <div className="w-full lg:w-1/2">
-                        <span className="text-xs font-bold tracking-widest text-gray-500 mb-2 block">APPEARANCE</span>
-                        <h2 className="text-2xl font-bold mb-4 tracking-wide text-gray-900 text-balance">好みの見た目に切り替え</h2>
+                        <SectionHeading label="APPEARANCE" title="好みの見た目に切り替え" icon={Palette} mb="mb-4" />
                         <p className="text-gray-600 leading-relaxed text-pretty">
                             「フラット」「ガラス」「劇画」「版画」の4スタイルに加え、外観は胡粉・墨・鈍色・漆黒の4つから選べます。アクセントカラーはカラーコードで自由に指定でき、フォントも25種類から選べます。
                         </p>
@@ -375,8 +378,7 @@ function GeneralContent() {
             {/* スクリーンショットギャラリー */}
             <div id="screenshots" className="bg-white/50 rounded-m3-xl p-8 md:p-12 mb-24 scroll-mt-8">
                 <div className="text-center mb-12">
-                    <span className="text-xs font-bold tracking-widest text-gray-500 mb-2 block">SCREENSHOTS</span>
-                    <h2 className="text-2xl font-bold tracking-wide text-gray-900 text-balance">アプリの画面</h2>
+                    <SectionHeading label="SCREENSHOTS" title="アプリの画面" icon={Smartphone} mb="mb-0" center />
                 </div>
                 <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-4 max-w-5xl mx-auto">
                     <ScreenshotPlaceholder label="[SCREENSHOT: モバイル - 一対・広場タブ、下部ナビゲーション]" aspect="portrait" />
@@ -467,8 +469,7 @@ function GeekContent() {
             <div className="flex flex-col gap-20">
                 {/* 技術スタック */}
                 <div id="stack" className="scroll-mt-8">
-                    <span className="text-xs font-bold tracking-widest text-gray-500 mb-2 block">TECH STACK</span>
-                    <h2 className="text-2xl font-bold mb-8 tracking-wide text-gray-900">技術スタック</h2>
+                    <SectionHeading label="TECH STACK" title="技術スタック" icon={Cpu} mb="mb-8" />
                     <div className="overflow-x-auto bg-white rounded-m3-lg shadow-sm border border-gray-100">
                         <table className="w-full text-left">
                             <tbody className="text-gray-600">
@@ -485,11 +486,7 @@ function GeekContent() {
 
                 {/* プライバシー・セキュリティ設計 */}
                 <div id="security" className="scroll-mt-8">
-                    <span className="text-xs font-bold tracking-widest text-gray-500 mb-2 block">PRIVACY & SECURITY</span>
-                    <h2 className="text-2xl font-bold mb-8 tracking-wide text-gray-900 flex items-center gap-3">
-                        <Lock className="w-5 h-5 text-tertiary" strokeWidth={1.5} />
-                        プライバシー・セキュリティ設計
-                    </h2>
+                    <SectionHeading label="PRIVACY & SECURITY" title="プライバシー・セキュリティ設計" icon={Lock} mb="mb-8" />
                     <ul className="space-y-4 text-gray-600 leading-relaxed text-sm">
                         <li>
                             メールアドレスは、画面に表示せず、DaiDai自身のデータベース（Firestore）にも保存しません。Googleでログインした場合は、認証基盤（Firebase Authentication）にGoogleアカウントのメールアドレスが保存されます。Appleでログインした場合は、メールアドレスも名前も受け取りません（スコープを要求しない設定）。電話番号と現在地は集めません。アカウントはGoogle/Apple認証への委任、またはパスキー（WebAuthn、DaiDai自身がRelying Partyとして運用）で成立させており、DaiDai自身はパスワード等の認証情報を保持しません。
@@ -498,7 +495,7 @@ function GeekContent() {
                             2段階認証は、Firebase AuthenticationのMulti-Factor Authentication機能を利用し、認証アプリによるワンタイムパスコードのみ対応しています。
                         </li>
                         <li>
-                            「Don&apos;t roll your own crypto」を鉄則とし、暗号を自前実装しないことを原則としています。メッセージのE2E暗号化は、鍵管理・オフライン受信・端末紛失時の鍵失効まで含めて実績のあるSignal Protocolと同じ方式を採用する方針で、2027年夏頃を目処に実装する予定です（約束ではありません）。専門家のセキュリティレビューを経て本番に投入します。ただし費用面から、正式な第三者セキュリティ監査は現時点では実施する予定がありません。
+                            メッセージのE2E暗号化は、鍵管理・オフライン受信・端末紛失時の鍵失効まで含めて実績の有るSignal Protocolと同じ方式を採用する方針で、2027年夏頃を目処に実装する予定です。専門家のセキュリティレビューを経て本番に投入する予定ですが、未計画なので変わる可能性も有ります。
                         </li>
                         <li>
                             メッセージの削除は、参加者全員が削除操作を終えた時点で初めてサーバーからも物理削除される設計です。それまでは自分の画面から見えなくなるだけです。
@@ -512,17 +509,13 @@ function GeekContent() {
 
                 {/* アーキテクチャ */}
                 <div id="architecture" className="scroll-mt-8">
-                    <span className="text-xs font-bold tracking-widest text-gray-500 mb-2 block">ARCHITECTURE</span>
-                    <h2 className="text-2xl font-bold mb-8 tracking-wide text-gray-900 flex items-center gap-3">
-                        <Network className="w-5 h-5 text-tertiary" strokeWidth={1.5} />
-                        アーキテクチャ
-                    </h2>
+                    <SectionHeading label="ARCHITECTURE" title="アーキテクチャ" icon={Network} mb="mb-8" />
                     <ul className="space-y-4 text-gray-600 leading-relaxed text-sm">
                         <li>
-                            バックエンドをFirebaseから段階的に移行していく計画のため、全レイヤーをRepositoryパターンで抽象化しており、UI・ビジネスロジックからFirestore等のSDKを直接叩きません。
+                            バックエンドをFirebaseから段階的に移行していく計画の為、全レイヤーをRepositoryパターンで抽象化しており、UI・ビジネスロジックからFirestore等のSDKを直接叩きません。
                         </li>
                         <li>
-                            広場の役職・権限は、Firestoreセキュリティルールが動的な権限計算をできない制約に対応するため、実効権限を非正規化キャッシュとして持たせる方式で実装しています。
+                            広場の役職・権限は、Firestoreセキュリティルールが動的な権限計算をできない制約に対応する為、実効権限を非正規化キャッシュとして持たせる方式で実装しています。
                         </li>
                         <li>
                             寄合は「単一モード」「複数モード」を後から自由に切り替えられる設計で、シンプルに使いたい人・会話を細かく分けたい人の両方に対応します。
@@ -534,8 +527,7 @@ function GeekContent() {
 
                 {/* 実装ロードマップ */}
                 <div id="roadmap" className="scroll-mt-8">
-                    <span className="text-xs font-bold tracking-widest text-gray-500 mb-2 block">ROADMAP</span>
-                    <h2 className="text-2xl font-bold mb-8 tracking-wide text-gray-900">実装ロードマップ</h2>
+                    <SectionHeading label="ROADMAP" title="実装ロードマップ" icon={Route} mb="mb-8" />
                     <div className="overflow-x-auto bg-white rounded-m3-lg shadow-sm border border-gray-100 mb-6">
                         <table className="w-full text-left">
                             <thead>
@@ -569,12 +561,11 @@ function GeekContent() {
 
                 {/* リポジトリ */}
                 <div id="github" className="scroll-mt-8">
-                    <span className="text-xs font-bold tracking-widest text-gray-500 mb-2 block">REPOSITORY</span>
-                    <h2 className="text-2xl font-bold mb-8 tracking-wide text-gray-900">リポジトリ</h2>
+                    <SectionHeading label="REPOSITORY" title="リポジトリ" icon={GitBranch} mb="mb-8" />
                     <div className="flex flex-wrap justify-center gap-4">
                         {[
                             { href: "https://github.com/rhing-official/DaiDai", label: "GITHUB", title: "開発の様子を見る", caption: "DaiDaiのリポジトリ" },
-                            { href: "https://gitdiagram.com/rhing-official/daidai", label: "DIAGRAM", title: "構成を図解する", caption: "GitDiagramでコードの構成を見る" },
+                            { href: "https://gitdiagram.com/rhing-official/daidai", label: "DIAGRAM", title: "構成を図解する", caption: "コードの構成を見る" },
                         ].map((card) => (
                             <CtaCard key={card.href} href={card.href} label={card.label} title={card.title} caption={card.caption} />
                         ))}

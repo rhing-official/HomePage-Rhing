@@ -30,7 +30,7 @@ export default function CreatorPacks({ packs, creator }: { packs: StickerPack[];
             </div>
 
             {packs.length === 0 ? (
-                <p className="text-gray-500">出品しているパックはありません</p>
+                <p className="text-gray-500">出品しているパックは有りません</p>
             ) : (
                 <>
                     <div className="mb-8 flex flex-col gap-4">

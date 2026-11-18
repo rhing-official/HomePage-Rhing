@@ -27,7 +27,7 @@ export default function AccountDeleteDialog({
         setSubmitting(true);
         try {
             if (await hasOwnedGroups(uid)) {
-                setError("長を務めている広場があります。DaiDaiアプリで長を譲渡してから削除してください。");
+                setError("長を務めている広場が有ります。DaiDaiアプリで長を譲渡してから削除してください。");
                 return;
             }
             await requestAccountDeletion(uid);

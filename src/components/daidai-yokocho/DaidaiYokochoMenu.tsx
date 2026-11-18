@@ -34,7 +34,7 @@ async function fetchOwnProfile(uid: string): Promise<OwnProfile | null> {
     try {
         const snapshot = await getDoc(doc(db, "users", uid));
         if (!snapshot.exists()) {
-            console.warn("プロフィール（users/{uid}）がありません:", uid);
+            console.warn("プロフィール（users/{uid}）が有りません:", uid);
             return null;
         }
         const data = snapshot.data();
