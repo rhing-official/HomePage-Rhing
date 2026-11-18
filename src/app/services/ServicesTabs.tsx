@@ -45,10 +45,10 @@ const appServices: Service[] = [
     {
         id: "dolce",
         name: "dolce",
-        tagline: "本と、甘美な贅沢を。",
+        tagline: "本と、二人きり",
         category: "Book Reader",
         description: "カスタマイズが豊富で、複数プラットフォームを跨いで同じ使用感で使えます。現在はAndroid・Windows・Linuxで利用可能です。",
-        features: ["CBZ,PDFの読み込み", "設定のカスタマイズ", "ローカル完結", "Android,Linux,Windows対応", "iOS,macOS対応予定"],
+        features: ["CBZ,PDF,EPUBの読み込み", "設定のカスタマイズ", "ローカル完結", "Android,Linux,Windows対応", "iOS,macOS対応予定"],
         link: "/services/dolce",
         bgColor: "bg-gray-200/60",
         image: "/logos/dolce.png",

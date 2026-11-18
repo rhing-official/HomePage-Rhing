@@ -40,7 +40,7 @@ export default function DaiDaiPage() {
             <div className="container mx-auto px-6 pb-24 text-center">
                 <h1 className="text-4xl md:text-5xl font-bold tracking-widest text-gray-900 mb-4">DaiDai</h1>
                 <p className="text-xl md:text-2xl tracking-[0.2em] mb-8 text-tertiary">「整う、守る、私に馴染む。」</p>
-                <p className="text-gray-600 leading-relaxed text-pretty max-w-xl mx-auto">
+                <p className="text-gray-600 leading-relaxed mx-auto">
                     広告なし、電話番号・メールアドレスの入力が不要な、プライバシーを大切にするメッセージアプリ
                 </p>
             </div>

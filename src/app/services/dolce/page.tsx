@@ -14,18 +14,23 @@ import {
     FolderOpen,
     FileText,
     Archive,
+    BookOpen,
     ArrowRight,
+    Palette,
+    Play,
+    ListTree,
 } from "lucide-react";
 import ScreenshotPlaceholder from "./ScreenshotPlaceholder";
 import EnvironmentList from "@/components/EnvironmentList";
 
 export const metadata: Metadata = {
     title: "dolce | Rhing",
-    description: "本と、甘美な贅沢を。PDF・CBZ対応、ローカル完結のクロスプラットフォーム電子書籍/コミックリーダー",
+    description: "本と、二人きり。PDF・CBZ・EPUB対応、ローカル完結のクロスプラットフォーム電子書籍/コミックリーダー",
 };
 
 const contents = [
     { href: "#features", label: "機能を見る" },
+    { href: "#keys", label: "キー操作" },
     { href: "#platforms", label: "対応プラットフォーム" },
 ];
 
@@ -33,7 +38,7 @@ const pillars = [
     {
         icon: ShieldCheck,
         title: "ローカル完結",
-        desc: "書籍データも設定も全て端末内に保存。クラウドへのアップロードは一切発生しません。",
+        desc: "書籍データも設定も全て端末内に保存。クラウドへのアップロードは一切発生せず、ネット接続も不要です。",
     },
     {
         icon: MonitorSmartphone,
@@ -75,14 +80,23 @@ const mobileFeatures = [
     },
 ];
 
-type Platform = { name: string; status: "available" | "planned"; url?: string };
+type Platform = { name: string; status: "available" | "planned"; url?: string; note?: string; caption?: string };
+
+const keyRows: { keys: string; desc: string }[] = [
+    { keys: "T", desc: "目次を開く" },
+    { keys: "P", desc: "自動ページめくり" },
+    { keys: "F5", desc: "本棚のディレクトリを再スキャン" },
+    { keys: "← → / Space / Ctrl+F / Ctrl+B / Ctrl+I / F1 / Ctrl+T / Ctrl+W", desc: "その他のキー" },
+];
+
+const releasesUrl = "https://github.com/rhing-official/dolce/releases";
 
 const platforms: Platform[] = [
-    { name: "Android", status: "available" },
-    { name: "Windows", status: "available" },
-    { name: "Linux", status: "available" },
+    { name: "Android", status: "available", url: releasesUrl, note: "dolce-android.apk" },
+    { name: "Windows", status: "available", url: releasesUrl, note: "dolce-windows.zip / *.msix" },
+    { name: "Linux", status: "available", url: releasesUrl, note: "dolce-linux-x86_64.AppImage" },
+    { name: "macOS", status: "available", url: releasesUrl, note: "dolce-macos.zip", caption: "動作未確認" },
     { name: "iOS", status: "planned" },
-    { name: "macOS", status: "planned" },
 ];
 
 export default function DolcePage() {
@@ -91,9 +105,9 @@ export default function DolcePage() {
             {/* ヒーローエリア */}
             <div className="container mx-auto px-6 pb-24 text-center">
                 <h1 className="text-4xl md:text-5xl font-bold tracking-widest text-gray-900 mb-4">dolce</h1>
-                <p className="text-xl md:text-2xl tracking-[0.2em] mb-8">「本と、甘美な贅沢を。」</p>
+                <p className="text-xl md:text-2xl tracking-[0.2em] mb-8">「本と、二人きり」</p>
                 <p className="text-gray-600 leading-relaxed text-pretty max-w-xl mx-auto mb-16">
-                    PDF・CBZ対応、ローカル完結のクロスプラットフォーム電子書籍リーダー
+                    PDF・CBZ・EPUB対応、ローカル完結のクロスプラットフォーム電子書籍/コミックリーダー
                 </p>
 
                 {/* 目次 */}
@@ -141,21 +155,39 @@ export default function DolcePage() {
                             <span className="text-xs font-bold tracking-widest text-gray-500 mb-2 block">BOOKSHELF</span>
                             <h2 className="text-2xl font-bold mb-4 tracking-wide text-gray-900 text-balance">マルチタブで広がる本棚</h2>
                             <p className="text-gray-600 leading-relaxed text-pretty">
-                                複数の本棚タブを開いて、並行して読書・整理ができます。常駐サイドバーからは本棚の切り替えや検索もすぐに行えます。
+                                複数の本棚タブを開いて、並行して読書・整理が出来ます。常駐サイドバーからは本棚の切り替えや検索もすぐに行えます。
                             </p>
+                            <ul className="space-y-2 mt-6">
+                                <li className="flex items-center gap-3 text-gray-700 text-sm">
+                                    <FolderOpen className="w-4 h-4 text-gray-500" strokeWidth={1.5} />
+                                    ディレクトリを登録すると、階層のまま一覧表示
+                                </li>
+                                <li className="flex items-center gap-3 text-gray-700 text-sm">
+                                    <LayoutGrid className="w-4 h-4 text-gray-500" strokeWidth={1.5} />
+                                    サムネイル表示・検索・複数選択
+                                </li>
+                                <li className="flex items-center gap-3 text-gray-700 text-sm">
+                                    <ListTree className="w-4 h-4 text-gray-500" strokeWidth={1.5} />
+                                    巻数情報が全冊に有る時は巻数順、無い時はタイトルの自然順
+                                </li>
+                                <li className="flex items-center gap-3 text-gray-700 text-sm">
+                                    <Keyboard className="w-4 h-4 text-gray-500" strokeWidth={1.5} />
+                                    F5で、ディレクトリを再スキャン
+                                </li>
+                            </ul>
                         </div>
                         <div className="w-full lg:w-1/2">
                             <ScreenshotPlaceholder label="[SCREENSHOT: デスクトップ(Linux) - 本棚グリッド表示]" aspect="video" />
                         </div>
                     </div>
 
-                    {/* お気に入り・フォルダ管理（配置反転） */}
+                    {/* お気に入り・ディレクトリ管理（配置反転） */}
                     <div className="flex flex-col lg:flex-row-reverse gap-12 items-center">
                         <div className="w-full lg:w-1/2">
                             <span className="text-xs font-bold tracking-widest text-gray-500 mb-2 block">ORGANIZE</span>
-                            <h2 className="text-2xl font-bold mb-4 tracking-wide text-gray-900 text-balance">お気に入り・フォルダ管理</h2>
+                            <h2 className="text-2xl font-bold mb-4 tracking-wide text-gray-900 text-balance">お気に入り・ディレクトリ管理</h2>
                             <p className="text-gray-600 leading-relaxed text-pretty mb-6">
-                                本や本棚をお気に入り登録したり、フォルダ単位で整理・削除したりできます。サイドバーからいつでもアクセス可能です。
+                                本や本棚をお気に入り登録したり、ディレクトリ単位で整理・削除したりできます。サイドバーからいつでもアクセス可能です。
                             </p>
                             <ul className="space-y-2">
                                 <li className="flex items-center gap-3 text-gray-700 text-sm">
@@ -164,7 +196,7 @@ export default function DolcePage() {
                                 </li>
                                 <li className="flex items-center gap-3 text-gray-700 text-sm">
                                     <FolderOpen className="w-4 h-4 text-gray-500" strokeWidth={1.5} />
-                                    フォルダ単位での整理・削除
+                                    ディレクトリ単位での整理・削除
                                 </li>
                             </ul>
                         </div>
@@ -179,7 +211,7 @@ export default function DolcePage() {
                             <span className="text-xs font-bold tracking-widest text-gray-500 mb-2 block">VIEWER</span>
                             <h2 className="text-2xl font-bold mb-4 tracking-wide text-gray-900 text-balance">迷わないビューア</h2>
                             <p className="text-gray-600 leading-relaxed text-pretty mb-6">
-                                画面を3分割したタップ操作で、直感的にページを進められます。キーボードやページスライダーにも対応。
+                                画面を3分割したタップ操作で、直感的にページを進められます。キーボードやページスライダーにも対応しています。
                             </p>
 
                             {/* タップ操作の図解 */}
@@ -201,7 +233,19 @@ export default function DolcePage() {
                             <ul className="space-y-2">
                                 <li className="flex items-center gap-3 text-gray-700 text-sm">
                                     <Keyboard className="w-4 h-4 text-gray-500" strokeWidth={1.5} />
-                                    キーボードショートカット（ページ送り・タブ操作・ページ検索）
+                                    キーボードショートカット。一覧は、下の「キー操作」を参照
+                                </li>
+                                <li className="flex items-center gap-3 text-gray-700 text-sm">
+                                    <ListTree className="w-4 h-4 text-gray-500" strokeWidth={1.5} />
+                                    目次（PDF・EPUB）と、書籍内リンクのジャンプ。Tキーでも目次を開けます
+                                </li>
+                                <li className="flex items-center gap-3 text-gray-700 text-sm">
+                                    <Play className="w-4 h-4 text-gray-500" strokeWidth={1.5} />
+                                    自動ページめくり。再生ボタンを長押しすると秒数を選べ、Pキーでも操作出来ます
+                                </li>
+                                <li className="flex items-center gap-3 text-gray-700 text-sm">
+                                    <ArrowRight className="w-4 h-4 text-gray-500" strokeWidth={1.5} />
+                                    同じディレクトリの前後の本へ移動。最終ページでは「次の本を開く」
                                 </li>
                                 <li className="flex items-center gap-3 text-gray-700 text-sm">
                                     <SlidersHorizontal className="w-4 h-4 text-gray-500" strokeWidth={1.5} />
@@ -213,6 +257,44 @@ export default function DolcePage() {
                             <ScreenshotPlaceholder label="[SCREENSHOT: デスクトップ(Linux) - ビューア画面（UIオーバーレイ表示状態）]" aspect="video" />
                         </div>
                     </div>
+
+                    {/* 見た目 */}
+                    <div className="flex flex-col lg:flex-row-reverse gap-12 items-center">
+                        <div className="w-full lg:w-1/2">
+                            <span className="text-xs font-bold tracking-widest text-gray-500 mb-2 block">APPEARANCE</span>
+                            <h2 className="text-2xl font-bold mb-4 tracking-wide text-gray-900 text-balance">版画風の見た目と、好みの色</h2>
+                            <p className="text-gray-600 leading-relaxed text-pretty mb-6">
+                                太い枠と硬い影の、版画風のUIです。アクセント色は、プリセットの10色から選ぶか、カラーコードで指定出来ます。気に入った色は、＋でプリセットに登録出来ます。表示言語は、日本語と英語です。
+                            </p>
+                            <ul className="space-y-2">
+                                <li className="flex items-center gap-3 text-gray-700 text-sm">
+                                    <Palette className="w-4 h-4 text-gray-500" strokeWidth={1.5} />
+                                    プリセット10色、またはカラーコード（#RRGGBB）
+                                </li>
+                            </ul>
+                        </div>
+                        <div className="w-full lg:w-1/2">
+                            <ScreenshotPlaceholder label="[SCREENSHOT: デスクトップ(Windows) - 見た目の設定画面（版画風UI・アクセント色）]" aspect="video" />
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            {/* キー操作 */}
+            <section id="keys" className="container mx-auto px-6 py-20 max-w-3xl">
+                <span className="text-xs font-bold tracking-widest text-gray-500 mb-2 block text-center">KEYS</span>
+                <h2 className="text-2xl font-bold mb-8 tracking-widest text-gray-900 text-center">キー操作</h2>
+                <div className="overflow-x-auto bg-white rounded-m3-lg shadow-sm border border-gray-100">
+                    <table className="w-full text-left text-sm">
+                        <tbody className="text-gray-600 divide-y divide-gray-100">
+                            {keyRows.map((r) => (
+                                <tr key={r.keys}>
+                                    <th scope="row" className="px-6 py-4 font-mono font-bold text-gray-900 whitespace-nowrap">{r.keys}</th>
+                                    <td className="px-6 py-4">{r.desc}</td>
+                                </tr>
+                            ))}
+                        </tbody>
+                    </table>
                 </div>
             </section>
 
@@ -249,7 +331,7 @@ export default function DolcePage() {
             {/* 対応フォーマット */}
             <section className="container mx-auto px-6 py-20 text-center">
                 <h2 className="text-2xl font-bold mb-12 tracking-widest text-gray-900">対応フォーマット</h2>
-                <div className="flex flex-col md:flex-row justify-center gap-8 mb-8 max-w-2xl mx-auto">
+                <div className="flex flex-col md:flex-row justify-center gap-8 mb-8 max-w-3xl mx-auto">
                     <div className="flex-1 bg-white p-8 rounded-m3-lg shadow-sm border border-gray-100">
                         <FileText className="w-8 h-8 mx-auto mb-4 text-gray-700" strokeWidth={1.5} />
                         <h4 className="text-xl font-bold mb-2">PDF (.pdf)</h4>
@@ -259,6 +341,11 @@ export default function DolcePage() {
                         <Archive className="w-8 h-8 mx-auto mb-4 text-gray-700" strokeWidth={1.5} />
                         <h4 className="text-xl font-bold mb-2">CBZ (.cbz / .zip)</h4>
                         <p className="text-gray-500 text-sm">コミック・画像集</p>
+                    </div>
+                    <div className="flex-1 bg-white p-8 rounded-m3-lg shadow-sm border border-gray-100">
+                        <BookOpen className="w-8 h-8 mx-auto mb-4 text-gray-700" strokeWidth={1.5} />
+                        <h4 className="text-xl font-bold mb-2">EPUB (.epub)</h4>
+                        <p className="text-gray-500 text-sm">リフロー表示の電子書籍</p>
                     </div>
                 </div>
                 <p className="text-sm text-gray-500 tracking-widest italic">※ローカルのファイルを読み込むだけ。アカウント登録もクラウド同期も不要。</p>
@@ -274,7 +361,11 @@ export default function DolcePage() {
                             ? "bg-gray-900 text-white rounded-m3-lg p-6 text-center font-bold tracking-wide"
                             : "border border-gray-300 text-gray-400 rounded-m3-lg p-6 text-center";
                         const content = available ? (
-                            p.name
+                            <>
+                                <p>{p.name}</p>
+                                {p.note && <p className="text-[0.7rem] font-medium tracking-wide text-gray-300 mt-1 break-all">{p.note}</p>}
+                                {p.caption && <p className="text-xs font-medium tracking-widest text-gray-300 mt-1">{p.caption}</p>}
+                            </>
                         ) : (
                             <>
                                 <p className="font-bold tracking-wide mb-1">{p.name}</p>
@@ -292,6 +383,16 @@ export default function DolcePage() {
                             </div>
                         );
                     })}
+                </div>
+                <div className="mt-8 text-sm text-gray-600 leading-relaxed space-y-3 text-left">
+                    <p>配布は、GitHub Releasesのみです。</p>
+                    <div className="bg-white rounded-m3-lg border border-gray-100 shadow-sm p-5">
+                        <h3 className="font-bold text-gray-900 mb-2">Linux（AppImage）の使い方</h3>
+                        <p>
+                            ダウンロードしたAppImageに、<code className="font-mono text-gray-900">chmod +x</code>で実行権限を付けてから、実行します。FUSEが無い環境では、<code className="font-mono text-gray-900">--appimage-extract-and-run</code>を付けて実行します。
+                        </p>
+                    </div>
+                    <p>macOS向けの配布は有りますが、動作を確認出来る環境が無いため、動作は確認していません。</p>
                 </div>
                 <EnvironmentList
                     className="mt-10 max-w-sm mx-auto text-left"
@@ -311,7 +412,11 @@ export default function DolcePage() {
                     <p>現在はAndroid・Windows・Linuxを中心に開発を進めています。iOS・macOSへの対応も計画中です。</p>
                     <p>ローカル完結・プライバシー重視という方針は変えず、これからも使いやすいリーダーを目指していきます。</p>
                 </div>
-                <div className="flex flex-wrap justify-center gap-4">
+            </section>
+
+            {/* CTA（横並び） */}
+            <section className="container mx-auto px-4 pb-8">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4 max-w-4xl mx-auto">
                     {[
                         { href: "https://github.com/rhing-official/dolce", label: "GITHUB", title: "開発の様子を見る", caption: "dolceのリポジトリ" },
                         { href: "https://gitdiagram.com/rhing-official/dolce", label: "DIAGRAM", title: "構成を図解する", caption: "コードの構成を見る" },

@@ -81,14 +81,14 @@ export function formatJstDateTime(ms: number): string {
 
 // 入手した人へ送られるお知らせの文面（Cloud Functionsの packDeletionNoticeText と同じ。確認用のプレビュー）
 export function deletionNoticePreview(packName: string, deleteAtMs: number, urgent = false): string {
-    if (urgent) return `「${packName}」というぺったんをお使いの利用者の方に連絡します。緊急の対応の為、まもなく使えなくなります。`;
+    if (urgent) return `「${packName}」というぺったんをお使いの利用者の方に連絡します。緊急の対応のため、まもなく使えなくなります。`;
     return `「${packName}」というぺったんをお使いの利用者の方に連絡します。${formatJstDateTime(deleteAtMs)}に使えなくなります。`;
 }
 
 // 入手した人へ送られるお知らせの文面（1枚の削除。Cloud Functionsの stickerDeletionNoticeText と同じ）
 export function stickerDeletionNoticePreview(packName: string, stickerName: string, deleteAtMs: number, urgent = false): string {
     if (urgent) {
-        return `「${packName}」というぺったんパックの中の「${stickerName}」をお使いの利用者の方に連絡します。緊急の対応の為、まもなく使えなくなります。`;
+        return `「${packName}」というぺったんパックの中の「${stickerName}」をお使いの利用者の方に連絡します。緊急の対応のため、まもなく使えなくなります。`;
     }
     return `「${packName}」というぺったんパックの中の「${stickerName}」をお使いの利用者の方に連絡します。${formatJstDateTime(deleteAtMs)}に使えなくなります。`;
 }
