@@ -91,6 +91,7 @@ export default function Footer() {
                                 <li><UnderlineLink href={siteConfig.socialLinks.discord} external>Discord</UnderlineLink></li>
                                 <li><UnderlineLink href={siteConfig.socialLinks.x} external>X</UnderlineLink></li>
                                 <li><UnderlineLink href={siteConfig.socialLinks.instagram} external>Instagram</UnderlineLink></li>
+                                <li><UnderlineLink href={siteConfig.socialLinks.karotter} external>Karotter</UnderlineLink></li>
                             </ul>
                         </div>
 
