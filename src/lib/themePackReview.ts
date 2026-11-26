@@ -1,6 +1,6 @@
 "use client";
 
-import { collection, getDocs, limit, orderBy, query, where } from "firebase/firestore";
+import { collection, doc, getDoc, getDocs, limit, orderBy, query, where } from "firebase/firestore";
 import { getBytes, getDownloadURL, getStorage, ref } from "firebase/storage";
 import { db, firebaseApp } from "@/lib/firebase";
 import { checkContrast, type ContrastReport } from "@/lib/themePack/contrast";
@@ -120,4 +120,22 @@ export async function listPublicThemePacks(): Promise<PublicThemePack[]> {
     });
     // 新しく公開された順（並べ替えはこちらで行い、複合インデックスを増やさない）
     return list.filter((p) => p.name && p.assetPath).sort((a, b) => (b.approvedAt?.getTime() ?? 0) - (a.approvedAt?.getTime() ?? 0));
+}
+
+// 公開中の意匠パック1件（承認されたものだけ）。無い・停止中・承認前はnull
+export async function getPublicThemePack(id: string): Promise<PublicThemePack | null> {
+    const snap = await getDoc(doc(db, "themePacks", id));
+    if (!snap.exists()) return null;
+    const data = snap.data();
+    if (data.status !== "approved") return null;
+    const at = data.approvedAt as { toDate?: () => Date } | undefined;
+    return {
+        id: snap.id,
+        name: String(data.name ?? ""),
+        creatorId: String(data.creatorId ?? ""),
+        version: Number(data.version ?? 0),
+        brightness: String(data.brightness ?? "both"),
+        assetPath: String(data.assetPath ?? ""),
+        approvedAt: at && typeof at.toDate === "function" ? at.toDate() : null,
+    };
 }

@@ -85,6 +85,9 @@
     flex: 1 0 auto;
     position: relative;
     isolation: isolate;
+    /* フッターの中身（z-10）より手前に置く。無いと、ページの中で開くポップアップ（絞り込みなど）が、フッターの下に隠れる。
+       ヘッダー・ドロワー（z-50以上）は、これより手前のまま */
+    z-index: 20;
     animation: page-blur-in 0.4s ease-in-out backwards;
 }
 

@@ -3,14 +3,14 @@
 import { X } from "lucide-react";
 import { PRICE_FILTER_OPTIONS, SEARCH_TARGET_OPTIONS, EMPTY_FILTERS, type PackFilters } from "@/lib/packFilter";
 
-const inputClass =
+export const inputClass =
     "w-full px-4 py-2.5 rounded-full bg-white/80 border border-gray-200 text-sm text-gray-700 placeholder:text-gray-400 focus:outline-none focus:border-blue-200 transition-colors";
 
-function toggle(list: string[], value: string): string[] {
+export function toggle(list: string[], value: string): string[] {
     return list.includes(value) ? list.filter((v) => v !== value) : [...list, value];
 }
 
-function Chip({ active, onClick, children }: { active: boolean; onClick: () => void; children: React.ReactNode }) {
+export function Chip({ active, onClick, children }: { active: boolean; onClick: () => void; children: React.ReactNode }) {
     return (
         <button
             type="button"
@@ -35,6 +35,7 @@ export default function PackFilterPanel({
     tags,
     resultCount,
     showCreatorFields = true,
+    showSummary = true,
 }: {
     filters: PackFilters;
     onChange: (next: PackFilters) => void;
@@ -43,6 +44,8 @@ export default function PackFilterPanel({
     resultCount: number;
     // クリエイター1人のページでは、Rhing Seed・呼び名の欄は不要なので隠す
     showCreatorFields?: boolean;
+    // 選んだ条件のタグ・「全て解除」・件数の行。ポップアップで使う時は、呼び出し側で別に出すので隠す
+    showSummary?: boolean;
 }) {
     const set = (patch: Partial<PackFilters>) => onChange({ ...filters, ...patch });
 
@@ -140,6 +143,7 @@ export default function PackFilterPanel({
                 )}
             </div>
 
+            {showSummary && (
             <div className="flex flex-wrap items-center gap-2">
                 {applied.map((a) => (
                     <button
@@ -166,6 +170,7 @@ export default function PackFilterPanel({
                     {resultCount}件
                 </p>
             </div>
+            )}
         </div>
     );
 }

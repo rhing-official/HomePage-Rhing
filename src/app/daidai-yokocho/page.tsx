@@ -17,8 +17,8 @@ export default async function DaidaiYokochoPage({ searchParams }: { searchParams
     return (
         <div className="w-full pb-24">
             {/* ページタイトル */}
-            <div className="container mx-auto px-6 pb-24 max-w-4xl">
-                <div className="relative flex flex-col items-center justify-center text-center md:min-h-56 lg:min-h-64">
+            <div className="container mx-auto px-6 pb-4 max-w-4xl">
+                <div className="relative flex flex-col items-center justify-center text-center md:min-h-40 lg:min-h-44">
                     <h1 className="text-4xl md:text-5xl font-bold tracking-widest text-gray-900 mb-4">daidai横丁</h1>
                     {/* eslint-disable-next-line @next/next/no-img-element */}
                     <img src="/illustrations/online-shopping.svg" alt="" className="hidden md:block absolute left-0 top-1/2 -translate-y-1/2 w-48 lg:w-56 h-auto" />
@@ -27,7 +27,7 @@ export default async function DaidaiYokochoPage({ searchParams }: { searchParams
 
             <IntroBanner />
 
-            <CatalogClient packs={packs} initialKind={kind === "design" ? "design" : "petan"} />
+            <CatalogClient packs={packs} initialKind={kind === "design" ? "design" : kind === "petan" ? "petan" : undefined} />
         </div>
     );
 }
