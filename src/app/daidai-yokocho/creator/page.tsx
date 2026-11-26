@@ -17,6 +17,8 @@ import { deleteStickerPack, requestStickerPackDeletion } from "@/lib/firebaseFun
 import DeletionRequestDialog from "@/components/daidai-yokocho/DeletionRequestDialog";
 import { formatJstDateTime, getMyDeletionRequests, type PackDeletionRequest } from "@/lib/packDeletion";
 import CreatePackForm from "@/components/daidai-yokocho/CreatePackForm";
+import KindSwitch, { type CatalogKind } from "@/components/daidai-yokocho/KindSwitch";
+import MyDesigns from "@/components/daidai-yokocho/MyDesigns";
 import { deletePackDraft, deletePackEditDraft, listPackDrafts, listPackEditDraftIds, type PackDraft } from "@/lib/packDrafts";
 import { getPackViewCount } from "@/lib/packStats";
 import { ThumbRowSkeleton } from "@/components/Skeleton";
@@ -44,6 +46,9 @@ export default function CreatorDashboardPage() {
     // 下書き（作成の途中保存）。「編集」で、パックの編集画面へ移る
     const [drafts, setDrafts] = useState<PackDraft[]>([]);
     const [formKey, setFormKey] = useState(0);
+    // ぺったんと意匠の切り替え。意匠の側は、初めて開いた時に読み込み、以後は隠すだけにする
+    const [kind, setKind] = useState<CatalogKind>("petan");
+    const [designOpened, setDesignOpened] = useState(false);
     const formRef = useRef<HTMLDivElement>(null);
     // 作成済みのパックの絞り込み（公開中・下書き）と、公開中のパックの閲覧回数（出品者にだけ見える）
     const [statusFilter, setStatusFilter] = useState<StatusFilter>("all");
@@ -163,6 +168,22 @@ export default function CreatorDashboardPage() {
                     作成と管理
                 </h1>
 
+                <KindSwitch
+                    value={kind}
+                    onChange={(next) => {
+                        if (next === "design") setDesignOpened(true);
+                        setKind(next);
+                    }}
+                    className="-mt-4 mb-10 sm:mx-0"
+                />
+
+                {designOpened && (
+                    <div hidden={kind !== "design"}>
+                        <MyDesigns uid={user.uid} />
+                    </div>
+                )}
+
+                <div hidden={kind !== "petan"}>
                 <div ref={formRef}>
                     <CreatePackForm
                         key={`new-${formKey}`}
@@ -324,6 +345,7 @@ export default function CreatorDashboardPage() {
                             )}
                         </div>
                     )}
+                </div>
                 </div>
             </div>
             {requestTarget && (

@@ -9,6 +9,8 @@ import { getOwnedStickerPacks, formatPackPrice, type StickerPack } from "@/lib/s
 import { uninstallStickerPack } from "@/lib/firebaseFunctions";
 import { PackPanelListSkeleton } from "@/components/Skeleton";
 import LoadingImage from "@/components/LoadingImage";
+import KindSwitch, { type CatalogKind } from "@/components/daidai-yokocho/KindSwitch";
+import OwnedDesigns from "@/components/daidai-yokocho/OwnedDesigns";
 
 const OWNED_PATH = "/daidai-yokocho/owned";
 
@@ -18,6 +20,9 @@ export default function OwnedStickerPacksPage() {
     const [ready, setReady] = useState(false);
     const [packs, setPacks] = useState<StickerPack[]>([]);
     const [loadingPacks, setLoadingPacks] = useState(false);
+    // ぺったんと意匠の切り替え。意匠の側は、初めて開いた時に読み込み、以後は隠すだけにする
+    const [kind, setKind] = useState<CatalogKind>("petan");
+    const [designOpened, setDesignOpened] = useState(false);
 
     useEffect(() => onAuthStateChanged(auth, (u) => {
         setUser(u);
@@ -54,6 +59,21 @@ export default function OwnedStickerPacksPage() {
                     購入済み
                 </h1>
 
+                <KindSwitch
+                    value={kind}
+                    onChange={(next) => {
+                        if (next === "design") setDesignOpened(true);
+                        setKind(next);
+                    }}
+                    className="mb-10 sm:mx-0"
+                />
+
+                {designOpened && (
+                    <div hidden={kind !== "design"}>
+                        <OwnedDesigns uid={user.uid} />
+                    </div>
+                )}
+                <div hidden={kind !== "petan"}>
                 {loadingPacks ? (
                     <PackPanelListSkeleton />
                 ) : packs.length === 0 ? (
@@ -74,6 +94,7 @@ export default function OwnedStickerPacksPage() {
                         ))}
                     </div>
                 )}
+                </div>
             </div>
         </div>
     );

@@ -95,6 +95,8 @@ export async function loadThemePackPreview(assetPath: string): Promise<ThemePack
 // 公開中の意匠パック（themePacks。誰でも読める）。承認された版だけが入る
 export interface PublicThemePack {
     id: string;
+    /** approved（公開中）・withdrawn（取り下げ）・suspended（配信停止）。一覧に出るのはapprovedだけ */
+    status?: string;
     name: string;
     creatorId: string;
     version: number;
@@ -138,4 +140,62 @@ export async function getPublicThemePack(id: string): Promise<PublicThemePack | 
         assetPath: String(data.assetPath ?? ""),
         approvedAt: at && typeof at.toDate === "function" ? at.toDate() : null,
     };
+}
+
+// 意匠パック1件を、状態に関わらず読む（取得した人が、取り下げ・停止の後も見られるように）。無ければnull
+export async function getThemePack(id: string): Promise<PublicThemePack | null> {
+    const snap = await getDoc(doc(db, "themePacks", id));
+    if (!snap.exists()) return null;
+    const data = snap.data();
+    const at = data.approvedAt as { toDate?: () => Date } | undefined;
+    return {
+        id: snap.id,
+        status: String(data.status ?? ""),
+        name: String(data.name ?? ""),
+        creatorId: String(data.creatorId ?? ""),
+        version: Number(data.version ?? 0),
+        brightness: String(data.brightness ?? "both"),
+        assetPath: String(data.assetPath ?? ""),
+        approvedAt: at && typeof at.toDate === "function" ? at.toDate() : null,
+    };
+}
+
+// 取得済みの意匠パックのid（users/{uid}/ownedThemePacks）。本人だけが読める
+export async function listOwnedThemePackIds(uid: string): Promise<string[]> {
+    const snap = await getDocs(collection(db, "users", uid, "ownedThemePacks"));
+    return snap.docs.map((d) => d.id);
+}
+
+// 取得済みの意匠パックの一覧（取り下げ・停止になったものも含む）
+export async function listOwnedThemePacks(uid: string): Promise<PublicThemePack[]> {
+    const ids = await listOwnedThemePackIds(uid);
+    const packs = await Promise.all(ids.map((id) => getThemePack(id).catch(() => null)));
+    return packs.filter((p): p is PublicThemePack => p !== null);
+}
+
+// 自分の投稿の一覧（審査待ち・差し戻し・公開中・取り下げなど）。creatorIdで絞るクエリは、本人だけに許されている
+export async function listMyThemePackSubmissions(uid: string): Promise<ThemePackSubmission[]> {
+    const snap = await getDocs(query(collection(db, "themePackSubmissions"), where("creatorId", "==", uid), limit(100)));
+    const list = snap.docs.map((d) => {
+        const data = d.data();
+        const created = data.createdAt as { toDate?: () => Date } | undefined;
+        return {
+            id: d.id,
+            packId: String(data.packId ?? ""),
+            creatorId: String(data.creatorId ?? ""),
+            version: Number(data.version ?? 0),
+            status: String(data.status ?? ""),
+            assetPath: String(data.assetPath ?? ""),
+            name: typeof data.name === "string" ? data.name : null,
+            decisionNote: typeof data.decisionNote === "string" ? data.decisionNote : null,
+            createdAt: created && typeof created.toDate === "function" ? created.toDate() : null,
+        };
+    });
+    // 新しい順（並べ替えはこちらで行い、複合インデックスを増やさない）
+    return list.sort((a, b) => (b.createdAt?.getTime() ?? 0) - (a.createdAt?.getTime() ?? 0));
+}
+
+export async function isThemePackOwned(uid: string, packId: string): Promise<boolean> {
+    const snap = await getDoc(doc(db, "users", uid, "ownedThemePacks", packId));
+    return snap.exists();
 }

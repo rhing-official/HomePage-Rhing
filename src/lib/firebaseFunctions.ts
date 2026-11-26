@@ -220,3 +220,20 @@ export async function suspendThemePack(data: { packId: string; reason: string })
     const result = await httpsCallable<typeof data, { notifiedOwners?: number }>(functions, "suspendThemePack")(data);
     return { notifiedOwners: result.data?.notifiedOwners ?? 0 };
 }
+
+// 意匠パックの取得（無料のみ）。DaiDaiリポジトリのfunctions/src/themePackOwnership.ts。
+// 二重の呼び出しは、alreadyOwned: true を返す（ownerCountは重ならない）
+export async function acquireThemePack(data: { packId: string }): Promise<{ packId: string; version: number; alreadyOwned: boolean }> {
+    const result = await httpsCallable<typeof data, { packId: string; version: number; alreadyOwned: boolean }>(functions, "acquireThemePack")(data);
+    return result.data;
+}
+
+// 取得した意匠パックを外す。取り下げ・配信停止の後でも、いつでも外せる
+export async function uninstallThemePack(data: { packId: string }): Promise<void> {
+    await httpsCallable(functions, "uninstallThemePack")(data);
+}
+
+// 自分の公開中の意匠パックを取り下げる。新しい取得だけが止まり、取得した人は使い続けられる
+export async function withdrawThemePack(data: { packId: string }): Promise<void> {
+    await httpsCallable(functions, "withdrawThemePack")(data);
+}

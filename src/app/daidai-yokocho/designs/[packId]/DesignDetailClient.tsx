@@ -4,13 +4,14 @@ import { useEffect, useState } from "react";
 import Link from "next/link";
 import { getCreatorProfile, type CreatorProfile } from "@/lib/creatorProfiles";
 import {
-    getPublicThemePack,
+    getThemePack,
     listPublicThemePacks,
     loadThemePackPreview,
     type PublicThemePack,
     type ThemePackPreviewData,
 } from "@/lib/themePackReview";
 import DesignCard, { brightnessLabel } from "@/components/daidai-yokocho/DesignCard";
+import DesignAcquireButton from "@/components/daidai-yokocho/DesignAcquireButton";
 import ThemePackPreview from "@/components/daidai-yokocho/ThemePackPreview";
 
 type State = { kind: "loading" } | { kind: "missing" } | { kind: "error" } | { kind: "ready"; pack: PublicThemePack };
@@ -29,7 +30,7 @@ export default function DesignDetailClient({ packId }: { packId: string }) {
 
     useEffect(() => {
         let cancelled = false;
-        getPublicThemePack(packId)
+        getThemePack(packId)
             .then((pack) => {
                 if (cancelled) return;
                 setState(pack ? { kind: "ready", pack } : { kind: "missing" });
@@ -103,19 +104,24 @@ export default function DesignDetailClient({ packId }: { packId: string }) {
 
                         <p className="text-4xl font-bold text-emerald-600">無料</p>
 
+                        {pack.status === "withdrawn" && (
+                            <p className="rounded-m3-md border border-gray-200 bg-gray-50 text-gray-600 px-4 py-3 text-sm">
+                                この意匠パックは、取り下げられました。新しく取得することは出来ません。取得済みの方は、引き続き使えます。
+                            </p>
+                        )}
+                        {pack.status === "suspended" && (
+                            <p className="rounded-m3-md border border-red-200 bg-red-50 text-red-700 px-4 py-3 text-sm">
+                                この意匠パックは、配信を停止しました。取得済みの方の表示は、標準に戻ります。
+                            </p>
+                        )}
+
                         <div>
-                            <button
-                                type="button"
-                                disabled
-                                className="w-full rounded-full bg-primary px-8 py-3 font-bold text-on-primary tracking-wide opacity-40 cursor-not-allowed"
-                            >
-                                取得（準備中）
-                            </button>
+                            <DesignAcquireButton packId={pack.id} status={pack.status ?? ""} redirectPath={`/daidai-yokocho/designs/${pack.id}`} />
                         </div>
 
                         <ul className="text-xs text-gray-500 leading-relaxed list-disc pl-5 space-y-1">
-                            <li>取得すると、DaiDaiアプリの設定から、この意匠に着せ替えられるようになります。</li>
-                            <li>意匠の取得は、準備中です。</li>
+                            <li>取得した意匠は、DaiDaiアプリの設定から選べるようになります。アプリでの対応は、準備中です。</li>
+                            <li>取得した意匠は、「購入済み」の意匠の側から確認出来ます。</li>
                         </ul>
 
                         <dl className="text-sm border-t border-gray-200">

@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
+import { Check } from "lucide-react";
 import type { CreatorProfile } from "@/lib/creatorProfiles";
 import { loadThemePackPreview, type PublicThemePack, type ThemePackPreviewData } from "@/lib/themePackReview";
 import { Skeleton } from "@/components/Skeleton";
@@ -36,7 +37,7 @@ export function DesignSwatch({ data, className = "" }: { data: ThemePackPreviewD
 }
 
 // 意匠パックのカード。ぺったんのカード（StickerPackCard）と同じ作りで、詳細ページへ移る
-export default function DesignCard({ pack, creator }: { pack: PublicThemePack; creator?: CreatorProfile | null }) {
+export default function DesignCard({ pack, creator, owned = false }: { pack: PublicThemePack; creator?: CreatorProfile | null; owned?: boolean }) {
     const [data, setData] = useState<ThemePackPreviewData | null>(null);
 
     // 色の見本は、一覧に出た時に読む（pack.jsonは小さい）
@@ -55,7 +56,15 @@ export default function DesignCard({ pack, creator }: { pack: PublicThemePack; c
     return (
         <div className="group flex flex-col bg-white border border-gray-100 shadow-sm hover:shadow-xl hover:shadow-blue-300/15 transition-all duration-300 overflow-hidden rounded-2xl">
             <Link href={`/daidai-yokocho/designs/${pack.id}`} className="flex flex-col">
-                <DesignSwatch data={data} className="relative w-full aspect-[4/3] overflow-hidden transition-transform duration-500 group-hover:scale-105" />
+                <div className="relative overflow-hidden">
+                    <DesignSwatch data={data} className="w-full aspect-[4/3] transition-transform duration-500 group-hover:scale-105" />
+                    {owned && (
+                        <span className="absolute top-3 right-3 flex items-center gap-1 rounded-full bg-white/90 px-2.5 py-1 text-xs font-bold text-emerald-600 shadow-sm" aria-label="取得済み">
+                            <Check className="w-3.5 h-3.5" aria-hidden />
+                            取得済み
+                        </span>
+                    )}
+                </div>
                 <div className="px-6 pt-3 flex flex-col gap-1">
                     <span className="text-sm font-bold whitespace-nowrap text-emerald-600">無料</span>
                     <h2 className="text-base font-bold text-gray-900 group-hover:text-blue-600 transition-colors truncate">{pack.name}</h2>

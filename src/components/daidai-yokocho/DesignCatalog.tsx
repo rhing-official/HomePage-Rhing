@@ -2,7 +2,8 @@
 
 import { useEffect, useMemo, useState } from "react";
 import { getCreatorProfiles, type CreatorProfile } from "@/lib/creatorProfiles";
-import { listPublicThemePacks, type PublicThemePack } from "@/lib/themePackReview";
+import { auth, onAuthStateChanged } from "@/lib/firebaseAuth";
+import { listOwnedThemePackIds, listPublicThemePacks, type PublicThemePack } from "@/lib/themePackReview";
 import DesignCard from "./DesignCard";
 import { applyDesignFilters, type DesignFilters } from "@/lib/designFilter";
 
@@ -10,6 +11,25 @@ export default function DesignCatalog({ query, filters, onCount }: { query: stri
     const [packs, setPacks] = useState<PublicThemePack[] | null>(null);
     const [creators, setCreators] = useState<Map<string, CreatorProfile>>(new Map());
     const [failed, setFailed] = useState(false);
+    // 取得済みのid（ログイン中だけ。カードに「取得済み」を出す）
+    const [ownedIds, setOwnedIds] = useState<Set<string>>(new Set());
+
+    useEffect(() => {
+        let cancelled = false;
+        const off = onAuthStateChanged(auth, (u) => {
+            if (!u) {
+                setOwnedIds(new Set());
+                return;
+            }
+            listOwnedThemePackIds(u.uid)
+                .then((ids) => !cancelled && setOwnedIds(new Set(ids)))
+                .catch(() => {});
+        });
+        return () => {
+            cancelled = true;
+            off();
+        };
+    }, []);
 
     useEffect(() => {
         let cancelled = false;
@@ -47,7 +67,7 @@ export default function DesignCatalog({ query, filters, onCount }: { query: stri
             ) : (
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
                     {shown.map((p) => (
-                        <DesignCard key={p.id} pack={p} creator={creators.get(p.creatorId) ?? null} />
+                        <DesignCard key={p.id} pack={p} creator={creators.get(p.creatorId) ?? null} owned={ownedIds.has(p.id)} />
                     ))}
                 </div>
             )}
