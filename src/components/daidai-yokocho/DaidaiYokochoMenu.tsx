@@ -4,7 +4,7 @@ import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import { doc, getDoc } from "firebase/firestore";
 import { motion, AnimatePresence } from "framer-motion";
-import { Heart, KeyRound, LogOut, PackageCheck, PenTool, ShoppingCart, Trash2, Users } from "lucide-react";
+import { Bell, Heart, KeyRound, LogOut, PackageCheck, PenTool, ShoppingCart, Trash2, Users } from "lucide-react";
 import { db } from "@/lib/firebase";
 import { auth, onAuthStateChanged, signOut, type User } from "@/lib/firebaseAuth";
 import { useGoogleSignIn } from "@/hooks/useGoogleSignIn";
@@ -18,6 +18,9 @@ import PasskeyRecoveryDialog from "./PasskeyRecoveryDialog";
 import { usePasskeyAuth } from "@/hooks/usePasskeyAuth";
 import { useCart } from "@/components/CartProvider";
 import GoogleSignInButton from "@/components/GoogleSignInButton";
+import { formatUnreadCount } from "@/lib/notices";
+import { fetchUnreadCount } from "@/lib/noticesClient";
+import { usePathname } from "next/navigation";
 
 interface OwnProfile {
     rhingSeed: string;
@@ -124,6 +127,24 @@ export default function DaidaiYokochoMenu() {
     // ログイン済みで、プロフィールを読み込み中（呼び名・アイコンが、あとから変わってちらつくのを避ける）
     const profileLoading = !!user && authReady && !profileLoaded;
 
+    // 未読のお知らせの数。メニューの表示時と、ページを移った時に取りにいく（常時の待ち受けはしない）
+    const pathname = usePathname();
+    const [unread, setUnread] = useState(0);
+    useEffect(() => {
+        if (!user) return;
+        let cancelled = false;
+        fetchUnreadCount(user.uid)
+            .then((n) => {
+                if (!cancelled) setUnread(n);
+            })
+            .catch(() => {});
+        return () => {
+            cancelled = true;
+        };
+    }, [user, pathname]);
+    // お知らせのページを開いている間は、既読になるため0として扱う
+    const unreadLabel = user && pathname !== "/daidai-yokocho/notices" ? formatUnreadCount(unread) : null;
+
     const { count: cartCount } = useCart();
     const close = () => setOpen(false);
 
@@ -167,8 +188,11 @@ export default function DaidaiYokochoMenu() {
                             onClick={() => setOpen((o) => !o)}
                             aria-label="アカウント設定を開く"
                             aria-expanded={open}
-                            className={quickIconClass}
+                            className={`relative ${quickIconClass}`}
                         >
+                            {unreadLabel && (
+                                <span aria-label="未読のお知らせが有ります" className="pointer-events-none absolute top-2 right-2 w-2.5 h-2.5 rounded-full bg-red-500 border border-white" />
+                            )}
                             {profileLoading ? (
                                 <Skeleton className="w-9 h-9 rounded-full" />
                             ) : displayProfile?.iconUrl ? (
@@ -317,6 +341,15 @@ export default function DaidaiYokochoMenu() {
 
                             {user && !resolver && (
                                 <div className="flex flex-col gap-0.5 border-t border-gray-200/70 pt-2">
+                                    <Link href="/daidai-yokocho/notices" onClick={close} className={menuItemClass}>
+                                        <Bell className="w-4 h-4 shrink-0" />
+                                        <span className="flex-1">お知らせ</span>
+                                        {unreadLabel && (
+                                            <span className="min-w-5 h-5 px-1 rounded-full bg-red-500 text-white text-[10px] font-bold flex items-center justify-center">
+                                                {unreadLabel}
+                                            </span>
+                                        )}
+                                    </Link>
                                     <Link href="/daidai-yokocho/owned" onClick={close} className={menuItemClass}>
                                         <PackageCheck className="w-4 h-4 shrink-0" />
                                         購入済み

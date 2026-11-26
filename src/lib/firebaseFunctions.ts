@@ -192,3 +192,9 @@ export async function finishPasskeyRecovery(data: {
     const result = await httpsCallable(functions, "finishPasskeyRecovery")(data);
     return result.data as { customToken: string };
 }
+
+// お知らせを既読にする（users/{uid}.noticesReadAt を、サーバーが現在時刻に更新する）。
+// TODO: サーバー側の markNoticesRead は未実装（文書/素材パック_サーバー側の変更案.md の「5. 通知」）。
+export async function markNoticesRead(): Promise<void> {
+    await httpsCallable(functions, "markNoticesRead")({});
+}
