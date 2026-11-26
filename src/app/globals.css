@@ -1,5 +1,31 @@
 @import "tailwindcss";
 
+/* 折りたたみ端末（展開した状態）用のバリアント。
+   fold: 展開した折りたたみ端末・タブレットの縦長でない画面（幅600〜1023px、縦横比が5:4以下）、
+         または、ヒンジで画面が左右2つに分かれる端末（Viewport Segments）。
+   サイドメニューを、ドロワーではなく、左に常時表示する場所で使う（Header.tsx、layout.tsx） */
+@custom-variant fold {
+    @media (min-width: 600px) and (max-width: 1023.98px) and (max-aspect-ratio: 5/4) {
+        @slot;
+    }
+    @media (horizontal-viewport-segments: 2) {
+        @slot;
+    }
+}
+
+:root {
+    /* サイドメニューの幅と、ページ本体の開始位置。ヒンジで分かれる端末では、左の画面にメニューを置き、右の画面から本文を始める */
+    --fold-menu-width: 14rem;
+    --fold-content-start: 14rem;
+}
+
+@media (horizontal-viewport-segments: 2) {
+    :root {
+        --fold-menu-width: env(viewport-segment-width 0 0, 14rem);
+        --fold-content-start: env(viewport-segment-left 1 0, 14rem);
+    }
+}
+
 @theme {
     --font-sans: var(--font-kiwi-maru), sans-serif;
     --font-serif: var(--font-kiwi-maru), serif;

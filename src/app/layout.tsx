@@ -49,7 +49,7 @@ export default function RootLayout({
               
               ※bodyの className（Googleフォント等の設定等）は、既にお使いのものがあればそのまま残して適用してください。
             */}
-            <body className="min-h-screen flex flex-col justify-between bg-surface text-on-surface font-sans" suppressHydrationWarning>
+            <body className="min-h-screen flex flex-col justify-between bg-surface text-on-surface font-sans fold:pl-[var(--fold-content-start)]" suppressHydrationWarning>
                 {/* Google Identity Services（daidai横丁のGoogleログインボタン用） */}
                 <Script src="https://accounts.google.com/gsi/client" strategy="afterInteractive" />
 
@@ -63,7 +63,7 @@ export default function RootLayout({
 
                 {/* メインコンテンツエリア */}
                 {/* ヘッダー（ロゴ・ナビ）がfixed/absoluteでドキュメントの流れから外れているため、ここで上余白を確保する */}
-                <main className="flex-grow flex flex-col pt-28 lg:pt-40">
+                <main className="flex-grow flex flex-col pt-28 lg:pt-40 fold:pt-12">
                     {children}
                 </main>
 

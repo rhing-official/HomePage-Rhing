@@ -2,6 +2,7 @@
 import { useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
+import { usePathname } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
 
 const NavLink = ({ href, children, onClick }: { href: string; children: React.ReactNode; onClick?: () => void }) => (
@@ -11,13 +12,57 @@ const NavLink = ({ href, children, onClick }: { href: string; children: React.Re
     </Link>
 );
 
+const navItems = [
+    { href: "/", label: "TOP" },
+    { href: "/about", label: "ABOUT" },
+    { href: "/services", label: "SERVICES" },
+    { href: "/daidai-yokocho", label: "daidai横丁" },
+    { href: "/donate", label: "DONATE" },
+    { href: "/financial", label: "FINANCIAL" },
+    { href: "https://note.com/rhing_official/all", label: "NEWS" },
+];
+
+// 折りたたみ端末を広げた時（foldバリアント、globals.css）の、左に常時表示するサイドメニュー。
+// この時は、右上のハンバーガー・ドロワー・左上のロゴは出さず、ロゴもここに入れる。
+function FoldSideMenu() {
+    const pathname = usePathname();
+    return (
+        <nav
+            aria-label="サイドメニュー"
+            className="hidden fold:flex fixed top-0 left-0 z-50 h-full w-[var(--fold-menu-width)] flex-col gap-2 overflow-y-auto bg-white/80 backdrop-blur-md border-r border-white/40 shadow-elevation-3 px-4 py-8"
+        >
+            <Link href="/" className="mb-6 block px-2">
+                <Image src="/Rhing logo.svg" alt="Rhing" width={240} height={80} className="h-12 w-auto aspect-[3/1] object-contain" />
+            </Link>
+            {navItems.map((item) => {
+                const current = item.href === "/" ? pathname === "/" : pathname.startsWith(item.href);
+                return (
+                    <Link
+                        key={item.href}
+                        href={item.href}
+                        aria-current={current ? "page" : undefined}
+                        className={`rounded-full px-4 py-3 font-bold transition-colors ${
+                            current ? "bg-primary-container text-on-primary-container" : "text-on-surface hover:bg-primary-container/60 hover:text-primary"
+                        }`}
+                    >
+                        {item.label}
+                    </Link>
+                );
+            })}
+        </nav>
+    );
+}
+
 export default function Header() {
     const [isOpen, setIsOpen] = useState(false);
 
     return (
         <>
+            {/* 折りたたみ端末を広げた時の、左のサイドメニュー */}
+            <FoldSideMenu />
+
             {/* ロゴエリア */}
-            <div className="absolute top-0 left-0 p-6 lg:p-8 z-50">
+            <div className="absolute top-0 left-0 p-6 lg:p-8 z-50 fold:hidden">
                 <div className="pointer-events-auto">
                     <Link href="/" className="inline-block">
                         <Image
@@ -33,7 +78,7 @@ export default function Header() {
             </div>
 
             {/* ナビゲーションエリア */}
-            <header className="fixed top-6 right-6 lg:right-8 z-50 pointer-events-none">
+            <header className="fixed top-6 right-6 lg:right-8 z-50 pointer-events-none fold:hidden">
                 {/*
                   🌟 変更：PC用のナビゲーションバーを美しい半透明のガラスデザインに変更
                   - bg-white/80, backdrop-blur-md, border-white/80
