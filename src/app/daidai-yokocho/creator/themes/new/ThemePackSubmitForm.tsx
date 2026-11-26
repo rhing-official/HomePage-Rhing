@@ -4,7 +4,10 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { AlertTriangle, CheckCircle2, FileArchive, Palette, XCircle } from "lucide-react";
+import { FirebaseError } from "firebase/app";
 import { auth, onAuthStateChanged, type User } from "@/lib/firebaseAuth";
+import { submitThemePack } from "@/lib/firebaseFunctions";
+import { uploadThemePackSubmission } from "@/lib/firebaseStorage";
 import { validateThemePackZip, type ValidationResult } from "@/lib/themePack/validate";
 import { COLOR_KEYS, COLOR_LABELS, THEME_PACK_LIMITS } from "@/lib/themePack/spec";
 import { describeContrast, MIN_CONTRAST_RATIO } from "@/lib/themePack/contrast";
@@ -27,6 +30,9 @@ export default function ThemePackSubmitForm() {
     const [dragging, setDragging] = useState(false);
     const [rights, setRights] = useState(false);
     const [terms, setTerms] = useState(false);
+    const [submitting, setSubmitting] = useState(false);
+    const [submitError, setSubmitError] = useState<string | null>(null);
+    const [submitted, setSubmitted] = useState(false);
     const inputRef = useRef<HTMLInputElement>(null);
 
     useEffect(
@@ -72,7 +78,29 @@ export default function ThemePackSubmitForm() {
     if (!ready || !user) return null;
 
     const result = checked?.result;
-    const canSubmit = !!result?.ok && rights && terms;
+    const canSubmit = !!result?.ok && !!result.files && rights && terms && !submitting && !submitted;
+
+    // 検査に通った素材を、本人の保存先へ置き、提出する。サーバーが、もう一度検査する
+    const submit = async () => {
+        if (!canSubmit || !result?.files || !user) return;
+        setSubmitting(true);
+        setSubmitError(null);
+        try {
+            const submissionId = crypto.randomUUID();
+            await uploadThemePackSubmission(user.uid, submissionId, result.files);
+            await submitThemePack({ submissionId, rightsAccepted: true });
+            setSubmitted(true);
+        } catch (err) {
+            console.error("素材パックを送信できませんでした:", err);
+            setSubmitError(
+                err instanceof FirebaseError && err.code === "functions/resource-exhausted"
+                    ? "投稿できる数の上限に達しています。"
+                    : "送信できませんでした。時間をおいて、もう一度お試しください。",
+            );
+        } finally {
+            setSubmitting(false);
+        }
+    };
 
     return (
         <div className="w-full pb-24">
@@ -180,16 +208,25 @@ export default function ThemePackSubmitForm() {
                 <div className="mt-8 flex flex-col items-start gap-3">
                     <button
                         type="button"
-                        disabled
-                        aria-disabled
-                        title={canSubmit ? "投稿の送信は、次の手順で追加します" : undefined}
-                        className="rounded-full bg-primary px-8 py-3 font-bold text-on-primary tracking-wide opacity-40 cursor-not-allowed"
+                        onClick={submit}
+                        disabled={!canSubmit}
+                        className="rounded-full bg-primary px-8 py-3 font-bold text-on-primary tracking-wide transition disabled:opacity-40 disabled:cursor-not-allowed"
                     >
-                        投稿する
+                        {submitting ? "送信中…" : submitted ? "提出しました" : "投稿する"}
                     </button>
-                    <p className="text-sm text-gray-500 leading-relaxed">
-                        投稿の送信は、まだ使えません。次の手順で追加します。{canSubmit ? "確認と同意は、済んでいます。" : "確認に通り、2つの同意にチェックを入れると、送れるようになります。"}
-                    </p>
+                    {submitted ? (
+                        <p className="text-sm text-green-700 leading-relaxed">
+                            提出しました。運営が審査し、結果はお知らせでお伝えします。
+                        </p>
+                    ) : submitError ? (
+                        <p className="text-sm text-red-600 leading-relaxed">{submitError}</p>
+                    ) : (
+                        <p className="text-sm text-gray-500 leading-relaxed">
+                            {canSubmit
+                                ? "確認と同意は、済んでいます。送ると、運営の審査に進みます。"
+                                : "確認に通り、2つの同意にチェックを入れると、送れるようになります。"}
+                        </p>
+                    )}
                 </div>
             </div>
         </div>

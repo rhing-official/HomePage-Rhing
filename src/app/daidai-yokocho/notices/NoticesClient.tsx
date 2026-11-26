@@ -4,9 +4,8 @@ import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { Bell } from "lucide-react";
 import { auth, onAuthStateChanged, type User } from "@/lib/firebaseAuth";
-import { markNoticesRead } from "@/lib/firebaseFunctions";
 import { demoNotices, noticeKindMeta, type Notice, type NoticeTone } from "@/lib/notices";
-import { fetchNotices } from "@/lib/noticesClient";
+import { fetchNotices, markNoticesRead } from "@/lib/noticesClient";
 
 const NOTICES_PATH = "/daidai-yokocho/notices";
 
@@ -49,7 +48,7 @@ export default function NoticesClient() {
                 if (cancelled) return;
                 setNotices(list);
                 // 開いた時に既読にする。失敗しても画面には出さない（バッジが残るだけ）
-                if (!demo) markNoticesRead().catch(() => {});
+                if (!demo) markNoticesRead(user.uid).catch((err) => console.error("既読にできませんでした:", err));
             })
             .catch((err) => {
                 console.error("お知らせを読み込めませんでした:", err);

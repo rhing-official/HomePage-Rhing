@@ -1,6 +1,6 @@
 "use client";
 
-import { collection, doc, getCountFromServer, getDoc, getDocs, limit, orderBy, query, where, Timestamp } from "firebase/firestore";
+import { collection, doc, getCountFromServer, getDoc, getDocs, limit, orderBy, query, serverTimestamp, updateDoc, where, Timestamp } from "firebase/firestore";
 import { db } from "@/lib/firebase";
 import { NOTICES_PAGE_SIZE, parseNotice, type Notice } from "@/lib/notices";
 
@@ -28,4 +28,9 @@ export async function fetchNotices(uid: string): Promise<Notice[]> {
         const n = parseNotice(d.id, d.data());
         return n ? [n] : [];
     });
+}
+
+// 既読にする。本人は自分のusers/{uid}を更新できるため（既存のルール）、画面から直接書く
+export async function markNoticesRead(uid: string): Promise<void> {
+    await updateDoc(doc(db, "users", uid), { noticesReadAt: serverTimestamp() });
 }

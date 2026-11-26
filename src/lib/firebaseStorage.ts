@@ -43,3 +43,29 @@ export async function uploadContactAttachment(file: File): Promise<string> {
     await uploadBytes(storageRef, file);
     return getDownloadURL(storageRef);
 }
+
+const THEME_PACK_CONTENT_TYPES: Record<string, string> = {
+    json: "application/json",
+    png: "image/png",
+    webp: "image/webp",
+    jpg: "image/jpeg",
+    jpeg: "image/jpeg",
+};
+
+// storage.rulesのthemePackSubmissions/{creatorId}/{submissionId}/...と対応（サーバー側の変更案の2）。
+// 検査に通った、pack.jsonと背景画像を、そのまま置く。作成は本人のみ。
+// 返す値は、置いた保存先の接頭辞（URLではなく、パスで持つ方針）。
+export async function uploadThemePackSubmission(
+    uid: string,
+    submissionId: string,
+    files: Map<string, Uint8Array>,
+): Promise<string> {
+    const prefix = `themePackSubmissions/${uid}/${submissionId}`;
+    for (const [name, bytes] of files) {
+        const ext = name.slice(name.lastIndexOf(".") + 1).toLowerCase();
+        const contentType = THEME_PACK_CONTENT_TYPES[ext];
+        if (!contentType) throw new Error(`送れない形式のファイルです: ${name}`);
+        await uploadBytes(ref(storage, `${prefix}/${name}`), bytes, { contentType });
+    }
+    return prefix;
+}

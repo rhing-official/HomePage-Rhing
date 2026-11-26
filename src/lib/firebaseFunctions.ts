@@ -193,8 +193,12 @@ export async function finishPasskeyRecovery(data: {
     return result.data as { customToken: string };
 }
 
-// お知らせを既読にする（users/{uid}.noticesReadAt を、サーバーが現在時刻に更新する）。
-// TODO: サーバー側の markNoticesRead は未実装（文書/素材パック_サーバー側の変更案.md の「5. 通知」）。
-export async function markNoticesRead(): Promise<void> {
-    await httpsCallable(functions, "markNoticesRead")({});
+// 素材パックの投稿を提出する。素材は、先にStorageの themePackSubmissions/{uid}/{submissionId}/ へ置いておく。
+// サーバーが素材を再検査し、投稿数（1人5件）を確かめる。TODO: サーバー側は未実装（文書/素材パック_サーバー側の変更案.md の3）。
+export async function submitThemePack(data: {
+    submissionId: string;
+    rightsAccepted: true;
+}): Promise<{ submissionId: string; packId: string; version: number }> {
+    const result = await httpsCallable(functions, "submitThemePack")(data);
+    return result.data as { submissionId: string; packId: string; version: number };
 }

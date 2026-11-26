@@ -16,6 +16,8 @@ export type ValidationResult = {
     contrast?: ContrastReport;
     /** 背景画像の情報（あれば） */
     background?: { file: string; width: number; height: number; bytes: number };
+    /** 展開したファイル（送信の時に、そのまま保存先へ置く）。キーは、フォルダを除いたファイル名 */
+    files?: Map<string, Uint8Array>;
 };
 
 const PACK_FILE = "pack.json";
@@ -39,6 +41,8 @@ export function validateThemePackZip(data: Uint8Array): ValidationResult {
     result.errors.push(...unzip.errors);
     if (unzip.errors.length > 0 && unzip.files.size === 0) return finish(result);
     if (unzip.ignored.length > 0) result.warnings.push("macOSが付けた不要なファイル（__MACOSXや.DS_Store）は、無視しました。");
+
+    result.files = unzip.files;
 
     // pack.json
     const packBytes = unzip.files.get(PACK_FILE);
