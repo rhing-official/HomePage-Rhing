@@ -4,7 +4,7 @@ import { jpegBytes, makeZip, packJson, pngBytes, text, webpVp8xBytes } from "./t
 
 const goodFiles = () => ({ "pack.json": text(packJson()), "background.png": pngBytes(1080, 1920) });
 
-describe("素材パックのzipの検査", () => {
+describe("意匠パックのzipの検査", () => {
     it("正常なパック（直下に置いたもの）は、合格", () => {
         const r = validateThemePackZip(makeZip(goodFiles()));
         expect(r.errors).toEqual([]);

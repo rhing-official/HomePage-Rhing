@@ -10,7 +10,8 @@ export const metadata: Metadata = {
     description: "DaiDaiで使えるぺったんのストア、daidai横丁。",
 };
 
-export default async function DaidaiYokochoPage() {
+export default async function DaidaiYokochoPage({ searchParams }: { searchParams: Promise<{ kind?: string }> }) {
+    const { kind } = await searchParams;
     const packs = await getAllStickerPacks();
 
     return (
@@ -26,7 +27,7 @@ export default async function DaidaiYokochoPage() {
 
             <IntroBanner />
 
-            <CatalogClient packs={packs} />
+            <CatalogClient packs={packs} initialKind={kind === "design" ? "design" : "petan"} />
         </div>
     );
 }

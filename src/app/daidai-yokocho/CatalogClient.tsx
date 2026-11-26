@@ -6,9 +6,23 @@ import { getCreatorProfiles, type CreatorProfile } from "@/lib/creatorProfiles";
 import StickerPackCard from "@/components/StickerPackCard";
 import BulkAddToCartButton from "@/components/BulkAddToCartButton";
 import PackFilterPanel from "@/components/PackFilterPanel";
+import KindSwitch, { type CatalogKind } from "@/components/daidai-yokocho/KindSwitch";
+import DesignCatalog from "@/components/daidai-yokocho/DesignCatalog";
 import { applyPackFilters, EMPTY_FILTERS, type PackFilters } from "@/lib/packFilter";
 
-export default function CatalogClient({ packs }: { packs: StickerPack[] }) {
+export default function CatalogClient({ packs, initialKind = "petan" }: { packs: StickerPack[]; initialKind?: CatalogKind }) {
+    const [kind, setKind] = useState<CatalogKind>(initialKind);
+    // 意匠の側は、初めて開いた時に読み込み、以後は表示を隠すだけにする（切り替えるたびに読み込み直さない）
+    const [designOpened, setDesignOpened] = useState(initialKind === "design");
+    // 切り替えを、URLにも残す（?kind=design）。再読み込みや共有で、同じ側が開く。ページの再取得はしない
+    const switchKind = (next: CatalogKind) => {
+        if (next === "design") setDesignOpened(true);
+        setKind(next);
+        const url = new URL(window.location.href);
+        if (next === "design") url.searchParams.set("kind", "design");
+        else url.searchParams.delete("kind");
+        window.history.replaceState(null, "", url);
+    };
     const [creatorProfiles, setCreatorProfiles] = useState<Map<string, CreatorProfile> | null>(null);
     const [query, setQuery] = useState("");
     const [filters, setFilters] = useState<PackFilters>(EMPTY_FILTERS);
@@ -29,6 +43,15 @@ export default function CatalogClient({ packs }: { packs: StickerPack[] }) {
 
     return (
         <div className="container mx-auto px-6 max-w-6xl">
+            <KindSwitch value={kind} onChange={switchKind} />
+
+            {designOpened && (
+                <div hidden={kind !== "design"}>
+                    <DesignCatalog />
+                </div>
+            )}
+            <div hidden={kind !== "petan"}>
+                <>
             <div className="max-w-2xl mx-auto mb-10 flex flex-col gap-4">
                 <input
                     value={query}
@@ -69,6 +92,8 @@ export default function CatalogClient({ packs }: { packs: StickerPack[] }) {
                     ))}
                 </div>
             )}
+                </>
+            </div>
         </div>
     );
 }

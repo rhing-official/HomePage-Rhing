@@ -193,7 +193,7 @@ export async function finishPasskeyRecovery(data: {
     return result.data as { customToken: string };
 }
 
-// 素材パックの投稿を提出する。素材は、先にStorageの themePackSubmissions/{uid}/{submissionId}/ へ置いておく。
+// 意匠パックの投稿を提出する。素材は、先にStorageの themePackSubmissions/{uid}/{submissionId}/ へ置いておく。
 // サーバーが素材を再検査し、投稿数（1人5件）を確かめる。TODO: サーバー側は未実装（文書/素材パック_サーバー側の変更案.md の3）。
 export async function submitThemePack(data: {
     submissionId: string;
@@ -201,4 +201,22 @@ export async function submitThemePack(data: {
 }): Promise<{ submissionId: string; packId: string; version: number }> {
     const result = await httpsCallable(functions, "submitThemePack")(data);
     return result.data as { submissionId: string; packId: string; version: number };
+}
+
+// 意匠パックの審査（管理者のみ）。DaiDaiリポジトリのfunctions/src/themePackReview.ts。
+// 結果は、出品者（配信停止は取得した人にも）へ、お知らせとして書かれる。
+export async function approveThemePack(data: { submissionId: string }): Promise<{ changed: boolean }> {
+    const result = await httpsCallable<typeof data, { changed?: boolean }>(functions, "approveThemePack")(data);
+    return { changed: result.data?.changed !== false };
+}
+
+// 差し戻し。理由は必須（500文字以内）で、出品者のお知らせにだけ入る
+export async function rejectThemePack(data: { submissionId: string; reason: string }): Promise<void> {
+    await httpsCallable(functions, "rejectThemePack")(data);
+}
+
+// 配信停止（権利侵害など）。公開中のパックを停止し、出品者と取得した人へお知らせが届く。理由は出品者にだけ見える
+export async function suspendThemePack(data: { packId: string; reason: string }): Promise<{ notifiedOwners: number }> {
+    const result = await httpsCallable<typeof data, { notifiedOwners?: number }>(functions, "suspendThemePack")(data);
+    return { notifiedOwners: result.data?.notifiedOwners ?? 0 };
 }

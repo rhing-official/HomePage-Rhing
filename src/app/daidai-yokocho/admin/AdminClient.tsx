@@ -2,6 +2,8 @@
 
 import { useCallback, useEffect, useState } from "react";
 import Link from "next/link";
+import KindSwitch, { type CatalogKind } from "@/components/daidai-yokocho/KindSwitch";
+import ThemePackReviewPanel from "@/components/daidai-yokocho/ThemePackReviewPanel";
 import NotFound from "@/app/not-found";
 import { ListRowSkeleton } from "@/components/Skeleton";
 import { auth, onAuthStateChanged, type User } from "@/lib/firebaseAuth";
@@ -227,6 +229,14 @@ function Section({ title, hint, children }: { title: string; hint?: string; chil
 }
 
 export default function AdminClient() {
+    // ぺったん（パックの削除の申請）と意匠（意匠パックの審査）の切り替え。URLは同じ
+    const [kind, setKind] = useState<CatalogKind>("petan");
+    // 意匠の側は、初めて開いた時に読み込み、以後は表示を隠すだけにする（切り替えるたびに読み込み直さない）
+    const [designOpened, setDesignOpened] = useState(false);
+    const switchKind = (next: CatalogKind) => {
+        if (next === "design") setDesignOpened(true);
+        setKind(next);
+    };
     const [user, setUser] = useState<User | null>(null);
     const [access, setAccess] = useState<AccessState>("loading");
     const [requests, setRequests] = useState<PackDeletionRequest[]>([]);
@@ -316,22 +326,40 @@ export default function AdminClient() {
         <div className="container mx-auto px-6 max-w-3xl pb-24 flex flex-col gap-10">
             <div>
                 <h1 className="text-2xl font-bold text-gray-900 tracking-wider">管理画面</h1>
-                <p className="text-sm text-gray-500 mt-1">daidai横丁のパックの削除の申請を、確認して承認・却下します。</p>
+                {/* 2つの説明を、同じ場所に重ねる。高さが長い方に揃うので、切り替えてもスイッチの位置が動かない */}
+                <div className="mt-1 grid text-sm text-gray-500">
+                    <p className={`col-start-1 row-start-1 ${kind === "petan" ? "" : "invisible"}`} aria-hidden={kind !== "petan"}>
+                        daidai横丁のぺったんパックの削除の申請を、確認して承認・却下します。
+                    </p>
+                    <p className={`col-start-1 row-start-1 ${kind === "design" ? "" : "invisible"}`} aria-hidden={kind !== "design"}>
+                        投稿された意匠パックの素材を確認して、承認・差し戻し・配信停止を行います。結果は、出品者のお知らせに届きます。
+                    </p>
+                </div>
             </div>
+            <KindSwitch value={kind} onChange={switchKind} className="-mt-4" />
             <p className="text-xs text-gray-400 -mt-6">
                 ログイン中: {user.email ?? "（メールアドレスなし）"}（{user.uid.slice(0, 8)}）
             </p>
-            {loadError && <p className="text-sm text-red-600" role="alert">{loadError}</p>}
-            {slow && !loaded && !loadError && (
-                <p className="text-sm text-amber-700" role="status">
-                    Firestoreに接続出来ていません。VPN・ブラウザの拡張機能（広告ブロッカー）・ネットワークを確認してください。
-                </p>
+            {designOpened && (
+                <div hidden={kind !== "design"}>
+                    <ThemePackReviewPanel />
+                </div>
             )}
-            <Section title={`申請中${count(pending.length)}`} hint="承認すると、指定した日時に完全に削除され、入手した人には、その前にお知らせが届きます。日時は、今から24時間以上先にしてください。">
-                {renderRows(pending, "申請中のパックは有りません")}
-            </Section>
-            <Section title={`削除予定${count(scheduled.length)}`}>{renderRows(scheduled, "削除が予定されているパックは有りません")}</Section>
-            <Section title="処理済み（直近50件）">{renderRows(history, "処理済みの申請は有りません")}</Section>
+            <div hidden={kind !== "petan"} className="flex flex-col gap-10">
+                <>
+                {loadError && <p className="text-sm text-red-600" role="alert">{loadError}</p>}
+                {slow && !loaded && !loadError && (
+                    <p className="text-sm text-amber-700" role="status">
+                        Firestoreに接続出来ていません。VPN・ブラウザの拡張機能（広告ブロッカー）・ネットワークを確認してください。
+                    </p>
+                )}
+                <Section title={`申請中${count(pending.length)}`} hint="承認すると、指定した日時に完全に削除され、入手した人には、その前にお知らせが届きます。日時は、今から24時間以上先にしてください。">
+                    {renderRows(pending, "申請中のパックは有りません")}
+                </Section>
+                <Section title={`削除予定${count(scheduled.length)}`}>{renderRows(scheduled, "削除が予定されているパックは有りません")}</Section>
+                <Section title="処理済み（直近50件）">{renderRows(history, "処理済みの申請は有りません")}</Section>
+                </>
+            </div>
         </div>
     );
 }

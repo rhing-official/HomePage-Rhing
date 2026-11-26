@@ -11,7 +11,7 @@ function ok(source: string) {
     return r;
 }
 
-describe("素材パックの読み取り", () => {
+describe("意匠パックの読み取り", () => {
     it("正常なパックを読める", () => {
         const { pack, warnings } = ok(
             json({
