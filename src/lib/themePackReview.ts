@@ -103,6 +103,8 @@ export interface PublicThemePack {
     brightness: string;
     assetPath: string;
     approvedAt: Date | null;
+    /** 取得した人の数（公開用の文書が持つ） */
+    ownerCount?: number;
 }
 
 export async function listPublicThemePacks(): Promise<PublicThemePack[]> {
@@ -157,6 +159,7 @@ export async function getThemePack(id: string): Promise<PublicThemePack | null> 
         brightness: String(data.brightness ?? "both"),
         assetPath: String(data.assetPath ?? ""),
         approvedAt: at && typeof at.toDate === "function" ? at.toDate() : null,
+        ownerCount: typeof data.ownerCount === "number" ? data.ownerCount : undefined,
     };
 }
 
@@ -198,4 +201,23 @@ export async function listMyThemePackSubmissions(uid: string): Promise<ThemePack
 export async function isThemePackOwned(uid: string, packId: string): Promise<boolean> {
     const snap = await getDoc(doc(db, "users", uid, "ownedThemePacks", packId));
     return snap.exists();
+}
+
+// あるクリエイターの、公開中の意匠パック（クリエイターのページ用）。新しく公開された順
+export async function listPublicThemePacksByCreator(creatorId: string): Promise<PublicThemePack[]> {
+    const snap = await getDocs(query(collection(db, "themePacks"), where("creatorId", "==", creatorId), where("status", "==", "approved"), limit(100)));
+    const list = snap.docs.map((d) => {
+        const data = d.data();
+        const at = data.approvedAt as { toDate?: () => Date } | undefined;
+        return {
+            id: d.id,
+            name: String(data.name ?? ""),
+            creatorId: String(data.creatorId ?? ""),
+            version: Number(data.version ?? 0),
+            brightness: String(data.brightness ?? "both"),
+            assetPath: String(data.assetPath ?? ""),
+            approvedAt: at && typeof at.toDate === "function" ? at.toDate() : null,
+        };
+    });
+    return list.filter((p) => p.name && p.assetPath).sort((a, b) => (b.approvedAt?.getTime() ?? 0) - (a.approvedAt?.getTime() ?? 0));
 }

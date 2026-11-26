@@ -7,10 +7,15 @@ import { applyPackFilters, EMPTY_FILTERS, type PackFilters } from "@/lib/packFil
 import StickerPackCard from "@/components/StickerPackCard";
 import BulkAddToCartButton from "@/components/BulkAddToCartButton";
 import PackFilterPanel from "@/components/PackFilterPanel";
+import KindSwitch, { type CatalogKind } from "@/components/daidai-yokocho/KindSwitch";
+import CreatorDesigns from "@/components/daidai-yokocho/CreatorDesigns";
 
 // クリエイターの出品パック。パック名・タグと価格で絞り込める。
 // 「全てカートに追加」は、画面に表示されているパック全てが対象（無料のみにしたいときは、先に絞り込む）
 export default function CreatorPacks({ packs, creator }: { packs: StickerPack[]; creator: CreatorProfile }) {
+    // ぺったんと意匠の切り替え。意匠の側は、初めて開いた時に読み込み、以後は隠すだけにする
+    const [kind, setKind] = useState<CatalogKind>("petan");
+    const [designOpened, setDesignOpened] = useState(false);
     const [query, setQuery] = useState("");
     const [filters, setFilters] = useState<PackFilters>(EMPTY_FILTERS);
 
@@ -22,6 +27,20 @@ export default function CreatorPacks({ packs, creator }: { packs: StickerPack[];
 
     return (
         <>
+            <KindSwitch
+                value={kind}
+                onChange={(next) => {
+                    if (next === "design") setDesignOpened(true);
+                    setKind(next);
+                }}
+                className="mb-10"
+            />
+            {designOpened && (
+                <div hidden={kind !== "design"}>
+                    <CreatorDesigns creator={creator} />
+                </div>
+            )}
+            <div hidden={kind !== "petan"}>
             <div className="mb-6 flex flex-wrap items-center justify-between gap-4">
                 <h2 className="text-lg font-bold text-gray-900">出品パック</h2>
                 {filtered.length > 0 && (
@@ -61,6 +80,7 @@ export default function CreatorPacks({ packs, creator }: { packs: StickerPack[];
                     )}
                 </>
             )}
+            </div>
         </>
     );
 }

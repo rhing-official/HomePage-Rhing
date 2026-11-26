@@ -2,34 +2,76 @@
 
 import { useCallback, useEffect, useState } from "react";
 import Link from "next/link";
+import { PackagePlus } from "lucide-react";
 import { withdrawThemePack } from "@/lib/firebaseFunctions";
-import { listMyThemePackSubmissions, submissionStatusLabel, type ThemePackSubmission } from "@/lib/themePackReview";
+import {
+    getThemePack,
+    listMyThemePackSubmissions,
+    loadThemePackPreview,
+    submissionStatusLabel,
+    type ThemePackPreviewData,
+    type ThemePackSubmission,
+} from "@/lib/themePackReview";
+import { DesignSwatch } from "./DesignCard";
 
-const STATUS_CLASS: Record<string, string> = {
-    submitted: "bg-blue-100 text-blue-800",
-    inReview: "bg-blue-100 text-blue-800",
-    approved: "bg-green-100 text-green-800",
+// 絞り込み（ぺったんの「作成済みのパック」の、公開中・下書きの絞り込みに揃える）
+type StatusFilter = "all" | "waiting" | "approved" | "rejected" | "ended";
+const FILTER_OPTIONS: { value: StatusFilter; label: string }[] = [
+    { value: "all", label: "全て" },
+    { value: "waiting", label: "審査待ち" },
+    { value: "approved", label: "公開中" },
+    { value: "rejected", label: "差し戻し" },
+    { value: "ended", label: "取り下げ・停止" },
+];
+
+function filterOf(status: string): StatusFilter {
+    if (status === "submitted" || status === "inReview") return "waiting";
+    if (status === "approved") return "approved";
+    if (status === "rejected") return "rejected";
+    return "ended";
+}
+
+const BADGE_CLASS: Record<string, string> = {
+    approved: "bg-primary text-on-primary",
+    submitted: "bg-primary-container text-on-primary-container",
+    inReview: "bg-primary-container text-on-primary-container",
     rejected: "bg-amber-100 text-amber-800",
     withdrawn: "bg-gray-100 text-gray-600",
     suspended: "bg-red-100 text-red-700",
 };
 
-function formatDate(d: Date | null): string {
-    return d ? d.toLocaleString("ja-JP", { year: "numeric", month: "numeric", day: "numeric", hour: "2-digit", minute: "2-digit" }) : "";
-}
-
 function Row({ sub, canWithdraw, onChanged }: { sub: ThemePackSubmission; canWithdraw: boolean; onChanged: () => void }) {
-    const [confirming, setConfirming] = useState(false);
+    const [data, setData] = useState<ThemePackPreviewData | null>(null);
+    const [ownerCount, setOwnerCount] = useState<number | null>(null);
     const [busy, setBusy] = useState(false);
     const [error, setError] = useState<string | null>(null);
     const title = sub.name ?? sub.packId.split("__").pop() ?? sub.packId;
+    const published = sub.status === "approved";
+
+    useEffect(() => {
+        let cancelled = false;
+        loadThemePackPreview(sub.assetPath)
+            .then((d) => !cancelled && setData(d))
+            .catch(() => {});
+        if (published) {
+            getThemePack(sub.packId)
+                .then((p) => {
+                    // 利用者数は、公開用の文書（themePacks）にだけ有る
+                    if (!cancelled && p?.ownerCount !== undefined) setOwnerCount(p.ownerCount);
+                })
+                .catch(() => {});
+        }
+        return () => {
+            cancelled = true;
+        };
+    }, [sub.assetPath, sub.packId, published]);
 
     const withdraw = async () => {
+        if (!window.confirm(`『${title}』を取り下げますか？新しく取得できなくなります。取得済みの方は、使い続けられます。`)) return;
         setBusy(true);
         setError(null);
         try {
             await withdrawThemePack({ packId: sub.packId });
-            setConfirming(false);
             onChanged();
         } catch (err) {
             setError(err instanceof Error ? err.message : "取り下げに失敗しました");
@@ -39,52 +81,59 @@ function Row({ sub, canWithdraw, onChanged }: { sub: ThemePackSubmission; canWit
     };
 
     return (
-        <li className="bg-white/40 backdrop-blur-md border border-white/80 shadow-sm rounded-2xl p-5 flex flex-col gap-3 text-left">
-            <div className="flex flex-wrap items-baseline gap-x-3 gap-y-1">
-                {sub.status === "approved" ? (
-                    <Link href={`/daidai-yokocho/designs/${sub.packId}`} className="font-bold text-gray-900 hover:text-blue-600 transition-colors">
-                        {title}
-                    </Link>
-                ) : (
-                    <p className="font-bold text-gray-900">{title}</p>
-                )}
-                <span className={`text-xs font-bold px-2.5 py-1 rounded-full ${STATUS_CLASS[sub.status] ?? "bg-gray-100 text-gray-600"}`}>
-                    {submissionStatusLabel(sub.status)}
-                </span>
-                <span className="text-xs text-gray-500">版{sub.version}</span>
-                <time className="text-xs text-gray-400">{formatDate(sub.createdAt)}</time>
-            </div>
-            {sub.status === "rejected" && sub.decisionNote && <p className="text-sm text-amber-800">差し戻しの理由: {sub.decisionNote}</p>}
-            {sub.status === "suspended" && sub.decisionNote && <p className="text-sm text-red-700">配信停止の理由: {sub.decisionNote}</p>}
-            {canWithdraw && (
-                <div className="flex flex-col gap-2 pt-2 border-t border-white/60">
-                    {confirming ? (
-                        <div className="flex flex-wrap items-center gap-3 text-sm">
-                            <span className="text-gray-700">取り下げますか？ 新しく取得できなくなります。取得済みの方は、使い続けられます。</span>
-                            <button type="button" disabled={busy} onClick={withdraw} className="font-bold text-red-600 hover:text-red-800 disabled:opacity-40">
-                                取り下げる
-                            </button>
-                            <button type="button" disabled={busy} onClick={() => setConfirming(false)} className="text-gray-500 hover:text-gray-800">
-                                やめる
-                            </button>
-                        </div>
+        <li
+            className={`${published ? "group relative hover:bg-white/70 hover:shadow-md" : ""} flex items-center gap-4 bg-white/40 backdrop-blur-md border border-white/80 shadow-sm rounded-2xl p-4 transition-all text-left`}
+        >
+            <DesignSwatch data={data} className="w-16 h-16 shrink-0 rounded-xl border border-white/80 overflow-hidden [&>span]:hidden" />
+            <div className="min-w-0 flex-1">
+                <div className="flex items-center gap-2 min-w-0">
+                    <span className={`shrink-0 rounded-full px-2 py-0.5 text-[10px] font-bold ${BADGE_CLASS[sub.status] ?? "bg-gray-100 text-gray-600"}`}>
+                        {published ? "公開中" : submissionStatusLabel(sub.status)}
+                    </span>
+                    {published ? (
+                        <Link
+                            href={`/daidai-yokocho/designs/${sub.packId}`}
+                            className="block min-w-0 font-bold text-gray-900 truncate after:absolute after:inset-0 after:content-[''] group-hover:text-primary transition-colors"
+                        >
+                            {title}
+                        </Link>
                     ) : (
-                        <button type="button" onClick={() => setConfirming(true)} className="self-start text-sm text-gray-500 hover:text-red-600 underline underline-offset-4">
-                            取り下げる
-                        </button>
+                        <p className="min-w-0 font-bold text-gray-900 truncate">{title}</p>
                     )}
-                    {error && <p className="text-xs text-red-600" role="alert">{error}</p>}
                 </div>
+                <p className="text-xs text-gray-500 mt-1">
+                    無料 ・ 版{sub.version}
+                    {sub.createdAt ? ` ・ ${sub.createdAt.toLocaleDateString("ja-JP")}に投稿` : ""}
+                    {ownerCount !== null ? ` ・ 利用者数 ${ownerCount}` : ""}
+                </p>
+                {sub.status === "rejected" && sub.decisionNote && (
+                    <p className="relative z-10 mt-1 text-xs font-bold text-amber-800 whitespace-pre-wrap break-words">差し戻しの理由: {sub.decisionNote}</p>
+                )}
+                {sub.status === "suspended" && sub.decisionNote && (
+                    <p className="relative z-10 mt-1 text-xs font-bold text-red-700 whitespace-pre-wrap break-words">配信停止の理由: {sub.decisionNote}</p>
+                )}
+                {error && <p className="relative z-10 mt-1 text-xs text-red-600" role="alert">{error}</p>}
+            </div>
+            {canWithdraw && (
+                <button
+                    type="button"
+                    disabled={busy}
+                    onClick={withdraw}
+                    className="relative z-10 shrink-0 text-sm font-bold text-red-600 hover:text-red-800 transition-colors disabled:text-gray-300 disabled:cursor-not-allowed"
+                >
+                    {busy ? "取り下げ中..." : "取り下げる"}
+                </button>
             )}
         </li>
     );
 }
 
-// 自分の意匠パックの投稿（「作成と管理」の意匠の側）。審査の状態・差し戻しの理由・取り下げ
+// 自分の意匠パックの投稿（「作成と管理」の意匠の側）。見た目は、ぺったんの側（作成のカードと、作成済みの一覧）に揃える
 export default function MyDesigns({ uid }: { uid: string }) {
     const [subs, setSubs] = useState<ThemePackSubmission[] | null>(null);
     const [failed, setFailed] = useState(false);
     const [refreshKey, setRefreshKey] = useState(0);
+    const [filter, setFilter] = useState<StatusFilter>("all");
     const reload = useCallback(() => setRefreshKey((k) => k + 1), []);
 
     useEffect(() => {
@@ -102,33 +151,64 @@ export default function MyDesigns({ uid }: { uid: string }) {
     for (const s of subs ?? []) {
         if (s.status === "approved") latestApproved.set(s.packId, Math.max(latestApproved.get(s.packId) ?? 0, s.version));
     }
+    const items = subs ?? [];
+    const visible = filter === "all" ? items : items.filter((s) => filterOf(s.status) === filter);
 
     return (
-        <div className="flex flex-col gap-6">
-            <div className="flex flex-wrap items-center justify-between gap-4">
-                <p className="text-sm text-gray-500">DaiDaiの色・形・背景を着せ替える、意匠パックを投稿します。公開の前に、運営が審査します。結果は、お知らせに届きます。</p>
+        <div>
+            {/* 投稿の入口（ぺったんの、作成のカードに当たる） */}
+            <div className="bg-white/40 backdrop-blur-md border border-white/80 shadow-sm rounded-2xl p-6 flex flex-wrap items-center justify-between gap-4">
+                <div className="min-w-0">
+                    <h2 className="text-xl font-bold text-gray-900">意匠パックを投稿する</h2>
+                    <p className="mt-1 text-sm text-gray-500">DaiDaiの色・形・背景を着せ替える、意匠パックを投稿します。公開の前に、運営が審査し、結果はお知らせに届きます。</p>
+                </div>
                 <Link
                     href="/daidai-yokocho/creator/themes/new"
-                    className="shrink-0 rounded-full bg-primary px-6 py-3 text-sm font-bold text-on-primary tracking-wide hover:bg-primary/90 transition"
+                    className="shrink-0 inline-flex items-center gap-2 rounded-full bg-primary px-6 py-3 text-sm font-bold text-on-primary tracking-wide hover:bg-primary/90 transition"
                 >
-                    意匠パックを投稿する
+                    <PackagePlus className="w-4 h-4" aria-hidden />
+                    投稿する
                 </Link>
             </div>
 
-            <h2 className="text-xl font-bold text-gray-900">投稿した意匠パック</h2>
-            {failed ? (
-                <p className="text-sm text-red-600">投稿を読み込めませんでした。</p>
-            ) : subs === null ? (
-                <p className="text-sm text-gray-400">読み込み中…</p>
-            ) : subs.length === 0 ? (
-                <p className="text-sm text-gray-400">まだ投稿していません。</p>
-            ) : (
-                <ul className="flex flex-col gap-4">
-                    {subs.map((s) => (
-                        <Row key={s.id} sub={s} canWithdraw={s.status === "approved" && latestApproved.get(s.packId) === s.version} onChanged={reload} />
-                    ))}
-                </ul>
-            )}
+            {/* 投稿した意匠パック（状態で絞り込める） */}
+            <div className="mt-16">
+                <h2 className="text-xl font-bold text-gray-900 mb-4">投稿した意匠パック</h2>
+
+                <div className="flex flex-wrap gap-2 mb-6" role="group" aria-label="状態で絞り込む">
+                    {FILTER_OPTIONS.map((o) => {
+                        const count = o.value === "all" ? items.length : items.filter((s) => filterOf(s.status) === o.value).length;
+                        const active = filter === o.value;
+                        return (
+                            <button
+                                key={o.value}
+                                type="button"
+                                onClick={() => setFilter(o.value)}
+                                aria-pressed={active}
+                                className={`px-4 py-1.5 rounded-full text-sm border transition ${
+                                    active ? "bg-primary text-on-primary border-primary" : "bg-white/70 text-primary border-primary/30 hover:bg-primary-container/60"
+                                }`}
+                            >
+                                {o.label}（{count}）
+                            </button>
+                        );
+                    })}
+                </div>
+
+                {failed ? (
+                    <p className="text-sm text-red-600">投稿を読み込めませんでした。</p>
+                ) : subs === null ? (
+                    <p className="text-sm text-gray-400">読み込み中…</p>
+                ) : visible.length === 0 ? (
+                    <p className="text-gray-400 text-sm">{items.length === 0 ? "まだ意匠パックを投稿していません。" : "条件に一致する意匠パックが有りません。"}</p>
+                ) : (
+                    <ul className="flex flex-col gap-4">
+                        {visible.map((s) => (
+                            <Row key={s.id} sub={s} canWithdraw={s.status === "approved" && latestApproved.get(s.packId) === s.version} onChanged={reload} />
+                        ))}
+                    </ul>
+                )}
+            </div>
         </div>
     );
 }

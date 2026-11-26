@@ -110,7 +110,7 @@ function SubmissionRow({ sub, creator, onChanged }: { sub: ThemePackSubmission; 
                 <span className="text-xs text-gray-500">{creator}</span>
                 <time className="text-xs text-gray-400">{formatDate(sub.createdAt)}</time>
             </div>
-            {sub.decisionNote && <p className="text-xs text-gray-500">理由: {sub.decisionNote}</p>}
+            {sub.decisionNote && <p className="text-xs text-gray-500 whitespace-pre-wrap break-words">理由: {sub.decisionNote}</p>}
 
             <div className="flex flex-wrap gap-3">
                 <button type="button" onClick={toggle} className={`${buttonClass} border border-gray-300 text-gray-700 hover:bg-gray-100`}>

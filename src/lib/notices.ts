@@ -46,6 +46,12 @@ export function parseNotice(
     };
 }
 
+// 「理由は次のとおりです。」の後ろで改行して、理由を次の行から出す（差し戻し・配信停止のお知らせ）。
+// 文面はサーバーが作る。サーバーが、すでに改行を入れていれば、重ねて入れない
+export function formatNoticeContent(content: string): string {
+    return content.replace(/(理由は次のとおりです。)[ \t]*(?!\n)(?=\S)/, "$1\n");
+}
+
 // 未読数の表示。0は出さず、10件以上は「9+」
 export function formatUnreadCount(count: number): string | null {
     if (!Number.isFinite(count) || count <= 0) return null;

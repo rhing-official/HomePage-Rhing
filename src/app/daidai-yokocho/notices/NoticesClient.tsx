@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { Bell } from "lucide-react";
 import { auth, onAuthStateChanged, type User } from "@/lib/firebaseAuth";
-import { demoNotices, noticeKindMeta, type Notice, type NoticeTone } from "@/lib/notices";
+import { demoNotices, formatNoticeContent, noticeKindMeta, type Notice, type NoticeTone } from "@/lib/notices";
 import { fetchNotices, markNoticesRead } from "@/lib/noticesClient";
 
 const NOTICES_PATH = "/daidai-yokocho/notices";
@@ -89,7 +89,7 @@ export default function NoticesClient() {
                                         )}
                                         <time className="text-xs text-gray-400">{formatDate(n.createdAt)}</time>
                                     </div>
-                                    <p className="text-sm text-gray-800 leading-relaxed whitespace-pre-wrap break-words">{n.content}</p>
+                                    <p className="text-sm text-gray-800 leading-relaxed whitespace-pre-wrap break-words">{formatNoticeContent(n.content)}</p>
                                 </li>
                             );
                         })}

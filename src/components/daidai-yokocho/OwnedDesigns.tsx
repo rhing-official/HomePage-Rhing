@@ -40,36 +40,51 @@ function OwnedDesignRow({ pack, onRemoved }: { pack: PublicThemePack; onRemoved:
     };
 
     const note = pack.status ? STATUS_NOTE[pack.status] : undefined;
+    // 見た目は、ぺったんの「購入済み」のカード（OwnedPackCard）に揃える
     return (
         <li className="bg-white/40 backdrop-blur-md border border-white/80 shadow-sm rounded-2xl p-6 flex flex-col gap-4 text-left">
-            <div className="flex items-center gap-4">
-                <DesignSwatch data={data} className="w-24 h-16 shrink-0 rounded-lg border border-gray-200" />
-                <div className="min-w-0 flex-1">
-                    <Link href={`/daidai-yokocho/designs/${pack.id}`} className="font-bold text-gray-900 hover:text-blue-600 transition-colors">
+            <div className="flex items-center justify-between gap-4">
+                <div className="flex min-w-0 items-center gap-3">
+                    <Link href={`/daidai-yokocho/designs/${pack.id}`} className="font-bold text-gray-900 hover:text-blue-600 transition-colors truncate">
                         {pack.name}
                     </Link>
-                    <p className="text-xs text-gray-500 mt-1">
-                        {brightnessLabel[pack.brightness] ?? ""}　版{pack.version}
-                    </p>
+                    {note && <span className={`shrink-0 text-[10px] font-bold px-2 py-0.5 rounded-full ${note.className}`}>{note.label}</span>}
                 </div>
-                {note && <span className={`shrink-0 text-xs font-bold px-2.5 py-1 rounded-full ${note.className}`}>{note.label}</span>}
+                <span className="shrink-0 text-xs text-gray-400">無料</span>
             </div>
+
+            <DesignSwatch data={data} className="w-full h-28 rounded-lg border border-white/80 overflow-hidden" />
+            <p className="text-xs text-gray-500">
+                {brightnessLabel[pack.brightness] ?? ""}　版{pack.version}
+            </p>
             {pack.status === "suspended" && <p className="text-xs text-red-600">配信が停止されたため、アプリの表示は標準に戻ります。</p>}
 
             <div className="flex flex-col gap-2 pt-3 border-t border-white/60">
                 {confirming ? (
-                    <div className="flex flex-wrap items-center gap-3 text-sm">
-                        <span className="text-gray-700">取得を外しますか？ 着せ替えが標準に戻ります。</span>
-                        <button type="button" disabled={busy} onClick={remove} className="font-bold text-red-600 hover:text-red-800 disabled:opacity-40">
-                            外す
-                        </button>
-                        <button type="button" disabled={busy} onClick={() => setConfirming(false)} className="text-gray-500 hover:text-gray-800">
-                            やめる
-                        </button>
+                    <div className="flex flex-col gap-3">
+                        <span className="text-sm text-gray-700">本当にアンインストールしますか？この意匠への着せ替えが、標準に戻ります。</span>
+                        <div className="flex items-center gap-3">
+                            <button
+                                type="button"
+                                onClick={() => setConfirming(false)}
+                                disabled={busy}
+                                className="text-sm px-5 py-1.5 rounded-full border border-primary/50 text-primary hover:bg-primary-container/60 transition disabled:opacity-50"
+                            >
+                                やめる
+                            </button>
+                            <button
+                                type="button"
+                                onClick={remove}
+                                disabled={busy}
+                                className="text-sm px-5 py-1.5 rounded-full bg-red-600 text-white hover:bg-red-700 transition disabled:opacity-50"
+                            >
+                                {busy ? "アンインストール中..." : "アンインストール"}
+                            </button>
+                        </div>
                     </div>
                 ) : (
-                    <button type="button" onClick={() => setConfirming(true)} className="self-start text-sm text-gray-500 hover:text-red-600 underline underline-offset-4">
-                        取得を外す
+                    <button type="button" onClick={() => setConfirming(true)} className="self-start text-sm font-bold text-red-600 hover:text-red-800 transition-colors">
+                        アンインストールする
                     </button>
                 )}
                 {error && <p className="text-xs text-red-600" role="alert">{error}</p>}
@@ -98,7 +113,7 @@ export default function OwnedDesigns({ uid }: { uid: string }) {
     if (packs.length === 0) {
         return (
             <p className="text-gray-400 text-sm">
-                まだ意匠パックを取得していません。
+                まだ意匠パックを所持していません。
                 <Link href="/daidai-yokocho?kind=design" className="text-blue-600 hover:underline ml-1">
                     daidai横丁で探す →
                 </Link>
