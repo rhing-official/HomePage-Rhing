@@ -16,12 +16,10 @@ type Own = "loading" | "owned" | "notOwned";
 // variant="detail": 詳細ページの取得ボタンの隣に並べる大きめのボタン
 export default function DesignActions({
     packId,
-    creatorId,
     status = "approved",
     variant,
 }: {
     packId: string;
-    creatorId: string;
     status?: string;
     variant: "card" | "detail";
 }) {
@@ -52,10 +50,9 @@ export default function DesignActions({
     }, [authReady, user, packId]);
 
     const loginPath = `/login?redirect=${encodeURIComponent(`/daidai-yokocho/designs/${packId}`)}`;
-    const mine = !!user && user.uid === creatorId;
     const inCart = cart.hasDesign(packId);
     // 公開中でない意匠は、新しくカートに入れられない（入っているものは外せる）
-    const canAddToCart = status === "approved" && own === "notOwned" && !mine;
+    const canAddToCart = status === "approved" && own === "notOwned";
 
     const toggleFavorite = async (e: React.MouseEvent) => {
         if (variant === "card") {
@@ -66,7 +63,7 @@ export default function DesignActions({
             router.push(loginPath);
             return;
         }
-        // 失敗したとき（自分の投稿へのお気に入りは、ルールで拒否される等）は、表示を元に戻す
+        // 失敗したとき（通信の失敗等）は、表示を元に戻す
         const before = fav;
         try {
             if (before === "favorited") {
@@ -90,14 +87,15 @@ export default function DesignActions({
             router.push(loginPath);
             return;
         }
-        if (inCart) await cart.removeDesign(packId);
+        // カートに入っている時は、カートのページへ移る（外すのは、カートのページで行う）
+        if (inCart) router.push("/daidai-yokocho/cart");
         else if (canAddToCart) await cart.addDesign(packId);
     };
 
     if (!authReady || fav === "loading" || own === "loading") return null;
 
     const favLabel = fav === "favorited" ? "お気に入り解除" : "お気に入りに追加";
-    const cartLabel = own === "owned" ? "取得済み" : inCart ? "カートから外す" : "カートに追加";
+    const cartLabel = own === "owned" ? "取得済み" : inCart ? "カートを見る" : "カートに追加";
     const cartDisabled = own === "owned" || (!inCart && !canAddToCart && !!user);
 
     if (variant === "card") {
@@ -108,7 +106,7 @@ export default function DesignActions({
                 <button type="button" onClick={toggleFavorite} aria-label={favLabel} className={round}>
                     <Heart className={`w-4 h-4 ${fav === "favorited" ? "text-rose-500 fill-rose-500" : "text-gray-400"}`} />
                 </button>
-                <button type="button" onClick={toggleCart} disabled={cartDisabled} aria-label={cartLabel} aria-pressed={inCart} className={round}>
+                <button type="button" onClick={toggleCart} disabled={cartDisabled} aria-label={cartLabel} className={round}>
                     {own === "owned" ? (
                         <Check className="w-4 h-4 text-emerald-600" />
                     ) : (
@@ -125,7 +123,7 @@ export default function DesignActions({
             <button type="button" onClick={toggleFavorite} aria-label={favLabel} aria-pressed={fav === "favorited"} className={flat}>
                 <Heart className={`w-6 h-6 ${fav === "favorited" ? "text-rose-500 fill-rose-500" : "text-gray-400"}`} />
             </button>
-            <button type="button" onClick={toggleCart} disabled={cartDisabled} aria-label={cartLabel} aria-pressed={inCart} className={flat}>
+            <button type="button" onClick={toggleCart} disabled={cartDisabled} aria-label={cartLabel} className={flat}>
                 {own === "owned" ? (
                     <Check className="w-6 h-6 text-emerald-600" />
                 ) : (

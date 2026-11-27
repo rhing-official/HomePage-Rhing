@@ -1,6 +1,7 @@
 import { collection, deleteDoc, doc, getDoc, getDocs, serverTimestamp, setDoc } from "firebase/firestore";
 import { db } from "@/lib/firebase";
 import { getStickerPackById, type StickerPack } from "@/lib/stickerPacks";
+import { timestampToMillis } from "@/lib/mixedList";
 
 // users/{uid}/favoritePacks/{packId}はDaiDai репо firestore.rulesにより
 // 本人のみ読み書き可能。ドキュメントが存在すること自体がお気に入りの印
@@ -32,6 +33,19 @@ export async function getFavoritePackIds(uid: string): Promise<string[]> {
     } catch {
         return [];
     }
+}
+
+// 追加した時刻つきのお気に入り（存在しない・読めないぺったんは除く）。1つの一覧に混ぜて並べる為
+export async function getFavoritedStickerEntries(uid: string): Promise<{ pack: StickerPack; addedAt: number }[]> {
+    let docs: { id: string; addedAt: number }[] = [];
+    try {
+        const snapshot = await getDocs(collection(db, "users", uid, "favoritePacks"));
+        docs = snapshot.docs.map((d) => ({ id: d.id, addedAt: timestampToMillis(d.data({ serverTimestamps: "estimate" }).createdAt) }));
+    } catch {
+        return [];
+    }
+    const packs = await Promise.all(docs.map((d) => getStickerPackById(d.id)));
+    return docs.flatMap((d, i) => (packs[i] ? [{ pack: packs[i]!, addedAt: d.addedAt }] : []));
 }
 
 // getFavoritePackIds→getStickerPackByIdの並列取得。stickerPacks.tsの

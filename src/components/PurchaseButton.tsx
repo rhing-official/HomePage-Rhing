@@ -59,8 +59,9 @@ export default function PurchaseButton({ packId, extra }: { packId: string; extr
             return;
         }
         setError(null);
+        // カートに入っている時は、カートのページへ移る（外すのは、カートのページで行う）
         if (inCart) {
-            await cart.remove(packId);
+            router.push("/daidai-yokocho/cart");
             return;
         }
         const r = await cart.add(packId);
@@ -123,8 +124,7 @@ export default function PurchaseButton({ packId, extra }: { packId: string; extr
     const cartButton = (
         <button
             onClick={handleCartClick}
-            aria-pressed={inCart}
-            aria-label={inCart ? "カートから外す" : "カートに追加"}
+            aria-label={inCart ? "カートを見る" : "カートに追加"}
             className={`inline-flex items-center justify-center gap-2 flex-1 px-6 py-3 rounded-full border font-bold transition ${
                 inCart
                     ? "border-primary bg-primary-container text-on-primary-container"
@@ -132,7 +132,7 @@ export default function PurchaseButton({ packId, extra }: { packId: string; extr
             }`}
         >
             <ShoppingCart className="w-5 h-5" />
-            {inCart ? "カートから外す" : "カートに追加"}
+            {inCart ? "カートを見る" : "カートに追加"}
         </button>
     );
 

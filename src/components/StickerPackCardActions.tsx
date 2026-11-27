@@ -66,7 +66,7 @@ export default function StickerPackCardActions({ packId }: { packId: string }) {
             router.push(`/login?redirect=${encodeURIComponent(`/daidai-yokocho/${packId}`)}`);
             return;
         }
-        // 失敗したとき（自分の出品へのお気に入りは、ルールで拒否される等）は、表示を元に戻す
+        // 失敗したとき（通信の失敗等）は、表示を元に戻す
         const before = favoriteStatus;
         try {
             if (before === "favorited") {
@@ -84,7 +84,7 @@ export default function StickerPackCardActions({ packId }: { packId: string }) {
     const cart = useCart();
     const inCart = cart.has(packId);
 
-    // 入手済みでなければ、カートに追加/カートから外す（入手はカートのページ、または販売ページから）
+    // 入手済みでなければ、カートに追加する。入っている時は、カートのページへ移る（外すのは、カートのページで行う。入手もカートのページ、または販売ページから）
     const handleCartClick = async (e: React.MouseEvent) => {
         stop(e);
         if (getStatus !== "purchasable") return;
@@ -92,7 +92,7 @@ export default function StickerPackCardActions({ packId }: { packId: string }) {
             router.push(`/login?redirect=${encodeURIComponent(`/daidai-yokocho/${packId}`)}`);
             return;
         }
-        if (inCart) await cart.remove(packId);
+        if (inCart) router.push("/daidai-yokocho/cart");
         else await cart.add(packId);
     };
 
@@ -116,8 +116,7 @@ export default function StickerPackCardActions({ packId }: { packId: string }) {
                 type="button"
                 onClick={handleCartClick}
                 disabled={getStatus === "owned"}
-                aria-label={getStatus === "owned" ? "入手済み" : inCart ? "カートから外す" : "カートに追加"}
-                aria-pressed={inCart}
+                aria-label={getStatus === "owned" ? "入手済み" : inCart ? "カートを見る" : "カートに追加"}
                 className="p-2 rounded-full bg-white/80 backdrop-blur-sm shadow-sm border border-white/70 hover:bg-white/95 transition-colors disabled:cursor-not-allowed disabled:opacity-70"
             >
                 {getStatus === "owned" ? (

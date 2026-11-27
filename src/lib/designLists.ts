@@ -1,6 +1,7 @@
-import { collection, deleteDoc, doc, getDoc, getDocs, serverTimestamp, setDoc } from "firebase/firestore";
+import { collection, deleteDoc, doc, getDoc, getDocs, serverTimestamp, setDoc, writeBatch } from "firebase/firestore";
 import { db } from "@/lib/firebase";
 import { getThemePack, isThemePackOwned, type PublicThemePack } from "@/lib/themePackReview";
+import { timestampToMillis } from "@/lib/mixedList";
 
 // 意匠のお気に入りとカート。ぺったんの favorites.ts・cart.ts と同じ作りで、保存先だけを分ける。
 // users/{uid}/favoriteDesigns/{packId}と users/{uid}/cartDesigns/{packId}は、
@@ -35,6 +36,16 @@ export async function getDesignListIds(uid: string, list: DesignListName): Promi
     try {
         const snapshot = await getDocs(designListCollection(uid, list));
         return snapshot.docs.map((d) => d.id);
+    } catch {
+        return [];
+    }
+}
+
+// idと、追加した時刻（ミリ秒。無ければ0）。並べ替えに使う
+export async function getDesignListEntries(uid: string, list: DesignListName): Promise<{ id: string; addedAt: number }[]> {
+    try {
+        const snapshot = await getDocs(designListCollection(uid, list));
+        return snapshot.docs.map((d) => ({ id: d.id, addedAt: timestampToMillis(d.data({ serverTimestamps: "estimate" }).createdAt) }));
     } catch {
         return [];
     }
@@ -119,19 +130,15 @@ export async function checkoutDesignCart(
     return result;
 }
 
-// カートに入れられる意匠を選ぶ（取得済み・自分の投稿・カート済みを除き、上限まで）
+// カートに入れられる意匠を選ぶ（取得済み・カート済みを除き、上限まで）。自分の投稿も入れられる
 export async function selectAddableDesigns(
     packs: PublicThemePack[],
     uid: string,
     inCart: ReadonlySet<string>,
     isOwned: (uid: string, packId: string) => Promise<boolean> = isThemePackOwned,
-): Promise<{ addable: PublicThemePack[]; skippedOwned: number; skippedInCart: number; skippedOwnPack: number; skippedOverLimit: number }> {
-    const summary = { skippedOwned: 0, skippedInCart: 0, skippedOwnPack: 0, skippedOverLimit: 0 };
+): Promise<{ addable: PublicThemePack[]; skippedOwned: number; skippedInCart: number; skippedOverLimit: number }> {
+    const summary = { skippedOwned: 0, skippedInCart: 0, skippedOverLimit: 0 };
     const candidates = packs.filter((p) => {
-        if (p.creatorId === uid) {
-            summary.skippedOwnPack++;
-            return false;
-        }
         if (inCart.has(p.id)) {
             summary.skippedInCart++;
             return false;
@@ -146,4 +153,28 @@ export async function selectAddableDesigns(
     const room = Math.max(0, DESIGN_CART_MAX_ITEMS - inCart.size);
     summary.skippedOverLimit = Math.max(0, notOwned.length - room);
     return { addable: notOwned.slice(0, room), ...summary };
+}
+
+export interface AddManyDesignsResult {
+    added: number;
+    skippedOwned: number;
+    skippedInCart: number;
+    skippedOverLimit: number;
+}
+
+// 表示中の意匠を、まとめてカートに追加する。追加できるものだけを、1回の書き込みで入れる
+export async function addManyDesignsToCart(
+    packs: PublicThemePack[],
+    uid: string,
+    inCart: ReadonlySet<string>,
+): Promise<AddManyDesignsResult> {
+    const { addable, ...summary } = await selectAddableDesigns(packs, uid, inCart);
+    if (addable.length > 0) {
+        const batch = writeBatch(db);
+        for (const p of addable) {
+            batch.set(doc(db, "users", uid, "cartDesigns", p.id), { createdAt: serverTimestamp() });
+        }
+        await batch.commit();
+    }
+    return { added: addable.length, ...summary };
 }

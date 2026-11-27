@@ -118,7 +118,7 @@ export default function DesignDetailClient({ packId }: { packId: string }) {
 
                         <div className="flex flex-col gap-4">
                             <DesignAcquireButton packId={pack.id} status={pack.status ?? ""} redirectPath={`/daidai-yokocho/designs/${pack.id}`} />
-                            <DesignActions packId={pack.id} creatorId={pack.creatorId} status={pack.status ?? ""} variant="detail" />
+                            <DesignActions packId={pack.id} status={pack.status ?? ""} variant="detail" />
                         </div>
 
                         <ul className="text-xs text-gray-500 leading-relaxed list-disc pl-5 space-y-1">

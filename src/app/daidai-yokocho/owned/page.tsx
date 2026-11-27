@@ -1,28 +1,47 @@
 "use client";
 
 import { PackageCheck } from "lucide-react";
-import { useCallback, useEffect, useState } from "react";
-import Link from "next/link";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
 import { auth, onAuthStateChanged, type User } from "@/lib/firebaseAuth";
-import { getOwnedStickerPacks, formatPackPrice, type StickerPack } from "@/lib/stickerPacks";
-import { uninstallStickerPack } from "@/lib/firebaseFunctions";
-import { PackPanelListSkeleton } from "@/components/Skeleton";
-import LoadingImage from "@/components/LoadingImage";
-import KindSwitch, { type CatalogKind } from "@/components/daidai-yokocho/KindSwitch";
-import OwnedDesigns from "@/components/daidai-yokocho/OwnedDesigns";
+import { getOwnedStickerEntries, type StickerPack } from "@/lib/stickerPacks";
+import { listOwnedThemePackEntries, type PublicThemePack } from "@/lib/themePackReview";
+import { uninstallStickerPack, uninstallThemePack } from "@/lib/firebaseFunctions";
+import { getCreatorProfiles, type CreatorProfile } from "@/lib/creatorProfiles";
+import { itemKey, mergeByAddedAt, parseItemKey, type MixedItem } from "@/lib/mixedList";
+import StickerPackCard from "@/components/StickerPackCard";
+import DesignCard from "@/components/daidai-yokocho/DesignCard";
+import KindBadge from "@/components/daidai-yokocho/KindBadge";
+import KindFilter, { type KindFilterValue } from "@/components/daidai-yokocho/KindFilter";
+import FindInYokochoLink from "@/components/daidai-yokocho/FindInYokochoLink";
+import ConfirmDialog from "@/components/daidai-yokocho/ConfirmDialog";
+import { SelectableItem, SelectionToolbar, useSelection } from "@/components/daidai-yokocho/Selection";
+import { PackGridSkeleton } from "@/components/Skeleton";
 
 const OWNED_PATH = "/daidai-yokocho/owned";
 
-export default function OwnedStickerPacksPage() {
+type OwnedEntry = StickerPack | PublicThemePack;
+
+// 取り下げ・配信停止になった意匠は、取得済みでも、そのことを示す
+const STATUS_NOTE: Record<string, { label: string; className: string }> = {
+    withdrawn: { label: "取り下げ", className: "bg-gray-100 text-gray-600" },
+    suspended: { label: "配信停止", className: "bg-red-100 text-red-700" },
+};
+
+// ぺったんと意匠を、1つの一覧にまとめた購入済み。取得した新しい順に並べる。増えても見つけやすいよう、種別で絞れる
+export default function OwnedPage() {
     const router = useRouter();
     const [user, setUser] = useState<User | null>(null);
     const [ready, setReady] = useState(false);
-    const [packs, setPacks] = useState<StickerPack[]>([]);
-    const [loadingPacks, setLoadingPacks] = useState(false);
-    // ぺったんと意匠の切り替え。意匠の側は、初めて開いた時に読み込み、以後は隠すだけにする
-    const [kind, setKind] = useState<CatalogKind>("petan");
-    const [designOpened, setDesignOpened] = useState(false);
+    const [items, setItems] = useState<MixedItem<OwnedEntry>[]>([]);
+    const [creatorProfiles, setCreatorProfiles] = useState<Map<string, CreatorProfile>>(new Map());
+    const [loading, setLoading] = useState(false);
+    const [failed, setFailed] = useState(false);
+    const [filter, setFilter] = useState<KindFilterValue>("all");
+    const sel = useSelection();
+    const [confirming, setConfirming] = useState<string[] | null>(null);
+    const [busy, setBusy] = useState(false);
+    const [error, setError] = useState<string | null>(null);
 
     useEffect(() => onAuthStateChanged(auth, (u) => {
         setUser(u);
@@ -36,20 +55,75 @@ export default function OwnedStickerPacksPage() {
         }
     }, [ready, user, router]);
 
-    const reloadPacks = useCallback(async (uid: string) => {
-        setLoadingPacks(true);
+    const reload = useCallback(async (uid: string) => {
+        setLoading(true);
+        setFailed(false);
         try {
-            setPacks(await getOwnedStickerPacks(uid));
+            const [petan, designs] = await Promise.all([getOwnedStickerEntries(uid), listOwnedThemePackEntries(uid)]);
+            setItems(
+                mergeByAddedAt<OwnedEntry>(
+                    petan.map((e) => ({ kind: "petan", id: e.pack.id, addedAt: e.addedAt, data: e.pack })),
+                    designs.map((e) => ({ kind: "design", id: e.pack.id, addedAt: e.addedAt, data: e.pack })),
+                ),
+            );
+            setCreatorProfiles(
+                await getCreatorProfiles([...petan.map((e) => e.pack.creatorId), ...designs.map((e) => e.pack.creatorId)]).catch(() => new Map<string, CreatorProfile>()),
+            );
+        } catch {
+            setFailed(true);
         } finally {
-            setLoadingPacks(false);
+            setLoading(false);
         }
     }, []);
 
     useEffect(() => {
-        if (user) reloadPacks(user.uid);
-    }, [user, reloadPacks]);
+        if (user) reload(user.uid);
+    }, [user, reload]);
+
+    const counts = useMemo<Record<KindFilterValue, number>>(
+        () => ({
+            all: items.length,
+            petan: items.filter((i) => i.kind === "petan").length,
+            design: items.filter((i) => i.kind === "design").length,
+        }),
+        [items],
+    );
+    const shown = useMemo(() => (filter === "all" ? items : items.filter((i) => i.kind === filter)), [items, filter]);
+    const keys = useMemo(() => shown.map((i) => itemKey(i.kind, i.id)), [shown]);
 
     if (!ready || !user) return null;
+
+    // 選んだものを、まとめてアンインストールする。成功した分だけ一覧から消し、失敗した分は残す
+    const handleUninstall = async () => {
+        if (!confirming) return;
+        setBusy(true);
+        setError(null);
+        const results = await Promise.allSettled(
+            confirming.map((k) => {
+                const { kind, id } = parseItemKey(k);
+                return kind === "petan" ? uninstallStickerPack({ packId: id }) : uninstallThemePack({ packId: id });
+            }),
+        );
+        const removed = new Set(confirming.filter((_, i) => results[i].status === "fulfilled"));
+        setItems((prev) => prev.filter((i) => !removed.has(itemKey(i.kind, i.id))));
+        const failedCount = confirming.length - removed.size;
+        setBusy(false);
+        if (failedCount === 0) {
+            setConfirming(null);
+            sel.clear();
+        } else {
+            setConfirming(confirming.filter((k) => !removed.has(k)));
+            setError(`${failedCount}件はアンインストールに失敗しました。もう一度お試しください。`);
+        }
+    };
+
+    const hasPetan = !!confirming?.some((k) => parseItemKey(k).kind === "petan");
+    const hasDesign = !!confirming?.some((k) => parseItemKey(k).kind === "design");
+    const message = [
+        "本当にアンインストールしますか？",
+        hasPetan ? "ぺったんは、送信できなくなります。" : "",
+        hasDesign ? "意匠は、着せ替えが標準に戻ります。" : "",
+    ].join("");
 
     return (
         <div className="w-full pb-24">
@@ -59,128 +133,77 @@ export default function OwnedStickerPacksPage() {
                     購入済み
                 </h1>
 
-                <KindSwitch
-                    value={kind}
-                    onChange={(next) => {
-                        if (next === "design") setDesignOpened(true);
-                        setKind(next);
-                    }}
-                    className="mb-10 sm:mx-0"
-                />
-
-                {designOpened && (
-                    <div hidden={kind !== "design"}>
-                        <OwnedDesigns uid={user.uid} />
+                {loading ? (
+                    <PackGridSkeleton count={3} />
+                ) : failed ? (
+                    <p className="text-sm text-red-600">購入済みを読み込めませんでした。時間をおいて、もう一度お試しください。</p>
+                ) : items.length === 0 ? (
+                    <div className="flex flex-col items-start gap-4">
+                        <p className="text-gray-400 text-sm">まだ購入済みが有りません。</p>
+                        <FindInYokochoLink />
                     </div>
-                )}
-                <div hidden={kind !== "petan"}>
-                {loadingPacks ? (
-                    <PackPanelListSkeleton />
-                ) : packs.length === 0 ? (
-                    <p className="text-gray-400 text-sm">
-                        まだぺったんを所持していません。
-                        <Link href="/daidai-yokocho" className="text-blue-600 hover:underline ml-1">
-                            daidai横丁で探す →
-                        </Link>
-                    </p>
                 ) : (
-                    <div className="flex flex-col gap-6">
-                        {packs.map((pack) => (
-                            <OwnedPackCard
-                                key={pack.id}
-                                pack={pack}
-                                onUninstalled={() => setPacks((prev) => prev.filter((p) => p.id !== pack.id))}
-                            />
-                        ))}
-                    </div>
-                )}
-                </div>
-            </div>
-        </div>
-    );
-}
-
-function OwnedPackCard({
-    pack,
-    onUninstalled,
-}: {
-    pack: StickerPack;
-    onUninstalled: () => void;
-}) {
-    const [confirming, setConfirming] = useState(false);
-    const [uninstalling, setUninstalling] = useState(false);
-    const [error, setError] = useState<string | null>(null);
-
-    const handleUninstall = async () => {
-        setError(null);
-        setUninstalling(true);
-        try {
-            await uninstallStickerPack({ packId: pack.id });
-            onUninstalled();
-        } catch (err) {
-            setError(err instanceof Error ? err.message : "アンインストールに失敗しました");
-            setUninstalling(false);
-        }
-    };
-
-    return (
-        <div className="bg-white/40 backdrop-blur-md border border-white/80 shadow-sm rounded-2xl p-6 flex flex-col gap-4">
-            <div className="flex items-center justify-between gap-4">
-                <Link
-                    href={`/daidai-yokocho/${pack.id}`}
-                    className="font-bold text-gray-900 hover:text-blue-600 transition-colors"
-                >
-                    {pack.name}
-                </Link>
-                <span className="text-xs text-gray-400">{formatPackPrice(pack.price)}</span>
-            </div>
-
-            <div className="grid grid-cols-6 sm:grid-cols-8 gap-2">
-                {pack.stickers.map((sticker, i) => (
-                    <div key={sticker.stickerId || i} className="relative aspect-square bg-white/60 border border-white/80 rounded-lg overflow-hidden">
-                        {sticker.imageUrl && (
-                            <LoadingImage src={sticker.imageUrl} alt={sticker.name} className="w-full h-full object-contain p-1" />
+                    <>
+                        <KindFilter value={filter} counts={counts} onChange={setFilter} />
+                        <SelectionToolbar
+                            ids={keys}
+                            selected={sel.selected}
+                            busy={busy}
+                            actionLabel="アンインストール"
+                            onSelectAll={sel.selectAll}
+                            onClear={sel.clear}
+                            onAction={(selectedKeys) => {
+                                setError(null);
+                                setConfirming(selectedKeys);
+                            }}
+                        />
+                        {shown.length === 0 ? (
+                            <p className="text-gray-400 text-sm">この種別の購入済みは、まだ有りません。</p>
+                        ) : (
+                            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+                                {shown.map((item) => {
+                                    const key = itemKey(item.kind, item.id);
+                                    const pack = item.data as StickerPack & PublicThemePack;
+                                    const note = item.kind === "design" && pack.status ? STATUS_NOTE[pack.status] : undefined;
+                                    return (
+                                        <SelectableItem
+                                            key={key}
+                                            selected={sel.selected.has(key)}
+                                            onToggle={() => sel.toggle(key)}
+                                            label={pack.name}
+                                            badge={
+                                                <span className="flex items-center gap-1.5">
+                                                    <KindBadge kind={item.kind} />
+                                                    {note && <span className={`rounded-full px-2 py-0.5 text-[10px] font-bold ${note.className}`}>{note.label}</span>}
+                                                </span>
+                                            }
+                                        >
+                                            {item.kind === "petan" ? (
+                                                <StickerPackCard pack={pack} creator={creatorProfiles.get(pack.creatorId) ?? null} />
+                                            ) : (
+                                                <DesignCard pack={pack} creator={creatorProfiles.get(pack.creatorId) ?? null} />
+                                            )}
+                                        </SelectableItem>
+                                    );
+                                })}
+                            </div>
                         )}
-                    </div>
-                ))}
+                    </>
+                )}
             </div>
 
-            <div className="flex flex-col gap-2 pt-3 border-t border-white/60">
-                {confirming ? (
-                    <div className="flex flex-col gap-3">
-                        <span className="text-sm text-gray-700">
-                            本当にアンインストールしますか？このぺったんが送信できなくなります。
-                        </span>
-                        <div className="flex items-center gap-3">
-                            <button
-                                type="button"
-                                onClick={() => setConfirming(false)}
-                                disabled={uninstalling}
-                                className="text-sm px-5 py-1.5 rounded-full border border-primary/50 text-primary hover:bg-primary-container/60 transition disabled:opacity-50"
-                            >
-                                やめる
-                            </button>
-                            <button
-                                type="button"
-                                onClick={handleUninstall}
-                                disabled={uninstalling}
-                                className="text-sm px-5 py-1.5 rounded-full bg-red-600 text-white hover:bg-red-700 transition disabled:opacity-50"
-                            >
-                                {uninstalling ? "アンインストール中..." : "アンインストール"}
-                            </button>
-                        </div>
-                    </div>
-                ) : (
-                    <button
-                        type="button"
-                        onClick={() => setConfirming(true)}
-                        className="self-start text-sm font-bold text-red-600 hover:text-red-800 transition-colors"
-                    >
-                        アンインストールする
-                    </button>
-                )}
-                {error && <p className="text-xs text-red-600">{error}</p>}
-            </div>
+            {confirming && (
+                <ConfirmDialog
+                    title={`${confirming.length}件をアンインストール`}
+                    message={message}
+                    confirmLabel="アンインストール"
+                    busyLabel="アンインストール中..."
+                    busy={busy}
+                    error={error}
+                    onConfirm={handleUninstall}
+                    onClose={() => setConfirming(null)}
+                />
+            )}
         </div>
     );
 }

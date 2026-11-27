@@ -50,7 +50,7 @@ export default function FavoriteButton({ packId }: { packId: string }) {
                 setStatus("favorited");
             }
         } catch {
-            // 失敗したとき（自分の出品へのお気に入りは、ルールで拒否される等）は、表示を変えない
+            // 失敗したとき（通信の失敗等）は、表示を変えない
         } finally {
             setSubmitting(false);
         }

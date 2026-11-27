@@ -7,7 +7,7 @@ import { listOwnedThemePackIds, listPublicThemePacks, type PublicThemePack } fro
 import DesignCard from "./DesignCard";
 import { applyDesignFilters, type DesignFilters } from "@/lib/designFilter";
 
-export default function DesignCatalog({ query, filters, onCount }: { query: string; filters: DesignFilters; onCount?: (count: number | null) => void }) {
+export default function DesignCatalog({ query, filters, onCount, onShown }: { query: string; filters: DesignFilters; onCount?: (count: number | null) => void; onShown?: (packs: PublicThemePack[]) => void }) {
     const [packs, setPacks] = useState<PublicThemePack[] | null>(null);
     const [creators, setCreators] = useState<Map<string, CreatorProfile>>(new Map());
     const [failed, setFailed] = useState(false);
@@ -55,6 +55,11 @@ export default function DesignCatalog({ query, filters, onCount }: { query: stri
     useEffect(() => {
         onCount?.(packs === null ? null : shown.length);
     }, [packs, shown.length, onCount]);
+
+    // 表示中の意匠は、呼び出し側の「全てカートに追加」が使う
+    useEffect(() => {
+        onShown?.(shown);
+    }, [shown, onShown]);
 
     return (
         <div>

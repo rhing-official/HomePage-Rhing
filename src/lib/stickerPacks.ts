@@ -153,6 +153,21 @@ export async function getOwnedStickerPacks(uid: string): Promise<StickerPack[]> 
     }
 }
 
+// 取得した時刻（ミリ秒。無ければ0）つきの、所持しているぺったん。購入済みの一覧で、新しい順に並べる為
+export async function getOwnedStickerEntries(uid: string): Promise<{ pack: StickerPack; addedAt: number }[]> {
+    try {
+        const snapshot = await getDocs(collection(db, "users", uid, "ownedStickerPacks"));
+        const docs = snapshot.docs.map((d) => {
+            const at = d.data({ serverTimestamps: "estimate" }).grantedAt as { toMillis?: () => number } | undefined;
+            return { id: d.id, addedAt: at && typeof at.toMillis === "function" ? at.toMillis() : 0 };
+        });
+        const packs = await Promise.all(docs.map((d) => getStickerPackById(d.id)));
+        return docs.flatMap((d, i) => (packs[i] ? [{ pack: packs[i]!, addedAt: d.addedAt }] : []));
+    } catch {
+        return [];
+    }
+}
+
 // ぺったんの代表になるぺったん。coverStickerIdに一致するものがあればそれ、なければ先頭
 export function getPackCover(pack: Pick<StickerPack, "stickers" | "coverStickerId">): Sticker | undefined {
     return pack.stickers.find((s) => s.stickerId === pack.coverStickerId) ?? pack.stickers[0];

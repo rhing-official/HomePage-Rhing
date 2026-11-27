@@ -3,27 +3,46 @@
 import { useEffect, useMemo, useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { Trash2, ShoppingCart } from "lucide-react";
+import { ShoppingCart } from "lucide-react";
 import { useCart } from "@/components/CartProvider";
-import { getStickerPackById, getPackCover, isPackOwnedByUser, formatPackPrice, type StickerPack } from "@/lib/stickerPacks";
-import { checkoutCart, removeFromCart, type CheckoutResult } from "@/lib/cart";
+import { getStickerPackById, isPackOwnedByUser, type StickerPack } from "@/lib/stickerPacks";
+import { getCreatorProfiles, type CreatorProfile } from "@/lib/creatorProfiles";
+import { checkoutCart, removeFromCart } from "@/lib/cart";
+import { acquireThemePack } from "@/lib/firebaseFunctions";
+import { checkoutDesignCart, loadDesignList } from "@/lib/designLists";
+import { itemKey, mergeByAddedAt, parseItemKey, type MixedItem } from "@/lib/mixedList";
+import type { PublicThemePack } from "@/lib/themePackReview";
 import Button from "@/components/ui/Button";
-import { ThumbRowSkeleton } from "@/components/Skeleton";
-import KindSwitch, { type CatalogKind } from "@/components/daidai-yokocho/KindSwitch";
-import CartDesigns from "@/components/daidai-yokocho/CartDesigns";
+import { PackGridSkeleton } from "@/components/Skeleton";
+import StickerPackCard from "@/components/StickerPackCard";
+import DesignCard from "@/components/daidai-yokocho/DesignCard";
+import { SelectableItem, SelectionToolbar, useSelection } from "@/components/daidai-yokocho/Selection";
+import FindInYokochoLink from "@/components/daidai-yokocho/FindInYokochoLink";
+import KindBadge from "@/components/daidai-yokocho/KindBadge";
 
 const CART_PATH = "/daidai-yokocho/cart";
 
+type CartEntry = StickerPack | PublicThemePack;
+
+interface CheckoutSummary {
+    acquired: number;
+    alreadyOwned: number;
+    failed: number;
+}
+
+// ぺったんと意匠を、1つの一覧にまとめたカート。追加した新しい順に並べる
 export default function CartPage() {
     const router = useRouter();
-    const { user, authReady, cartReady, ids, remove } = useCart();
+    const { user, authReady, cartReady, designCartReady, ids, designIds, addedAt, designAddedAt, remove, removeDesign } = useCart();
     const [packs, setPacks] = useState<StickerPack[]>([]);
-    const [loading, setLoading] = useState(true);
+    const [designs, setDesigns] = useState<PublicThemePack[]>([]);
+    const [petanLoading, setPetanLoading] = useState(true);
+    const [designLoading, setDesignLoading] = useState(true);
     const [progress, setProgress] = useState<{ done: number; total: number } | null>(null);
-    const [result, setResult] = useState<CheckoutResult | null>(null);
-    // ぺったんと意匠の切り替え。意匠の側は、初めて開いた時に読み込み、以後は隠すだけにする
-    const [kind, setKind] = useState<CatalogKind>("petan");
-    const [designOpened, setDesignOpened] = useState(false);
+    const [result, setResult] = useState<CheckoutSummary | null>(null);
+    const sel = useSelection();
+    const [removingSelected, setRemovingSelected] = useState(false);
+    const [creatorProfiles, setCreatorProfiles] = useState<Map<string, CreatorProfile>>(new Map());
 
     useEffect(() => {
         if (authReady && !user) router.replace(`/login?redirect=${encodeURIComponent(CART_PATH)}`);
@@ -47,7 +66,7 @@ export default function CartPage() {
             }
             if (!cancelled) {
                 setPacks(alive);
-                setLoading(false);
+                setPetanLoading(false);
             }
         })();
         return () => {
@@ -55,20 +74,98 @@ export default function CartPage() {
         };
     }, [user, cartReady, idsKey]);
 
+    // 意匠も同じ。取得済み・存在しない・取り下げの意匠はカートから外し、配信停止は消さずに隠す
+    const designIdsKey = useMemo(() => Array.from(designIds).sort().join(","), [designIds]);
+    useEffect(() => {
+        if (!user || !designCartReady) return;
+        let cancelled = false;
+        loadDesignList(user.uid, "cartDesigns", designIdsKey ? designIdsKey.split(",") : []).then((list) => {
+            if (cancelled) return;
+            setDesigns(list);
+            setDesignLoading(false);
+        });
+        return () => {
+            cancelled = true;
+        };
+    }, [user, designCartReady, designIdsKey]);
+
+    // 追加した新しい順に、1つの一覧にする
+    const items = useMemo<MixedItem<CartEntry>[]>(
+        () =>
+            mergeByAddedAt<CartEntry>(
+                packs.map((p) => ({ kind: "petan", id: p.id, addedAt: addedAt.get(p.id) ?? 0, data: p })),
+                designs.map((p) => ({ kind: "design", id: p.id, addedAt: designAddedAt.get(p.id) ?? 0, data: p })),
+            ),
+        [packs, designs, addedAt, designAddedAt],
+    );
+
+    // カードに出す、クリエイターの情報
+    const creatorKey = useMemo(() => Array.from(new Set(items.map((i) => (i.data as { creatorId: string }).creatorId))).sort().join(","), [items]);
+    useEffect(() => {
+        if (!creatorKey) return;
+        let cancelled = false;
+        getCreatorProfiles(creatorKey.split(","))
+            .then((m) => !cancelled && setCreatorProfiles(m))
+            .catch(() => {});
+        return () => {
+            cancelled = true;
+        };
+    }, [creatorKey]);
+
     if (!authReady || !user) return null;
 
     const free = packs.filter((p) => p.price === 0);
     const paid = packs.length - free.length;
+    // 意匠は全て無料
+    const acquirable = free.length + designs.length;
     const running = progress !== null;
+    const loading = petanLoading || designLoading;
 
-    const handleCheckout = async () => {
-        if (free.length === 0) return;
-        if (!window.confirm(`${free.length}件の無料のぺったんを入手します。よろしいですか？`)) return;
-        setResult(null);
-        setProgress({ done: 0, total: free.length });
+    // 選んだものを、まとめてカートから外す
+    const handleRemoveSelected = async (keys: string[]) => {
+        if (!window.confirm(`${keys.length}件をカートから外します。よろしいですか？`)) return;
+        setRemovingSelected(true);
         try {
-            const r = await checkoutCart(packs, user.uid, (done, total) => setProgress({ done, total }));
-            setResult(r);
+            await Promise.all(
+                keys.map((k) => {
+                    const { kind, id } = parseItemKey(k);
+                    return kind === "petan" ? remove(id) : removeDesign(id);
+                }),
+            );
+            sel.clear();
+        } finally {
+            setRemovingSelected(false);
+        }
+    };
+
+    // 無料のぺったんと、意匠を、順に入手する（Cloud Functionsへの同時リクエストを避ける）
+    const handleCheckout = async () => {
+        if (acquirable === 0) return;
+        if (!window.confirm(`${acquirable}件を入手します。よろしいですか？`)) return;
+        setResult(null);
+        setProgress({ done: 0, total: acquirable });
+        const summary: CheckoutSummary = { acquired: 0, alreadyOwned: 0, failed: 0 };
+        try {
+            if (free.length > 0) {
+                const r = await checkoutCart(packs, user.uid, (done) => setProgress({ done, total: acquirable }));
+                summary.acquired += r.acquired.length;
+                summary.alreadyOwned += r.alreadyOwned;
+                summary.failed += r.failed;
+            }
+            if (designs.length > 0) {
+                const base = free.length;
+                const r = await checkoutDesignCart(
+                    user.uid,
+                    designs.map((d) => d.id),
+                    (id) => acquireThemePack({ packId: id }),
+                    (done) => setProgress({ done: base + done, total: acquirable }),
+                );
+                summary.acquired += r.acquired.length;
+                summary.alreadyOwned += r.alreadyOwned;
+                summary.failed += r.failed;
+            }
+            setResult(summary);
+            sel.clear();
         } finally {
             setProgress(null);
         }
@@ -82,90 +179,74 @@ export default function CartPage() {
                     カート
                 </h1>
 
-                <KindSwitch
-                    value={kind}
-                    onChange={(next) => {
-                        if (next === "design") setDesignOpened(true);
-                        setKind(next);
-                    }}
-                    className="mb-10 sm:mx-0"
-                />
-
-                {designOpened && (
-                    <div hidden={kind !== "design"}>
-                        <CartDesigns uid={user.uid} />
-                    </div>
-                )}
-                <div hidden={kind !== "petan"}>
-
                 {loading ? (
-                    <ThumbRowSkeleton />
-                ) : packs.length === 0 ? (
-                    <div className="flex flex-col items-start gap-3">
+                    <PackGridSkeleton count={3} />
+                ) : items.length === 0 ? (
+                    <div className="flex flex-col items-start gap-4">
                         {result ? (
                             <p className="text-sm text-gray-700" role="status">
-                                {result.acquired.length}件入手しました。
+                                {result.acquired}件入手しました
+                                {result.failed > 0 && `。${result.failed}件は失敗しました。もう一度お試しください`}
+                                。
                                 <Link href="/daidai-yokocho/owned" className="text-blue-600 hover:underline ml-1">
-                                    購入済みのぺったんを見る →
+                                    購入済みを見る →
                                 </Link>
                             </p>
                         ) : (
-                            <p className="text-gray-400 text-sm">カートにぺったんは有りません。</p>
+                            <p className="text-gray-400 text-sm">カートは空です。</p>
                         )}
-                        <Link href="/daidai-yokocho" className="text-sm text-blue-600 hover:underline">
-                            daidai横丁で探す →
-                        </Link>
+                        <FindInYokochoLink />
                     </div>
                 ) : (
                     <>
-                        <ul className="flex flex-col gap-3">
-                            {packs.map((pack) => (
-                                <li
-                                    key={pack.id}
-                                    className="flex items-center gap-4 bg-white border border-gray-100 shadow-elevation-1 rounded-m3-lg p-3"
-                                >
-                                    <Link href={`/daidai-yokocho/${pack.id}`} className="flex items-center gap-4 min-w-0 flex-1">
-                                        <div className="w-20 h-20 shrink-0 bg-white rounded-m3-md flex items-center justify-center overflow-hidden">
-                                            {getPackCover(pack)?.imageUrl ? (
-                                                // eslint-disable-next-line @next/next/no-img-element
-                                                <img src={getPackCover(pack)!.imageUrl} alt="" className="w-full h-full object-contain p-1" />
-                                            ) : null}
-                                        </div>
-                                        <div className="min-w-0">
-                                            <p className="font-bold text-gray-900 truncate">{pack.name}</p>
-                                            <p className={`text-sm font-bold ${pack.price === 0 ? "text-emerald-600" : "text-amber-600"}`}>
-                                                {formatPackPrice(pack.price)}
-                                            </p>
-                                        </div>
-                                    </Link>
-                                    <button
-                                        type="button"
-                                        onClick={() => remove(pack.id)}
-                                        aria-label={`${pack.name}をカートから外す`}
-                                        disabled={running}
-                                        className="p-2 rounded-full text-gray-400 hover:text-red-600 hover:bg-gray-100 transition disabled:opacity-40"
+                        <SelectionToolbar
+                            ids={items.map((i) => itemKey(i.kind, i.id))}
+                            selected={sel.selected}
+                            busy={running || removingSelected}
+                            actionLabel="カートから外す"
+                            onSelectAll={sel.selectAll}
+                            onClear={sel.clear}
+                            onAction={handleRemoveSelected}
+                            trailing={
+                                <Button onClick={handleCheckout} disabled={running || acquirable === 0}>
+                                    {running ? `入手中… ${progress!.done}/${progress!.total}` : `まとめて入手（${acquirable}件）`}
+                                </Button>
+                            }
+                        />
+                        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+                            {items.map((item) => {
+                                const key = itemKey(item.kind, item.id);
+                                const pack = item.data as StickerPack & PublicThemePack;
+                                return (
+                                    <SelectableItem
+                                        key={key}
+                                        selected={sel.selected.has(key)}
+                                        onToggle={() => sel.toggle(key)}
+                                        label={pack.name}
+                                        badge={<KindBadge kind={item.kind} />}
                                     >
-                                        <Trash2 className="w-5 h-5" />
-                                    </button>
-                                </li>
-                            ))}
-                        </ul>
+                                        {item.kind === "petan" ? (
+                                            <StickerPackCard pack={pack} creator={creatorProfiles.get(pack.creatorId) ?? null} />
+                                        ) : (
+                                            <DesignCard pack={pack} creator={creatorProfiles.get(pack.creatorId) ?? null} />
+                                        )}
+                                    </SelectableItem>
+                                );
+                            })}
+                        </div>
 
                         <div className="mt-8 flex flex-col gap-3 items-start">
                             <p className="text-sm text-gray-600">
-                                無料のぺったん {free.length}件
+                                無料 {acquirable}件
                                 {paid > 0 && (
                                     <span className="text-amber-600 ml-2">
                                         有料のぺったん{paid}件は、現在購入出来ません。カートには残ります。
                                     </span>
                                 )}
                             </p>
-                            <Button size="lg" onClick={handleCheckout} disabled={running || free.length === 0}>
-                                {running ? `入手中… ${progress.done}/${progress.total}` : `まとめて入手（${free.length}件）`}
-                            </Button>
                             {result && !running && (
                                 <p className="text-sm text-gray-700" role="status">
-                                    {result.acquired.length}件入手しました
+                                    {result.acquired}件入手しました
                                     {result.alreadyOwned > 0 && `。入手済みが${result.alreadyOwned}件有りました`}
                                     {result.failed > 0 && `。${result.failed}件は失敗しました。もう一度お試しください`}
                                 </p>
@@ -173,7 +254,6 @@ export default function CartPage() {
                         </div>
                     </>
                 )}
-                </div>
             </div>
         </div>
     );

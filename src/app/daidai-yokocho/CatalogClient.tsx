@@ -12,6 +12,8 @@ import DesignFilterPanel from "@/components/DesignFilterPanel";
 import { countActiveDesignFilters, EMPTY_DESIGN_FILTERS, type DesignFilters } from "@/lib/designFilter";
 import KindSwitch, { type CatalogKind } from "@/components/daidai-yokocho/KindSwitch";
 import DesignCatalog from "@/components/daidai-yokocho/DesignCatalog";
+import BulkAddDesignsButton from "@/components/daidai-yokocho/BulkAddDesignsButton";
+import type { PublicThemePack } from "@/lib/themePackReview";
 import { applyPackFilters, countActiveFilters, EMPTY_FILTERS, type PackFilters } from "@/lib/packFilter";
 
 // initialKind: URLに?kind=が有る時だけ渡る。無ければ、前に開いていた側（詳細ページから戻った時など）を使う
@@ -36,6 +38,8 @@ export default function CatalogClient({ packs, initialKind }: { packs: StickerPa
     const [designFilters, setDesignFilters] = useState<DesignFilters>(EMPTY_DESIGN_FILTERS);
     const designActive = countActiveDesignFilters(designFilters);
     const [designCount, setDesignCount] = useState<number | null>(null);
+    // 表示中の意匠（「全てカートに追加」の対象）
+    const [shownDesigns, setShownDesigns] = useState<PublicThemePack[]>([]);
 
     useEffect(() => {
         const creatorIds = packs.map((p) => p.creatorId);
@@ -122,7 +126,8 @@ export default function CatalogClient({ packs, initialKind }: { packs: StickerPa
                             )}
                         </>
                     ) : (
-                        designCount !== null && (query.trim() !== "" || designActive > 0) && (
+                        <>
+                        {designCount !== null && (query.trim() !== "" || designActive > 0) && (
                             <span className="text-sm text-gray-500">
                                 {designCount}件{designActive > 0 ? `　絞り込み${designActive}件を適用中` : ""}
                                 {designActive > 0 && (
@@ -135,14 +140,18 @@ export default function CatalogClient({ packs, initialKind }: { packs: StickerPa
                                     </button>
                                 )}
                             </span>
-                        )
+                        )}
+                        {shownDesigns.length > 0 && (
+                            <BulkAddDesignsButton packs={shownDesigns} label="表示中の意匠を全てカートに追加" />
+                        )}
+                        </>
                     )}
                 </div>
             </div>
 
             {designOpened && (
                 <div hidden={kind !== "design"}>
-                    <DesignCatalog query={query} filters={designFilters} onCount={setDesignCount} />
+                    <DesignCatalog query={query} filters={designFilters} onCount={setDesignCount} onShown={setShownDesigns} />
                 </div>
             )}
             <div hidden={kind !== "petan"}>

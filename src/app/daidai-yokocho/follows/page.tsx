@@ -8,6 +8,7 @@ import { auth, onAuthStateChanged, type User } from "@/lib/firebaseAuth";
 import { getFollowedCreatorIds, unfollowCreator } from "@/lib/follows";
 import { getCreatorProfiles, type CreatorProfile } from "@/lib/creatorProfiles";
 import { ListRowSkeleton } from "@/components/Skeleton";
+import FindInYokochoLink from "@/components/daidai-yokocho/FindInYokochoLink";
 
 const FOLLOWS_PATH = "/daidai-yokocho/follows";
 
@@ -62,12 +63,10 @@ export default function FollowedCreatorsPage() {
                 {loading ? (
                     <ListRowSkeleton />
                 ) : creators.length === 0 ? (
-                    <p className="text-gray-400 text-sm">
-                        まだ誰もフォローしていません。
-                        <Link href="/daidai-yokocho" className="text-blue-600 hover:underline ml-1">
-                            daidai横丁で探す →
-                        </Link>
-                    </p>
+                    <div className="flex flex-col items-start gap-4">
+                        <p className="text-gray-400 text-sm">まだ誰もフォローしていません。</p>
+                        <FindInYokochoLink />
+                    </div>
                 ) : (
                     <div className="flex flex-col gap-4">
                         {creators.map((creator) => (

@@ -65,7 +65,7 @@ export default function DesignCard({ pack, creator, owned = false }: { pack: Pub
                             取得済み
                         </span>
                     )}
-                    <DesignActions packId={pack.id} creatorId={pack.creatorId} variant="card" />
+                    <DesignActions packId={pack.id} variant="card" />
                 </div>
                 <div className="px-6 pt-3 flex flex-col gap-1">
                     <span className="text-sm font-bold whitespace-nowrap text-emerald-600">無料</span>
