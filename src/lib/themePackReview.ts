@@ -6,7 +6,7 @@ import { db, firebaseApp } from "@/lib/firebase";
 import { checkContrast, type ContrastReport } from "@/lib/themePack/contrast";
 import { parseThemePack, type ParsedThemePack } from "@/lib/themePack/spec";
 
-// 意匠パックの審査（管理者）。themePackSubmissionsは、管理者と投稿者本人だけが読める。
+// 意匠の審査（管理者）。themePackSubmissionsは、管理者と投稿者本人だけが読める。
 
 const storage = getStorage(firebaseApp);
 
@@ -92,7 +92,7 @@ export async function loadThemePackPreview(assetPath: string): Promise<ThemePack
     return { pack, contrast: checkContrast(pack), backgroundUrl, warnings: parsed.warnings };
 }
 
-// 公開中の意匠パック（themePacks。誰でも読める）。承認された版だけが入る
+// 公開中の意匠（themePacks。誰でも読める）。承認された版だけが入る
 export interface PublicThemePack {
     id: string;
     /** approved（公開中）・withdrawn（取り下げ）・suspended（配信停止）。一覧に出るのはapprovedだけ */
@@ -126,7 +126,7 @@ export async function listPublicThemePacks(): Promise<PublicThemePack[]> {
     return list.filter((p) => p.name && p.assetPath).sort((a, b) => (b.approvedAt?.getTime() ?? 0) - (a.approvedAt?.getTime() ?? 0));
 }
 
-// 公開中の意匠パック1件（承認されたものだけ）。無い・停止中・承認前はnull
+// 公開中の意匠1件（承認されたものだけ）。無い・停止中・承認前はnull
 export async function getPublicThemePack(id: string): Promise<PublicThemePack | null> {
     const snap = await getDoc(doc(db, "themePacks", id));
     if (!snap.exists()) return null;
@@ -144,7 +144,7 @@ export async function getPublicThemePack(id: string): Promise<PublicThemePack | 
     };
 }
 
-// 意匠パック1件を、状態に関わらず読む（取得した人が、取り下げ・停止の後も見られるように）。無ければnull
+// 意匠1件を、状態に関わらず読む（取得した人が、取り下げ・停止の後も見られるように）。無ければnull
 export async function getThemePack(id: string): Promise<PublicThemePack | null> {
     const snap = await getDoc(doc(db, "themePacks", id));
     if (!snap.exists()) return null;
@@ -163,13 +163,13 @@ export async function getThemePack(id: string): Promise<PublicThemePack | null> 
     };
 }
 
-// 取得済みの意匠パックのid（users/{uid}/ownedThemePacks）。本人だけが読める
+// 取得済みの意匠のid（users/{uid}/ownedThemePacks）。本人だけが読める
 export async function listOwnedThemePackIds(uid: string): Promise<string[]> {
     const snap = await getDocs(collection(db, "users", uid, "ownedThemePacks"));
     return snap.docs.map((d) => d.id);
 }
 
-// 取得済みの意匠パックの一覧（取り下げ・停止になったものも含む）
+// 取得済みの意匠の一覧（取り下げ・停止になったものも含む）
 export async function listOwnedThemePacks(uid: string): Promise<PublicThemePack[]> {
     const ids = await listOwnedThemePackIds(uid);
     const packs = await Promise.all(ids.map((id) => getThemePack(id).catch(() => null)));
@@ -203,7 +203,7 @@ export async function isThemePackOwned(uid: string, packId: string): Promise<boo
     return snap.exists();
 }
 
-// あるクリエイターの、公開中の意匠パック（クリエイターのページ用）。新しく公開された順
+// あるクリエイターの、公開中の意匠（クリエイターのページ用）。新しく公開された順
 export async function listPublicThemePacksByCreator(creatorId: string): Promise<PublicThemePack[]> {
     const snap = await getDocs(query(collection(db, "themePacks"), where("creatorId", "==", creatorId), where("status", "==", "approved"), limit(100)));
     const list = snap.docs.map((d) => {

@@ -24,7 +24,7 @@ function isAlreadyExists(err: unknown): boolean {
     return typeof err === "object" && err !== null && (err as { code?: unknown }).code === "functions/already-exists";
 }
 
-// 未入手の無料パックを探す。有料は対象外（件数だけ返す）
+// 未入手の無料ぺったんを探す。有料は対象外（件数だけ返す）
 export async function findAcquirableFreePacks(
     packs: StickerPack[],
     uid: string,
@@ -39,7 +39,7 @@ export async function findAcquirableFreePacks(
     };
 }
 
-// 無料パックを1つずつ順番に入手する（Cloud Functionsへの同時リクエストを避ける）
+// 無料ぺったんを1つずつ順番に入手する（Cloud Functionsへの同時リクエストを避ける）
 export async function acquireFreePacks(
     packs: StickerPack[],
     uid: string,

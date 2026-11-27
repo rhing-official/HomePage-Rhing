@@ -51,8 +51,8 @@ describe("isUnread", () => {
 
 describe("formatNoticeContent", () => {
     it("「理由は次のとおりです。」の後ろで改行する", () => {
-        expect(formatNoticeContent("意匠パック『桜』は、差し戻されました。理由は次のとおりです。背景が不明です。")).toBe(
-            "意匠パック『桜』は、差し戻されました。理由は次のとおりです。\n背景が不明です。",
+        expect(formatNoticeContent("意匠『桜』は、差し戻されました。理由は次のとおりです。背景が不明です。")).toBe(
+            "意匠『桜』は、差し戻されました。理由は次のとおりです。\n背景が不明です。",
         );
     });
     it("すでに改行が有れば、重ねない", () => {
@@ -63,7 +63,7 @@ describe("formatNoticeContent", () => {
         expect(formatNoticeContent("理由は次のとおりです。一行目\n二行目")).toBe("理由は次のとおりです。\n一行目\n二行目");
     });
     it("理由の文が無い・別の文面は、変えない", () => {
-        expect(formatNoticeContent("意匠パック『桜』が承認され、公開されました。")).toBe("意匠パック『桜』が承認され、公開されました。");
+        expect(formatNoticeContent("意匠『桜』が承認され、公開されました。")).toBe("意匠『桜』が承認され、公開されました。");
         expect(formatNoticeContent("理由は次のとおりです。")).toBe("理由は次のとおりです。");
     });
 });

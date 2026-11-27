@@ -149,7 +149,7 @@ function OwnedPackCard({
                 {confirming ? (
                     <div className="flex flex-col gap-3">
                         <span className="text-sm text-gray-700">
-                            本当にアンインストールしますか？このパックのぺったんが送信できなくなります。
+                            本当にアンインストールしますか？このぺったんが送信できなくなります。
                         </span>
                         <div className="flex items-center gap-3">
                             <button

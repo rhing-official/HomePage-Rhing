@@ -1,7 +1,7 @@
 import { COLOR_LABELS, type ParsedThemePack, type ThemePackColorKey, type ThemePackColors } from "./spec";
 
 // WCAG 2.x のコントラスト比。全ての組で、3:1以上にする（大きな文字・画面の部品の基準。AAの本文の基準は4.5:1）。
-// 当初は4.5:1だったが、同梱の公式パック（桜 4.21、水玉 3.76）が届かないため、全ての組を3:1に緩めた（2026-11-26、ユーザー判断）。
+// 当初は4.5:1だったが、同梱の公式の意匠（桜 4.21、水玉 3.76）が届かないため、全ての組を3:1に緩めた（2026-11-26、ユーザー判断）。
 
 export const MIN_CONTRAST_RATIO = 3;
 

@@ -1,14 +1,14 @@
 import { collection, getDocs, limit, orderBy, query, Timestamp, where, type DocumentData } from "firebase/firestore";
 import { db } from "@/lib/firebase";
 
-// 出品済みパックの削除の申請（2026-11-17）。利用者のいる（ownerCount > 0）パックは、出品者が運営へ
+// 出品済みぺったんの削除の申請（2026-11-17）。利用者のいる（ownerCount > 0）ぺったんは、出品者が運営へ
 // 申請し、運営（管理者）が日時を指定して承認する。承認後は、その時刻に自動で完全に削除される。
 // 申請は packDeletionRequests/{packId}（書き込みはCloud Functionsのみ、DaiDaiリポジトリのfirestore.rules参照）。
 
 export type PackDeletionStatus = "pending" | "scheduled" | "completed" | "rejected" | "cancelled" | "failed";
 
 export interface PackDeletionRequest {
-    // 文書ID。パックの削除はpackId、ぺったん1枚の削除は「packId__stickerId」
+    // 文書ID。ぺったんの削除はpackId、ぺったん1枚の削除は「packId__stickerId」
     requestId: string;
     kind: "pack" | "sticker";
     stickerId: string;
@@ -88,9 +88,9 @@ export function deletionNoticePreview(packName: string, deleteAtMs: number, urge
 // 入手した人へ送られるお知らせの文面（1枚の削除。Cloud Functionsの stickerDeletionNoticeText と同じ）
 export function stickerDeletionNoticePreview(packName: string, stickerName: string, deleteAtMs: number, urgent = false): string {
     if (urgent) {
-        return `「${packName}」というぺったんパックの中の「${stickerName}」をお使いの利用者の方に連絡します。緊急の対応のため、まもなく使えなくなります。`;
+        return `「${packName}」の中の「${stickerName}」をお使いの利用者の方に連絡します。緊急の対応のため、まもなく使えなくなります。`;
     }
-    return `「${packName}」というぺったんパックの中の「${stickerName}」をお使いの利用者の方に連絡します。${formatJstDateTime(deleteAtMs)}に使えなくなります。`;
+    return `「${packName}」の中の「${stickerName}」をお使いの利用者の方に連絡します。${formatJstDateTime(deleteAtMs)}に使えなくなります。`;
 }
 
 // 申請の種別に合わせた、お知らせの文面
@@ -112,11 +112,11 @@ export function deletionRequestId(packId: string, stickerId?: string): string {
 // DaiDaiリポジトリ functions/src/index.ts の MIN_STICKERS_PER_PACK と同じ
 export const MIN_STICKERS_PER_PACK = 4;
 
-// パックから1枚を削除してよいか（削除後の枚数の下限、代表は不可）。問題が無ければnull
+// ぺったんから1枚を削除してよいか（削除後の枚数の下限、代表は不可）。問題が無ければnull
 export function validateStickerRemoval(stickerIds: string[], stickerId: string, coverStickerId: string | null | undefined): string | null {
-    if (!stickerIds.includes(stickerId)) return "このパックにそのぺったんは有りません";
+    if (!stickerIds.includes(stickerId)) return "このぺったんに、その画像は有りません";
     if (stickerIds.length - 1 < MIN_STICKERS_PER_PACK) {
-        return `パックには${MIN_STICKERS_PER_PACK}枚以上のぺったんが必要です。パックごと削除する場合は、パックの削除を申請してください`;
+        return `ぺったんには${MIN_STICKERS_PER_PACK}枚以上の画像が必要です。ぺったんごと削除する場合は、ぺったんの削除を申請してください`;
     }
     if (coverStickerId && coverStickerId === stickerId) {
         return "代表のぺったんは削除出来ません。先に、代表を別のぺったんに変えてください";

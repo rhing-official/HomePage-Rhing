@@ -14,7 +14,7 @@ import { deleteStickerPackAssetByUrl } from "@/lib/firebaseStorage";
 import type { StickerInput } from "@/lib/firebaseFunctions";
 
 // users/{uid}/packDrafts/{draftId}はDaiDaiリポジトリのfirestore.rulesで本人のみ読み書き可。
-// パックの作成を途中で保存しておくためのもの（公開されるstickerPacksとは別の場所）。
+// ぺったんの作成を途中で保存しておくためのもの（公開されるstickerPacksとは別の場所）。
 export const DRAFT_MAX = 10;
 
 export interface PackDraft {
@@ -94,7 +94,7 @@ export async function savePackDraft(uid: string, draftId: string | null, data: P
 }
 
 // 下書きを削除する。deleteImagesがtrueなら、下書きの画像もStorageから消す
-// （公開に使った画像は、パックが使うので、消さない＝false）
+// （公開に使った画像は、ぺったんが使うので、消さない＝false）
 export async function deletePackDraft(uid: string, draft: Pick<PackDraft, "id" | "stickers">, deleteImages: boolean): Promise<void> {
     await deleteDoc(doc(db, "users", uid, "packDrafts", draft.id));
     if (deleteImages) {
@@ -102,7 +102,7 @@ export async function deletePackDraft(uid: string, draft: Pick<PackDraft, "id" |
     }
 }
 
-// ---- 公開中のパックの編集内容の下書き（users/{uid}/packEditDrafts/{packId}、1パックにつき1つ） ----
+// ---- 公開中のぺったんの編集内容の下書き（users/{uid}/packEditDrafts/{packId}、1ぺったんにつき1つ） ----
 // 変更点だけを持つ。公開版は、「公開する」を押すまで変わらない。
 
 export interface PackEditDraft {
@@ -139,7 +139,7 @@ export async function getPackEditDraft(uid: string, packId: string): Promise<Pac
     }
 }
 
-// 編集用の下書きが、あるパックのID一覧（「作成と管理」の一覧のバッジ用）
+// 編集用の下書きが、あるぺったんのID一覧（「作成と管理」の一覧のバッジ用）
 export async function listPackEditDraftIds(uid: string): Promise<Set<string>> {
     try {
         const snapshot = await getDocs(collection(db, "users", uid, "packEditDrafts"));
@@ -160,7 +160,7 @@ export async function savePackEditDraft(uid: string, packId: string, data: PackE
 }
 
 // 編集用の下書きを削除する。deleteImagesがtrueなら、追加予定の画像もStorageから消す
-// （公開して、画像が公開版に入ったときは、消さない＝false。パックの削除のときは、true）
+// （公開して、画像が公開版に入ったときは、消さない＝false。ぺったんの削除のときは、true）
 export async function deletePackEditDraft(uid: string, packId: string, deleteImages: boolean): Promise<void> {
     const draft = deleteImages ? await getPackEditDraft(uid, packId) : null;
     await deleteDoc(doc(db, "users", uid, "packEditDrafts", packId));

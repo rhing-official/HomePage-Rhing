@@ -35,7 +35,7 @@ interface PackEditorProps {
     onDeleted: () => void;
 }
 
-// 公開中のパックの編集。変更は「下書き保存」（公開版は変えない）か「公開する」（公開版に適用）で行う。
+// 公開中のぺったんの編集。変更は「下書き保存」（公開版は変えない）か「公開する」（公開版に適用）で行う。
 // 保存した編集内容（下書き）を読み込んでから、フォームを出す。
 export default function PackEditor(props: PackEditorProps) {
     const { uid, pack } = props;
@@ -163,7 +163,7 @@ function PackEditorForm({
         const trimmedName = name.trim();
         const priceValue = Number(price);
         if (!trimmedName) {
-            setError("パック名を入力してください");
+            setError("ぺったん名を入力してください");
             return null;
         }
         if (!Number.isInteger(priceValue) || priceValue < 0) {
@@ -171,7 +171,7 @@ function PackEditorForm({
             return null;
         }
         if (priceValue > 0 && priceValue !== pack.price) {
-            setError("有料パックの出品は準備中の為、価格は0円のみ設定出来ます");
+            setError("有料ぺったんの出品は準備中の為、価格は0円のみ設定出来ます");
             return null;
         }
         return { trimmedName, priceValue };
@@ -186,7 +186,7 @@ function PackEditorForm({
         return { inputs, coverStickerId };
     };
 
-    // 下書き保存: 編集内容を保存する。公開中のパックは、このままで、変わらない
+    // 下書き保存: 編集内容を保存する。公開中のぺったんは、このままで、変わらない
     const handleSaveDraft = async () => {
         if (busy) return;
         setError(null);
@@ -206,7 +206,7 @@ function PackEditorForm({
             await Promise.all(removedImageUrls(savedAdded.current, inputs).map(deleteStickerPackAssetByUrl));
             savedAdded.current = inputs;
             setHasDraft(true);
-            setNotice("編集内容を下書きとして保存しました（公開中のパックは、まだ変わっていません）");
+            setNotice("編集内容を下書きとして保存しました（公開中のぺったんは、まだ変わっていません）");
         } catch (err) {
             setError(err instanceof Error ? err.message : "下書きの保存に失敗しました");
         } finally {
@@ -214,7 +214,7 @@ function PackEditorForm({
         }
     };
 
-    // 公開する: 編集内容を、公開中のパックに適用する
+    // 公開する: 編集内容を、公開中のぺったんに適用する
     const handleApply = async () => {
         if (busy) return;
         setError(null);
@@ -233,7 +233,7 @@ function PackEditorForm({
                 price: v.priceValue,
                 ...(coverStickerId ? { coverStickerId } : {}),
             });
-            // 公開できたら、編集用の下書きは不要（追加した画像は、パックが使うので消さない）
+            // 公開できたら、編集用の下書きは不要（追加した画像は、ぺったんが使うので消さない）
             if (hasDraft) {
                 try {
                     await deletePackEditDraft(uid, pack.id, false);
@@ -305,7 +305,7 @@ function PackEditorForm({
 
             {hasDraft && (
                 <p className="text-xs text-primary bg-primary-container/60 rounded-lg px-4 py-2.5">
-                    保存した編集内容を読み込んでいます。「公開する」を押すまで、公開中のパックは変わりません。
+                    保存した編集内容を読み込んでいます。「公開する」を押すまで、公開中のぺったんは変わりません。
                 </p>
             )}
 
@@ -327,7 +327,7 @@ function PackEditorForm({
                                             <img src={sticker.imageUrl} alt={sticker.name} className="w-full h-full object-contain" />
                                         </button>
                                     )}
-                                    {/* 新規作成と同じ、★で代表を選ぶボタン（「公開する」まで、公開中のパックは変わらない） */}
+                                    {/* 新規作成と同じ、★で代表を選ぶボタン（「公開する」まで、公開中のぺったんは変わらない） */}
                                     <button
                                         type="button"
                                         onClick={() => {
@@ -335,7 +335,7 @@ function PackEditorForm({
                                             setNotice(null);
                                         }}
                                         aria-pressed={isCover}
-                                        aria-label={isCover ? "パックの代表（選択中）" : "パックの代表にする"}
+                                        aria-label={isCover ? "ぺったんの代表（選択中）" : "ぺったんの代表にする"}
                                         className="absolute bottom-0 left-0 bg-white/85 w-5 h-5 flex items-center justify-center"
                                     >
                                         <Star className={`w-3.5 h-3.5 ${isCover ? "text-amber-500 fill-amber-500" : "text-gray-400"}`} />
@@ -371,7 +371,7 @@ function PackEditorForm({
                         );
                     })}
                 </div>
-                <p className="text-xs text-gray-400">★をつけた画像が、パックの代表（一覧等に最初に出る画像）になります。画像をクリックすると、拡大して見られます。</p>
+                <p className="text-xs text-gray-400">★をつけた画像が、ぺったんの代表（一覧等に最初に出る画像）になります。画像をクリックすると、拡大して見られます。</p>
                 <div className="flex flex-wrap items-center gap-3">
                     <button
                         type="button"
@@ -411,14 +411,14 @@ function PackEditorForm({
                     }}
                 />
                 <p className="text-xs text-gray-400">
-                    追加する画像は、役割を設定してから、「公開する」で公開中のパックに入ります（追加済みの画像は、各画像の「差し替え」で変えられます。削除は、利用者がいなければ直接、いれば運営への申請になります）。
+                    追加する画像は、役割を設定してから、「公開する」で公開中のぺったんに入ります（追加済みの画像は、各画像の「差し替え」で変えられます。削除は、利用者がいなければ直接、いれば運営への申請になります）。
                 </p>
             </div>
 
-            {/* パック名と価格は、行を分けて入力する */}
+            {/* ぺったん名と価格は、行を分けて入力する */}
             <div className="flex flex-col gap-4 pt-3 border-t border-white/60">
                 <label className="flex flex-col gap-1.5 text-sm text-gray-600">
-                    パック名
+                    ぺったん名
                     <input
                         value={name}
                         onChange={(e) => {
@@ -444,7 +444,7 @@ function PackEditorForm({
                 </label>
                 <p className="text-xs text-gray-400 -mt-2">
                     現在の価格: {formatPackPrice(pack.price)}
-                    {pack.price === 0 && "（有料パックの出品は準備中の為、当面は無料のみ設定出来ます）"}
+                    {pack.price === 0 && "（有料ぺったんの出品は準備中の為、当面は無料のみ設定出来ます）"}
                 </p>
                 {error && <p className="text-xs text-red-600">{error}</p>}
                 {notice && <p className="text-xs text-emerald-700" role="status">{notice}</p>}
@@ -505,7 +505,7 @@ function PackEditorForm({
                         title={canDelete ? undefined : "現在利用しているユーザーがいるため削除出来ません"}
                         className="self-start text-sm font-bold text-red-600 hover:text-red-800 transition-colors disabled:text-gray-300 disabled:cursor-not-allowed"
                     >
-                        このパックを削除する
+                        このぺったんを削除する
                     </button>
                 )}
                 {deleteError && <p className="text-xs text-red-600">{deleteError}</p>}

@@ -7,7 +7,7 @@ import {
 } from "@/lib/designFilter";
 import { Chip, inputClass, toggle } from "@/components/PackFilterPanel";
 
-// 意匠パックの絞り込みパネル。ぺったんのPackFilterPanelと同じ見た目で、項目だけが違う
+// 意匠の絞り込みパネル。ぺったんのPackFilterPanelと同じ見た目で、項目だけが違う
 export default function DesignFilterPanel({ filters, onChange }: { filters: DesignFilters; onChange: (next: DesignFilters) => void }) {
     const set = (patch: Partial<DesignFilters>) => onChange({ ...filters, ...patch });
     return (

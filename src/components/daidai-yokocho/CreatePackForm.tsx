@@ -22,7 +22,7 @@ import { deleteStickerPackAssetByUrl } from "@/lib/firebaseStorage";
 const MIN_STICKERS_PER_PACK = 4;
 const MAX_TAGS = 5;
 
-// パックの新規作成（または、下書きのパックの編集）フォーム。「下書き保存」と「公開する」の2つのボタンがある
+// ぺったんの新規作成（または、下書きのぺったんの編集）フォーム。「下書き保存」と「公開する」の2つのボタンがある
 export default function CreatePackForm({
     uid,
     tagSuggestions,
@@ -47,7 +47,7 @@ export default function CreatePackForm({
     const [stickers, setStickers] = useState<StickerDraft[]>(
         () => (draft?.stickers ?? []).map((s) => ({ uploaded: s, roles: s.roles })),
     );
-    // パックの代表にする画像の位置（初期は先頭、下書きなら保存した代表）。画像を減らして範囲外になったら、先頭に戻す
+    // ぺったんの代表にする画像の位置（初期は先頭、下書きなら保存した代表）。画像を減らして範囲外になったら、先頭に戻す
     const [coverIndex, setCoverIndex] = useState(() => {
         const i = draft ? draft.stickers.findIndex((s) => s.stickerId === draft.coverStickerId) : -1;
         return i >= 0 ? i : 0;
@@ -127,7 +127,7 @@ export default function CreatePackForm({
                 tags,
                 coverStickerId: stickerInputs[effectiveCover]?.stickerId,
             });
-            // 下書きから公開したら、下書きは消す（画像は、パックが使うので消さない）
+            // 下書きから公開したら、下書きは消す（画像は、ぺったんが使うので消さない）
             if (draftId) {
                 try {
                     await deletePackDraft(uid, { id: draftId, stickers: stickerInputs }, false);
@@ -155,11 +155,11 @@ export default function CreatePackForm({
             onSubmit={handleSubmit}
             className="bg-white/40 backdrop-blur-md border border-white/80 shadow-md shadow-gray-200/30 rounded-3xl p-8 flex flex-col gap-5"
         >
-            {/* 下書きの編集画面では、ページの見出し「パックの編集」があるので、フォームの見出しは出さない */}
-            {!draft && <h2 className="text-xl font-bold text-gray-900">新規パックを作成</h2>}
+            {/* 下書きの編集画面では、ページの見出し「ぺったんの編集」があるので、フォームの見出しは出さない */}
+            {!draft && <h2 className="text-xl font-bold text-gray-900">新規ぺったんを作成</h2>}
 
             <label className="flex flex-col gap-1.5 text-sm text-gray-600">
-                パック名
+                ぺったん名
                 <input
                     value={name}
                     onChange={(e) => setName(e.target.value)}
@@ -168,7 +168,7 @@ export default function CreatePackForm({
             </label>
 
             <p className="text-sm text-gray-500 bg-gray-50 border border-gray-200 rounded-lg px-4 py-2.5">
-                価格: 無料（0円）— 有料パックの出品は準備中の為、現在は無料配布のみ対応しています。
+                価格: 無料（0円）— 有料ぺったんの出品は準備中の為、現在は無料配布のみ対応しています。
             </p>
 
             <label className="flex flex-col gap-1.5 text-sm text-gray-600">
@@ -204,7 +204,7 @@ export default function CreatePackForm({
                     onCoverChange={setCoverIndex}
                 />
                 {stickers.length > 0 && (
-                    <p className="text-xs text-gray-400">★をつけた画像が、パックの代表（一覧等に最初に出る画像）になります。</p>
+                    <p className="text-xs text-gray-400">★をつけた画像が、ぺったんの代表（一覧等に最初に出る画像）になります。</p>
                 )}
             </div>
 
@@ -232,7 +232,7 @@ export default function CreatePackForm({
                 </button>
             </div>
             {!isValid && (
-                <p className="text-xs text-gray-400">公開するには、パック名と、{MIN_STICKERS_PER_PACK}枚以上の画像が必要です。途中なら、下書き保存ができます。</p>
+                <p className="text-xs text-gray-400">公開するには、ぺったん名と、{MIN_STICKERS_PER_PACK}枚以上の画像が必要です。途中なら、下書き保存ができます。</p>
             )}
         </form>
     );

@@ -11,7 +11,7 @@ import { EditorSkeleton } from "@/components/Skeleton";
 
 const CREATOR_PATH = "/daidai-yokocho/creator";
 
-// 作成済みのパックの編集画面（「作成と管理」の一覧の「編集」から来る）
+// 作成済みのぺったんの編集画面（「作成と管理」の一覧の「編集」から来る）
 export default function EditPackPage({ params }: { params: Promise<{ packId: string }> }) {
     const { packId } = use(params);
     const router = useRouter();
@@ -32,7 +32,7 @@ export default function EditPackPage({ params }: { params: Promise<{ packId: str
         }
     }, [ready, user, router, packId]);
 
-    // 保存や画像の追加のあと、パックを読み直す（versionを進めて、下の取得を再実行する）
+    // 保存や画像の追加のあと、ぺったんを読み直す（versionを進めて、下の取得を再実行する）
     const [version, setVersion] = useState(0);
     const reload = useCallback(() => setVersion((v) => v + 1), []);
 
@@ -55,7 +55,7 @@ export default function EditPackPage({ params }: { params: Promise<{ packId: str
 
     if (!ready || !user) return null;
 
-    // 自分のパックだけ編集できる（サーバー側でも、出品者かどうかを確認している）
+    // 自分のぺったんだけ編集できる（サーバー側でも、出品者かどうかを確認している）
     const editable = pack !== null && pack.creatorId === user.uid;
 
     return (
@@ -66,7 +66,7 @@ export default function EditPackPage({ params }: { params: Promise<{ packId: str
                 {loading ? (
                     <EditorSkeleton />
                 ) : !editable ? (
-                    <p className="text-gray-500 text-sm">編集出来るパックが見つかりません。</p>
+                    <p className="text-gray-500 text-sm">編集出来るぺったんが見つかりません。</p>
                 ) : (
                     <PackEditor
                         pack={pack}

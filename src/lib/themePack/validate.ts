@@ -3,7 +3,7 @@ import { imageTypeForExtension, readImageInfo } from "./imageSize";
 import { parseThemePack, THEME_PACK_LIMITS, type ParsedThemePack } from "./spec";
 import { formatBytes, readThemePackZip } from "./zip";
 
-// 意匠パックのzipを、投稿の前に検査する（ブラウザの中で完結する。ファイルは外へ送らない）。
+// 意匠のzipを、投稿の前に検査する（ブラウザの中で完結する。ファイルは外へ送らない）。
 // errorsが1つでもあれば、投稿できない。warningsは、投稿はできるが、直した方がよい点。
 
 export type ValidationResult = {
@@ -91,7 +91,7 @@ export function validateThemePackZip(data: Uint8Array): ValidationResult {
         }
         const ext = extensionOf(name);
         if (EXECUTABLE_EXTENSIONS.has(ext)) {
-            result.errors.push(`「${name}」は、実行できる形式かスクリプトです。意匠パックには、コードを含められません。`);
+            result.errors.push(`「${name}」は、実行できる形式かスクリプトです。意匠には、コードを含められません。`);
             continue;
         }
         const expected = imageTypeForExtension(ext);

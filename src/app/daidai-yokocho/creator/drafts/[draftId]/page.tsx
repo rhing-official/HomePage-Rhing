@@ -12,8 +12,8 @@ import { EditorSkeleton } from "@/components/Skeleton";
 
 const CREATOR_PATH = "/daidai-yokocho/creator";
 
-// 下書きの、パックの編集画面（「作成と管理」の一覧の、下書きの「編集」から来る）。
-// 「下書き保存」で保存し直し、「公開する」でパックとして公開できる。
+// 下書きの、ぺったんの編集画面（「作成と管理」の一覧の、下書きの「編集」から来る）。
+// 「下書き保存」で保存し直し、「公開する」でぺったんとして公開できる。
 export default function EditDraftPage({ params }: { params: Promise<{ draftId: string }> }) {
     const { draftId } = use(params);
     const router = useRouter();

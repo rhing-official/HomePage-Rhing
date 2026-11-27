@@ -1,9 +1,9 @@
-// 意匠パック（pack.json）の読み取りと検査。DaiDai本体の `lib/theme_pack/theme_pack.dart` の
-// `ThemePackParser` の規則を、TypeScriptへ移植したもの（2026-11-26、`文書/検討/素材パック.md`）。
+// 意匠（pack.json）の読み取りと検査。DaiDai本体の `lib/theme_pack/theme_pack.dart` の
+// `ThemePackParser` の規則を、TypeScriptへ移植したもの（2026-11-26、DaiDai-privateの`文書/検討/素材パック.md`）。
 // アプリ側は、範囲外の数値を丸め、不正な色を未指定にして読み込む。横丁は、それらを「警告」として投稿者へ返す。
 // 規則の食い違いを避けるため、テストの入力例は `DaiDai/test/theme_pack_test.dart` に合わせている。
 
-/** 意匠パックの形式の版。アプリが読めるのは、この版以下 */
+/** 意匠の形式の版。アプリが読めるのは、この版以下 */
 export const THEME_PACK_FORMAT_VERSION = 1;
 
 export const THEME_PACK_LIMITS = {

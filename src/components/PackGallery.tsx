@@ -19,7 +19,7 @@ export default function PackGallery({
 }) {
     const [index, setIndex] = useState(0);
     const [viewerOpen, setViewerOpen] = useState(false);
-    // パックの代表を最初に表示する（保存されている並びは変えない）
+    // ぺったんの代表を最初に表示する（保存されている並びは変えない）
     const cover = getPackCover({ stickers, coverStickerId });
     const items = [...(cover ? [cover] : []), ...stickers.filter((s) => s !== cover)].filter((s) => s.imageUrl);
     if (items.length === 0) {

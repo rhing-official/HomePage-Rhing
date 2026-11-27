@@ -13,7 +13,7 @@ function errorText(err: unknown, fallback: string): string {
     return err instanceof Error && err.message ? err.message : fallback;
 }
 
-// 意匠パックの取得ボタン（無料のみ）。取得済みなら「取得済み」と外す操作、取り下げ・停止の後でも外せる
+// 意匠の取得ボタン（無料のみ）。取得済みなら「取得済み」と外す操作、取り下げ・停止の後でも外せる
 export default function DesignAcquireButton({ packId, status, redirectPath }: { packId: string; status: string; redirectPath: string }) {
     const [user, setUser] = useState<User | null>(null);
     const [authReady, setAuthReady] = useState(false);

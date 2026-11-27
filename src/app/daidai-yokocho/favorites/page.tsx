@@ -10,6 +10,8 @@ import type { StickerPack } from "@/lib/stickerPacks";
 import { getCreatorProfiles, type CreatorProfile } from "@/lib/creatorProfiles";
 import StickerPackCard from "@/components/StickerPackCard";
 import { PackGridSkeleton } from "@/components/Skeleton";
+import KindSwitch, { type CatalogKind } from "@/components/daidai-yokocho/KindSwitch";
+import FavoriteDesigns from "@/components/daidai-yokocho/FavoriteDesigns";
 
 const FAVORITES_PATH = "/daidai-yokocho/favorites";
 
@@ -20,6 +22,9 @@ export default function FavoritePacksPage() {
     const [packs, setPacks] = useState<StickerPack[]>([]);
     const [creatorProfiles, setCreatorProfiles] = useState<Map<string, CreatorProfile>>(new Map());
     const [loading, setLoading] = useState(false);
+    // ぺったんと意匠の切り替え。意匠の側は、初めて開いた時に読み込み、以後は隠すだけにする
+    const [kind, setKind] = useState<CatalogKind>("petan");
+    const [designOpened, setDesignOpened] = useState(false);
 
     useEffect(() => onAuthStateChanged(auth, (u) => {
         setUser(u);
@@ -62,11 +67,27 @@ export default function FavoritePacksPage() {
                     お気に入り
                 </h1>
 
+                <KindSwitch
+                    value={kind}
+                    onChange={(next) => {
+                        if (next === "design") setDesignOpened(true);
+                        setKind(next);
+                    }}
+                    className="mb-10 sm:mx-0"
+                />
+
+                {designOpened && (
+                    <div hidden={kind !== "design"}>
+                        <FavoriteDesigns uid={user.uid} />
+                    </div>
+                )}
+                <div hidden={kind !== "petan"}>
+
                 {loading ? (
                     <PackGridSkeleton count={3} />
                 ) : packs.length === 0 ? (
                     <p className="text-gray-400 text-sm">
-                        まだお気に入りのパックが有りません。
+                        まだお気に入りのぺったんが有りません。
                         <Link href="/daidai-yokocho" className="text-blue-600 hover:underline ml-1">
                             daidai横丁で探す →
                         </Link>
@@ -87,6 +108,7 @@ export default function FavoritePacksPage() {
                         ))}
                     </div>
                 )}
+                </div>
             </div>
         </div>
     );

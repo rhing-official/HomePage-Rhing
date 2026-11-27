@@ -10,8 +10,8 @@ import PackFilterPanel from "@/components/PackFilterPanel";
 import KindSwitch, { type CatalogKind } from "@/components/daidai-yokocho/KindSwitch";
 import CreatorDesigns from "@/components/daidai-yokocho/CreatorDesigns";
 
-// クリエイターの出品パック。パック名・タグと価格で絞り込める。
-// 「全てカートに追加」は、画面に表示されているパック全てが対象（無料のみにしたいときは、先に絞り込む）
+// クリエイターの出品ぺったん。ぺったん名・タグと価格で絞り込める。
+// 「全てカートに追加」は、画面に表示されているぺったん全てが対象（無料のみにしたいときは、先に絞り込む）
 export default function CreatorPacks({ packs, creator }: { packs: StickerPack[]; creator: CreatorProfile }) {
     // ぺったんと意匠の切り替え。意匠の側は、初めて開いた時に読み込み、以後は隠すだけにする
     const [kind, setKind] = useState<CatalogKind>("petan");
@@ -21,7 +21,7 @@ export default function CreatorPacks({ packs, creator }: { packs: StickerPack[];
 
     const filtered = useMemo(() => applyPackFilters(packs, query, filters, null), [packs, query, filters]);
 
-    // 絞り込みパネルに出す、カテゴリとタグの候補（このクリエイターのパックから集める）
+    // 絞り込みパネルに出す、カテゴリとタグの候補（このクリエイターのぺったんから集める）
     const categories = useMemo(() => Array.from(new Set(packs.map((p) => p.category).filter(Boolean))).sort(), [packs]);
     const tags = useMemo(() => Array.from(new Set(packs.flatMap((p) => p.tags))).sort(), [packs]);
 
@@ -42,14 +42,14 @@ export default function CreatorPacks({ packs, creator }: { packs: StickerPack[];
             )}
             <div hidden={kind !== "petan"}>
             <div className="mb-6 flex flex-wrap items-center justify-between gap-4">
-                <h2 className="text-lg font-bold text-gray-900">出品パック</h2>
+                <h2 className="text-lg font-bold text-gray-900">出品ぺったん</h2>
                 {filtered.length > 0 && (
-                    <BulkAddToCartButton packs={filtered} label="表示中のパックを全てカートに追加" />
+                    <BulkAddToCartButton packs={filtered} label="表示中のぺったんを全てカートに追加" />
                 )}
             </div>
 
             {packs.length === 0 ? (
-                <p className="text-gray-500">出品しているパックは有りません</p>
+                <p className="text-gray-500">出品しているぺったんは有りません</p>
             ) : (
                 <>
                     <div className="mb-8 flex flex-col gap-4">
@@ -70,7 +70,7 @@ export default function CreatorPacks({ packs, creator }: { packs: StickerPack[];
                     </div>
 
                     {filtered.length === 0 ? (
-                        <p className="text-gray-500">条件に一致するパックが見つかりませんでした</p>
+                        <p className="text-gray-500">条件に一致するぺったんが見つかりませんでした</p>
                     ) : (
                         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
                             {filtered.map((pack) => (

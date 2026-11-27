@@ -10,7 +10,7 @@ import type {
 import { firebaseApp } from "@/lib/firebase";
 
 // DaiDai репоのfunctions/src/index.ts参照。書き込みはFirestore/Storageの
-// ルールで一律禁止されているため、パックの作成・編集・通報はこれらの
+// ルールで一律禁止されているため、ぺったんの作成・編集・通報はこれらの
 // callableを経由する（region: asia-northeast1、DaiDai側と揃える）。
 const functions = getFunctions(firebaseApp, "asia-northeast1");
 
@@ -49,7 +49,7 @@ export async function addStickersToStickerPack(data: {
     await httpsCallable(functions, "addStickersToStickerPack")(data);
 }
 
-// 出品者が、利用者のいないパックから、ぺったん1枚を直接削除する（利用者がいるときは、requestStickerPackDeletionにstickerIdを付けて申請する）
+// 出品者が、利用者のいないぺったんから、ぺったん1枚を直接削除する（利用者がいるときは、requestStickerPackDeletionにstickerIdを付けて申請する）
 export async function deleteStickerFromPack(data: { packId: string; stickerId: string }): Promise<void> {
     await httpsCallable(functions, "deleteStickerFromPack")(data);
 }
@@ -89,7 +89,7 @@ export async function deleteStickerPack(data: { packId: string }): Promise<void>
     await httpsCallable(functions, "deleteStickerPack")(data);
 }
 
-// 利用者のいるパックの削除を、運営へ申請する（理由は必須・200文字まで）
+// 利用者のいるぺったんの削除を、運営へ申請する（理由は必須・200文字まで）
 export async function requestStickerPackDeletion(data: { packId: string; stickerId?: string; reason: string }): Promise<void> {
     await httpsCallable(functions, "requestStickerPackDeletion")(data);
 }
@@ -193,8 +193,8 @@ export async function finishPasskeyRecovery(data: {
     return result.data as { customToken: string };
 }
 
-// 意匠パックの投稿を提出する。素材は、先にStorageの themePackSubmissions/{uid}/{submissionId}/ へ置いておく。
-// サーバーが素材を再検査し、投稿数（1人5件）を確かめる。TODO: サーバー側は未実装（文書/素材パック_サーバー側の変更案.md の3）。
+// 意匠の投稿を提出する。素材は、先にStorageの themePackSubmissions/{uid}/{submissionId}/ へ置いておく。
+// サーバーが素材を再検査し、投稿数（1人5件）を確かめる。TODO: サーバー側は未実装（文書/意匠_サーバー側の変更案.md の3）。
 export async function submitThemePack(data: {
     submissionId: string;
     rightsAccepted: true;
@@ -203,7 +203,7 @@ export async function submitThemePack(data: {
     return result.data as { submissionId: string; packId: string; version: number };
 }
 
-// 意匠パックの審査（管理者のみ）。DaiDaiリポジトリのfunctions/src/themePackReview.ts。
+// 意匠の審査（管理者のみ）。DaiDaiリポジトリのfunctions/src/themePackReview.ts。
 // 結果は、出品者（配信停止は取得した人にも）へ、お知らせとして書かれる。
 export async function approveThemePack(data: { submissionId: string }): Promise<{ changed: boolean }> {
     const result = await httpsCallable<typeof data, { changed?: boolean }>(functions, "approveThemePack")(data);
@@ -215,25 +215,25 @@ export async function rejectThemePack(data: { submissionId: string; reason: stri
     await httpsCallable(functions, "rejectThemePack")(data);
 }
 
-// 配信停止（権利侵害など）。公開中のパックを停止し、出品者と取得した人へお知らせが届く。理由は出品者にだけ見える
+// 配信停止（権利侵害など）。公開中の意匠を停止し、出品者と取得した人へお知らせが届く。理由は出品者にだけ見える
 export async function suspendThemePack(data: { packId: string; reason: string }): Promise<{ notifiedOwners: number }> {
     const result = await httpsCallable<typeof data, { notifiedOwners?: number }>(functions, "suspendThemePack")(data);
     return { notifiedOwners: result.data?.notifiedOwners ?? 0 };
 }
 
-// 意匠パックの取得（無料のみ）。DaiDaiリポジトリのfunctions/src/themePackOwnership.ts。
+// 意匠の取得（無料のみ）。DaiDaiリポジトリのfunctions/src/themePackOwnership.ts。
 // 二重の呼び出しは、alreadyOwned: true を返す（ownerCountは重ならない）
 export async function acquireThemePack(data: { packId: string }): Promise<{ packId: string; version: number; alreadyOwned: boolean }> {
     const result = await httpsCallable<typeof data, { packId: string; version: number; alreadyOwned: boolean }>(functions, "acquireThemePack")(data);
     return result.data;
 }
 
-// 取得した意匠パックを外す。取り下げ・配信停止の後でも、いつでも外せる
+// 取得した意匠を外す。取り下げ・配信停止の後でも、いつでも外せる
 export async function uninstallThemePack(data: { packId: string }): Promise<void> {
     await httpsCallable(functions, "uninstallThemePack")(data);
 }
 
-// 自分の公開中の意匠パックを取り下げる。新しい取得だけが止まり、取得した人は使い続けられる
+// 自分の公開中の意匠を取り下げる。新しい取得だけが止まり、取得した人は使い続けられる
 export async function withdrawThemePack(data: { packId: string }): Promise<void> {
     await httpsCallable(functions, "withdrawThemePack")(data);
 }

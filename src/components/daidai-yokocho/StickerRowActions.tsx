@@ -12,7 +12,7 @@ import { formatJstDateTime, validateStickerRemoval, type PackDeletionRequest } f
 import type { StickerPack } from "@/lib/stickerPacks";
 import DeletionRequestDialog from "@/components/daidai-yokocho/DeletionRequestDialog";
 
-// 公開中のパックの、ぺったん1枚ごとの操作（差し替え・削除）。
+// 公開中のぺったんの、ぺったん1枚ごとの操作（差し替え・削除）。
 // 差し替えは、運営の許可が不要（stickerIdは変わらない）。削除は、利用者がいなければ直接、
 // いれば運営への申請（承認後、指定の日時に削除）。
 export default function StickerRowActions({

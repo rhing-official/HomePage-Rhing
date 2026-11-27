@@ -8,7 +8,7 @@ import type { StickerPack } from "@/lib/stickerPacks";
 import { useCart } from "@/components/CartProvider";
 import Button from "@/components/ui/Button";
 
-// 表示中のパックを、まとめてカートに追加するボタン（入手はカートのページで行う）
+// 表示中のぺったんを、まとめてカートに追加するボタン（入手はカートのページで行う）
 export default function BulkAddToCartButton({ packs, label }: { packs: StickerPack[]; label: string }) {
     const router = useRouter();
     const pathname = usePathname();

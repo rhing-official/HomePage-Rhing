@@ -12,6 +12,7 @@ import {
 } from "@/lib/themePackReview";
 import DesignCard, { brightnessLabel } from "@/components/daidai-yokocho/DesignCard";
 import DesignAcquireButton from "@/components/daidai-yokocho/DesignAcquireButton";
+import DesignActions from "@/components/daidai-yokocho/DesignActions";
 import ThemePackPreview from "@/components/daidai-yokocho/ThemePackPreview";
 
 type State = { kind: "loading" } | { kind: "missing" } | { kind: "error" } | { kind: "ready"; pack: PublicThemePack };
@@ -20,7 +21,7 @@ function formatDate(d: Date | null): string {
     return d ? d.toLocaleDateString("ja-JP", { year: "numeric", month: "numeric", day: "numeric" }) : "";
 }
 
-// 意匠パックの詳細（ぺったんの詳細ページと同じ構成）。取得は、準備中のため、押せない
+// 意匠の詳細（ぺったんの詳細ページと同じ構成）。取得は、準備中のため、押せない
 export default function DesignDetailClient({ packId }: { packId: string }) {
     const [state, setState] = useState<State>({ kind: "loading" });
     const [creator, setCreator] = useState<CreatorProfile | null | undefined>(undefined);
@@ -46,7 +47,7 @@ export default function DesignDetailClient({ packId }: { packId: string }) {
                     .catch(() => {});
             })
             .catch((err) => {
-                console.error("意匠パックを読み込めませんでした:", err);
+                console.error("意匠を読み込めませんでした:", err);
                 if (!cancelled) setState({ kind: "error" });
             });
         return () => {
@@ -58,7 +59,7 @@ export default function DesignDetailClient({ packId }: { packId: string }) {
     if (state.kind !== "ready") {
         return (
             <div className="container mx-auto px-6 max-w-3xl pb-24 text-center">
-                <p className="text-gray-600">{state.kind === "missing" ? "意匠パックが見つかりません。公開が終わった可能性があります。" : "意匠パックを読み込めませんでした。時間をおいて、もう一度お試しください。"}</p>
+                <p className="text-gray-600">{state.kind === "missing" ? "意匠が見つかりません。公開が終わった可能性があります。" : "意匠を読み込めませんでした。時間をおいて、もう一度お試しください。"}</p>
                 <Link href="/daidai-yokocho?kind=design" className="mt-6 inline-block text-sm font-bold text-blue-600 hover:text-blue-800">
                     意匠の一覧へ戻る
                 </Link>
@@ -85,7 +86,7 @@ export default function DesignDetailClient({ packId }: { packId: string }) {
                     {/* 右: 商品情報と取得（PCでは追従） */}
                     <div className="md:sticky md:top-28 flex flex-col gap-6">
                         <div>
-                            <span className="text-xs font-bold tracking-widest text-gray-500 mb-2 block">意匠パック</span>
+                            <span className="text-xs font-bold tracking-widest text-gray-500 mb-2 block">意匠</span>
                             <h1 className="text-2xl md:text-3xl font-bold text-gray-900 tracking-wider">{pack.name}</h1>
                             {creator && (
                                 <Link href={`/daidai-yokocho/creator/${pack.creatorId}`} className="mt-4 flex items-center gap-2 w-fit group">
@@ -106,17 +107,18 @@ export default function DesignDetailClient({ packId }: { packId: string }) {
 
                         {pack.status === "withdrawn" && (
                             <p className="rounded-m3-md border border-gray-200 bg-gray-50 text-gray-600 px-4 py-3 text-sm">
-                                この意匠パックは、取り下げられました。新しく取得することは出来ません。取得済みの方は、引き続き使えます。
+                                この意匠は、取り下げられました。新しく取得することは出来ません。取得済みの方は、引き続き使えます。
                             </p>
                         )}
                         {pack.status === "suspended" && (
                             <p className="rounded-m3-md border border-red-200 bg-red-50 text-red-700 px-4 py-3 text-sm">
-                                この意匠パックは、配信を停止しました。取得済みの方の表示は、標準に戻ります。
+                                この意匠は、配信を停止しました。取得済みの方の表示は、標準に戻ります。
                             </p>
                         )}
 
-                        <div>
+                        <div className="flex flex-col gap-4">
                             <DesignAcquireButton packId={pack.id} status={pack.status ?? ""} redirectPath={`/daidai-yokocho/designs/${pack.id}`} />
+                            <DesignActions packId={pack.id} creatorId={pack.creatorId} status={pack.status ?? ""} variant="detail" />
                         </div>
 
                         <ul className="text-xs text-gray-500 leading-relaxed list-disc pl-5 space-y-1">

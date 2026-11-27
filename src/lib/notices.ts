@@ -19,10 +19,10 @@ export interface NoticeKindMeta {
 }
 
 const KIND_META: Record<string, NoticeKindMeta> = {
-    themePackApproved: { title: "意匠パックの承認", tone: "success" },
-    themePackRejected: { title: "意匠パックの差し戻し", tone: "warning" },
-    themePackSuspended: { title: "意匠パックの配信停止", tone: "danger" },
-    packDeletion: { title: "パックの削除予告", tone: "warning" },
+    themePackApproved: { title: "意匠の承認", tone: "success" },
+    themePackRejected: { title: "意匠の差し戻し", tone: "warning" },
+    themePackSuspended: { title: "意匠の配信停止", tone: "danger" },
+    packDeletion: { title: "ぺったんの削除予告", tone: "warning" },
 };
 
 // 知らない種類は、見出しなしで本文だけ出す
@@ -67,10 +67,10 @@ export function isUnread(notice: Notice, readAt: Date | null): boolean {
 export function demoNotices(now: Date = new Date()): Notice[] {
     const ago = (min: number) => new Date(now.getTime() - min * 60_000);
     return [
-        { id: "demo-1", kind: "themePackApproved", packId: "demo", createdAt: ago(5), content: "意匠パック『桜』が承認され、公開されました。" },
-        { id: "demo-2", kind: "themePackRejected", packId: "demo", createdAt: ago(60 * 3), content: "意匠パック『桜』は、差し戻されました。理由は次のとおりです。背景画像の権利を確認できませんでした。" },
-        { id: "demo-3", kind: "themePackSuspended", packId: "demo", createdAt: ago(60 * 30), content: "取得した意匠パック『桜』の配信が停止されました。表示は標準に戻ります。" },
-        { id: "demo-4", kind: "packDeletion", packId: "demo", createdAt: ago(60 * 80), content: "ぺったんパック『サンプル』は、運営の対応のため削除される予定です。" },
+        { id: "demo-1", kind: "themePackApproved", packId: "demo", createdAt: ago(5), content: "意匠『桜』が承認され、公開されました。" },
+        { id: "demo-2", kind: "themePackRejected", packId: "demo", createdAt: ago(60 * 3), content: "意匠『桜』は、差し戻されました。理由は次のとおりです。背景画像の権利を確認できませんでした。" },
+        { id: "demo-3", kind: "themePackSuspended", packId: "demo", createdAt: ago(60 * 30), content: "取得した意匠『桜』の配信が停止されました。表示は標準に戻ります。" },
+        { id: "demo-4", kind: "packDeletion", packId: "demo", createdAt: ago(60 * 80), content: "ぺったん『サンプル』は、運営の対応のため削除される予定です。" },
         { id: "demo-5", kind: null, packId: null, createdAt: ago(60 * 100), content: "種類の無いお知らせの見本です。" },
     ];
 }

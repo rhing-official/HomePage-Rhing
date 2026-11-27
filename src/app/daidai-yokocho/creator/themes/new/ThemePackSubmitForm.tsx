@@ -15,7 +15,7 @@ import { formatBytes } from "@/lib/themePack/zip";
 
 const PAGE_PATH = "/daidai-yokocho/creator/themes/new";
 
-// TODO: 権利の表明と、投稿の規約の文面は、仮のもの。専門家の確認が済んだら、公開の前に差し替える（2026-11-26、意匠パックの方針）。
+// TODO: 権利の表明と、投稿の規約の文面は、仮のもの。専門家の確認が済んだら、公開の前に差し替える（2026-11-26、意匠の方針）。
 const RIGHTS_STATEMENT =
     "投稿する素材は、自分で作ったものであるか、投稿に必要な許諾を得たものです。素材の著作権は、投稿者が持ちます。DaiDaiには、配信と表示のための許諾だけを渡します。";
 
@@ -91,7 +91,7 @@ export default function ThemePackSubmitForm() {
             await submitThemePack({ submissionId, rightsAccepted: true });
             setSubmitted(true);
         } catch (err) {
-            console.error("意匠パックを送信できませんでした:", err);
+            console.error("意匠を送信できませんでした:", err);
             setSubmitError(
                 err instanceof FirebaseError && err.code === "functions/resource-exhausted"
                     ? "投稿できる数の上限に達しています。"
@@ -108,10 +108,10 @@ export default function ThemePackSubmitForm() {
                 <div className="mb-10">
                     <h1 className="flex flex-wrap items-center gap-x-3 gap-y-2 text-3xl font-bold tracking-widest text-gray-900">
                         <Palette className="w-7 h-7 shrink-0" aria-hidden />
-                        意匠パックを投稿する
+                        意匠を投稿する
                     </h1>
                     <p className="mt-3 text-sm text-gray-500 leading-relaxed">
-                        意匠パックのzipを選ぶと、ブラウザの中で、決まりに合っているかを確認します。選んだファイルは、ここでは送られません。
+                        意匠のzipを選ぶと、ブラウザの中で、決まりに合っているかを確認します。選んだファイルは、ここでは送られません。
                     </p>
                 </div>
 

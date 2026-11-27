@@ -21,7 +21,7 @@ export interface ViewStorage {
     setItem(key: string, value: string): void;
 }
 
-// この訪問（ブラウザのタブ・セッション）で、まだ数えていないパックなら真。真を返したときは、数えた印を残す。
+// この訪問（ブラウザのタブ・セッション）で、まだ数えていないぺったんなら真。真を返したときは、数えた印を残す。
 // 更新ボタンの連打で、閲覧数が増えないようにするためのもの。
 export function shouldRecordView(storage: ViewStorage, packId: string): boolean {
     const key = VIEW_KEY_PREFIX + packId;

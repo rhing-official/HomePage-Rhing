@@ -18,7 +18,7 @@ export function SkeletonRegion({ children, className = "" }: { children: React.R
     );
 }
 
-// StickerPackCardと同じ大きさのカード（画像の枠・価格・パック名・出品者）
+// StickerPackCardと同じ大きさのカード（画像の枠・価格・ぺったん名・出品者）
 export function PackCardSkeleton() {
     return (
         <div aria-hidden="true" className="flex flex-col bg-white border border-gray-100 shadow-sm overflow-hidden rounded-2xl">
@@ -35,7 +35,7 @@ export function PackCardSkeleton() {
     );
 }
 
-// パックのカードのグリッド（カタログ・購入済み・お気に入りなどと同じ列数）
+// ぺったんのカードのグリッド（カタログ・購入済み・お気に入りなどと同じ列数）
 export function PackGridSkeleton({ count = 6, wide = false }: { count?: number; wide?: boolean }) {
     return (
         <SkeletonRegion>
@@ -65,7 +65,7 @@ export function ListRowSkeleton({ count = 3 }: { count?: number }) {
     );
 }
 
-// 購入済みのように、パックごとに1枚のパネル（名前の行＋ぺったんの小さな正方形の並び）で出す一覧
+// 購入済みのように、ぺったんごとに1枚のパネル（名前の行＋ぺったんの小さな正方形の並び）で出す一覧
 export function PackPanelListSkeleton({ count = 2 }: { count?: number }) {
     return (
         <SkeletonRegion className="flex flex-col gap-6">
@@ -103,7 +103,7 @@ export function ThumbRowSkeleton({ count = 3 }: { count?: number }) {
     );
 }
 
-// 編集画面（パック・下書き）の枠: ぺったんの並び＋入力欄2つ＋ボタン
+// 編集画面（ぺったん・下書き）の枠: ぺったんの並び＋入力欄2つ＋ボタン
 export function EditorSkeleton() {
     return (
         <SkeletonRegion>

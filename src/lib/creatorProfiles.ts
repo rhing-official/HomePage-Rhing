@@ -53,7 +53,7 @@ function chunk<T>(items: T[], size: number): T[][] {
 }
 
 // Firestoreの`in`クエリは30件までのため、重複除去した上でチャンク分割して
-// 並列取得する（カタログページ等で複数パックのクリエイターをまとめて引く用）。
+// 並列取得する（カタログページ等で複数ぺったんのクリエイターをまとめて引く用）。
 export async function getCreatorProfiles(uids: string[]): Promise<Map<string, CreatorProfile>> {
     const result = new Map<string, CreatorProfile>();
     const uniqueIds = Array.from(new Set(uids)).filter((id) => id.length > 0);

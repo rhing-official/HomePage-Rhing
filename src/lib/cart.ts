@@ -43,7 +43,7 @@ export interface AddManyResult {
     skippedOverLimit: number;
 }
 
-// カートに追加できるパックを選ぶ（入手済み・自分の出品・カート済みを除き、上限まで）
+// カートに追加できるぺったんを選ぶ（入手済み・自分の出品・カート済みを除き、上限まで）
 export async function selectAddableToCart(
     packs: StickerPack[],
     uid: string,
@@ -89,12 +89,12 @@ export async function addManyToCart(
 }
 
 export interface CheckoutResult extends BulkAcquireResult {
-    // 入手に成功してカートから外したパックのID
+    // 入手に成功してカートから外したぺったんのID
     removedFromCart: string[];
 }
 
-// カートの中身をまとめて入手する。今は無料パックのみ（有料は`paid`として件数だけ返し、カートに残す）。
-// 有料パックの再開時は、ここに決済（Stripeの複数品目など）を足す。
+// カートの中身をまとめて入手する。今は無料ぺったんのみ（有料は`paid`として件数だけ返し、カートに残す）。
+// 有料ぺったんの再開時は、ここに決済（Stripeの複数品目など）を足す。
 export async function checkoutCart(
     packs: StickerPack[],
     uid: string,

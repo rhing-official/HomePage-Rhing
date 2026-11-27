@@ -43,20 +43,20 @@ export default function CreatorDashboardPage() {
     const [loadingPacks, setLoadingPacks] = useState(false);
     const [tagSuggestions, setTagSuggestions] = useState<string[]>([]);
     const [roleOptions, setRoleOptions] = useState<StickerRoleOption[]>([]);
-    // 下書き（作成の途中保存）。「編集」で、パックの編集画面へ移る
+    // 下書き（作成の途中保存）。「編集」で、ぺったんの編集画面へ移る
     const [drafts, setDrafts] = useState<PackDraft[]>([]);
     const [formKey, setFormKey] = useState(0);
     // ぺったんと意匠の切り替え。意匠の側は、初めて開いた時に読み込み、以後は隠すだけにする
     const [kind, setKind] = useState<CatalogKind>("petan");
     const [designOpened, setDesignOpened] = useState(false);
     const formRef = useRef<HTMLDivElement>(null);
-    // 作成済みのパックの絞り込み（公開中・下書き）と、公開中のパックの閲覧回数（出品者にだけ見える）
+    // 作成済みのぺったんの絞り込み（公開中・下書き）と、公開中のぺったんの閲覧回数（出品者にだけ見える）
     const [statusFilter, setStatusFilter] = useState<StatusFilter>("all");
-    // 編集内容の下書きがある、公開中のパックのID（一覧のバッジ用）
+    // 編集内容の下書きがある、公開中のぺったんのID（一覧のバッジ用）
     const [editDraftIds, setEditDraftIds] = useState<Set<string>>(new Set());
     const [deletingId, setDeletingId] = useState<string | null>(null);
     const [viewCounts, setViewCounts] = useState<Map<string, number | null>>(new Map());
-    // 利用者のいるパックの削除の申請（パックのIDごと）と、申請の入力を開いているパック
+    // 利用者のいるぺったんの削除の申請（ぺったんのIDごと）と、申請の入力を開いているぺったん
     const [deletionRequests, setDeletionRequests] = useState<Map<string, PackDeletionRequest>>(new Map());
     const [requestTarget, setRequestTarget] = useState<StickerPack | null>(null);
 
@@ -83,7 +83,7 @@ export default function CreatorDashboardPage() {
         }
     }, []);
 
-    // 公開中のパックの閲覧回数を取得する（取得できなければ、表示は「-」）
+    // 公開中のぺったんの閲覧回数を取得する（取得できなければ、表示は「-」）
     useEffect(() => {
         let cancelled = false;
         Promise.all(packs.map(async (p) => [p.id, await getPackViewCount(p.id)] as const)).then((entries) => {
@@ -116,7 +116,7 @@ export default function CreatorDashboardPage() {
     if (!ready || !user) return null;
 
     const handleDeletePack = async (pack: StickerPack) => {
-        // 利用者のいるパックは、直接は削除できない。削除を運営へ申請する
+        // 利用者のいるぺったんは、直接は削除できない。削除を運営へ申請する
         if (pack.ownerCount > 0) {
             setRequestTarget(pack);
             return;
@@ -153,7 +153,7 @@ export default function CreatorDashboardPage() {
         return { label: "削除", disabled: false };
     };
 
-    // 公開中のパックと下書きを、更新が新しい順に、1つの一覧にする
+    // 公開中のぺったんと下書きを、更新が新しい順に、1つの一覧にする
     const items: ListItem[] = [
         ...packs.map((pack): ListItem => ({ kind: "pack", pack, at: pack.updatedAt ?? pack.createdAt ?? 0 })),
         ...drafts.map((draft): ListItem => ({ kind: "draft", draft, at: draft.updatedAt ?? 0 })),
@@ -202,9 +202,9 @@ export default function CreatorDashboardPage() {
                     />
                 </div>
 
-                {/* 作成済みのパック（公開中と下書きを、絞り込める） */}
+                {/* 作成済みのぺったん（公開中と下書きを、絞り込める） */}
                 <div className="mt-16">
-                    <h2 className="text-xl font-bold text-gray-900 mb-4">作成済みのパック</h2>
+                    <h2 className="text-xl font-bold text-gray-900 mb-4">作成済みのぺったん</h2>
 
                     <div className="flex flex-wrap gap-2 mb-6" role="group" aria-label="公開中・下書きで絞り込む">
                         {STATUS_FILTER_OPTIONS.map((o) => {
@@ -232,7 +232,7 @@ export default function CreatorDashboardPage() {
                         <ThumbRowSkeleton />
                     ) : visibleItems.length === 0 ? (
                         <p className="text-gray-400 text-sm">
-                            {items.length === 0 ? "まだパックを作成していません。" : "条件に一致するパックが有りません。"}
+                            {items.length === 0 ? "まだぺったんを作成していません。" : "条件に一致するぺったんが有りません。"}
                         </p>
                     ) : (
                         <div className="flex flex-col gap-4">
@@ -280,7 +280,7 @@ export default function CreatorDashboardPage() {
                                             <Pencil className="w-4 h-4" aria-hidden />
                                             編集
                                         </Link>
-                                        {/* 利用者のいるパックは、直接は削除できない（運営へ申請する）。状態によって、グレーアウトする */}
+                                        {/* 利用者のいるぺったんは、直接は削除できない（運営へ申請する）。状態によって、グレーアウトする */}
                                         {(() => {
                                             const state = deleteButtonState(item.pack);
                                             return (
@@ -319,7 +319,7 @@ export default function CreatorDashboardPage() {
                                                 </span>
                                                 {item.draft.name || "無題の下書き"}
                                             </p>
-                                            {/* 未公開のパックは、価格だけを出す（作成時は、無料のみ） */}
+                                            {/* 未公開のぺったんは、価格だけを出す（作成時は、無料のみ） */}
                                             <p className="text-xs text-gray-500 mt-1">{formatPackPrice(0)}</p>
                                         </div>
                                         <Link

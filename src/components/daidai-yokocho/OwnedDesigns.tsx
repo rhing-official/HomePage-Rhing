@@ -93,7 +93,7 @@ function OwnedDesignRow({ pack, onRemoved }: { pack: PublicThemePack; onRemoved:
     );
 }
 
-// 取得済みの意匠パック（「購入済み」の意匠の側）。取り下げ・停止のものも含め、いつでも外せる
+// 取得済みの意匠（「購入済み」の意匠の側）。取り下げ・停止のものも含め、いつでも外せる
 export default function OwnedDesigns({ uid }: { uid: string }) {
     const [packs, setPacks] = useState<PublicThemePack[] | null>(null);
     const [failed, setFailed] = useState(false);
@@ -108,12 +108,12 @@ export default function OwnedDesigns({ uid }: { uid: string }) {
         };
     }, [uid]);
 
-    if (failed) return <p className="text-sm text-red-600">取得済みの意匠パックを読み込めませんでした。</p>;
+    if (failed) return <p className="text-sm text-red-600">取得済みの意匠を読み込めませんでした。</p>;
     if (packs === null) return <p className="text-sm text-gray-400">読み込み中…</p>;
     if (packs.length === 0) {
         return (
             <p className="text-gray-400 text-sm">
-                まだ意匠パックを所持していません。
+                まだ意匠を所持していません。
                 <Link href="/daidai-yokocho?kind=design" className="text-blue-600 hover:underline ml-1">
                     daidai横丁で探す →
                 </Link>

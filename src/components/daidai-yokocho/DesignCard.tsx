@@ -6,10 +6,11 @@ import { Check } from "lucide-react";
 import type { CreatorProfile } from "@/lib/creatorProfiles";
 import { loadThemePackPreview, type PublicThemePack, type ThemePackPreviewData } from "@/lib/themePackReview";
 import { Skeleton } from "@/components/Skeleton";
+import DesignActions from "./DesignActions";
 
 export const brightnessLabel: Record<string, string> = { light: "明るい外観", dark: "暗い外観", both: "明るい・暗い外観" };
 
-// 意匠パックの、色と形の見本（背景・パネル・ボタン）。一覧のカードと、詳細の左側で使う
+// 意匠の、色と形の見本（背景・パネル・ボタン）。一覧のカードと、詳細の左側で使う
 export function DesignSwatch({ data, className = "" }: { data: ThemePackPreviewData | null; className?: string }) {
     const scope = data?.pack.brightness === "dark" ? "dark" : "light";
     const c = data?.pack.colors[scope];
@@ -36,7 +37,7 @@ export function DesignSwatch({ data, className = "" }: { data: ThemePackPreviewD
     );
 }
 
-// 意匠パックのカード。ぺったんのカード（StickerPackCard）と同じ作りで、詳細ページへ移る
+// 意匠のカード。ぺったんのカード（StickerPackCard）と同じ作りで、詳細ページへ移る
 export default function DesignCard({ pack, creator, owned = false }: { pack: PublicThemePack; creator?: CreatorProfile | null; owned?: boolean }) {
     const [data, setData] = useState<ThemePackPreviewData | null>(null);
 
@@ -59,11 +60,12 @@ export default function DesignCard({ pack, creator, owned = false }: { pack: Pub
                 <div className="relative overflow-hidden">
                     <DesignSwatch data={data} className="w-full aspect-[4/3] transition-transform duration-500 group-hover:scale-105" />
                     {owned && (
-                        <span className="absolute top-3 right-3 flex items-center gap-1 rounded-full bg-white/90 px-2.5 py-1 text-xs font-bold text-emerald-600 shadow-sm" aria-label="取得済み">
+                        <span className="absolute bottom-3 right-3 flex items-center gap-1 rounded-full bg-white/90 px-2.5 py-1 text-xs font-bold text-emerald-600 shadow-sm" aria-label="取得済み">
                             <Check className="w-3.5 h-3.5" aria-hidden />
                             取得済み
                         </span>
                     )}
+                    <DesignActions packId={pack.id} creatorId={pack.creatorId} variant="card" />
                 </div>
                 <div className="px-6 pt-3 flex flex-col gap-1">
                     <span className="text-sm font-bold whitespace-nowrap text-emerald-600">無料</span>

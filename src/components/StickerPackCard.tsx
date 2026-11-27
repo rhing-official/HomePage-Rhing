@@ -15,13 +15,13 @@ export default function StickerPackCard({
     // null: creatorProfilesが存在しない（非表示）
     creator?: CreatorProfile | null;
 }) {
-    // パックの代表（出品者が選んだぺったん。未設定なら先頭）
+    // ぺったんの代表（出品者が選んだぺったん。未設定なら先頭）
     const cover = getPackCover(pack);
 
     return (
         // カード全体を単一の<Link>にすると、クリエイター行を別リンクとして
         // 入れ子にできない（<a>の中に<a>はHTML的に無効）ため、外枠は<div>にし
-        // 「画像・パック名」への遷移リンクと「クリエイター」への遷移リンクを
+        // 「画像・ぺったん名」への遷移リンクと「クリエイター」への遷移リンクを
         // 兄弟要素として分ける。
         <div className="group flex flex-col bg-white border border-gray-100 shadow-sm hover:shadow-xl hover:shadow-blue-300/15 transition-all duration-300 overflow-hidden rounded-2xl">
             <Link href={`/daidai-yokocho/${pack.id}`} className="flex flex-col">
@@ -37,7 +37,7 @@ export default function StickerPackCard({
                     )}
                     <StickerPackCardActions packId={pack.id} />
                 </div>
-                {/* 価格を一番上、その下にパック名。左端を揃える */}
+                {/* 価格を一番上、その下にぺったん名。左端を揃える */}
                 <div className="px-6 pt-3 flex flex-col gap-1">
                     <span className={`text-sm font-bold whitespace-nowrap ${pack.price === 0 ? "text-emerald-600" : "text-amber-600"}`}>
                         {formatPackPrice(pack.price)}

@@ -1,6 +1,6 @@
 import type { CreatorProfile } from "@/lib/creatorProfiles";
 
-// 意匠パックの絞り込み（ぺったんのpackFilter.tsに対応する）。全て「かつ」で組み合わせる。
+// 意匠の絞り込み（ぺったんのpackFilter.tsに対応する）。全て「かつ」で組み合わせる。
 // 価格は、今は全て無料なので、項目に出さない。
 
 export type DesignAppearance = "all" | "light" | "dark";

@@ -14,7 +14,7 @@ import {
 } from "@/lib/themePackReview";
 import { DesignSwatch } from "./DesignCard";
 
-// 絞り込み（ぺったんの「作成済みのパック」の、公開中・下書きの絞り込みに揃える）
+// 絞り込み（ぺったんの「作成済みのぺったん」の、公開中・下書きの絞り込みに揃える）
 type StatusFilter = "all" | "waiting" | "approved" | "rejected" | "ended";
 const FILTER_OPTIONS: { value: StatusFilter; label: string }[] = [
     { value: "all", label: "全て" },
@@ -128,7 +128,7 @@ function Row({ sub, canWithdraw, onChanged }: { sub: ThemePackSubmission; canWit
     );
 }
 
-// 自分の意匠パックの投稿（「作成と管理」の意匠の側）。見た目は、ぺったんの側（作成のカードと、作成済みの一覧）に揃える
+// 自分の意匠の投稿（「作成と管理」の意匠の側）。見た目は、ぺったんの側（作成のカードと、作成済みの一覧）に揃える
 export default function MyDesigns({ uid }: { uid: string }) {
     const [subs, setSubs] = useState<ThemePackSubmission[] | null>(null);
     const [failed, setFailed] = useState(false);
@@ -159,8 +159,8 @@ export default function MyDesigns({ uid }: { uid: string }) {
             {/* 投稿の入口（ぺったんの、作成のカードに当たる） */}
             <div className="bg-white/40 backdrop-blur-md border border-white/80 shadow-sm rounded-2xl p-6 flex flex-wrap items-center justify-between gap-4">
                 <div className="min-w-0">
-                    <h2 className="text-xl font-bold text-gray-900">意匠パックを投稿する</h2>
-                    <p className="mt-1 text-sm text-gray-500">DaiDaiの色・形・背景を着せ替える、意匠パックを投稿します。公開の前に、運営が審査し、結果はお知らせに届きます。</p>
+                    <h2 className="text-xl font-bold text-gray-900">意匠を投稿する</h2>
+                    <p className="mt-1 text-sm text-gray-500">DaiDaiの色・形・背景を着せ替える、意匠を投稿します。公開の前に、運営が審査し、結果はお知らせに届きます。</p>
                 </div>
                 <Link
                     href="/daidai-yokocho/creator/themes/new"
@@ -171,9 +171,9 @@ export default function MyDesigns({ uid }: { uid: string }) {
                 </Link>
             </div>
 
-            {/* 投稿した意匠パック（状態で絞り込める） */}
+            {/* 投稿した意匠（状態で絞り込める） */}
             <div className="mt-16">
-                <h2 className="text-xl font-bold text-gray-900 mb-4">投稿した意匠パック</h2>
+                <h2 className="text-xl font-bold text-gray-900 mb-4">投稿した意匠</h2>
 
                 <div className="flex flex-wrap gap-2 mb-6" role="group" aria-label="状態で絞り込む">
                     {FILTER_OPTIONS.map((o) => {
@@ -200,7 +200,7 @@ export default function MyDesigns({ uid }: { uid: string }) {
                 ) : subs === null ? (
                     <p className="text-sm text-gray-400">読み込み中…</p>
                 ) : visible.length === 0 ? (
-                    <p className="text-gray-400 text-sm">{items.length === 0 ? "まだ意匠パックを投稿していません。" : "条件に一致する意匠パックが有りません。"}</p>
+                    <p className="text-gray-400 text-sm">{items.length === 0 ? "まだ意匠を投稿していません。" : "条件に一致する意匠が有りません。"}</p>
                 ) : (
                     <ul className="flex flex-col gap-4">
                         {visible.map((s) => (

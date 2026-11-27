@@ -59,7 +59,7 @@ export default function StickerImagePicker({
     onChange: (entries: StickerDraft[]) => void;
     roleOptions: StickerRoleOption[];
     label: string;
-    // 指定すると、画像ごとに「パックの代表にする」ボタンが出る（新規作成用）
+    // 指定すると、画像ごとに「ぺったんの代表にする」ボタンが出る（新規作成用）
     coverIndex?: number;
     onCoverChange?: (index: number) => void;
 }) {
@@ -140,7 +140,7 @@ export default function StickerImagePicker({
                                         type="button"
                                         onClick={() => onCoverChange(i)}
                                         aria-pressed={coverIndex === i}
-                                        aria-label={coverIndex === i ? "パックの代表（選択中）" : "パックの代表にする"}
+                                        aria-label={coverIndex === i ? "ぺったんの代表（選択中）" : "ぺったんの代表にする"}
                                         className="absolute bottom-0 left-0 bg-white/85 w-5 h-5 flex items-center justify-center"
                                     >
                                         <Star className={`w-3.5 h-3.5 ${coverIndex === i ? "text-amber-500 fill-amber-500" : "text-gray-400"}`} />

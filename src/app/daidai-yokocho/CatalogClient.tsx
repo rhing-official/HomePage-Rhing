@@ -49,13 +49,13 @@ export default function CatalogClient({ packs, initialKind }: { packs: StickerPa
 
     const activeFilterCount = countActiveFilters(filters);
 
-    // 絞り込みパネルに出す、カテゴリとタグの候補（今あるパックから集める）
+    // 絞り込みパネルに出す、カテゴリとタグの候補（今あるぺったんから集める）
     const categories = useMemo(() => Array.from(new Set(packs.map((p) => p.category).filter(Boolean))).sort(), [packs]);
     const tags = useMemo(() => Array.from(new Set(packs.flatMap((p) => p.tags))).sort(), [packs]);
 
     return (
         <div className="container mx-auto px-6 max-w-6xl">
-            {/* 切り替えと検索を、同じ行に置く。左右の端は、下のカードの一覧に揃える。絞り込みは、検索欄に触れた時に、下へ重ねて開く（パックを隠さないため） */}
+            {/* 切り替えと検索を、同じ行に置く。左右の端は、下のカードの一覧に揃える。絞り込みは、検索欄に触れた時に、下へ重ねて開く（ぺったんを隠さないため） */}
             <div className="mb-4 flex flex-col gap-3 sm:flex-row sm:items-center sm:gap-4">
                 <KindSwitch value={kind} onChange={switchKind} className="sm:mx-0 shrink-0" />
                 <div className="group relative flex-1">
@@ -98,7 +98,7 @@ export default function CatalogClient({ packs, initialKind }: { packs: StickerPa
             {/* 説明と、結果の状態を、1行にまとめる。文は、切り替えても行の高さが変わらないよう、1行に収める */}
             <div className="mb-6 flex min-h-8 flex-wrap items-center justify-between gap-x-6 gap-y-2">
                 <p className="text-sm text-gray-500">
-                    {kind === "petan" ? "DaiDaiで使えるぺったんを、パックで探せます。" : "DaiDaiの色・形・背景を着せ替える、意匠のパックです。"}
+                    {kind === "petan" ? "DaiDaiで使えるぺったんを探せます。" : "DaiDaiの色・形・背景を着せ替える意匠を探せます。"}
                 </p>
                 <div className="flex flex-wrap items-center gap-x-4 gap-y-2" role="status">
                     {kind === "petan" ? (
@@ -118,7 +118,7 @@ export default function CatalogClient({ packs, initialKind }: { packs: StickerPa
                                 </span>
                             )}
                             {filteredPacks.length > 0 && (
-                                <BulkAddToCartButton packs={filteredPacks} label="表示中のパックを全てカートに追加" />
+                                <BulkAddToCartButton packs={filteredPacks} label="表示中のぺったんを全てカートに追加" />
                             )}
                         </>
                     ) : (
@@ -149,7 +149,7 @@ export default function CatalogClient({ packs, initialKind }: { packs: StickerPa
                 <>
             {filteredPacks.length === 0 ? (
                 <div className="text-center text-gray-500">
-                    <p>{packs.length === 0 ? "横丁に並んでいるパックは有りません" : "条件に一致するパックが見つかりませんでした"}</p>
+                    <p>{packs.length === 0 ? "横丁に並んでいるぺったんは有りません" : "条件に一致するぺったんが見つかりませんでした"}</p>
                 </div>
             ) : (
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">

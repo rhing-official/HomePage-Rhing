@@ -190,7 +190,7 @@ function Section({ title, children }: { title: string; children: React.ReactNode
     );
 }
 
-// 意匠パックの審査（管理画面の中の、意匠の側）。管理者かどうかの判定は、呼び出し側の管理画面が行う。
+// 意匠の審査（管理画面の中の、意匠の側）。管理者かどうかの判定は、呼び出し側の管理画面が行う。
 // 実際の権限は、Cloud Functionsとfirestore.rulesが判定する
 export default function ThemePackReviewPanel() {
     const [subs, setSubs] = useState<ThemePackSubmission[]>([]);

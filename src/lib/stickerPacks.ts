@@ -40,7 +40,7 @@ export interface StickerPack {
     name: string;
     price: number;
     stickers: Sticker[];
-    // パックの「代表」にするぺったんのstickerId。未設定・不正なときは、先頭のぺったん（getPackCover参照）
+    // ぺったんの「代表」にするぺったんのstickerId。未設定・不正なときは、先頭のぺったん（getPackCover参照）
     coverStickerId: string | null;
     category: string;
     tags: string[];
@@ -56,9 +56,9 @@ function toStickerPack(id: string, data: DocumentData): StickerPack {
     return {
         id,
         creatorId: typeof data.creatorId === "string" ? data.creatorId : "",
-        name: typeof data.name === "string" ? data.name : "無題のパック",
+        name: typeof data.name === "string" ? data.name : "無題のぺったん",
         price: typeof data.price === "number" ? data.price : 0,
-        // rolesは後から追加した項目のため、古いパックのステッカーには無い。必ず配列にそろえる
+        // rolesは後から追加した項目のため、古いぺったんのステッカーには無い。必ず配列にそろえる
         stickers: Array.isArray(data.stickers)
             ? data.stickers.map((s: Sticker) => ({ ...s, roles: Array.isArray(s.roles) ? s.roles : [] }))
             : [],
@@ -120,7 +120,7 @@ export async function getStickerPackById(packId: string): Promise<StickerPack | 
     }
 }
 
-// タグ入力の候補用に、既存パックで使われているタグを重複なく集める。
+// タグ入力の候補用に、既存ぺったんで使われているタグを重複なく集める。
 export async function getAllTags(): Promise<string[]> {
     const packs = await getAllStickerPacks();
     const tags = new Set<string>();
@@ -141,7 +141,7 @@ export async function isPackOwnedByUser(uid: string, packId: string): Promise<bo
     }
 }
 
-// users/{uid}/ownedStickerPacksのドキュメントID一覧を取得し、各パックの詳細を
+// users/{uid}/ownedStickerPacksのドキュメントID一覧を取得し、各ぺったんの詳細を
 // 並列取得する（管理画面「所持しているぺったん」用、2026-08-11追加）。
 export async function getOwnedStickerPacks(uid: string): Promise<StickerPack[]> {
     try {
@@ -153,7 +153,7 @@ export async function getOwnedStickerPacks(uid: string): Promise<StickerPack[]> 
     }
 }
 
-// パックの代表になるぺったん。coverStickerIdに一致するものがあればそれ、なければ先頭
+// ぺったんの代表になるぺったん。coverStickerIdに一致するものがあればそれ、なければ先頭
 export function getPackCover(pack: Pick<StickerPack, "stickers" | "coverStickerId">): Sticker | undefined {
     return pack.stickers.find((s) => s.stickerId === pack.coverStickerId) ?? pack.stickers[0];
 }

@@ -28,7 +28,7 @@ export interface PackFilters {
 export type SearchTarget = "name" | "tag" | "creator";
 
 export const SEARCH_TARGET_OPTIONS: { value: SearchTarget; label: string }[] = [
-    { value: "name", label: "パック名" },
+    { value: "name", label: "ぺったん名" },
     { value: "tag", label: "タグ" },
     { value: "creator", label: "クリエイター" },
 ];
@@ -54,7 +54,7 @@ export function countActiveFilters(f: PackFilters): number {
 
 const norm = (v: string) => v.trim().toLowerCase();
 
-// 検索語（パック名・タグ・クリエイターを横断）と、絞り込みの条件を、全て満たすパックを返す
+// 検索語（ぺったん名・タグ・クリエイターを横断）と、絞り込みの条件を、全て満たすぺったんを返す
 export function applyPackFilters(
     packs: StickerPack[],
     query: string,

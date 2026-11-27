@@ -39,7 +39,7 @@ export default function IntroBanner() {
         <div className="container mx-auto px-6 mb-12 max-w-4xl">
             <div className="flex items-center justify-between gap-4 bg-white/60 backdrop-blur-md border border-white/80 shadow-sm rounded-2xl px-6 py-4 text-sm text-gray-700">
                 <p className="leading-relaxed">
-                    初めての方へ — ぺったんは、DaiDaiで使えるスタンプ。意匠パックは、DaiDaiの見た目を着せ替えるデザインです。
+                    初めての方へ — ぺったんは、DaiDaiで使えるスタンプ。意匠は、DaiDaiの見た目を着せ替えるデザインです。
                     <Link href="/services/daidai-yokocho" className="ml-2 underline underline-offset-4 hover:text-gray-900 transition-colors">
                         daidai横丁とは？
                     </Link>

@@ -117,7 +117,7 @@ function RequestRow({
     };
 
     const cancel = () => {
-        if (!window.confirm(`${targetLabel}の削除の予定を取り消しますか？${isSticker ? "ぺったんは残ります。" : "パックは残り、入手も再開します。"}`)) return;
+        if (!window.confirm(`${targetLabel}の削除の予定を取り消しますか？${isSticker ? "ぺったん本体は残ります。" : "ぺったんは残り、入手も再開します。"}`)) return;
         void run(async () => {
             await cancelScheduledPackDeletion({ packId: request.packId, ...stickerArg });
         });
@@ -159,7 +159,7 @@ function RequestRow({
     return (
         <li className={`${cardClass} p-5 flex flex-col gap-3`}>
             <div className="flex flex-wrap items-center gap-x-3 gap-y-1">
-                {/* パック名は大きく、押しやすく（販売ページを開いて、画像を確認できる） */}
+                {/* ぺったん名は大きく、押しやすく（販売ページを開いて、画像を確認できる） */}
                 <Link
                     href={`/daidai-yokocho/${request.packId}`}
                     className="text-xl font-bold text-gray-900 hover:text-primary underline underline-offset-4 decoration-gray-300 hover:decoration-primary transition-colors py-1"
@@ -168,7 +168,7 @@ function RequestRow({
                     {isSticker && <span className="font-normal text-gray-600">の「{request.stickerName || request.stickerId}」</span>}
                 </Link>
                 <span className="text-xs rounded-full bg-gray-100 px-2 py-0.5 font-bold text-gray-600">
-                    {isSticker ? "ぺったん1枚" : "パック"}
+                    {isSticker ? "画像1枚" : "ぺったん"}
                 </span>
                 <span className="text-xs rounded-full bg-primary-container px-2 py-0.5 font-bold text-on-primary-container">
                     {deletionStatusLabel(request.status)}
@@ -229,7 +229,7 @@ function Section({ title, hint, children }: { title: string; hint?: string; chil
 }
 
 export default function AdminClient() {
-    // ぺったん（パックの削除の申請）と意匠（意匠パックの審査）の切り替え。URLは同じ
+    // ぺったん（ぺったんの削除の申請）と意匠（意匠の審査）の切り替え。URLは同じ
     const [kind, setKind] = useState<CatalogKind>("petan");
     // 意匠の側は、初めて開いた時に読み込み、以後は表示を隠すだけにする（切り替えるたびに読み込み直さない）
     const [designOpened, setDesignOpened] = useState(false);
@@ -329,10 +329,10 @@ export default function AdminClient() {
                 {/* 2つの説明を、同じ場所に重ねる。高さが長い方に揃うので、切り替えてもスイッチの位置が動かない */}
                 <div className="mt-1 grid text-sm text-gray-500">
                     <p className={`col-start-1 row-start-1 ${kind === "petan" ? "" : "invisible"}`} aria-hidden={kind !== "petan"}>
-                        daidai横丁のぺったんパックの削除の申請を、確認して承認・却下します。
+                        daidai横丁のぺったんの削除の申請を、確認して承認・却下します。
                     </p>
                     <p className={`col-start-1 row-start-1 ${kind === "design" ? "" : "invisible"}`} aria-hidden={kind !== "design"}>
-                        投稿された意匠パックの素材を確認して、承認・差し戻し・配信停止を行います。結果は、出品者のお知らせに届きます。
+                        投稿された意匠の素材を確認して、承認・差し戻し・配信停止を行います。結果は、出品者のお知らせに届きます。
                     </p>
                 </div>
             </div>
@@ -354,9 +354,9 @@ export default function AdminClient() {
                     </p>
                 )}
                 <Section title={`申請中${count(pending.length)}`} hint="承認すると、指定した日時に完全に削除され、入手した人には、その前にお知らせが届きます。日時は、今から24時間以上先にしてください。">
-                    {renderRows(pending, "申請中のパックは有りません")}
+                    {renderRows(pending, "申請中のぺったんは有りません")}
                 </Section>
-                <Section title={`削除予定${count(scheduled.length)}`}>{renderRows(scheduled, "削除が予定されているパックは有りません")}</Section>
+                <Section title={`削除予定${count(scheduled.length)}`}>{renderRows(scheduled, "削除が予定されているぺったんは有りません")}</Section>
                 <Section title="処理済み（直近50件）">{renderRows(history, "処理済みの申請は有りません")}</Section>
                 </>
             </div>

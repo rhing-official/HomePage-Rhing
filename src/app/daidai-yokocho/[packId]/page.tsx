@@ -19,11 +19,11 @@ export async function generateMetadata({
     const { packId } = await params;
     const pack = await getStickerPackById(packId);
     if (!pack) {
-        return { title: "パックが見つかりません | daidai横丁 | Rhing" };
+        return { title: "ぺったんが見つかりません | daidai横丁 | Rhing" };
     }
     return {
         title: `${pack.name} | daidai横丁 | Rhing`,
-        description: `daidai横丁で頒布中のぺったんパック「${pack.name}」。`,
+        description: `daidai横丁で頒布中のぺったん「${pack.name}」。`,
     };
 }
 
@@ -154,13 +154,13 @@ export default async function StickerPackDetailPage({
                                 className="text-xs text-gray-400 cursor-not-allowed underline decoration-dotted"
                                 title="通報機能は近日公開予定です"
                             >
-                                このパックを通報する
+                                このぺったんを通報する
                             </button>
                         </div>
                     </div>
                 </div>
 
-                {/* このクリエイターの、ほかのパック */}
+                {/* このクリエイターの、ほかのぺったん */}
                 {otherPacks.length > 0 && (
                     <section className="mt-20">
                         <h2 className="text-lg font-bold text-gray-900 tracking-wider mb-6">このクリエイターの、他のぺったん</h2>

@@ -33,7 +33,7 @@ function TrendingHeader() {
     );
 }
 
-// 人気パックの取得（Firestore）を待つ間も、ページの他の部分を先に出せるよう、
+// 人気のぺったんの取得（Firestore）を待つ間も、ページの他の部分を先に出せるよう、
 // この部分だけを非同期にして、<Suspense>で包む（ストリーミング）
 async function TrendingSection() {
     const trendingPacks = await getTrendingStickerPacks(5);

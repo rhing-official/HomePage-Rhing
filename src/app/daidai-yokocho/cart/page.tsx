@@ -9,6 +9,8 @@ import { getStickerPackById, getPackCover, isPackOwnedByUser, formatPackPrice, t
 import { checkoutCart, removeFromCart, type CheckoutResult } from "@/lib/cart";
 import Button from "@/components/ui/Button";
 import { ThumbRowSkeleton } from "@/components/Skeleton";
+import KindSwitch, { type CatalogKind } from "@/components/daidai-yokocho/KindSwitch";
+import CartDesigns from "@/components/daidai-yokocho/CartDesigns";
 
 const CART_PATH = "/daidai-yokocho/cart";
 
@@ -19,12 +21,15 @@ export default function CartPage() {
     const [loading, setLoading] = useState(true);
     const [progress, setProgress] = useState<{ done: number; total: number } | null>(null);
     const [result, setResult] = useState<CheckoutResult | null>(null);
+    // ぺったんと意匠の切り替え。意匠の側は、初めて開いた時に読み込み、以後は隠すだけにする
+    const [kind, setKind] = useState<CatalogKind>("petan");
+    const [designOpened, setDesignOpened] = useState(false);
 
     useEffect(() => {
         if (authReady && !user) router.replace(`/login?redirect=${encodeURIComponent(CART_PATH)}`);
     }, [authReady, user, router]);
 
-    // カートの中身（ID）が変わるたびに、パックの詳細を取り直す。入手済み・削除済みのパックはカートから外す
+    // カートの中身（ID）が変わるたびに、ぺったんの詳細を取り直す。入手済み・削除済みのぺったんはカートから外す
     const idsKey = useMemo(() => Array.from(ids).sort().join(","), [ids]);
     useEffect(() => {
         if (!user || !cartReady) return;
@@ -58,7 +63,7 @@ export default function CartPage() {
 
     const handleCheckout = async () => {
         if (free.length === 0) return;
-        if (!window.confirm(`${free.length}件の無料パックを入手します。よろしいですか？`)) return;
+        if (!window.confirm(`${free.length}件の無料のぺったんを入手します。よろしいですか？`)) return;
         setResult(null);
         setProgress({ done: 0, total: free.length });
         try {
@@ -77,6 +82,22 @@ export default function CartPage() {
                     カート
                 </h1>
 
+                <KindSwitch
+                    value={kind}
+                    onChange={(next) => {
+                        if (next === "design") setDesignOpened(true);
+                        setKind(next);
+                    }}
+                    className="mb-10 sm:mx-0"
+                />
+
+                {designOpened && (
+                    <div hidden={kind !== "design"}>
+                        <CartDesigns uid={user.uid} />
+                    </div>
+                )}
+                <div hidden={kind !== "petan"}>
+
                 {loading ? (
                     <ThumbRowSkeleton />
                 ) : packs.length === 0 ? (
@@ -89,7 +110,7 @@ export default function CartPage() {
                                 </Link>
                             </p>
                         ) : (
-                            <p className="text-gray-400 text-sm">カートは空です。</p>
+                            <p className="text-gray-400 text-sm">カートにぺったんは有りません。</p>
                         )}
                         <Link href="/daidai-yokocho" className="text-sm text-blue-600 hover:underline">
                             daidai横丁で探す →
@@ -132,10 +153,10 @@ export default function CartPage() {
 
                         <div className="mt-8 flex flex-col gap-3 items-start">
                             <p className="text-sm text-gray-600">
-                                無料パック {free.length}件
+                                無料のぺったん {free.length}件
                                 {paid > 0 && (
                                     <span className="text-amber-600 ml-2">
-                                        有料パック{paid}件は、現在購入出来ません（カートには残ります）
+                                        有料のぺったん{paid}件は、現在購入出来ません。カートには残ります。
                                     </span>
                                 )}
                             </p>
@@ -145,13 +166,14 @@ export default function CartPage() {
                             {result && !running && (
                                 <p className="text-sm text-gray-700" role="status">
                                     {result.acquired.length}件入手しました
-                                    {result.alreadyOwned > 0 && `（入手済み${result.alreadyOwned}件）`}
+                                    {result.alreadyOwned > 0 && `。入手済みが${result.alreadyOwned}件有りました`}
                                     {result.failed > 0 && `。${result.failed}件は失敗しました。もう一度お試しください`}
                                 </p>
                             )}
                         </div>
                     </>
                 )}
+                </div>
             </div>
         </div>
     );

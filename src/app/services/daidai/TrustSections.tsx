@@ -383,12 +383,12 @@ export function CompareSection({ id = "compare", geek = false }: { id?: string; 
 export function CreatorsSection({ id = "creators" }: { id?: string }) {
     return (
         <div id={id} className="scroll-mt-8 bg-white rounded-m3-lg shadow-sm border border-gray-100 p-8 md:p-12 max-w-3xl mx-auto w-full">
-            <SectionHeading label="FOR CREATORS" title="ぺったんと意匠パックを作る" icon={StickyNote} mb="mb-6" />
+            <SectionHeading label="FOR CREATORS" title="ぺったんと意匠を作る" icon={StickyNote} mb="mb-6" />
             <p className="text-gray-600 text-sm leading-relaxed text-pretty mb-4">
-                作ったぺったんを、daidai横丁に出品出来ます。DaiDaiの色・形・背景を着せ替える意匠パックは、投稿出来ます。意匠パックは、審査の後に公開します。有料化した際の目標として、購入額の約91.4%の還元を目指しています。これは概算で、保証するものではありません。
+                作ったぺったんを、daidai横丁に出品出来ます。DaiDaiの色・形・背景を着せ替える意匠は、投稿出来ます。意匠は、審査の後に公開します。有料化した際の目標として、購入額の約91.4%の還元を目指しています。これは概算で、保証するものではありません。
             </p>
             <p className="text-gray-600 text-sm leading-relaxed text-pretty mb-6">
-                当面は、無料のぺったんと意匠パックのみを扱います。還元は、まだ発生していません。
+                当面は、無料のぺったんと意匠のみを扱います。還元は、まだ発生していません。
             </p>
             <Link
                 href="/services/daidai-yokocho#fee"
@@ -463,7 +463,7 @@ const glossary: [string, string][] = [
     ["仕立て（したて）", "蔵の素材を組み合わせて、プロフィールカードを作ります。無料では最大3枚、極みプランでは10枚まで作れます。"],
     ["縁結び（えんむすび）", "招待リンクやQRコードで、友達を追加する仕組みです。"],
     ["ぺったん", "DaiDaiで使えるスタンプです。"],
-    ["意匠パック", "DaiDaiの色・形・背景を着せ替える、デザインの詰め合わせです。"],
+    ["意匠", "DaiDaiの色・形・背景を着せ替えるデザインです。"],
     ["極み（きわみ）", "月額¥300の有料プランです。"],
 ];
 

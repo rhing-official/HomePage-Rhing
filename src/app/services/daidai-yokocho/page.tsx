@@ -3,7 +3,7 @@ import CtaCard from "@/components/ui/CtaCard";
 import { Gift, KeyRound, Palette, ArrowRight, Search, Heart, UserRound, Sparkles } from "lucide-react";
 
 const title = "daidai横丁 | Rhing";
-const description = "DaiDaiで使えるぺったんと意匠パックの横丁、daidai横丁について。当面は無料のものだけで、有料化の際の還元率の目標と、その算出の前提も載せています。";
+const description = "DaiDaiで使えるぺったんと意匠の横丁、daidai横丁について。当面は無料のものだけで、有料化の際の還元率の目標と、その算出の前提も載せています。";
 
 export const metadata: Metadata = {
     title,
@@ -21,7 +21,7 @@ export const metadata: Metadata = {
 };
 
 const contents = [
-    { href: "#about", label: "ぺったんと意匠パック" },
+    { href: "#about", label: "ぺったんと意匠" },
     { href: "#howto", label: "使い方" },
     { href: "#fee", label: "還元率の算出の前提" },
     { href: "#github", label: "仕組みを見る" },
@@ -31,7 +31,7 @@ const pillars = [
     {
         icon: Gift,
         title: "当面は無料",
-        desc: "有料のパックは準備中です。当面は、無料のぺったんと意匠パックを配布します。",
+        desc: "有料のものは準備中です。当面は、無料のぺったんと意匠を配布します。",
     },
     {
         icon: KeyRound,
@@ -41,7 +41,7 @@ const pillars = [
     {
         icon: Palette,
         title: "クリエイターが出品出来る",
-        desc: "作ったぺったんを出品し、意匠パックを投稿出来ます。意匠パックは、審査の後に公開します。",
+        desc: "作ったぺったんを出品し、意匠を投稿出来ます。意匠は、審査の後に公開します。",
     },
 ];
 
@@ -49,7 +49,7 @@ const features = [
     {
         icon: Search,
         title: "探しやすい",
-        desc: "検索やカテゴリで、気になるぺったんを絞り込めます。意匠パックは、名前や、対応する外観で絞り込めます。",
+        desc: "検索やカテゴリで、気になるぺったんを絞り込めます。意匠は、名前や、対応する外観で絞り込めます。",
     },
     {
         icon: UserRound,
@@ -69,9 +69,9 @@ const features = [
 ];
 
 const steps = [
-    { no: "01", title: "探す", desc: "daidai横丁で、使ってみたいぺったんや意匠パックを探します。" },
+    { no: "01", title: "探す", desc: "daidai横丁で、使ってみたいぺったんや意匠を探します。" },
     { no: "02", title: "入手する", desc: "DaiDaiのアカウントでログインして、入手します。" },
-    { no: "03", title: "使う", desc: "DaiDaiのアプリで、入手したぺったんを使い、意匠パックで見た目を着せ替えます。" },
+    { no: "03", title: "使う", desc: "DaiDaiのアプリで、入手したぺったんを使い、意匠で見た目を着せ替えます。" },
 ];
 
 export default function DaidaiYokochoServicePage() {
@@ -82,7 +82,7 @@ export default function DaidaiYokochoServicePage() {
                 <h1 className="text-4xl md:text-5xl font-bold tracking-widest text-gray-900 mb-4">daidai横丁</h1>
                 <p className="text-xl md:text-2xl tracking-[0.2em] mb-8">「ぺったんと意匠が集まる、小さな横丁。」</p>
                 <p className="text-gray-600 leading-relaxed text-pretty max-w-xl mx-auto mb-16">
-                    DaiDaiで使えるぺったんと、DaiDaiの見た目を着せ替える意匠パックを、探して、入手出来るストア
+                    DaiDaiで使えるぺったんと、DaiDaiの見た目を着せ替える意匠を、探して、入手出来るストア
                 </p>
 
                 {/* 目次 */}
@@ -124,12 +124,12 @@ export default function DaidaiYokochoServicePage() {
             {/* ぺったんとは */}
             <section id="about" className="container mx-auto px-6 py-20 max-w-5xl">
                 <span className="text-xs font-bold tracking-widest text-gray-500 mb-2 block text-center">ABOUT</span>
-                <h2 className="text-2xl font-bold mb-6 tracking-widest text-center text-gray-900">ぺったんと意匠パック</h2>
+                <h2 className="text-2xl font-bold mb-6 tracking-widest text-center text-gray-900">ぺったんと意匠</h2>
                 <p className="text-gray-600 leading-relaxed text-pretty max-w-2xl mx-auto mb-4 text-center">
                     ぺったんは、メッセージアプリDaiDaiで使えるスタンプです。daidai横丁では、色々なクリエイターのぺったんが並んでいます。
                 </p>
                 <p className="text-gray-600 leading-relaxed text-pretty max-w-2xl mx-auto mb-12 text-center">
-                    意匠パックは、DaiDaiの色・形・背景を着せ替える、デザインの詰め合わせです。入手すると、DaiDaiの見た目が変わります。取得を外せば、標準の見た目に戻ります。公開の前に、Rhingが審査します。
+                    意匠は、DaiDaiの色・形・背景を着せ替えるデザインです。入手すると、DaiDaiの見た目が変わります。取得を外せば、標準の見た目に戻ります。公開の前に、Rhingが審査します。
                 </p>
                 <div className="grid sm:grid-cols-2 gap-6">
                     {features.map((f, i) => (
@@ -162,7 +162,7 @@ export default function DaidaiYokochoServicePage() {
                 <span className="text-xs font-bold tracking-widest text-gray-500 mb-2 block text-center">REVENUE SHARE</span>
                 <h2 className="text-2xl font-bold mb-6 tracking-widest text-center text-gray-900">還元率の算出の前提</h2>
                 <p className="text-gray-600 leading-relaxed text-pretty max-w-2xl mx-auto mb-10 text-center">
-                    有料化した際の目標として、購入額の<strong className="font-bold text-gray-800">約91.4%</strong>を出品者に還元することを目指しています。これは概算で、保証するものではありません。当面は無料のぺったんと意匠パックのみで、還元はまだ発生していません。意匠パックの有料の配信は、別に定めます。
+                    有料化した際の目標として、購入額の<strong className="font-bold text-gray-800">約91.4%</strong>を出品者に還元することを目指しています。これは概算で、保証するものではありません。当面は無料のぺったんと意匠のみで、還元はまだ発生していません。意匠の有料の配信は、別に定めます。
                 </p>
 
                 <div className="bg-white rounded-m3-lg shadow-sm border border-gray-100 overflow-x-auto mb-8">

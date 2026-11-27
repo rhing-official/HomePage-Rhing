@@ -145,7 +145,7 @@ export default function DaidaiYokochoMenu() {
     // お知らせのページを開いている間は、既読になるため0として扱う
     const unreadLabel = user && pathname !== "/daidai-yokocho/notices" ? formatUnreadCount(unread) : null;
 
-    const { count: cartCount } = useCart();
+    const { totalCount: cartCount } = useCart();
     const close = () => setOpen(false);
 
     const handleAccountDeleted = async () => {

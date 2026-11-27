@@ -1,6 +1,6 @@
 import { PackGridSkeleton, Skeleton } from "@/components/Skeleton";
 
-// daidai横丁のカタログを、サーバーで生成している間の枠（タイトル・検索欄・パックのグリッド）
+// daidai横丁のカタログを、サーバーで生成している間の枠（タイトル・検索欄・ぺったんのグリッド）
 export default function Loading() {
     return (
         <div className="w-full pb-24">
