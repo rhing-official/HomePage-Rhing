@@ -172,10 +172,13 @@ export default function OwnedPage() {
                                             onToggle={() => sel.toggle(key)}
                                             label={pack.name}
                                             badge={
-                                                <span className="flex items-center gap-1.5">
-                                                    <KindBadge kind={item.kind} />
-                                                    {note && <span className={`rounded-full px-2 py-0.5 text-[10px] font-bold ${note.className}`}>{note.label}</span>}
-                                                </span>
+                                                // 種別で絞っている間は、種別のバッジを出さない（全て同じ種別の為）。取り下げ・配信停止の印は、常に出す
+                                                filter === "all" || note ? (
+                                                    <span className="flex items-center gap-1.5">
+                                                        {filter === "all" && <KindBadge kind={item.kind} />}
+                                                        {note && <span className={`rounded-full px-2 py-0.5 text-[10px] font-bold ${note.className}`}>{note.label}</span>}
+                                                    </span>
+                                                ) : undefined
                                             }
                                         >
                                             {item.kind === "petan" ? (

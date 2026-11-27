@@ -129,7 +129,7 @@ export function SelectableItem({
         <Tag className={`relative rounded-m3-lg ${selected ? "ring-2 ring-blue-600" : ""} ${className}`}>
             {children}
             <Box checked={selected} onChange={onToggle} label={`${label}を選択`} className="absolute left-3 top-3 z-10 shadow-sm" />
-            {badge && <span className="pointer-events-none absolute left-11 top-3.5 z-10">{badge}</span>}
+            {badge && <span className="pointer-events-none absolute left-11 top-3 z-10 flex h-6 items-center">{badge}</span>}
         </Tag>
     );
 }

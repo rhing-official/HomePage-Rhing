@@ -2,10 +2,14 @@
 
 import { Heart } from "lucide-react";
 import { useCallback, useEffect, useMemo, useState } from "react";
+import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { auth, onAuthStateChanged, type User } from "@/lib/firebaseAuth";
 import { getFavoritedStickerEntries, removeFavoritePack } from "@/lib/favorites";
-import { getDesignListEntries, loadDesignList, removeFromDesignList } from "@/lib/designLists";
+import { addManyDesignsToCart, getDesignListEntries, loadDesignList, removeFromDesignList } from "@/lib/designLists";
+import { addManyToCart } from "@/lib/cart";
+import { useCart } from "@/components/CartProvider";
+import Button from "@/components/ui/Button";
 import { itemKey, mergeByAddedAt, parseItemKey, type MixedItem } from "@/lib/mixedList";
 import type { StickerPack } from "@/lib/stickerPacks";
 import type { PublicThemePack } from "@/lib/themePackReview";
@@ -31,6 +35,9 @@ export default function FavoritesPage() {
     const [loading, setLoading] = useState(false);
     const sel = useSelection();
     const [removing, setRemoving] = useState(false);
+    const { ids: cartIds, designIds: cartDesignIds } = useCart();
+    const [adding, setAdding] = useState(false);
+    const [cartResult, setCartResult] = useState<{ added: number; skipped: number; failed: boolean } | null>(null);
 
     useEffect(() => onAuthStateChanged(auth, (u) => {
         setUser(u);
@@ -91,6 +98,31 @@ export default function FavoritesPage() {
         }
     };
 
+    // 選んだものを、まとめてカートに追加する。入手済み・カート済みは除き、上限（50件）を超えた分は入れない
+    const handleAddToCart = async (selectedKeys: string[]) => {
+        const chosen = new Set(selectedKeys);
+        const chosenItems = items.filter((i) => chosen.has(itemKey(i.kind, i.id)));
+        const petan = chosenItems.filter((i) => i.kind === "petan").map((i) => i.data as StickerPack);
+        const designs = chosenItems.filter((i) => i.kind === "design").map((i) => i.data as PublicThemePack);
+        setAdding(true);
+        setCartResult(null);
+        try {
+            const [p, d] = await Promise.all([
+                petan.length > 0 ? addManyToCart(petan, user.uid, cartIds) : null,
+                designs.length > 0 ? addManyDesignsToCart(designs, user.uid, cartDesignIds) : null,
+            ]);
+            const added = (p?.added ?? 0) + (d?.added ?? 0);
+            setCartResult({ added, skipped: selectedKeys.length - added, failed: false });
+            sel.clear();
+        } catch {
+            setCartResult({ added: 0, skipped: 0, failed: true });
+        } finally {
+            setAdding(false);
+        }
+    };
+
+    const selectedCount = keys.filter((k) => sel.selected.has(k)).length;
+
     return (
         <div className="w-full pb-24">
             <div className="container mx-auto px-6 pb-16 max-w-4xl">
@@ -116,7 +148,28 @@ export default function FavoritesPage() {
                             onSelectAll={sel.selectAll}
                             onClear={sel.clear}
                             onAction={handleRemoveSelected}
+                            trailing={
+                                <Button variant="tonal" onClick={() => handleAddToCart(keys.filter((k) => sel.selected.has(k)))} disabled={removing || adding || selectedCount === 0}>
+                                    {adding ? "追加中…" : `カートに追加（${selectedCount}件）`}
+                                </Button>
+                            }
                         />
+                        {cartResult && !adding && (
+                            <p className="-mt-3 mb-6 text-sm text-gray-600" role="status">
+                                {cartResult.failed ? (
+                                    "カートに追加出来ませんでした。時間をおいてお試しください。"
+                                ) : (
+                                    <>
+                                        {cartResult.added}件をカートに追加しました
+                                        {cartResult.skipped > 0 && `。入手済み・カート済み・上限の為、${cartResult.skipped}件は追加していません`}
+                                        {" "}
+                                        <Link href="/daidai-yokocho/cart" className="text-blue-600 hover:underline">
+                                            カートを見る →
+                                        </Link>
+                                    </>
+                                )}
+                            </p>
+                        )}
                         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
                             {items.map((item) => {
                                 const key = itemKey(item.kind, item.id);

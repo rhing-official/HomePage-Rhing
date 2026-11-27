@@ -7,6 +7,8 @@ import CtaCard from "@/components/ui/CtaCard";
 import TrendingStickerPacks from "@/components/TrendingStickerPacks";
 import CartProvider from "@/components/CartProvider";
 import { getTrendingStickerPacks } from "@/lib/stickerPacks";
+import { getTrendingThemePacks } from "@/lib/themePackReview";
+import { pickTrendingSlots } from "@/lib/trendingSlots";
 import { PackGridSkeleton } from "@/components/Skeleton";
 
 export const dynamic = "force-dynamic";
@@ -19,12 +21,12 @@ const menuCards = [
     { title: "収支報告", en: "FINANCIAL", href: "/financial", desc: "収支を閲覧する" },
 ];
 
-// 「人気のぺったん」の見出し（取得中の枠と、取得後で共通）
+// 「人気のぺったんと意匠」の見出し（取得中の枠と、取得後で共通）
 function TrendingHeader() {
     return (
         <div className="flex flex-col items-center mb-16">
             <p className="text-sm font-bold text-gray-400 tracking-[0.2em] mb-2 uppercase">DAIDAI YOKOCHO</p>
-            <h2 className="text-3xl font-bold tracking-widest text-gray-900 mb-8">daidai横丁で人気のぺったん</h2>
+            <h2 className="text-3xl font-bold tracking-widest text-gray-900 mb-8">daidai横丁で人気のぺったんと意匠</h2>
 
             <Button href="/daidai-yokocho" variant="glass">
                 全て見る →
@@ -33,16 +35,18 @@ function TrendingHeader() {
     );
 }
 
-// 人気のぺったんの取得（Firestore）を待つ間も、ページの他の部分を先に出せるよう、
+// 人気のぺったんと意匠の取得（Firestore）を待つ間も、ページの他の部分を先に出せるよう、
 // この部分だけを非同期にして、<Suspense>で包む（ストリーミング）
 async function TrendingSection() {
-    const trendingPacks = await getTrendingStickerPacks(5);
-    if (trendingPacks.length === 0) return null;
+    // 5枠のうち、意匠に2枠。意匠が足りない間は、ぺったんで埋める
+    const [trendingPetan, trendingDesigns] = await Promise.all([getTrendingStickerPacks(5), getTrendingThemePacks(2)]);
+    const { petan: trendingPacks, designs } = pickTrendingSlots(trendingPetan, trendingDesigns);
+    if (trendingPacks.length === 0 && designs.length === 0) return null;
     return (
         <section className="container mx-auto px-4 py-24 max-w-screen-2xl">
             <TrendingHeader />
             <CartProvider>
-                <TrendingStickerPacks packs={trendingPacks} />
+                <TrendingStickerPacks packs={trendingPacks} designs={designs} />
             </CartProvider>
         </section>
     );
@@ -63,7 +67,7 @@ export default function Home() {
                 </div>
             </section>
 
-            {/* daidai横丁：売れ筋ぺったん（取得中は、枠だけを先に出す） */}
+            {/* daidai横丁：売れ筋のぺったんと、人気の意匠（取得中は、枠だけを先に出す） */}
             <Suspense
                 fallback={
                     <section className="container mx-auto px-4 py-24 max-w-screen-2xl">
