@@ -2,8 +2,8 @@
 import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
-import { usePathname } from "next/navigation";
-import { motion, AnimatePresence } from "framer-motion";
+import { usePathname, useRouter } from "next/navigation";
+import { motion, AnimatePresence, animate, useDragControls, useMotionValue } from "framer-motion";
 import ThemeToggle from "@/components/ThemeToggle";
 import { HEADER_BAR_SLOT_ID, usePhonePortrait } from "@/lib/usePhonePortrait";
 
@@ -18,9 +18,9 @@ const navItems = [
     { href: "/", label: "TOP" },
     { href: "/about", label: "ABOUT" },
     { href: "/services", label: "SERVICES" },
-    { href: "/daidai-yokocho", label: "daidai横丁" },
     { href: "/donate", label: "DONATE" },
     { href: "/financial", label: "FINANCIAL" },
+    { href: "/daidai-yokocho", label: "daidai横丁" },
     { href: "https://note.com/rhing_official/all", label: "NEWS" },
 ];
 
@@ -80,6 +80,8 @@ function DrawerLink({
     return (
         <Link
             href={href}
+            data-drawer-href={href}
+            draggable={false}
             onClick={() => {
                 setRipple((n) => n + 1);
                 onSelect();
@@ -144,6 +146,11 @@ export default function Header() {
     const [isOpen, setIsOpen] = useState(false);
     const [selected, setSelected] = useState<string | null>(null);
     const pathname = usePathname();
+    const router = useRouter();
+    const dragControls = useDragControls();
+    const drawerX = useMotionValue(0);
+    // 指を押したまま滑らせて、項目を選ぶ操作の状態。axis は、最初の数ピクセルの動きで、縦（項目を選ぶ）か横（閉じる）かを決める
+    const scrubRef = useRef<{ x: number; y: number; axis: "none" | "scrub" | "close"; start: string | null; from: string | null; last: string | null } | null>(null);
     const phonePortrait = usePhonePortrait();
     // ページを傾ける動きは、スマホの縦画面だけ。動きを減らす設定は、見ない（2026-11-28、ユーザー指示）。
     const recede = phonePortrait;
@@ -193,6 +200,50 @@ export default function Header() {
     // 項目を選ぶと、縦棒と輪の動きを見せてから、ドロワーを閉じる。
     const selectItem = (href: string) => {
         setSelected(href);
+        window.setTimeout(closeDrawer, DRAWER_SELECT_MS);
+    };
+
+    // 項目の上を指でなぞる間、棒が指に付いて動く。離した所の項目へ移る
+    const hrefAt = (x: number, y: number) =>
+        document.elementFromPoint(x, y)?.closest<HTMLElement>("[data-drawer-href]")?.dataset.drawerHref ?? null;
+    const onScrubDown = (e: React.PointerEvent) => {
+        scrubRef.current = { x: e.clientX, y: e.clientY, axis: "none", start: hrefAt(e.clientX, e.clientY), from: selected, last: null };
+    };
+    const onScrubMove = (e: React.PointerEvent) => {
+        const s = scrubRef.current;
+        if (!s) return;
+        if (s.axis === "none") {
+            const dx = e.clientX - s.x;
+            const dy = e.clientY - s.y;
+            // 項目の外（余白）は、少し動いただけで、閉じる動きに入る。項目の上は、縦の項目移動を優先して、少し長く見る
+            if (Math.hypot(dx, dy) < (s.start ? 8 : 3)) return;
+            if (Math.abs(dx) > Math.abs(dy) && dx > 0) {
+                s.axis = "close";
+                dragControls.start(e);
+                return;
+            }
+            s.axis = "scrub";
+        }
+        if (s.axis !== "scrub") return;
+        const href = hrefAt(e.clientX, e.clientY);
+        if (href && href !== s.last) {
+            s.last = href;
+            setSelected(href);
+        }
+    };
+    const onScrubUp = (e: React.PointerEvent) => {
+        const s = scrubRef.current;
+        scrubRef.current = null;
+        if (!s || s.axis !== "scrub") return;
+        const href = hrefAt(e.clientX, e.clientY);
+        if (!href || href === s.start) {
+            // 元の項目の上で離した時は、そのまま押した扱い（click が移動を担う）。項目の外なら、選びを戻す
+            if (!href) setSelected(s.from);
+            return;
+        }
+        setSelected(href);
+        if (href.startsWith("/")) router.push(href);
+        else window.open(href, "_self");
         window.setTimeout(closeDrawer, DRAWER_SELECT_MS);
     };
 
@@ -267,13 +318,22 @@ export default function Header() {
                         */}
                         <motion.nav
                             drag="x"
-                            style={{ y: "-50%" }} // 縦は、テキストの範囲だけの高さにして、画面の中央に置く
+                            dragControls={dragControls}
+                            dragListener={false}
+                            onPointerDown={onScrubDown}
+                            onPointerMove={onScrubMove}
+                            onPointerUp={onScrubUp}
+                            onPointerCancel={() => { scrubRef.current = null; }}
+                            style={{ x: drawerX, y: "-50%", touchAction: "none" }} // 縦は、テキストの範囲だけの高さにして、画面の中央に置く
                             dragConstraints={{ left: 0, right: 256 }} // メニュー幅分のみ右ドラッグを許可
                             dragElastic={{ left: 0, right: 0.15 }}    // 引っ張ったときの心地よい弾力
                             onDragEnd={(event, info) => {
-                                // 右に80px以上スワイプ（ドラッグ）されたらドロワーを閉じます
-                                if (info.offset.x > 80) {
+                                // ゆっくりでも、右へ40px以上引いたら閉じる。速く払う動きなら、短くても閉じる。
+                                // どちらでもない時は、離した位置で止まらず、元の位置へ戻す
+                                if (info.offset.x > 40 || info.velocity.x > 500) {
                                     closeDrawer();
+                                } else {
+                                    animate(drawerX, 0, { type: "spring", stiffness: 500, damping: 40 });
                                 }
                             }}
                             initial={{ x: "100%" }}
