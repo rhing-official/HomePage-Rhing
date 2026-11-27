@@ -177,7 +177,7 @@ export default function DolcePage() {
                             className="mt-8 pt-6 border-t border-gray-200"
                             items={[
                                 { os: "Windows 11" },
-                                { os: "Zorin OS 18", detail: "Linux" },
+                                { os: "Zorin 18", detail: "Linux" },
                                 { os: "Android 16" },
                             ]}
                             checkedAt="2026/9/15"

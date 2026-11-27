@@ -298,7 +298,7 @@ const compareRows: { label: string; cells: Cell[] }[] = [
     {
         label: "対応OS",
         cells: [
-            { text: ["Webと、APKのみのAndroid。iOS・Windows・macOS・Linuxは対応予定"], emphasis: true },
+            { text: ["Webと、APKのみのAndroid、TestFlightのみのiOS。Windows・macOS・Linuxは対応予定"], emphasis: true },
             { none: true },
             { quotes: ["Available on Windows, macOS, Linux, iOS, Android, and consoles."], href: "https://discord.com/download" },
             { quotes: ["Android", "iPhone & iPad", "Windows", "Mac", "Linux"], href: "https://signal.org/download/" },
@@ -424,7 +424,7 @@ const faqs: { q: string; a: string; generalA?: string }[] = [
     },
     {
         q: "対応しているOSは？",
-        a: "現在使えるのは、Web版と、Android版です。Android版は、APKのみです。iOS・Windows・macOS・Linuxは対応予定ですが、時期は決めていません。",
+        a: "現在使えるのは、Web版と、Android版と、iOS版のβ版です。Android版は、APKのみです。iOS版は、TestFlightで配っているβ版で、App Storeでは配っていません。Windows・macOS・Linuxは対応予定ですが、時期は決めていません。",
     },
     {
         q: "お金はかかりますか？",

@@ -29,7 +29,7 @@ type Platform = { name: string; status: "available" | "planned"; url?: string; n
 const platforms: Platform[] = [
     { name: "Web", status: "available", url: "https://daidai.rhing.jp" },
     { name: "Android", status: "available", url: "https://github.com/rhing-official/DaiDai/releases/latest", note: "APKのみ" },
-    { name: "iOS", status: "planned" },
+    { name: "iOS", status: "available", url: "https://testflight.apple.com/join/3VDJRTKw", note: "TestFlightのみ" },
     { name: "Windows", status: "planned" },
     { name: "macOS", status: "planned" },
     { name: "Linux", status: "planned" },
@@ -98,13 +98,13 @@ export default function DaiDaiPage() {
                         <EnvironmentList
                             className="mt-8 pt-6 border-t border-gray-200"
                             items={[
-                                { os: "iPadOS 27 β", detail: "Floorp" },
-                                { os: "Android 16", detail: "Firefox" },
-                                { os: "Zorin OS 18", detail: "Floorp・Vivaldi" },
-                                { os: "motorola edge 50s pro", detail: "Android 16・APK" },
+                                { os: "iPad 第9世代", detail: "iPadOS 27 β・Floorp・TestFlight" },
+                                { os: "motorola edge 50s pro", detail: "Android 16・Firefox・APK" },
+                                { os: "Zorin 18", detail: "Floorp・Vivaldi" },
+                                { os: "Windows 11", detail: "Floorp・Vivaldi" },
                             ]}
-                            note="Web版はブラウザ、motorola edge 50s proはAPKで確認した結果です（括弧内は使用したブラウザ、またはOSと配布形式）。"
-                            checkedAt="2026/11/18"
+                            note="iPadとAndroidは、ブラウザでのWeb版と、アプリの両方で確認した結果です。ZorinとWindowsは、Web版だけの結果です。括弧内は、OSと、使用したブラウザと、アプリの配布形式です。"
+                            checkedAt="2026/11/27"
                         />
                     </div>
                 </div>
