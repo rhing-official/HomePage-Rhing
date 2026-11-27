@@ -273,6 +273,23 @@
             18px 0 0 -6px var(--color-surface-container-high),
             var(--shadow-elevation-3);
     }
+    /* 右端から引き出している間（Header.tsx）。--recede-progress（0 が水平、1 が全開の傾き）に合わせて、指に追従する。
+       transition は付けない。離して tilt か flat になる時は、transition が、この途中の値から動かす。
+       transform の関数の並びは、tilt と同じにして、補間できるようにする */
+    html[data-recede="drag"] :is(.page-frame, .page-overlay) {
+        transition: none;
+        transform: perspective(1100px) translateX(calc(var(--recede-progress, 0) * -18%)) rotateY(calc(var(--recede-progress, 0) * 16deg))
+            rotate(calc(var(--recede-progress, 0) * -2deg)) scale(calc(1 - var(--recede-progress, 0) * 0.38));
+    }
+    html[data-recede="drag"] .page-frame {
+        transition: none;
+        border-radius: calc(var(--recede-progress, 0) * 28px);
+        box-shadow:
+            0 0 0 1px var(--color-outline-variant),
+            9px 0 0 -3px var(--color-surface-container),
+            18px 0 0 -6px var(--color-surface-container-high),
+            var(--shadow-elevation-3);
+    }
     /* ドロワーから選んだ遷移は、ぼかしで現れず、傾きが戻る動きを見せる。
        animation: none にすると、傾きを解いた時に名前が戻り、ぼかしが最初から再生される。
        そのため、名前は変えず、遅延を負にして、終わった状態に固定する。解いた時は、遅延が戻るだけで、再生し直さない */

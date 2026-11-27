@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import Carousel from "@/components/ui/Carousel";
 import StickerPackCard from "@/components/StickerPackCard";
 import DesignCard from "@/components/daidai-yokocho/DesignCard";
 import KindBadge from "@/components/daidai-yokocho/KindBadge";
@@ -20,19 +21,21 @@ export default function TrendingStickerPacks({ packs, designs = [] }: { packs: S
     const creatorOf = (id: string) => (creatorProfiles ? (creatorProfiles.get(id) ?? null) : undefined);
 
     return (
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-6">
-            {packs.map((pack) => (
-                <div key={`petan:${pack.id}`} className="relative">
-                    <StickerPackCard pack={pack} creator={creatorOf(pack.creatorId)} />
-                    <KindBadge kind="petan" className="pointer-events-none absolute left-3 top-3 z-10" />
-                </div>
-            ))}
-            {designs.map((design) => (
-                <div key={`design:${design.id}`} className="relative">
-                    <DesignCard pack={design} creator={creatorOf(design.creatorId)} />
-                    <KindBadge kind="design" className="pointer-events-none absolute left-3 top-3 z-10" />
-                </div>
-            ))}
-        </div>
+        <Carousel label="daidai横丁の人気のぺったんと意匠" slideClassName="basis-full sm:basis-1/2 lg:basis-1/3 xl:basis-1/5">
+            {[
+                ...packs.map((pack) => (
+                    <div key={`petan:${pack.id}`} className="relative h-full">
+                        <StickerPackCard pack={pack} creator={creatorOf(pack.creatorId)} />
+                        <KindBadge kind="petan" className="pointer-events-none absolute left-3 top-3 z-10" />
+                    </div>
+                )),
+                ...designs.map((design) => (
+                    <div key={`design:${design.id}`} className="relative h-full">
+                        <DesignCard pack={design} creator={creatorOf(design.creatorId)} />
+                        <KindBadge kind="design" className="pointer-events-none absolute left-3 top-3 z-10" />
+                    </div>
+                )),
+            ]}
+        </Carousel>
     );
 }

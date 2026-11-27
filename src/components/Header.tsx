@@ -3,7 +3,7 @@ import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { usePathname, useRouter } from "next/navigation";
-import { motion, AnimatePresence, useDragControls } from "framer-motion";
+import { motion, AnimatePresence, useDragControls, useMotionValue } from "framer-motion";
 import ThemeToggle from "@/components/ThemeToggle";
 import { HEADER_BAR_SLOT_ID, usePhonePortrait } from "@/lib/usePhonePortrait";
 
@@ -60,6 +60,8 @@ function FoldSideMenu() {
 const DRAWER_SELECT_MS = 300;
 // ページが、傾きから水平へ戻る時間。globals.css の .page-frame の transition と同じ値にする。
 const RECEDE_RETURN_MS = 450;
+// ドロワーの幅（w-64）。右端から引き出す操作で、指に追従させる距離に使う
+const DRAWER_WIDTH = 256;
 const EASE_M3 = [0.2, 0, 0, 1] as const;
 
 // ドロワーの項目。縦の線路の上に、選ばれた項目の横へ黒い棒を付け、選び直すと、棒が項目の間を滑って移る。
@@ -115,12 +117,18 @@ function DrawerLink({
 }
 
 // ページを傾けて奥へ退かせる動きの、html への印と、スクロール位置の固定と復元。見た目は globals.css の data-recede が決める。
-function startRecede(scrollY: number) {
+// drag: 右端から引き出している間。傾けず、指の位置（--recede-progress、0 が水平、1 が全開）に合わせて、毎コマ傾ける。離した時に、tilt か flat へ移る。
+function startRecede(scrollY: number, mode: "tilt" | "drag" = "tilt") {
     const html = document.documentElement;
     // 枠が固定になると、文書の高さが縮む。スクロール位置を保つため、元の高さを body に持たせる。
     document.body.style.minHeight = `${html.scrollHeight}px`;
     html.style.overflow = "hidden";
     html.style.setProperty("--recede-offset", `${scrollY}px`);
+    if (mode === "drag") {
+        html.style.setProperty("--recede-progress", "0");
+        html.dataset.recede = "drag";
+        return;
+    }
     html.dataset.recede = "flat";
     // flat の描画を確定させてから tilt にして、transition を働かせる。
     void html.getBoundingClientRect();
@@ -138,6 +146,7 @@ function endRecede(scrollY: number) {
     delete html.dataset.recede;
     html.style.overflow = "";
     html.style.removeProperty("--recede-offset");
+    html.style.removeProperty("--recede-progress");
     document.body.style.minHeight = "";
     window.scrollTo(0, scrollY);
 }
@@ -148,6 +157,9 @@ export default function Header() {
     const pathname = usePathname();
     const router = useRouter();
     const dragControls = useDragControls();
+    // 画面の右端から引き出している間の、ドロワーの横位置（DRAWER_WIDTH で隠れ、0 で全開）。指に追従させる
+    const drawerX = useMotionValue(DRAWER_WIDTH);
+    const [edgeDragging, setEdgeDragging] = useState(false);
     // 指を押したまま滑らせて、項目を選ぶ操作の状態。axis は、最初の数ピクセルの動きで、縦（項目を選ぶ）か横（閉じる）かを決める
     const scrubRef = useRef<{ x: number; y: number; axis: "none" | "scrub" | "close"; start: string | null; from: string | null; last: string | null } | null>(null);
     const phonePortrait = usePhonePortrait();
@@ -165,21 +177,29 @@ export default function Header() {
         }
     }, [pathname]);
 
-    const openDrawer = () => {
+    const selectCurrent = () => {
         const current = navItems.find((item) => (item.href === "/" ? pathname === "/" : item.href.startsWith("/") && pathname.startsWith(item.href)));
         setSelected(current ? current.href : null);
+    };
+
+    // ページを傾けて退かせる動きを始める（スマホ・タブレットの縦画面など）
+    const beginRecede = () => {
         const state = recedeRef.current;
-        if (recede) {
-            window.clearTimeout(state.timer);
-            if (!state.active) {
-                state.scrollY = window.scrollY;
-                state.pathname = pathname;
-                state.active = true;
-                startRecede(state.scrollY);
-            } else {
-                setRecedePhase("tilt");
-            }
+        if (!recede) return;
+        window.clearTimeout(state.timer);
+        if (!state.active) {
+            state.scrollY = window.scrollY;
+            state.pathname = pathname;
+            state.active = true;
+            startRecede(state.scrollY);
+        } else {
+            setRecedePhase("tilt");
         }
+    };
+
+    const openDrawer = () => {
+        selectCurrent();
+        beginRecede();
         setIsOpen(true);
     };
 
@@ -196,56 +216,106 @@ export default function Header() {
         }, RECEDE_RETURN_MS);
     };
 
-    // 画面の右端から左へ横にスワイプして、ドロワーを開く。ハンバーガーが見えている幅だけで効く（PC用のナビバーや、画面が左右に分かれる端末では、ボタンが見えないので効かない）。
-    // 開く操作は最新の状態で呼びたいので、ref 越しに持つ。
-    const edgeOpenRef = useRef<() => void>(() => {});
+    // 画面の右端から左へ引いて、ドロワーを開く。ドロワーは指に追従して出てくる（勝手に最後まで伸びない）。
+    // 途中で指を戻せば、そのまま指に追従して収納される。離した時に、半分を超えていたら開き、手前なら閉じる。速く払った時は、その向きに従う。
+    // ハンバーガーが見えている幅だけで効く（PC用のナビバーや、画面が左右に分かれる端末では、ボタンが見えないので効かない）。
+    // ページを傾ける動きは、離して開くと決まってから始める（傾きは時間で動くので、指には追従させない）。
+    const edgeRef = useRef<{ opened: boolean; begin: () => void; settle: (open: boolean) => void }>({ opened: false, begin: () => {}, settle: () => {} });
     useEffect(() => {
-        edgeOpenRef.current = () => {
-            if (!isOpen) openDrawer();
+        edgeRef.current = {
+            opened: isOpen,
+            begin: () => {
+                drawerX.set(DRAWER_WIDTH);
+                selectCurrent();
+                // ページも、指に合わせて傾ける（globals.css の data-recede="drag"）
+                const state = recedeRef.current;
+                if (recede && !state.active) {
+                    window.clearTimeout(state.timer);
+                    state.scrollY = window.scrollY;
+                    state.pathname = pathname;
+                    state.active = true;
+                    startRecede(state.scrollY, "drag");
+                }
+                setEdgeDragging(true);
+                setIsOpen(true);
+            },
+            settle: (open) => {
+                if (open) {
+                    if (recedeRef.current.active) setRecedePhase("tilt"); // 指の位置から、全開の傾きまで動く
+                    setEdgeDragging(false); // animate={{ x: 0 }} が、今の位置から全開まで動かす
+                } else {
+                    closeDrawer(); // 傾きは、指の位置から水平まで戻り、ドロワーは、今の位置から隠れる。edgeDragging は、退場が終わってから戻す
+                }
+            },
         };
     });
     useEffect(() => {
         const EDGE_PX = 24; // 右端からこの幅の中で始まった指だけを対象にする
-        const OPEN_PX = 48; // この距離以上、左へ動いたら開く
+        const INTENT_PX = 8; // この距離以上、横へ動いたら、引き出す操作と見なす
+        const FLICK_PX_PER_S = 600; // これ以上の速さで払ったら、位置に関わらず、その向きに従う
         let start: { x: number; y: number } | null = null;
+        let dragging = false;
+        let last = { x: 0, t: 0 };
+        let velocity = 0; // 右向きが正
         const hamburgerVisible = () =>
             (document.querySelector<HTMLElement>('button[aria-label="メニューを開く"]')?.getClientRects().length ?? 0) > 0;
+        const fingerToX = (clientX: number) => Math.min(Math.max(clientX - (window.innerWidth - DRAWER_WIDTH), 0), DRAWER_WIDTH);
+        const finish = () => {
+            if (dragging) {
+                dragging = false;
+                const x = drawerX.get();
+                const open = Math.abs(velocity) > FLICK_PX_PER_S ? velocity < 0 : x < DRAWER_WIDTH / 2;
+                edgeRef.current.settle(open);
+            }
+            start = null;
+        };
         const onStart = (e: TouchEvent) => {
             start = null;
-            if (e.touches.length !== 1) return;
+            dragging = false;
+            if (e.touches.length !== 1 || edgeRef.current.opened) return;
             const t = e.touches[0];
             if (t.clientX < window.innerWidth - EDGE_PX) return;
             if (!hamburgerVisible()) return;
             start = { x: t.clientX, y: t.clientY };
+            last = { x: t.clientX, t: performance.now() };
+            velocity = 0;
         };
         const onMove = (e: TouchEvent) => {
             if (!start) return;
             const t = e.touches[0];
-            const dx = t.clientX - start.x;
-            const dy = t.clientY - start.y;
-            // 縦に動いた時は、ページのスクロールなので、見送る
-            if (Math.abs(dy) > Math.abs(dx) && Math.abs(dy) > 10) {
-                start = null;
-                return;
+            if (!dragging) {
+                const dx = t.clientX - start.x;
+                const dy = t.clientY - start.y;
+                // 縦に動いた時は、ページのスクロールなので、見送る
+                if (Math.abs(dy) > Math.abs(dx) && Math.abs(dy) > 10) {
+                    start = null;
+                    return;
+                }
+                if (dx > -INTENT_PX) return;
+                dragging = true;
+                edgeRef.current.begin();
             }
-            if (dx < -OPEN_PX) {
-                start = null;
-                edgeOpenRef.current();
-            }
-        };
-        const onEnd = () => {
-            start = null;
+            // ページが横に動かないよう、引き出している間は、ブラウザの既定の動きを止める
+            if (e.cancelable) e.preventDefault();
+            const now = performance.now();
+            const dt = now - last.t;
+            if (dt > 0) velocity = ((t.clientX - last.x) / dt) * 1000;
+            last = { x: t.clientX, t: now };
+            const x = fingerToX(t.clientX);
+            drawerX.set(x);
+            document.documentElement.style.setProperty("--recede-progress", String(1 - x / DRAWER_WIDTH));
         };
         window.addEventListener("touchstart", onStart, { passive: true });
-        window.addEventListener("touchmove", onMove, { passive: true });
-        window.addEventListener("touchend", onEnd, { passive: true });
-        window.addEventListener("touchcancel", onEnd, { passive: true });
+        window.addEventListener("touchmove", onMove, { passive: false });
+        window.addEventListener("touchend", finish, { passive: true });
+        window.addEventListener("touchcancel", finish, { passive: true });
         return () => {
             window.removeEventListener("touchstart", onStart);
             window.removeEventListener("touchmove", onMove);
-            window.removeEventListener("touchend", onEnd);
-            window.removeEventListener("touchcancel", onEnd);
+            window.removeEventListener("touchend", finish);
+            window.removeEventListener("touchcancel", finish);
         };
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
     // 項目を選ぶと、縦棒と輪の動きを見せてから、ドロワーを閉じる。
@@ -347,7 +417,7 @@ export default function Header() {
             </header>
 
             {/* ドロワーメニュー */}
-            <AnimatePresence>
+            <AnimatePresence onExitComplete={() => setEdgeDragging(false)}>
                 {isOpen && (
                     <>
                         {/* スマホの縦画面では、傾いたページが背景になるので、暗幕は付けない。押すと閉じる範囲だけ残す */}
@@ -376,16 +446,16 @@ export default function Header() {
                             onPointerMove={onScrubMove}
                             onPointerUp={onScrubUp}
                             onPointerCancel={() => { scrubRef.current = null; }}
-                            style={{ y: "-50%", touchAction: "none" }} // 縦は、テキストの範囲だけの高さにして、画面の中央に置く
+                            style={{ x: drawerX, y: "-50%", touchAction: "none" }} // 縦は、テキストの範囲だけの高さにして、画面の中央に置く
                             dragConstraints={{ left: 0, right: 256 }} // メニュー幅分のみ右ドラッグを許可
                             dragElastic={{ left: 0, right: 0.15 }}    // 引っ張ったときの心地よい弾力
                             onDragEnd={(event, info) => {
                                 // ゆっくりでも、右へ40px以上引いたら閉じる。速く払う動きなら、短くても閉じる
                                 if (info.offset.x > 40 || info.velocity.x > 500) closeDrawer();
                             }}
-                            initial={{ x: "100%" }}
-                            animate={{ x: 0 }}
-                            exit={{ x: "100%" }}
+                            initial={{ x: DRAWER_WIDTH }}
+                            animate={edgeDragging ? undefined : { x: 0 }} // 右端から引き出している間は、指が位置を決める
+                            exit={{ x: DRAWER_WIDTH }}
                             transition={{ type: "spring", damping: 25 }}
                             /* 掴んでスライドできることが感覚的にわかるよう、カーソル表現を追加しています */
                             className="fixed top-1/2 right-0 w-64 bg-surface/80 backdrop-blur-md z-[80] p-10 flex flex-col gap-6 pointer-events-auto shadow-elevation-3 rounded-l-3xl border-y border-l border-outline-variant/60 text-on-surface cursor-grab active:cursor-grabbing select-none"

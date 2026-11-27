@@ -24,12 +24,16 @@ export default function ScrollToTop() {
         return () => window.removeEventListener("scroll", toggleVisibility);
     }, []);
 
-    // クリックされたら一番上へ滑らかに戻る
+    // クリックされたら、一番上へ、滲んで戻る。実際にスクロールはせず、位置を0へ飛ばして、古い見た目が滲んで消え、新しい見た目が滲んで現れる（モード切り替えと同じ。globals.cssの::view-transition-*）。
+    // View Transitions APIに対応していないブラウザでは、動きを付けず、その場で上へ飛ぶ
     const scrollToTop = () => {
-        window.scrollTo({
-            top: 0,
-            behavior: "smooth",
-        });
+        // behavior を明示する: ブラウザの滑らかなスクロールの設定（Firefox系の general.smoothScroll など）や CSS が有っても、飛ばす
+        const jump = () => window.scrollTo({ top: 0, left: 0, behavior: "instant" });
+        if (typeof document.startViewTransition === "function") {
+            document.startViewTransition(jump);
+        } else {
+            jump();
+        }
     };
 
     return (

@@ -3,6 +3,7 @@ import HeroFloatingSection from "@/components/HeroFloatingSection";
 import { newsList } from "@/data/newsData";
 import Button from "@/components/ui/Button";
 import Badge from "@/components/ui/Badge";
+import Carousel from "@/components/ui/Carousel";
 import CtaCard from "@/components/ui/CtaCard";
 import TrendingStickerPacks from "@/components/TrendingStickerPacks";
 import CartProvider from "@/components/CartProvider";
@@ -90,8 +91,8 @@ export default function Home() {
                     </Button>
                 </div>
 
-                {/* グリッドレイアウト（6つまで表示） */}
-                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-10">
+                {/* カルーセル（6つまで表示） */}
+                <Carousel label="最新情報" gap="10" slideClassName="basis-full sm:basis-1/2 lg:basis-1/3">
                     {newsList.slice(0, 6).map((news) => (
                         <a
                             href={news.url}
@@ -121,7 +122,7 @@ export default function Home() {
                             </div>
                         </a>
                     ))}
-                </div>
+                </Carousel>
             </section>
         </div>
     );
