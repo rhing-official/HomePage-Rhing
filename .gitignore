@@ -2,6 +2,12 @@ node_modules/
 .next/
 .env*.local
 
-# 公開しない（ローカルのみ）
-/CLAUDE.md
-/文書/日記.md
+# Claude Code（スキル・設定）。公開リポジトリには含めない（2026-11-28）。
+# 実体は、非公開リポジトリ rhing-official/HomePage-private（ローカルは ../HomePage-private）にあり、ここは、そこへのシンボリックリンク
+.claude
+
+# 非公開の文書（2026-11-28、ユーザー指示。DaiDaiと同じ作り）。実装内容チェックリストだけ公開する。
+# CLAUDE.md と 文書/ の大半（日記を含む）は、HomePage-private にあり、ここは、そこへのシンボリックリンク
+CLAUDE.md
+文書/*
+!文書/実装内容チェックリスト.md
