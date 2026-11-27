@@ -196,6 +196,58 @@ export default function Header() {
         }, RECEDE_RETURN_MS);
     };
 
+    // 画面の右端から左へ横にスワイプして、ドロワーを開く。ハンバーガーが見えている幅だけで効く（PC用のナビバーや、画面が左右に分かれる端末では、ボタンが見えないので効かない）。
+    // 開く操作は最新の状態で呼びたいので、ref 越しに持つ。
+    const edgeOpenRef = useRef<() => void>(() => {});
+    useEffect(() => {
+        edgeOpenRef.current = () => {
+            if (!isOpen) openDrawer();
+        };
+    });
+    useEffect(() => {
+        const EDGE_PX = 24; // 右端からこの幅の中で始まった指だけを対象にする
+        const OPEN_PX = 48; // この距離以上、左へ動いたら開く
+        let start: { x: number; y: number } | null = null;
+        const hamburgerVisible = () =>
+            (document.querySelector<HTMLElement>('button[aria-label="メニューを開く"]')?.getClientRects().length ?? 0) > 0;
+        const onStart = (e: TouchEvent) => {
+            start = null;
+            if (e.touches.length !== 1) return;
+            const t = e.touches[0];
+            if (t.clientX < window.innerWidth - EDGE_PX) return;
+            if (!hamburgerVisible()) return;
+            start = { x: t.clientX, y: t.clientY };
+        };
+        const onMove = (e: TouchEvent) => {
+            if (!start) return;
+            const t = e.touches[0];
+            const dx = t.clientX - start.x;
+            const dy = t.clientY - start.y;
+            // 縦に動いた時は、ページのスクロールなので、見送る
+            if (Math.abs(dy) > Math.abs(dx) && Math.abs(dy) > 10) {
+                start = null;
+                return;
+            }
+            if (dx < -OPEN_PX) {
+                start = null;
+                edgeOpenRef.current();
+            }
+        };
+        const onEnd = () => {
+            start = null;
+        };
+        window.addEventListener("touchstart", onStart, { passive: true });
+        window.addEventListener("touchmove", onMove, { passive: true });
+        window.addEventListener("touchend", onEnd, { passive: true });
+        window.addEventListener("touchcancel", onEnd, { passive: true });
+        return () => {
+            window.removeEventListener("touchstart", onStart);
+            window.removeEventListener("touchmove", onMove);
+            window.removeEventListener("touchend", onEnd);
+            window.removeEventListener("touchcancel", onEnd);
+        };
+    }, []);
+
     // 項目を選ぶと、縦棒と輪の動きを見せてから、ドロワーを閉じる。
     const selectItem = (href: string) => {
         setSelected(href);

@@ -361,6 +361,44 @@ export default function FinancialClient({ years: yearsProp }: { years: Record<st
         const next = Math.min(Math.max(tabs.indexOf(activeTab) + steps, 0), tabs.length - 1);
         if (tabs[next] !== activeTab) setActiveTab(tabs[next]);
     });
+    // 表（内容の面）の上で、指を横に払うと、月を切り替える。左へ払うと次の月、右へ払うと前の月。縦に動いた時はページのスクロールなので、見送る。
+    // 画面の右端から始めた払いは、ドロワーを開く操作（Header.tsx）なので、見送る
+    const contentRef = useRef<HTMLDivElement>(null);
+    useEffect(() => {
+        const el = contentRef.current;
+        if (!el) return;
+        const SWIPE_PX = 50;
+        const EDGE_PX = 24;
+        let start: { x: number; y: number } | null = null;
+        const onStart = (e: TouchEvent) => {
+            const t = e.touches[0];
+            start = e.touches.length === 1 && t.clientX < window.innerWidth - EDGE_PX ? { x: t.clientX, y: t.clientY } : null;
+        };
+        const onEnd = (e: TouchEvent) => {
+            if (!start) return;
+            const t = e.changedTouches[0];
+            const dx = t.clientX - start.x;
+            const dy = t.clientY - start.y;
+            start = null;
+            if (Math.abs(dx) < SWIPE_PX || Math.abs(dx) < Math.abs(dy) * 1.5) return;
+            const step = dx < 0 ? 1 : -1;
+            setTabState((s) => {
+                const next = tabs[Math.min(Math.max(tabs.indexOf(s.tab) + step, 0), tabs.length - 1)];
+                return next === s.tab ? s : { tab: next, prev: s.tab, dir: step };
+            });
+        };
+        const onCancel = () => {
+            start = null;
+        };
+        el.addEventListener("touchstart", onStart, { passive: true });
+        el.addEventListener("touchend", onEnd, { passive: true });
+        el.addEventListener("touchcancel", onCancel, { passive: true });
+        return () => {
+            el.removeEventListener("touchstart", onStart);
+            el.removeEventListener("touchend", onEnd);
+            el.removeEventListener("touchcancel", onCancel);
+        };
+    }, []);
     useCenterSelected(yearRowRef, activeYear, scrubbing);
     useCenterSelected(tabRowRef, activeTab, scrubbing);
     // 年度の行は、途切れている側の端を、滲ませる
@@ -500,7 +538,7 @@ export default function FinancialClient({ years: yearsProp }: { years: Record<st
             </div>
 
             {/* ====== コンテンツエリア ====== */}
-            <div className="bg-surface-container p-8 md:p-12 rounded-m3-lg min-h-[500px]">
+            <div ref={contentRef} className="bg-surface-container p-8 md:p-12 rounded-m3-lg min-h-[500px]">
                 {/* 月の切り替え: 内容が、進む向きに合わせて滑って入れ替わる。素早く切り替える時は、途中の月を飛ばす */}
                 <AnimatePresence mode="wait" initial={false} custom={tabState.dir}>
                     <motion.div
