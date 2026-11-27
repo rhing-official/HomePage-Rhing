@@ -1,5 +1,5 @@
 import { Metadata } from "next";
-import Link from "next/link";
+import CtaCard from "@/components/ui/CtaCard";
 import DonateMethods from "@/components/DonateMethods";
 
 // 支払い機能の公開準備が整うまで検索に出さない
@@ -90,13 +90,9 @@ export default function DonatePage() {
                         </div>
                     ))}
                 </dl>
-                <p className="mt-10 text-center text-sm text-gray-500">
-                    ご不明な点は
-                    <Link href="/contact?type=user" className="underline underline-offset-4 hover:text-gray-900 transition-colors">
-                        お問い合わせ
-                    </Link>
-                    からご連絡ください。
-                </p>
+                <div className="mt-12 flex justify-center">
+                    <CtaCard href="/contact?type=user" label="CONTACT" title="お問い合わせ" caption="ご不明な点は、こちらからご連絡ください" />
+                </div>
             </section>
         </div>
     );

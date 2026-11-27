@@ -145,7 +145,7 @@ export default function DaidaiYokochoMenu() {
     // お知らせのページを開いている間は、既読になるため0として扱う
     const unreadLabel = user && pathname !== "/daidai-yokocho/notices" ? formatUnreadCount(unread) : null;
 
-    const { totalCount: cartCount } = useCart();
+    const { totalCount: cartCount, favoriteCount } = useCart();
     const close = () => setOpen(false);
 
     const handleAccountDeleted = async () => {
@@ -165,8 +165,17 @@ export default function DaidaiYokochoMenu() {
                     >
                         {user && (
                             <>
-                                <Link href="/daidai-yokocho/favorites" aria-label="お気に入り" className={quickIconClass}>
+                                <Link
+                                    href="/daidai-yokocho/favorites"
+                                    aria-label={favoriteCount > 0 ? `お気に入り（${favoriteCount}件）` : "お気に入り"}
+                                    className={`relative ${quickIconClass}`}
+                                >
                                     <Heart className="w-5 h-5 text-gray-700" />
+                                    {favoriteCount > 0 && (
+                                        <span className="pointer-events-none absolute top-1 right-1 min-w-4 h-4 px-1 rounded-full bg-rose-500 text-white text-[10px] font-bold flex items-center justify-center">
+                                            {favoriteCount}
+                                        </span>
+                                    )}
                                 </Link>
                                 <span aria-hidden className="block h-px w-6 md:h-6 md:w-px bg-gray-300/80" />
                                 <Link
@@ -369,7 +378,12 @@ export default function DaidaiYokochoMenu() {
                                     </Link>
                                     <Link href="/daidai-yokocho/favorites" onClick={close} className={menuItemClass}>
                                         <Heart className="w-4 h-4 shrink-0" />
-                                        お気に入り
+                                        <span className="flex-1">お気に入り</span>
+                                        {favoriteCount > 0 && (
+                                            <span className="min-w-5 h-5 px-1 rounded-full bg-rose-500 text-white text-[10px] flex items-center justify-center">
+                                                {favoriteCount}
+                                            </span>
+                                        )}
                                     </Link>
                                     <Link href="/daidai-yokocho/creator" onClick={close} className={menuItemClass}>
                                         <PenTool className="w-4 h-4 shrink-0" />

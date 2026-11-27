@@ -1,5 +1,4 @@
-import Link from "next/link";
-import { ArrowRight } from "lucide-react";
+import CtaCard from "@/components/ui/CtaCard";
 
 const cardClass = "bg-white/40 backdrop-blur-md border border-white/80 shadow-elevation-1 rounded-m3-xl";
 
@@ -62,14 +61,8 @@ export function ContractFooter({ disclaimer }: { disclaimer: string }) {
     return (
         <>
             <p className="text-xs text-gray-500 leading-relaxed">{disclaimer}</p>
-            <div className="text-center">
-                <Link
-                    href="/contact?type=business"
-                    className="inline-flex items-center gap-2 bg-primary text-on-primary px-8 py-3.5 rounded-full font-bold tracking-wider hover:bg-primary/90 hover:shadow-elevation-2 transition-all"
-                >
-                    ご相談・お見積もりはこちら
-                    <ArrowRight className="w-5 h-5" />
-                </Link>
+            <div className="flex justify-center">
+                <CtaCard href="/contact?type=business" label="CONTACT" title="ご相談・お見積もり" caption="ご依頼の内容を、こちらからお知らせください" />
             </div>
         </>
     );

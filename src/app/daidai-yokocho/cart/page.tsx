@@ -236,14 +236,11 @@ export default function CartPage() {
                         </div>
 
                         <div className="mt-8 flex flex-col gap-3 items-start">
-                            <p className="text-sm text-gray-600">
-                                無料 {acquirable}件
-                                {paid > 0 && (
-                                    <span className="text-amber-600 ml-2">
-                                        有料のぺったん{paid}件は、現在購入出来ません。カートには残ります。
-                                    </span>
-                                )}
-                            </p>
+                            {paid > 0 && (
+                                <p className="text-sm text-amber-600">
+                                    有料のぺったん{paid}件は、現在購入出来ません。カートには残ります。
+                                </p>
+                            )}
                             {result && !running && (
                                 <p className="text-sm text-gray-700" role="status">
                                     {result.acquired}件入手しました

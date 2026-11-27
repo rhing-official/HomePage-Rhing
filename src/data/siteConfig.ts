@@ -23,7 +23,7 @@ export const siteConfig = {
         youtube: "https://www.youtube.com/@rhing_official",
         instagram: "https://www.instagram.com/rhing.official/",
         x: "https://x.com/Rhing_official",
-        karotter: "https://karotter.com/Rhing/status/p_06kcfd4",
+        karotter: "https://karotter.com/Rhing",
         github: "https://github.com/rhing-official",
         discord: "https://discord.gg/BynxXjKKDn"
     }

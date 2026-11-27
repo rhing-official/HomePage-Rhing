@@ -7,7 +7,7 @@ import CtaCard from "@/components/ui/CtaCard";
 import TrendingStickerPacks from "@/components/TrendingStickerPacks";
 import CartProvider from "@/components/CartProvider";
 import { getTrendingStickerPacks } from "@/lib/stickerPacks";
-import { getTrendingThemePacks } from "@/lib/themePackReview";
+import { getTrendingThemePacks } from "@/lib/trendingThemePacks";
 import { pickTrendingSlots } from "@/lib/trendingSlots";
 import { PackGridSkeleton } from "@/components/Skeleton";
 

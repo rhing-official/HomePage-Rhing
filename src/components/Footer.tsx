@@ -22,6 +22,34 @@ const UnderlineLink = ({ href, children, external = false }: { href: string; chi
     );
 };
 
+// フッターの「発信・交流」の並び。YouTubeは、動画を公開するまで載せない
+const mediaGroups = [
+    {
+        label: "読む",
+        links: [
+            { name: "Zenn", href: siteConfig.socialLinks.zenn },
+            { name: "Qiita", href: siteConfig.socialLinks.qiita },
+            { name: "note", href: siteConfig.socialLinks.note },
+        ],
+    },
+    {
+        label: "集う",
+        links: [{ name: "Discord", href: siteConfig.socialLinks.discord }],
+    },
+    {
+        label: "話す",
+        links: [
+            { name: "X", href: siteConfig.socialLinks.x },
+            { name: "Instagram", href: siteConfig.socialLinks.instagram },
+            { name: "Karotter", href: siteConfig.socialLinks.karotter },
+        ],
+    },
+    {
+        label: "作る",
+        links: [{ name: "GitHub", href: siteConfig.socialLinks.github }],
+    },
+];
+
 export default function Footer() {
     return (
         <footer className="w-full mt-24">
@@ -78,21 +106,25 @@ export default function Footer() {
                             </ul>
                         </div>
 
-                        {/* メディア */}
+                        {/* 発信・交流。役割ごとに、小見出しで区切る（読む: 発信の本編、集う: コミュニティ、話す: SNS、作る: ソース） */}
                         <div>
                             <h3 className="text-gray-900 font-black text-lg xl:text-xl mb-6 tracking-widest border-b-2 border-gray-900/20 pb-3 pl-2 whitespace-nowrap">
-                                メディア
+                                発信・交流
                             </h3>
-                            <ul className="space-y-4 pl-2">
-                                <li><UnderlineLink href={siteConfig.socialLinks.note} external>note</UnderlineLink></li>
-                                <li><UnderlineLink href={siteConfig.socialLinks.qiita} external>Qiita</UnderlineLink></li>
-                                <li><UnderlineLink href={siteConfig.socialLinks.zenn} external>Zenn</UnderlineLink></li>
-                                <li><UnderlineLink href={siteConfig.socialLinks.github} external>GitHub</UnderlineLink></li>
-                                <li><UnderlineLink href={siteConfig.socialLinks.discord} external>Discord</UnderlineLink></li>
-                                <li><UnderlineLink href={siteConfig.socialLinks.x} external>X</UnderlineLink></li>
-                                <li><UnderlineLink href={siteConfig.socialLinks.instagram} external>Instagram</UnderlineLink></li>
-                                <li><UnderlineLink href={siteConfig.socialLinks.karotter} external>Karotter</UnderlineLink></li>
-                            </ul>
+                            <div className="space-y-5 pl-2">
+                                {mediaGroups.map((group) => (
+                                    <div key={group.label} className="flex flex-col gap-2 xl:flex-row xl:items-baseline xl:gap-4">
+                                        <p className="shrink-0 text-xs font-bold tracking-widest text-gray-500 xl:w-10">{group.label}</p>
+                                        <ul className="flex flex-wrap gap-x-5 gap-y-2">
+                                            {group.links.map((link) => (
+                                                <li key={link.name}>
+                                                    <UnderlineLink href={link.href} external>{link.name}</UnderlineLink>
+                                                </li>
+                                            ))}
+                                        </ul>
+                                    </div>
+                                ))}
+                            </div>
                         </div>
 
                     </div>

@@ -1,7 +1,8 @@
 "use client";
 
 import { createContext, useCallback, useContext, useEffect, useMemo, useState } from "react";
-import { onSnapshot } from "firebase/firestore";
+import { collection, onSnapshot } from "firebase/firestore";
+import { db } from "@/lib/firebase";
 import { auth, onAuthStateChanged, type User } from "@/lib/firebaseAuth";
 import { addToCart, cartCollection, removeFromCart, CART_MAX_ITEMS } from "@/lib/cart";
 import { timestampToMillis } from "@/lib/mixedList";
@@ -26,6 +27,8 @@ interface CartContextValue {
     totalCount: number;
     // 意匠のカートを、最初に読み込み終えたか
     designCartReady: boolean;
+    // お気に入りの件数（ぺったんと意匠の合計）。メニューのバッジ用。公開が終わった意匠など、一覧では隠れるものも数える
+    favoriteCount: number;
     // 追加した時刻（ミリ秒）。1つの一覧に混ぜて、新しい順に並べる為
     addedAt: ReadonlyMap<string, number>;
     designAddedAt: ReadonlyMap<string, number>;
@@ -49,6 +52,7 @@ const CartContext = createContext<CartContextValue>({
     removeDesign: async () => {},
     totalCount: 0,
     designCartReady: false,
+    favoriteCount: 0,
     addedAt: EMPTY_MAP,
     designAddedAt: EMPTY_MAP,
 });
@@ -69,6 +73,9 @@ export default function CartProvider({ children }: { children: React.ReactNode }
     const addedAt = user ? snapshotAddedAt : EMPTY_MAP;
     const designAddedAt = user ? snapshotDesignAddedAt : EMPTY_MAP;
     const [readyDesignUid, setReadyDesignUid] = useState<string | null>(null);
+    const [snapshotFavPetan, setFavPetan] = useState(0);
+    const [snapshotFavDesign, setFavDesign] = useState(0);
+    const favoriteCount = user ? snapshotFavPetan + snapshotFavDesign : 0;
 
     useEffect(() => onAuthStateChanged(auth, (u) => {
         setUser(u);
@@ -105,6 +112,17 @@ export default function CartProvider({ children }: { children: React.ReactNode }
                 setReadyDesignUid(user.uid);
             },
         );
+    }, [user]);
+
+    // お気に入りの件数だけを、リアルタイムに数える（ハートを押すたびに、メニューのバッジが変わる）
+    useEffect(() => {
+        if (!user) return;
+        const offPetan = onSnapshot(collection(db, "users", user.uid, "favoritePacks"), (s) => setFavPetan(s.size), () => setFavPetan(0));
+        const offDesign = onSnapshot(designListCollection(user.uid, "favoriteDesigns"), (s) => setFavDesign(s.size), () => setFavDesign(0));
+        return () => {
+            offPetan();
+            offDesign();
+        };
     }, [user]);
 
     const add = useCallback<CartContextValue["add"]>(
@@ -163,9 +181,9 @@ export default function CartProvider({ children }: { children: React.ReactNode }
         () => ({
             user, authReady, cartReady: !!user && readyUid === user.uid, ids, count: ids.size, has: (id) => ids.has(id), add, remove,
             designIds, hasDesign: (id) => designIds.has(id), addDesign, removeDesign, totalCount: ids.size + designIds.size,
-            designCartReady: !!user && readyDesignUid === user.uid, addedAt, designAddedAt,
+            designCartReady: !!user && readyDesignUid === user.uid, favoriteCount, addedAt, designAddedAt,
         }),
-        [user, authReady, readyUid, ids, add, remove, designIds, addDesign, removeDesign, readyDesignUid, addedAt, designAddedAt],
+        [user, authReady, readyUid, ids, add, remove, designIds, addDesign, removeDesign, readyDesignUid, favoriteCount, addedAt, designAddedAt],
     );
 
     return <CartContext.Provider value={value}>{children}</CartContext.Provider>;

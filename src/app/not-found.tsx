@@ -1,6 +1,6 @@
 "use client";
 
-import Link from "next/link";
+import CtaCard from "@/components/ui/CtaCard";
 import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 
@@ -119,18 +119,8 @@ export default function NotFound() {
                     transition={{ duration: 1, ease: "easeOut", delay: 0.9 }}
                     className="pt-16 flex flex-col sm:flex-row justify-center gap-4"
                 >
-                    <Link
-                        href="/"
-                        className="px-12 py-4 bg-primary hover:bg-primary/90 text-on-primary font-bold rounded-full text-center transition-colors tracking-widest shadow-md"
-                    >
-                        トップページへ戻る
-                    </Link>
-                    <Link
-                        href="/contact"
-                        className="px-12 py-4 border border-primary/50 text-primary hover:bg-primary-container/60 font-bold rounded-full text-center transition-colors tracking-widest"
-                    >
-                        お問い合わせ
-                    </Link>
+                    <CtaCard href="/" label="TOP" title="トップページへ戻る" caption="Rhingのトップへ" />
+                    <CtaCard href="/contact" label="CONTACT" title="お問い合わせ" caption="お困りの点は、こちらから" />
                 </motion.div>
             </div>
         </div>
