@@ -54,7 +54,7 @@ export default function NotFound() {
                     initial={{ opacity: 0, y: 20 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ duration: 1.2, ease: "easeOut" }}
-                    className="mb-16 text-center py-10 bg-surface-container-lowest/40 backdrop-blur-md border border-glass-edge/80 shadow-md shadow-outline-variant/20 rounded-3xl"
+                    className="mb-16 text-center"
                 >
                     <h1 className="text-4xl md:text-5xl font-bold tracking-widest text-on-surface mb-4">404 MUSEUM</h1>
                     <p className="text-on-surface-subtle tracking-wider text-sm">お探しのページは見つかりませんでした</p>

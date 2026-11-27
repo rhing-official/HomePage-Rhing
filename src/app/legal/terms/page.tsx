@@ -71,10 +71,9 @@ const terms: { title: string; content: string; items?: string[] }[] = [
 export default function TermsPage() {
     return (
         <div className="container mx-auto px-6 pb-32 max-w-4xl">
-            {/* ページタイトル */}
-            {/* 🌟 修正ポイント1: タイトルエリアをガラスカードのデザインに変更 */}
-            <div className="mb-24 relative flex flex-col items-center justify-center text-center py-10 px-8 md:px-14 md:min-h-44 lg:min-h-52 bg-surface-container-lowest/40 backdrop-blur-md border border-glass-edge/80 shadow-elevation-1 rounded-m3-xl">
-                <Illustration name="terms" className="hidden xl:block absolute right-full -mr-10 top-1/2 -translate-y-1/2 w-40 h-auto" />
+            {/* ページタイトル。ブロックは付けない（概要ページに揃える）。題が長いので、イラストは、題と重ならない大きさにして、lg以上だけに出す */}
+            <div className="mb-16 relative flex flex-col items-center justify-center text-center md:min-h-40 lg:min-h-48">
+                <Illustration name="terms" className="hidden lg:block absolute left-0 top-1/2 -translate-y-1/2 w-32 h-auto" />
                 <h1 className="text-4xl md:text-5xl font-bold tracking-widest text-on-surface mb-4">TERMS OF SERVICE</h1>
                 <p className="text-on-surface-subtle tracking-wider text-sm">利用規約</p>
             </div>

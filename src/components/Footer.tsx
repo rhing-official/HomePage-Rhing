@@ -37,7 +37,7 @@ const mediaGroups = [
         links: [{ name: "Discord", href: siteConfig.socialLinks.discord }],
     },
     {
-        label: "話す",
+        label: "呟く",
         links: [
             { name: "X", href: siteConfig.socialLinks.x },
             { name: "Instagram", href: siteConfig.socialLinks.instagram },
@@ -106,7 +106,7 @@ export default function Footer() {
                             </ul>
                         </div>
 
-                        {/* 発信・交流。役割ごとに、小見出しで区切る（読む: 発信の本編、集う: コミュニティ、話す: SNS、作る: ソース） */}
+                        {/* 発信・交流。役割ごとに、小見出しで区切る（読む: 発信の本編、集う: コミュニティ、呟く: SNS、作る: ソース） */}
                         <div>
                             <h3 className="text-on-surface font-black text-lg xl:text-xl mb-6 tracking-widest border-b-2 border-on-surface/20 pb-3 pl-2 whitespace-nowrap">
                                 発信・交流
