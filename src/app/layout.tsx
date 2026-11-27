@@ -71,15 +71,24 @@ export default function RootLayout({
 
                 {/* メインコンテンツエリア */}
                 {/* ヘッダー（ロゴ・ナビ）がfixed/absoluteでドキュメントの流れから外れているため、ここで上余白を確保する */}
-                <main className="flex-grow flex flex-col pt-28 lg:pt-40 fold:pt-12">
-                    {children}
-                </main>
+                {/* page-frame と page-shell は、スマホ縦画面でドロワーを開いた間、ページを傾けて奥へ退かせるための包み（Header.tsx、globals.css）。
+                    通常時は、見た目も配置も変えない。ヘッダー・ドロワーは、この外に置く */}
+                <div className="page-frame flex flex-grow flex-col">
+                    <div className="page-shell flex flex-grow flex-col">
+                        <main className="flex-grow flex flex-col pt-28 lg:pt-40 fold:pt-12">
+                            {children}
+                        </main>
 
-                {/* フッターの読み込み */}
-                <Footer />
+                        {/* フッターの読み込み */}
+                        <Footer />
+                    </div>
+                </div>
 
-                {/* スクロールトップボタンの読み込み */}
-                <ScrollToTop />
+                {/* スクロールトップボタンの読み込み。ドロワーを開いた間、ページの傾きに追従させる為、枠と同じ動きをする専用の層に置く。
+                    枠の中に置くと、傾きを解く瞬間に、置き場が付け替わって、1コマ消えて揺れる */}
+                <div className="page-overlay">
+                    <ScrollToTop />
+                </div>
             </body>
         </html>
     );

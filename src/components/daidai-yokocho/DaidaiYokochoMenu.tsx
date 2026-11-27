@@ -156,7 +156,7 @@ export default function DaidaiYokochoMenu() {
 
     return (
         <>
-            <div ref={containerRef} className="fixed top-24 right-6 lg:top-28 lg:right-8 z-40">
+            <div ref={containerRef} className="recede-hide fixed top-24 right-6 lg:top-28 lg:right-8 z-40">
                 <div className="relative">
                     {/* お気に入り・カート・アカウントを1つのバーにする（モバイルは縦、PCは横）。お気に入りとカートは、ログイン中だけ */}
                     <nav

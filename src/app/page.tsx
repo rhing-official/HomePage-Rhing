@@ -26,7 +26,7 @@ function TrendingHeader() {
     return (
         <div className="flex flex-col items-center mb-16">
             <p className="text-sm font-bold text-outline tracking-[0.2em] mb-2 uppercase">DAIDAI YOKOCHO</p>
-            <h2 className="text-3xl font-bold tracking-widest text-on-surface mb-8">daidai横丁で人気のぺったんと意匠</h2>
+            <h2 className="text-3xl font-bold tracking-widest text-on-surface mb-8">daidai横丁</h2>
 
             <Button href="/daidai-yokocho" variant="glass">
                 全て見る →

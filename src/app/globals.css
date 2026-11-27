@@ -216,6 +216,70 @@
     }
 }
 
+/* スマホ縦画面で、右ドロワーを開いた間、ページを傾けて奥へ退かせる。Header.tsx が html の data-recede を切り替える。
+   - flat: ページを、画面1枚分の枠に切り取って固定する。見た目は、通常のページと同じ
+   - tilt: 枠ごと縮めて傾ける。flat へ戻すと、水平に戻りながら全面に広がる
+   枠は画面と同じ大きさで原点に有るので、枠の中の fixed の部品も、位置が跳ねない。
+   transform は、この間だけ。常時残すと、ページの中の fixed の基準が変わる */
+/* 上へ戻るボタンの層。常に画面に固定し、中のボタンは、この層に対して置く。
+   傾く間も、置き場が変わらないので、付け替えで1コマ消えたり、揺れたりしない */
+.page-overlay {
+    position: fixed;
+    inset: 0;
+    z-index: 50;
+    pointer-events: none;
+}
+
+@media (max-width: 639.98px) and (orientation: portrait) {
+    html[data-recede] body {
+        background: var(--color-surface-container-high);
+    }
+    /* ページの枠と、ボタンの層は、同じ傾きで動かす */
+    html[data-recede] :is(.page-frame, .page-overlay) {
+        transform-origin: 0% 50%;
+        transition: transform 0.45s var(--ease-m3-standard);
+    }
+    html[data-recede="tilt"] :is(.page-frame, .page-overlay) {
+        transform: perspective(1100px) translateX(-18%) rotateY(16deg) rotate(-2deg) scale(0.62);
+    }
+    html[data-recede] .page-frame {
+        position: fixed;
+        inset: 0;
+        z-index: 20;
+        overflow: hidden;
+        background: var(--color-surface);
+        transition:
+            transform 0.45s var(--ease-m3-standard),
+            border-radius 0.45s var(--ease-m3-standard),
+            box-shadow 0.45s var(--ease-m3-standard);
+    }
+    html[data-recede] .page-shell {
+        transform: translateY(calc(var(--recede-offset, 0px) * -1));
+    }
+    html[data-recede="tilt"] .page-frame {
+        border-radius: 28px;
+        box-shadow:
+            0 0 0 1px var(--color-outline-variant),
+            9px 0 0 -3px var(--color-surface-container),
+            18px 0 0 -6px var(--color-surface-container-high),
+            var(--shadow-elevation-3);
+    }
+    /* ドロワーから選んだ遷移は、ぼかしで現れず、傾きが戻る動きを見せる。
+       animation: none にすると、傾きを解いた時に名前が戻り、ぼかしが最初から再生される。
+       そのため、名前は変えず、遅延を負にして、終わった状態に固定する。解いた時は、遅延が戻るだけで、再生し直さない */
+    html[data-recede] .page-blur-in {
+        animation-delay: -1s;
+    }
+    /* 傾いたページの中に入ると不自然な部品は、開いている間だけ消す */
+    .recede-hide {
+        transition: opacity 0.2s;
+    }
+    html[data-recede] .recede-hide {
+        opacity: 0;
+        pointer-events: none;
+    }
+}
+
 /* 画面遷移のたびに、ページ全体に薄い黄緑の水玉がぽつぽつと現れ、そのまま残る（template.tsx、PageDots.tsx）。
    ヘッダー・フッターには掛けず、ページ（.page-blur-inの範囲）の中だけに敷く。
    - .page-bleed-areaがページの範囲で切り抜く
