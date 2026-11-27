@@ -9,6 +9,8 @@ import { isPackOwnedByUser } from "@/lib/stickerPacks";
 import { createCheckoutSession } from "@/lib/firebaseFunctions";
 import { PACKS_OWNED_EVENT } from "@/lib/bulkAcquire";
 import { useCart } from "@/components/CartProvider";
+import { flyFromChip, flyToChip } from "@/lib/flyToChip";
+import { freezeChipCount } from "@/lib/chipCount";
 
 type Status = "loading" | "owned" | "purchasable";
 
@@ -53,19 +55,26 @@ export default function PurchaseButton({ packId, extra }: { packId: string; extr
 
     const cart = useCart();
     const inCart = cart.has(packId);
-    const handleCartClick = async () => {
+    const handleCartClick = async (e: React.MouseEvent) => {
+        const button = e.currentTarget;
         if (!user) {
             router.push(`/login?redirect=${encodeURIComponent(`/daidai-yokocho/${packId}`)}`);
             return;
         }
         setError(null);
-        // カートに入っている時は、カートのページへ移る（外すのは、カートのページで行う）
+        // カートに入っている時は、もう一度押すと、カートから外す（お気に入りと同じ）
+        // 追加は、点が着くまで、外すのは、点が飛び立つまで、チップの件数を変えない
+        const release = freezeChipCount("cart");
         if (inCart) {
-            router.push("/daidai-yokocho/cart");
+            await cart.remove(packId);
+            flyFromChip(button, "cart", release);
             return;
         }
         const r = await cart.add(packId);
-        if (!r.ok) setError(r.reason === "limit" ? "カートがいっぱいです（50件まで）" : "カートに追加出来ませんでした");
+        if (!r.ok) {
+            release();
+            setError(r.reason === "limit" ? "カートがいっぱいです（50件まで）" : "カートに追加出来ませんでした");
+        } else flyToChip(button, "cart", release);
     };
 
     const handleClick = async () => {
@@ -124,7 +133,7 @@ export default function PurchaseButton({ packId, extra }: { packId: string; extr
     const cartButton = (
         <button
             onClick={handleCartClick}
-            aria-label={inCart ? "カートを見る" : "カートに追加"}
+            aria-label={inCart ? "カートから外す" : "カートに追加"}
             className={`inline-flex items-center justify-center gap-2 flex-1 px-6 py-3 rounded-full border font-bold transition ${
                 inCart
                     ? "border-primary bg-primary-container text-on-primary-container"
@@ -132,7 +141,7 @@ export default function PurchaseButton({ packId, extra }: { packId: string; extr
             }`}
         >
             <ShoppingCart className="w-5 h-5" />
-            {inCart ? "カートを見る" : "カートに追加"}
+            {inCart ? "カートから外す" : "カートに追加"}
         </button>
     );
 

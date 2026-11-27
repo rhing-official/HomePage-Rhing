@@ -7,6 +7,8 @@ import { auth, onAuthStateChanged, type User } from "@/lib/firebaseAuth";
 import { addToDesignList, isInDesignList, removeFromDesignList } from "@/lib/designLists";
 import { isThemePackOwned } from "@/lib/themePackReview";
 import { useCart } from "@/components/CartProvider";
+import { flyFromChip, flyToChip } from "@/lib/flyToChip";
+import { freezeChipCount } from "@/lib/chipCount";
 
 type Fav = "loading" | "favorited" | "not-favorited";
 type Own = "loading" | "owned" | "notOwned";
@@ -55,6 +57,7 @@ export default function DesignActions({
     const canAddToCart = status === "approved" && own === "notOwned";
 
     const toggleFavorite = async (e: React.MouseEvent) => {
+        const button = e.currentTarget; // await の後では、取れなくなる
         if (variant === "card") {
             e.preventDefault();
             e.stopPropagation();
@@ -65,20 +68,26 @@ export default function DesignActions({
         }
         // 失敗したとき（通信の失敗等）は、表示を元に戻す
         const before = fav;
+        // 追加は、点が着くまで、解除は、点が飛び立つまで、チップの件数を変えない
+        const release = freezeChipCount("favorite");
         try {
             if (before === "favorited") {
                 setFav("not-favorited");
                 await removeFromDesignList(user.uid, "favoriteDesigns", packId);
+                flyFromChip(button, "favorite", release);
             } else {
                 setFav("favorited");
                 await addToDesignList(user.uid, "favoriteDesigns", packId);
+                flyToChip(button, "favorite", release);
             }
         } catch {
             setFav(before);
+            release();
         }
     };
 
     const toggleCart = async (e: React.MouseEvent) => {
+        const button = e.currentTarget;
         if (variant === "card") {
             e.preventDefault();
             e.stopPropagation();
@@ -87,15 +96,24 @@ export default function DesignActions({
             router.push(loginPath);
             return;
         }
-        // カートに入っている時は、カートのページへ移る（外すのは、カートのページで行う）
-        if (inCart) router.push("/daidai-yokocho/cart");
-        else if (canAddToCart) await cart.addDesign(packId);
+        // カートに入っている時は、もう一度押すと、カートから外す（お気に入りと同じ）
+        // 追加は、点が着くまで、外すのは、点が飛び立つまで、チップの件数を変えない
+        if (inCart) {
+            const release = freezeChipCount("cart");
+            await cart.removeDesign(packId);
+            flyFromChip(button, "cart", release);
+            return;
+        }
+        if (!canAddToCart) return;
+        const release = freezeChipCount("cart");
+        if ((await cart.addDesign(packId)).ok) flyToChip(button, "cart", release);
+        else release();
     };
 
     if (!authReady || fav === "loading" || own === "loading") return null;
 
     const favLabel = fav === "favorited" ? "お気に入り解除" : "お気に入りに追加";
-    const cartLabel = own === "owned" ? "取得済み" : inCart ? "カートを見る" : "カートに追加";
+    const cartLabel = own === "owned" ? "取得済み" : inCart ? "カートから外す" : "カートに追加";
     const cartDisabled = own === "owned" || (!inCart && !canAddToCart && !!user);
 
     if (variant === "card") {

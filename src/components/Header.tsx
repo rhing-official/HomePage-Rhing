@@ -204,22 +204,6 @@ export default function Header() {
             {/* 折りたたみ端末を広げた時の、左のサイドメニュー */}
             <FoldSideMenu />
 
-            {/* ロゴエリア */}
-            <div className="recede-hide absolute top-0 left-0 p-6 lg:p-8 z-50 fold:hidden">
-                <div className="pointer-events-auto">
-                    <Link href="/" className="inline-block">
-                        <Image
-                            src="/Rhing logo.svg"
-                            alt="Rhing"
-                            width={240}
-                            height={80}
-                            priority
-                            className="h-10 lg:h-20 w-auto aspect-[3/1] object-contain"
-                        />
-                    </Link>
-                </div>
-            </div>
-
             {/* ナビゲーションエリア */}
             <header className="fixed top-6 right-6 lg:right-8 z-50 pointer-events-none fold:hidden">
                 {/*

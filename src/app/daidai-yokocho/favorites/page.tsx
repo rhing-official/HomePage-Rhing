@@ -20,6 +20,8 @@ import KindBadge from "@/components/daidai-yokocho/KindBadge";
 import FindInYokochoLink from "@/components/daidai-yokocho/FindInYokochoLink";
 import { SelectableItem, SelectionToolbar, useSelection } from "@/components/daidai-yokocho/Selection";
 import { PackGridSkeleton } from "@/components/Skeleton";
+import { flyToChip } from "@/lib/flyToChip";
+import { freezeChipCount } from "@/lib/chipCount";
 
 const FAVORITES_PATH = "/daidai-yokocho/favorites";
 
@@ -99,13 +101,15 @@ export default function FavoritesPage() {
     };
 
     // 選んだものを、まとめてカートに追加する。入手済み・カート済みは除き、上限（50件）を超えた分は入れない
-    const handleAddToCart = async (selectedKeys: string[]) => {
+    const handleAddToCart = async (selectedKeys: string[], button: Element) => {
         const chosen = new Set(selectedKeys);
         const chosenItems = items.filter((i) => chosen.has(itemKey(i.kind, i.id)));
         const petan = chosenItems.filter((i) => i.kind === "petan").map((i) => i.data as StickerPack);
         const designs = chosenItems.filter((i) => i.kind === "design").map((i) => i.data as PublicThemePack);
         setAdding(true);
         setCartResult(null);
+        // 点が着くまで、チップの件数を増やさない
+        const release = freezeChipCount("cart");
         try {
             const [p, d] = await Promise.all([
                 petan.length > 0 ? addManyToCart(petan, user.uid, cartIds) : null,
@@ -113,8 +117,11 @@ export default function FavoritesPage() {
             ]);
             const added = (p?.added ?? 0) + (d?.added ?? 0);
             setCartResult({ added, skipped: selectedKeys.length - added, failed: false });
+            if (added > 0) flyToChip(button, "cart", release);
+            else release();
             sel.clear();
         } catch {
+            release();
             setCartResult({ added: 0, skipped: 0, failed: true });
         } finally {
             setAdding(false);
@@ -149,7 +156,7 @@ export default function FavoritesPage() {
                             onClear={sel.clear}
                             onAction={handleRemoveSelected}
                             trailing={
-                                <Button variant="tonal" onClick={() => handleAddToCart(keys.filter((k) => sel.selected.has(k)))} disabled={removing || adding || selectedCount === 0}>
+                                <Button variant="tonal" onClick={(e) => handleAddToCart(keys.filter((k) => sel.selected.has(k)), e.currentTarget)} disabled={removing || adding || selectedCount === 0}>
                                     {adding ? "追加中…" : `カートに追加（${selectedCount}件）`}
                                 </Button>
                             }

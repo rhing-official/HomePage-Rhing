@@ -8,6 +8,8 @@ import { isPackFavorited, addFavoritePack, removeFavoritePack } from "@/lib/favo
 import { isPackOwnedByUser } from "@/lib/stickerPacks";
 import { PACKS_OWNED_EVENT } from "@/lib/bulkAcquire";
 import { useCart } from "@/components/CartProvider";
+import { flyFromChip, flyToChip } from "@/lib/flyToChip";
+import { freezeChipCount } from "@/lib/chipCount";
 
 type FavoriteStatus = "loading" | "favorited" | "not-favorited";
 type GetStatus = "loading" | "owned" | "purchasable";
@@ -62,38 +64,52 @@ export default function StickerPackCardActions({ packId }: { packId: string }) {
 
     const handleFavoriteClick = async (e: React.MouseEvent) => {
         stop(e);
+        const button = e.currentTarget; // await の後では、取れなくなる
         if (!user) {
             router.push(`/login?redirect=${encodeURIComponent(`/daidai-yokocho/${packId}`)}`);
             return;
         }
         // 失敗したとき（通信の失敗等）は、表示を元に戻す
         const before = favoriteStatus;
+        // 追加は、点が着くまで、解除は、点が飛び立つまで、チップの件数を変えない
+        const release = freezeChipCount("favorite");
         try {
             if (before === "favorited") {
                 setFavoriteStatus("not-favorited");
                 await removeFavoritePack(user.uid, packId);
+                flyFromChip(button, "favorite", release);
             } else {
                 setFavoriteStatus("favorited");
                 await addFavoritePack(user.uid, packId);
+                flyToChip(button, "favorite", release);
             }
         } catch {
             setFavoriteStatus(before);
+            release();
         }
     };
 
     const cart = useCart();
     const inCart = cart.has(packId);
 
-    // 入手済みでなければ、カートに追加する。入っている時は、カートのページへ移る（外すのは、カートのページで行う。入手もカートのページ、または販売ページから）
+    // 入手済みでなければ、カートに追加する。入っている時は、もう一度押すと、カートから外す（お気に入りと同じ）。入手は、カートのページ、または販売ページから
     const handleCartClick = async (e: React.MouseEvent) => {
         stop(e);
+        const button = e.currentTarget;
         if (getStatus !== "purchasable") return;
         if (!user) {
             router.push(`/login?redirect=${encodeURIComponent(`/daidai-yokocho/${packId}`)}`);
             return;
         }
-        if (inCart) router.push("/daidai-yokocho/cart");
-        else await cart.add(packId);
+        // 追加は、点が着くまで、外すのは、点が飛び立つまで、チップの件数を変えない
+        const release = freezeChipCount("cart");
+        if (inCart) {
+            await cart.remove(packId);
+            flyFromChip(button, "cart", release);
+            return;
+        }
+        if ((await cart.add(packId)).ok) flyToChip(button, "cart", release);
+        else release();
     };
 
     if (!authReady || favoriteStatus === "loading" || getStatus === "loading") {
@@ -116,7 +132,7 @@ export default function StickerPackCardActions({ packId }: { packId: string }) {
                 type="button"
                 onClick={handleCartClick}
                 disabled={getStatus === "owned"}
-                aria-label={getStatus === "owned" ? "入手済み" : inCart ? "カートを見る" : "カートに追加"}
+                aria-label={getStatus === "owned" ? "入手済み" : inCart ? "カートから外す" : "カートに追加"}
                 className="p-2 rounded-full bg-surface-container-lowest/80 backdrop-blur-sm shadow-sm border border-glass-edge/70 hover:bg-surface-container-lowest/95 transition-colors disabled:cursor-not-allowed disabled:opacity-70"
             >
                 {getStatus === "owned" ? (

@@ -7,6 +7,8 @@ import { addManyToCart, selectAddableToCart, type AddManyResult } from "@/lib/ca
 import type { StickerPack } from "@/lib/stickerPacks";
 import { useCart } from "@/components/CartProvider";
 import Button from "@/components/ui/Button";
+import { flyToChip } from "@/lib/flyToChip";
+import { freezeChipCount } from "@/lib/chipCount";
 
 // 表示中のぺったんを、まとめてカートに追加するボタン（入手はカートのページで行う）
 export default function BulkAddToCartButton({ packs, label }: { packs: StickerPack[]; label: string }) {
@@ -33,16 +35,23 @@ export default function BulkAddToCartButton({ packs, label }: { packs: StickerPa
         };
     }, [authReady, user, packs, ids]);
 
-    const handleClick = async () => {
+    const handleClick = async (e: React.MouseEvent) => {
+        const button = e.currentTarget;
         if (!user) {
             router.push(`/login?redirect=${encodeURIComponent(pathname)}`);
             return;
         }
         setRunning(true);
         setResult(null);
+        // 点が着くまで、チップの件数を増やさない
+        const release = freezeChipCount("cart");
         try {
-            setResult(await addManyToCart(packs, user.uid, ids));
+            const r = await addManyToCart(packs, user.uid, ids);
+            setResult(r);
+            if (r.added > 0) flyToChip(button, "cart", release);
+            else release();
         } catch {
+            release();
             setResult({ added: 0, skippedOwned: 0, skippedInCart: 0, skippedOwnPack: 0, skippedOverLimit: -1 });
         } finally {
             setRunning(false);

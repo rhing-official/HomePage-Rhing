@@ -7,6 +7,8 @@ import { addManyDesignsToCart, selectAddableDesigns, type AddManyDesignsResult }
 import type { PublicThemePack } from "@/lib/themePackReview";
 import { useCart } from "@/components/CartProvider";
 import Button from "@/components/ui/Button";
+import { flyToChip } from "@/lib/flyToChip";
+import { freezeChipCount } from "@/lib/chipCount";
 
 // 表示中の意匠を、まとめてカートに追加するボタン（取得はカートのページで行う）。
 // ぺったんの BulkAddToCartButton と同じ作り
@@ -34,16 +36,23 @@ export default function BulkAddDesignsButton({ packs, label }: { packs: PublicTh
         };
     }, [authReady, user, packs, designIds]);
 
-    const handleClick = async () => {
+    const handleClick = async (e: React.MouseEvent) => {
+        const button = e.currentTarget;
         if (!user) {
             router.push(`/login?redirect=${encodeURIComponent(pathname)}`);
             return;
         }
         setRunning(true);
         setResult(null);
+        // 点が着くまで、チップの件数を増やさない
+        const release = freezeChipCount("cart");
         try {
-            setResult(await addManyDesignsToCart(packs, user.uid, designIds));
+            const r = await addManyDesignsToCart(packs, user.uid, designIds);
+            setResult(r);
+            if (r.added > 0) flyToChip(button, "cart", release);
+            else release();
         } catch {
+            release();
             setResult({ added: 0, skippedOwned: 0, skippedInCart: 0, skippedOverLimit: -1 });
         } finally {
             setRunning(false);

@@ -230,6 +230,15 @@
     pointer-events: none;
 }
 
+/* ヒーローのカード（14枚）の背景のぼかしは、スマホの縦画面では付けない。
+   ドロワーを閉じて、傾きを解く時に、ぼかしが戻る瞬間の再描画で、1コマが約100ミリ秒になり、引っ掛かった（2026-11-28、計測）。
+   半透明の白い縁の中のぼかしで、外しても、見た目の差は、ほぼ無い */
+@media (max-width: 639.98px) and (orientation: portrait) {
+    .hero-card {
+        backdrop-filter: none;
+    }
+}
+
 @media (max-width: 639.98px) and (orientation: portrait) {
     html[data-recede] body {
         background: var(--color-surface-container-high);
@@ -269,6 +278,14 @@
        そのため、名前は変えず、遅延を負にして、終わった状態に固定する。解いた時は、遅延が戻るだけで、再生し直さない */
     html[data-recede] .page-blur-in {
         animation-delay: -1s;
+    }
+    /* 傾く層の中では、背景のぼかしを、一時的に外す。
+       層が傾く間、中のぼかしが毎コマ作り直され、トップのヒーロー（ぼかし付きのカード14枚）が見えていると、
+       1コマが約70ミリ秒に落ちて、カクついた（2026-11-28、ヘッドレスChromeの幅390x844で計測。外すと毎コマ16.7ミリ秒）。
+       ヘッダーとドロワーは、層の外なので、ぼかしを残す。傾いて縮んでいる間は、ぼかしの有無は、ほぼ見えない */
+    html[data-recede] .page-frame * {
+        /* 前置き付きの行は書かない。Lightning CSS が、前置きなしの行を落として、前置き付きだけを残し、Chrome で効かなくなる */
+        backdrop-filter: none !important;
     }
     /* 傾いたページの中に入ると不自然な部品は、開いている間だけ消す */
     .recede-hide {

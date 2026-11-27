@@ -5,6 +5,8 @@ import { Heart } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { auth, onAuthStateChanged, type User } from "@/lib/firebaseAuth";
 import { isPackFavorited, addFavoritePack, removeFavoritePack } from "@/lib/favorites";
+import { flyFromChip, flyToChip } from "@/lib/flyToChip";
+import { freezeChipCount } from "@/lib/chipCount";
 
 type Status = "loading" | "favorited" | "not-favorited";
 
@@ -35,22 +37,28 @@ export default function FavoriteButton({ packId }: { packId: string }) {
         };
     }, [authReady, user, packId]);
 
-    const handleClick = async () => {
+    const handleClick = async (e: React.MouseEvent) => {
+        const button = e.currentTarget;
         if (!user) {
             router.push(`/login?redirect=${encodeURIComponent(`/daidai-yokocho/${packId}`)}`);
             return;
         }
         setSubmitting(true);
+        // 追加は、点が着くまで、解除は、点が飛び立つまで、チップの件数を変えない
+        const release = freezeChipCount("favorite");
         try {
             if (status === "favorited") {
                 await removeFavoritePack(user.uid, packId);
                 setStatus("not-favorited");
+                flyFromChip(button, "favorite", release);
             } else {
                 await addFavoritePack(user.uid, packId);
                 setStatus("favorited");
+                flyToChip(button, "favorite", release);
             }
         } catch {
             // 失敗したとき（通信の失敗等）は、表示を変えない
+            release();
         } finally {
             setSubmitting(false);
         }

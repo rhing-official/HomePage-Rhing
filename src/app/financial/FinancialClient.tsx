@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useRef, useState, useSyncExternalStore, type MutableRefObject, type RefObject } from "react";
+import { useEffect, useRef, useState, useSyncExternalStore, type MutableRefObject, type RefObject } from "react";
 import {
     Chart as ChartJS,
     CategoryScale,
@@ -17,7 +17,6 @@ import { subscribeTheme } from "@/lib/theme";
 import { months, type Amount, type YearData } from "@/data/financialData";
 import {
     calculateRatio,
-    demoFinancialYears,
     formatCurrency,
     isPositive,
     monthExpense,
@@ -46,13 +45,6 @@ function readChartColors() {
         text: get("--color-on-surface-variant", "#4b5563"),
         grid: get("--color-outline-variant", "#e5e7eb"),
     };
-}
-// 開発中は、仮の数字を、既定で出す。本物の「-」を見たい時は、?demo=0 を付ける。
-// サーバーの描画では常に false にして、描画のずれを避ける
-const subscribeNone = () => () => {};
-const readDemoFlag = () => new URLSearchParams(window.location.search).get("demo") !== "0";
-function useDemoFlag() {
-    return useSyncExternalStore(subscribeNone, readDemoFlag, () => false);
 }
 const isDarkNow = () => document.documentElement.classList.contains("dark");
 
@@ -332,10 +324,7 @@ function YearTab({
 }
 
 export default function FinancialClient({ years: yearsProp }: { years: Record<string, YearData> }) {
-    const demo = useDemoFlag();
-    // 本番のビルドでは、この分岐ごと取り除かれる
-    const demoYears = useMemo(() => (process.env.NODE_ENV === "development" && demo ? demoFinancialYears() : null), [demo]);
-    const years = demoYears ?? yearsProp;
+    const years = yearsProp;
     const reduceMotion = useReducedMotion();
     // 年度は、古い順（新しい年度が下）に並べる。最初に開く年度は、一番新しいもの
     const availableYears = Object.keys(years).sort((x, y) => parseInt(x, 10) - parseInt(y, 10));

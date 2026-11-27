@@ -23,6 +23,7 @@ import { formatUnreadCount } from "@/lib/notices";
 import { fetchUnreadCount } from "@/lib/noticesClient";
 import { usePathname } from "next/navigation";
 import { HEADER_BAR_SLOT_ID, useHeaderBarMerged } from "@/lib/usePhonePortrait";
+import { publishChipCount, useShownChipCount } from "@/lib/chipCount";
 
 interface OwnProfile {
     rhingSeed: string;
@@ -147,7 +148,12 @@ export default function DaidaiYokochoMenu() {
     // お知らせのページを開いている間は、既読になるため0として扱う
     const unreadLabel = user && pathname !== "/daidai-yokocho/notices" ? formatUnreadCount(unread) : null;
 
-    const { totalCount: cartCount, favoriteCount } = useCart();
+    const { totalCount: realCartCount, favoriteCount: realFavoriteCount } = useCart();
+    // 追加した分の件数は、点がチップに着くまで、表示に含めない（lib/chipCount.ts）
+    useEffect(() => publishChipCount("cart", realCartCount), [realCartCount]);
+    useEffect(() => publishChipCount("favorite", realFavoriteCount), [realFavoriteCount]);
+    const cartCount = useShownChipCount("cart");
+    const favoriteCount = useShownChipCount("favorite");
     const close = () => setOpen(false);
 
     const handleAccountDeleted = async () => {
@@ -183,12 +189,13 @@ export default function DaidaiYokochoMenu() {
                             <>
                                 <Link
                                     href="/daidai-yokocho/favorites"
+                                    data-fly-target="favorite"
                                     aria-label={favoriteCount > 0 ? `お気に入り（${favoriteCount}件）` : "お気に入り"}
                                     className={`relative ${quickIconClass} ${merged ? "rounded-full" : ""}`}
                                 >
                                     <Heart className="w-5 h-5 text-on-surface-variant" />
                                     {favoriteCount > 0 && (
-                                        <span className="pointer-events-none absolute top-1 right-1 min-w-4 h-4 px-1 rounded-full bg-rose-500 text-white text-[10px] font-bold flex items-center justify-center">
+                                        <span data-fly-badge className="pointer-events-none absolute top-1 right-1 min-w-4 h-4 px-1 rounded-full bg-rose-500 text-white text-[10px] font-bold flex items-center justify-center">
                                             {favoriteCount}
                                         </span>
                                     )}
@@ -196,12 +203,13 @@ export default function DaidaiYokochoMenu() {
                                 <span aria-hidden className={dividerClass} />
                                 <Link
                                     href="/daidai-yokocho/cart"
+                                    data-fly-target="cart"
                                     aria-label={cartCount > 0 ? `カート（${cartCount}件）` : "カート"}
                                     className={`relative ${quickIconClass} ${merged ? "rounded-full" : ""}`}
                                 >
                                     <ShoppingCart className="w-5 h-5 text-on-surface-variant" />
                                     {cartCount > 0 && (
-                                        <span className="pointer-events-none absolute top-1 right-1 min-w-4 h-4 px-1 rounded-full bg-blue-600 text-white text-[10px] font-bold flex items-center justify-center">
+                                        <span data-fly-badge className="pointer-events-none absolute top-1 right-1 min-w-4 h-4 px-1 rounded-full bg-blue-600 text-white text-[10px] font-bold flex items-center justify-center">
                                             {cartCount}
                                         </span>
                                     )}

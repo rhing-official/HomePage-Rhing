@@ -1,6 +1,7 @@
 import Script from "next/script";
 import { Kiwi_Maru } from "next/font/google";
 import "./globals.css";
+import SiteLogo from "@/components/SiteLogo";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import ScrollToTop from "@/components/ScrollToTop"; // 🌟 復活
@@ -74,7 +75,9 @@ export default function RootLayout({
                 {/* page-frame と page-shell は、スマホ縦画面でドロワーを開いた間、ページを傾けて奥へ退かせるための包み（Header.tsx、globals.css）。
                     通常時は、見た目も配置も変えない。ヘッダー・ドロワーは、この外に置く */}
                 <div className="page-frame flex flex-grow flex-col">
-                    <div className="page-shell flex flex-grow flex-col">
+                    <div className="page-shell relative flex flex-grow flex-col">
+                        {/* ロゴは、ページの一部。ドロワーを開いて、ページが傾く時に、一緒に動く（page-shell が基準） */}
+                        <SiteLogo />
                         <main className="flex-grow flex flex-col pt-28 lg:pt-40 fold:pt-12">
                             {children}
                         </main>

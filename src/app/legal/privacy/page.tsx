@@ -1,5 +1,4 @@
 import { Metadata } from "next";
-import Illustration from "@/components/Illustration";
 
 export const metadata: Metadata = {
     title: "プライバシーポリシー | Rhing",
@@ -9,9 +8,8 @@ export const metadata: Metadata = {
 export default function PrivacyPolicyPage() {
     return (
         <div className="container mx-auto px-6 pb-32 max-w-4xl">
-            {/* ページタイトル。ブロックは付けない（概要ページに揃える）。題が長いので、イラストは、題と重ならない大きさにして、lg以上だけに出す */}
+            {/* ページタイトル。ブロックは付けない（概要ページに揃える） */}
             <div className="mb-16 relative flex flex-col items-center justify-center text-center md:min-h-40 lg:min-h-48">
-                <Illustration name="terms" className="hidden lg:block absolute left-0 top-1/2 -translate-y-1/2 w-40 h-auto" />
                 <h1 className="text-4xl md:text-5xl font-bold tracking-widest text-on-surface mb-4">PRIVACY POLICY</h1>
                 <p className="text-on-surface-subtle tracking-wider text-sm">プライバシーポリシー</p>
             </div>
