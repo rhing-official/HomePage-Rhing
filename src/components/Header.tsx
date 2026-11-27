@@ -210,7 +210,7 @@ export default function Header() {
                   🌟 変更：PC用のナビゲーションバーを美しい半透明のガラスデザインに変更
                   - bg-surface-container-lowest/80, backdrop-blur-md, border-glass-edge/80
                 */}
-                <nav className="pointer-events-auto hidden lg:flex items-center bg-surface/80 backdrop-blur-md shadow-elevation-3 rounded-full px-6 py-2 border border-outline-variant/60">
+                <nav className="pointer-events-auto hidden hb:flex items-center bg-surface/80 backdrop-blur-md shadow-elevation-3 rounded-full px-6 py-2 border border-outline-variant/60">
                     <NavLink href="/">TOP</NavLink>
                     <NavLink href="/about">ABOUT</NavLink>
                     <NavLink href="/services">SERVICES</NavLink>
@@ -225,17 +225,17 @@ export default function Header() {
                   🌟 変更：ハンバーガーボタンもガラス風デザインに変更
                   - bg-surface-container-lowest/80, backdrop-blur-sm, border-glass-edge/60, shadow-blue-300/10
                 */}
-                {/* 縦画面では、モード切り替えとハンバーガーを、1つのバーにする（daidai横丁のメニューと同じ作り）。
-                    daidai横丁のページでは、メニューのボタンが、左の場所に入る（DaidaiYokochoMenu.tsx）。横画面は、別々のボタンのまま */}
-                <div className="relative lg:hidden pointer-events-auto flex items-center gap-2 portrait:gap-0 portrait:rounded-full portrait:bg-surface/80 portrait:backdrop-blur-md portrait:shadow-elevation-3 portrait:border portrait:border-outline-variant/60">
-                    <div id={HEADER_BAR_SLOT_ID} className="hidden portrait:flex items-center" />
-                    <div className="rounded-full bg-surface/80 backdrop-blur-sm shadow-elevation-2 border border-outline-variant/60 portrait:rounded-none portrait:bg-transparent portrait:backdrop-blur-none portrait:shadow-none portrait:border-0">
-                        <ThemeToggle className="portrait:h-12 portrait:w-12" />
+                {/* 幅1500px未満（縦画面も横画面も）では、モード切り替えとハンバーガーを、1つのバーにする（daidai横丁のメニューと同じ作り）。
+                    daidai横丁のページでは、メニューのボタンが、左の場所に入る（DaidaiYokochoMenu.tsx） */}
+                <div className="relative hb:hidden pointer-events-auto flex items-center rounded-full bg-surface/80 backdrop-blur-md shadow-elevation-3 border border-outline-variant/60">
+                    <div id={HEADER_BAR_SLOT_ID} className="flex items-center" />
+                    <div className="">
+                        <ThemeToggle className="h-12 w-12" />
                     </div>
-                    <span aria-hidden className="hidden portrait:block h-6 w-px bg-outline/80" />
+                    <span aria-hidden className="block h-6 w-px bg-outline/80" />
                     <button
                         aria-label="メニューを開く"
-                        className="p-3 bg-surface/80 backdrop-blur-sm rounded-full shadow-elevation-2 border border-outline-variant/60 hover:bg-surface/90 transition-all duration-300 ease-m3-standard portrait:flex portrait:h-12 portrait:w-12 portrait:items-center portrait:justify-center portrait:p-0 portrait:bg-transparent portrait:backdrop-blur-none portrait:shadow-none portrait:border-0 portrait:hover:bg-surface-container-lowest/90"
+                        className="flex h-12 w-12 items-center justify-center rounded-full hover:bg-surface-container-lowest/90 transition-colors duration-300 ease-m3-standard"
                         onClick={openDrawer}
                     >
                         <div className="space-y-1">

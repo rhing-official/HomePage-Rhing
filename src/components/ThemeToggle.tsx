@@ -10,8 +10,11 @@ import { setPreference, subscribeTheme } from "@/lib/theme";
  * アイコンは、今の表示（OSの設定に従っている間も含む）に合わせる。
  */
 export default function ThemeToggle({ className = "" }: { className?: string }) {
+    // 押した時の切り替えと、読み上げのラベルだけ、状態から決める。
+    // アイコンは、状態ではなく、CSS（dark:）で出し分ける。サーバーの描画は、状態を知らず、ライトとして描かれるため、
+    // 状態でアイコンを決めると、ダークでリロードした時に、一瞬だけ、ライトのアイコン（太陽）が見える。
+    // <html> の dark クラスは、描画の前に付く（layout.tsx の THEME_INIT_SCRIPT）ので、CSS なら、最初の描画から、合う
     const dark = useSyncExternalStore(subscribeTheme, () => document.documentElement.classList.contains("dark"), () => false);
-    const Icon = dark ? Moon : Sun;
 
     return (
         <button
@@ -21,7 +24,8 @@ export default function ThemeToggle({ className = "" }: { className?: string }) 
             onClick={() => setPreference(dark ? "light" : "dark")}
             className={`flex h-10 w-10 items-center justify-center rounded-full text-on-surface hover:bg-primary-container/60 hover:text-primary transition-colors ${className}`}
         >
-            <Icon className="h-5 w-5" aria-hidden />
+            <Sun className="h-5 w-5 dark:hidden" aria-hidden />
+            <Moon className="hidden h-5 w-5 dark:block" aria-hidden />
         </button>
     );
 }

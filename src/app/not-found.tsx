@@ -64,14 +64,14 @@ export default function NotFound() {
                     initial={{ opacity: 0, y: 20 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ duration: 1.2, ease: "easeOut", delay: 0.1 }}
-                    className="mb-16 text-center bg-surface-container-lowest/40 backdrop-blur-md border border-glass-edge/80 shadow-md shadow-outline-variant/20 rounded-3xl p-8 md:p-10"
+                    className="mb-16 mx-auto w-fit max-w-full text-center bg-surface-container-lowest/40 backdrop-blur-md border border-glass-edge/80 shadow-md shadow-outline-variant/20 rounded-3xl p-8 md:p-10"
                 >
                     <p className="text-on-surface-variant leading-relaxed">
                         本日は存在しないページ特別展を開催しております。
                         <br />
                         お探しのページは見当たりませんでした。
                         <br />
-                        URLをご確認の上、常設展示からお探しください。
+                        URLをご確認の上、常設展からお探しください。
                     </p>
                 </motion.div>
             </div>

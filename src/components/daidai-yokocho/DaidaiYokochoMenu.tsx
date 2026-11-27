@@ -162,14 +162,14 @@ export default function DaidaiYokochoMenu() {
         await signOut();
     };
 
-    // 縦画面では、ヘッダーの右上のバーの中（ハンバーガーとモード切り替えの左）へ入れて、1つのバーにする。
+    // ハンバーガーのバーが出ている画面（幅1500px未満の縦画面・横画面）では、ヘッダーの右上のバーの中（ハンバーガーとモード切り替えの左）へ入れて、1つのバーにする。
     // それ以外では、今までどおり、ヘッダーの下に固定する
     const headerSlot = useSyncExternalStore(
         () => () => {},
         () => document.getElementById(HEADER_BAR_SLOT_ID),
         () => null,
     );
-    const merged = useHeaderBarMerged() && !!headerSlot;
+    const merged = useHeaderBarMerged(headerSlot);
     const dividerClass = merged ? "block h-6 w-px bg-outline/80" : "block h-px w-6 md:h-6 md:w-px bg-outline/80";
 
     const bar = (
