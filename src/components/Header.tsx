@@ -5,7 +5,7 @@ import Image from "next/image";
 import { usePathname } from "next/navigation";
 import { motion, AnimatePresence, useReducedMotion } from "framer-motion";
 import ThemeToggle from "@/components/ThemeToggle";
-import { usePhonePortrait } from "@/lib/usePhonePortrait";
+import { HEADER_BAR_SLOT_ID, usePhonePortrait } from "@/lib/usePhonePortrait";
 
 const NavLink = ({ href, children, onClick }: { href: string; children: React.ReactNode; onClick?: () => void }) => (
     <Link href={href} onClick={onClick} className="group relative block py-3 px-4 font-bold text-on-surface hover:text-primary transition-colors">
@@ -241,13 +241,17 @@ export default function Header() {
                   🌟 変更：ハンバーガーボタンもガラス風デザインに変更
                   - bg-surface-container-lowest/80, backdrop-blur-sm, border-glass-edge/60, shadow-blue-300/10
                 */}
-                <div className="lg:hidden pointer-events-auto flex items-center gap-2">
-                    <div className="rounded-full bg-surface/80 backdrop-blur-sm shadow-elevation-2 border border-outline-variant/60">
-                        <ThemeToggle />
+                {/* 縦画面では、モード切り替えとハンバーガーを、1つのバーにする（daidai横丁のメニューと同じ作り）。
+                    daidai横丁のページでは、メニューのボタンが、左の場所に入る（DaidaiYokochoMenu.tsx）。横画面は、別々のボタンのまま */}
+                <div className="relative lg:hidden pointer-events-auto flex items-center gap-2 portrait:gap-0 portrait:rounded-full portrait:bg-surface/80 portrait:backdrop-blur-md portrait:shadow-elevation-3 portrait:border portrait:border-outline-variant/60">
+                    <div id={HEADER_BAR_SLOT_ID} className="hidden portrait:flex items-center" />
+                    <div className="rounded-full bg-surface/80 backdrop-blur-sm shadow-elevation-2 border border-outline-variant/60 portrait:rounded-none portrait:bg-transparent portrait:backdrop-blur-none portrait:shadow-none portrait:border-0">
+                        <ThemeToggle className="portrait:h-12 portrait:w-12" />
                     </div>
+                    <span aria-hidden className="hidden portrait:block h-6 w-px bg-outline/80" />
                     <button
                         aria-label="メニューを開く"
-                        className="p-3 bg-surface/80 backdrop-blur-sm rounded-full shadow-elevation-2 border border-outline-variant/60 hover:bg-surface/90 transition-all duration-300 ease-m3-standard"
+                        className="p-3 bg-surface/80 backdrop-blur-sm rounded-full shadow-elevation-2 border border-outline-variant/60 hover:bg-surface/90 transition-all duration-300 ease-m3-standard portrait:flex portrait:h-12 portrait:w-12 portrait:items-center portrait:justify-center portrait:p-0 portrait:bg-transparent portrait:backdrop-blur-none portrait:shadow-none portrait:border-0 portrait:hover:bg-surface-container-lowest/90"
                         onClick={openDrawer}
                     >
                         <div className="space-y-1">

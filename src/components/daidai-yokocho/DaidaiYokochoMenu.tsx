@@ -1,6 +1,7 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState, useSyncExternalStore } from "react";
+import { createPortal } from "react-dom";
 import Link from "next/link";
 import { doc, getDoc } from "firebase/firestore";
 import { motion, AnimatePresence } from "framer-motion";
@@ -21,6 +22,7 @@ import GoogleSignInButton from "@/components/GoogleSignInButton";
 import { formatUnreadCount } from "@/lib/notices";
 import { fetchUnreadCount } from "@/lib/noticesClient";
 import { usePathname } from "next/navigation";
+import { HEADER_BAR_SLOT_ID, useHeaderBarMerged } from "@/lib/usePhonePortrait";
 
 interface OwnProfile {
     rhingSeed: string;
@@ -154,21 +156,35 @@ export default function DaidaiYokochoMenu() {
         await signOut();
     };
 
-    return (
-        <>
-            <div ref={containerRef} className="recede-hide fixed top-24 right-6 lg:top-28 lg:right-8 z-40">
-                <div className="relative">
+    // 縦画面では、ヘッダーの右上のバーの中（ハンバーガーとモード切り替えの左）へ入れて、1つのバーにする。
+    // それ以外では、今までどおり、ヘッダーの下に固定する
+    const headerSlot = useSyncExternalStore(
+        () => () => {},
+        () => document.getElementById(HEADER_BAR_SLOT_ID),
+        () => null,
+    );
+    const merged = useHeaderBarMerged() && !!headerSlot;
+    const dividerClass = merged ? "block h-6 w-px bg-outline/80" : "block h-px w-6 md:h-6 md:w-px bg-outline/80";
+
+    const bar = (
+        <div ref={containerRef} className={merged ? "flex items-center" : "recede-hide fixed top-24 right-6 lg:top-28 lg:right-8 z-40"}>
+            {/* 入った時は、開いた一覧の位置の基準を、ヘッダーのバー（relative）にする。基準を、この中に置かない */}
+            <div className={merged ? "flex items-center" : "relative"}>
                     {/* お気に入り・カート・アカウントを1つのバーにする（モバイルは縦、PCは横）。お気に入りとカートは、ログイン中だけ */}
                     <nav
                         aria-label="お気に入り・カート・アカウント"
-                        className="flex flex-col-reverse md:flex-row items-center bg-surface-container-lowest/80 backdrop-blur-md rounded-full shadow-lg border border-glass-edge/60 shadow-blue-300/10 overflow-hidden"
+                        className={
+                            merged
+                                ? "flex flex-row items-center"
+                                : "flex flex-col-reverse md:flex-row items-center bg-surface-container-lowest/80 backdrop-blur-md rounded-full shadow-lg border border-glass-edge/60 shadow-blue-300/10 overflow-hidden"
+                        }
                     >
                         {user && (
                             <>
                                 <Link
                                     href="/daidai-yokocho/favorites"
                                     aria-label={favoriteCount > 0 ? `お気に入り（${favoriteCount}件）` : "お気に入り"}
-                                    className={`relative ${quickIconClass}`}
+                                    className={`relative ${quickIconClass} ${merged ? "rounded-full" : ""}`}
                                 >
                                     <Heart className="w-5 h-5 text-on-surface-variant" />
                                     {favoriteCount > 0 && (
@@ -177,11 +193,11 @@ export default function DaidaiYokochoMenu() {
                                         </span>
                                     )}
                                 </Link>
-                                <span aria-hidden className="block h-px w-6 md:h-6 md:w-px bg-outline/80" />
+                                <span aria-hidden className={dividerClass} />
                                 <Link
                                     href="/daidai-yokocho/cart"
                                     aria-label={cartCount > 0 ? `カート（${cartCount}件）` : "カート"}
-                                    className={`relative ${quickIconClass}`}
+                                    className={`relative ${quickIconClass} ${merged ? "rounded-full" : ""}`}
                                 >
                                     <ShoppingCart className="w-5 h-5 text-on-surface-variant" />
                                     {cartCount > 0 && (
@@ -190,14 +206,14 @@ export default function DaidaiYokochoMenu() {
                                         </span>
                                     )}
                                 </Link>
-                                <span aria-hidden className="block h-px w-6 md:h-6 md:w-px bg-outline/80" />
+                                <span aria-hidden className={dividerClass} />
                             </>
                         )}
                         <button
                             onClick={() => setOpen((o) => !o)}
                             aria-label="アカウント設定を開く"
                             aria-expanded={open}
-                            className={`relative ${quickIconClass}`}
+                            className={`relative ${quickIconClass} ${merged ? "rounded-full" : ""}`}
                         >
                             {unreadLabel && (
                                 <span aria-label="未読のお知らせが有ります" className="pointer-events-none absolute top-2 right-2 w-2.5 h-2.5 rounded-full bg-red-500 border border-glass-edge" />
@@ -211,6 +227,7 @@ export default function DaidaiYokochoMenu() {
                                 <PersonIcon className="w-6 h-6 text-on-surface-variant" />
                             )}
                         </button>
+                        {merged && <span aria-hidden className={dividerClass} />}
                     </nav>
 
                 <AnimatePresence>
@@ -416,6 +433,11 @@ export default function DaidaiYokochoMenu() {
                 </AnimatePresence>
                 </div>
             </div>
+    );
+
+    return (
+        <>
+            {merged && headerSlot ? createPortal(bar, headerSlot) : bar}
 
             {showProfileEdit && user && (
                 <AnimatePresence>
