@@ -1,3 +1,4 @@
+import { Suspense } from "react";
 import type { Metadata } from "next";
 import ThemePackCreateForm from "./ThemePackCreateForm";
 
@@ -7,5 +8,9 @@ export const metadata: Metadata = {
 };
 
 export default function CreateThemePackPage() {
-    return <ThemePackCreateForm />;
+    return (
+        <Suspense>
+            <ThemePackCreateForm />
+        </Suspense>
+    );
 }

@@ -40,7 +40,7 @@ const BADGE_CLASS: Record<string, string> = {
     suspended: "bg-red-100 text-red-700",
 };
 
-function Row({ sub, canWithdraw, onChanged }: { sub: ThemePackSubmission; canWithdraw: boolean; onChanged: () => void }) {
+function Row({ sub, canWithdraw, canUpdate, onChanged }: { sub: ThemePackSubmission; canWithdraw: boolean; canUpdate: boolean; onChanged: () => void }) {
     const [data, setData] = useState<ThemePackPreviewData | null>(null);
     const [ownerCount, setOwnerCount] = useState<number | null>(null);
     const [busy, setBusy] = useState(false);
@@ -114,6 +114,14 @@ function Row({ sub, canWithdraw, onChanged }: { sub: ThemePackSubmission; canWit
                 )}
                 {error && <p className="relative z-10 mt-1 text-xs text-red-600" role="alert">{error}</p>}
             </div>
+            {canUpdate && (
+                <Link
+                    href={`/daidai-yokocho/creator/themes/create?from=${encodeURIComponent(sub.id)}`}
+                    className="relative z-10 shrink-0 text-sm font-bold text-primary hover:text-primary/80 transition-colors"
+                >
+                    更新する
+                </Link>
+            )}
             {canWithdraw && (
                 <button
                     type="button"
@@ -151,6 +159,9 @@ export default function MyDesigns({ uid }: { uid: string }) {
     for (const s of subs ?? []) {
         if (s.status === "approved") latestApproved.set(s.packId, Math.max(latestApproved.get(s.packId) ?? 0, s.version));
     }
+    // 新しい版を作れるのは、そのidの最新の版の、公開中か差し戻しだけ（取り下げ・停止・審査待ちは除く）
+    const latestVersion = new Map<string, number>();
+    for (const s of subs ?? []) latestVersion.set(s.packId, Math.max(latestVersion.get(s.packId) ?? 0, s.version));
     const items = subs ?? [];
     const visible = filter === "all" ? items : items.filter((s) => filterOf(s.status) === filter);
 
@@ -212,7 +223,7 @@ export default function MyDesigns({ uid }: { uid: string }) {
                 ) : (
                     <ul className="flex flex-col gap-4">
                         {visible.map((s) => (
-                            <Row key={s.id} sub={s} canWithdraw={s.status === "approved" && latestApproved.get(s.packId) === s.version} onChanged={reload} />
+                            <Row key={s.id} sub={s} canWithdraw={s.status === "approved" && latestApproved.get(s.packId) === s.version} canUpdate={(s.status === "approved" || s.status === "rejected") && latestVersion.get(s.packId) === s.version} onChanged={reload} />
                         ))}
                     </ul>
                 )}

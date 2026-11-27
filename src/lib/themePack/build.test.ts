@@ -45,3 +45,14 @@ describe("意匠の組み立て", () => {
         expect(r.ok).toBe(false);
     });
 });
+
+describe("意匠の内部のid", () => {
+    it("新しい下書きのidは、検査に通る形で、毎回違う", () => {
+        const a = emptyDraft();
+        const b = emptyDraft();
+        expect(a.id).not.toBe(b.id);
+        const r = validateThemePackZip(buildThemePackZip({ ...a, name: "名前" }));
+        expect(r.errors).toEqual([]);
+        expect(r.ok).toBe(true);
+    });
+});

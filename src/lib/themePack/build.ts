@@ -8,6 +8,7 @@ export type DraftColors = Partial<Record<ThemePackColorKey, string>>;
 export type ThemePackDraft = {
     id: string;
     name: string;
+    /** 作者の表示。作成画面では書かない（空なら、DaiDaiの呼び名が表示される） */
     author: string;
     brightness: ThemePackBrightness;
     shape: { borderWidth: number; radius: number; shadowOffset: [number, number] };
@@ -21,9 +22,14 @@ export type ThemePackDraft = {
 export const BACKGROUND_FILE_BASE = "background";
 export const MENU_CHIP_FILE = "menu-chip.png";
 
+/** 利用者には見せない内部の識別子。半角の小文字・数字・ハイフンで、40文字以内（`pack.json`のidの規則） */
+export function newPackId(): string {
+    return crypto.randomUUID();
+}
+
 export function emptyDraft(): ThemePackDraft {
     return {
-        id: "",
+        id: newPackId(),
         name: "",
         author: "",
         brightness: "both",

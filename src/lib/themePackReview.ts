@@ -4,7 +4,8 @@ import { collection, doc, getDoc, getDocs, limit, orderBy, query, where } from "
 import { getBytes, getDownloadURL, getStorage, ref } from "firebase/storage";
 import { db, firebaseApp } from "@/lib/firebase";
 import { checkContrast, type ContrastReport } from "@/lib/themePack/contrast";
-import { parseThemePack, type ParsedThemePack } from "@/lib/themePack/spec";
+import { parseThemePack, THEME_PACK_LIMITS, type ParsedThemePack } from "@/lib/themePack/spec";
+import type { ThemePackDraft } from "@/lib/themePack/build";
 
 // 意匠の審査（管理者）。themePackSubmissionsは、管理者と投稿者本人だけが読める。
 
@@ -237,4 +238,56 @@ export async function listPublicThemePacksByCreator(creatorId: string): Promise<
         };
     });
     return list.filter((p) => p.name && p.assetPath).sort((a, b) => (b.approvedAt?.getTime() ?? 0) - (a.approvedAt?.getTime() ?? 0));
+}
+
+/** 自分の投稿を1件、読む。他人の投稿や、無い投稿は、null（投稿の文書は、管理者と投稿者本人だけが読める） */
+export async function getMyThemePackSubmission(submissionId: string, uid: string): Promise<ThemePackSubmission | null> {
+    const snap = await getDoc(doc(db, "themePackSubmissions", submissionId));
+    if (!snap.exists()) return null;
+    const data = snap.data();
+    if (data.creatorId !== uid) return null;
+    const created = data.createdAt as { toDate?: () => Date } | undefined;
+    return {
+        id: snap.id,
+        packId: String(data.packId ?? ""),
+        creatorId: String(data.creatorId ?? ""),
+        version: Number(data.version ?? 0),
+        status: String(data.status ?? ""),
+        assetPath: String(data.assetPath ?? ""),
+        name: typeof data.name === "string" ? data.name : null,
+        decisionNote: typeof data.decisionNote === "string" ? data.decisionNote : null,
+        createdAt: created && typeof created.toDate === "function" ? created.toDate() : null,
+    };
+}
+
+/**
+ * 投稿済みの素材（pack.jsonと画像）を、作成画面の下書きに読み直す。idは引き継ぐ（同じidの再投稿が、新しい版になる）。
+ * 作者の表示は、作成画面では書かないので、空にする。
+ */
+export async function loadThemePackDraft(assetPath: string): Promise<ThemePackDraft> {
+    const bytes = await getBytes(ref(storage, `${assetPath}/pack.json`), THEME_PACK_LIMITS.packJsonMaxBytes);
+    const parsed = parseThemePack(new TextDecoder("utf-8").decode(bytes));
+    if (!parsed.ok) throw new Error(`pack.jsonを読めません。${parsed.error}`);
+    const pack = parsed.pack;
+    const draft: ThemePackDraft = {
+        id: pack.id,
+        name: pack.name,
+        author: "",
+        brightness: pack.brightness,
+        shape: pack.shape,
+        colors: { light: { ...pack.colors.light }, dark: { ...pack.colors.dark } },
+    };
+    if (pack.backgroundImage) {
+        const ext = pack.backgroundImage.slice(pack.backgroundImage.lastIndexOf(".") + 1).toLowerCase();
+        const kind = ext === "png" ? "png" : ext === "webp" ? "webp" : ext === "jpg" || ext === "jpeg" ? "jpg" : null;
+        if (kind) {
+            const img = await getBytes(ref(storage, `${assetPath}/${pack.backgroundImage}`), THEME_PACK_LIMITS.imageMaxBytes);
+            draft.background = { ext: kind, bytes: new Uint8Array(img) };
+        }
+    }
+    if (pack.menuChipImage) {
+        const img = await getBytes(ref(storage, `${assetPath}/${pack.menuChipImage}`), THEME_PACK_LIMITS.menuChipMaxBytes);
+        draft.menuChip = { bytes: new Uint8Array(img) };
+    }
+    return draft;
 }

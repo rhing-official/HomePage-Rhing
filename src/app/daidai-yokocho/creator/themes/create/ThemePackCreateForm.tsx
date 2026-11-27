@@ -2,21 +2,22 @@
 
 import { useEffect, useMemo, useRef, useState } from "react";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { Palette } from "lucide-react";
 import { auth, onAuthStateChanged, type User } from "@/lib/firebaseAuth";
 import ThemePackPreview from "@/components/daidai-yokocho/ThemePackPreview";
-import { buildThemePackZip, emptyDraft, type ThemePackDraft } from "@/lib/themePack/build";
+import { buildThemePackZip, emptyDraft, newPackId, type ThemePackDraft } from "@/lib/themePack/build";
 import { clearDraft, loadDraft, saveDraft } from "@/lib/themePack/draftStore";
 import { checkContrast, MIN_CONTRAST_RATIO } from "@/lib/themePack/contrast";
 import { readImageInfo } from "@/lib/themePack/imageSize";
 import { COLOR_KEYS, COLOR_LABELS, SHAPE_RANGES, THEME_PACK_LIMITS, type ThemePackBrightness, type ThemePackColorKey } from "@/lib/themePack/spec";
+import { getMyThemePackSubmission, loadThemePackDraft, type ThemePackSubmission } from "@/lib/themePackReview";
 import { validateThemePackZip } from "@/lib/themePack/validate";
 import { formatBytes } from "@/lib/themePack/zip";
 import { ResultList } from "../new/ThemePackSubmitForm";
 import SubmitPanel from "../new/SubmitPanel";
 
-const PAGE_PATH = "/daidai-yokocho/creator/themes/create";
+const BASE_PATH = "/daidai-yokocho/creator/themes/create";
 const HEX = /^#[0-9a-fA-F]{6}$/;
 
 const card = "rounded-m3-lg bg-white border border-gray-100 shadow-sm p-6 flex flex-col gap-4";
@@ -24,6 +25,11 @@ const input = "w-full rounded-lg border border-gray-300 px-3 py-2 text-sm text-g
 
 export default function ThemePackCreateForm() {
     const router = useRouter();
+    // `?from=投稿のid`: 投稿済みの意匠から、新しい版を作る。下書きの保存とは、別に扱う（保存済みの下書きを、上書きしない）
+    const fromId = useSearchParams().get("from");
+    const PAGE_PATH = fromId ? `${BASE_PATH}?from=${encodeURIComponent(fromId)}` : BASE_PATH;
+    const [base, setBase] = useState<ThemePackSubmission | null>(null);
+    const [baseError, setBaseError] = useState<string | null>(null);
     const [user, setUser] = useState<User | null>(null);
     const [ready, setReady] = useState(false);
     const [draft, setDraft] = useState<ThemePackDraft>(emptyDraft);
@@ -42,19 +48,31 @@ export default function ThemePackCreateForm() {
     );
     useEffect(() => {
         if (ready && !user) router.replace(`/login?redirect=${encodeURIComponent(PAGE_PATH)}`);
-    }, [ready, user, router]);
+    }, [ready, user, router, PAGE_PATH]);
 
-    // 下書きを、このブラウザの中から読む
+    // 下書きを、このブラウザの中から読む。新しい版を作る時は、投稿済みの素材から読む
     useEffect(() => {
+        if (!ready || !user) return;
+        if (fromId) {
+            getMyThemePackSubmission(fromId, user.uid)
+                .then(async (sub) => {
+                    if (!sub) throw new Error("この投稿は、見つかりません。");
+                    setDraft(await loadThemePackDraft(sub.assetPath));
+                    setBase(sub);
+                })
+                .catch((err) => setBaseError(err instanceof Error ? err.message : "投稿を読み込めませんでした。"))
+                .finally(() => setLoaded(true));
+            return;
+        }
         loadDraft()
-            .then((d) => d && setDraft({ ...emptyDraft(), ...d }))
+            .then((d) => d && setDraft({ ...emptyDraft(), ...d, id: d.id || newPackId(), author: "" }))
             .catch(() => undefined)
             .finally(() => setLoaded(true));
-    }, []);
+    }, [ready, user, fromId]);
 
-    // 入力が止まってから、下書きを保存する
+    // 入力が止まってから、下書きを保存する（新しい版を作る時は保存しない）
     useEffect(() => {
-        if (!loaded) return;
+        if (!loaded || fromId) return;
         const t = setTimeout(() => {
             saveDraft(draft).then(
                 () => setSaveError(false),
@@ -62,7 +80,7 @@ export default function ThemePackCreateForm() {
             );
         }, 600);
         return () => clearTimeout(t);
-    }, [draft, loaded]);
+    }, [draft, loaded, fromId]);
 
     const result = useMemo(() => validateThemePackZip(buildThemePackZip(draft)), [draft]);
 
@@ -120,6 +138,12 @@ export default function ThemePackCreateForm() {
                         </Link>
                         へ進んでください。
                     </p>
+                    {fromId && base && (
+                        <p className="mt-3 rounded-lg bg-primary-container/50 px-4 py-3 text-sm text-gray-800 leading-relaxed">
+                            「{base.name ?? draft.name}」の新しい版（版{base.version + 1}）を作っています。送ると、運営の審査に進みます。この画面の内容は、下書きとしては保存されません。
+                        </p>
+                    )}
+                    {baseError && <p className="mt-3 text-sm text-red-600">{baseError}</p>}
                     {saveError && <p className="mt-2 text-sm text-red-600">下書きを保存できませんでした。このブラウザでは、保存が使えない可能性があります。</p>}
                 </div>
 
@@ -128,18 +152,6 @@ export default function ThemePackCreateForm() {
                     <h2 className="font-bold text-gray-900">基本</h2>
                     <Field label="名前" hint="1〜40文字">
                         <input className={input} value={draft.name} maxLength={40} onChange={(e) => set({ name: e.target.value })} />
-                    </Field>
-                    <Field label="id" hint="半角の小文字・数字・ハイフンで、1〜40文字。公開した後は、変えられません。">
-                        <input
-                            className={input}
-                            value={draft.id}
-                            maxLength={40}
-                            onChange={(e) => set({ id: e.target.value.toLowerCase() })}
-                            placeholder="my-first-design"
-                        />
-                    </Field>
-                    <Field label="作者の表示" hint="空にすると、DaiDaiの呼び名が表示されます。">
-                        <input className={input} value={draft.author} onChange={(e) => set({ author: e.target.value })} />
                     </Field>
                     <Field label="対応する外観">
                         <select className={input} value={draft.brightness} onChange={(e) => set({ brightness: e.target.value as ThemePackBrightness })}>
@@ -231,13 +243,14 @@ export default function ThemePackCreateForm() {
                 {/* プレビューと確認 */}
                 <section className={card} aria-live="polite">
                     <h2 className="font-bold text-gray-900">プレビュー</h2>
-                    {live ? <ThemePackPreview data={live} /> : <p className="text-sm text-gray-500">名前とidを入れると、プレビューが出ます。</p>}
+                    {live ? <ThemePackPreview data={live} /> : <p className="text-sm text-gray-500">名前を入れると、プレビューが出ます。</p>}
                 </section>
                 {result.errors.length > 0 && <ResultList title="直してください" tone="error" items={result.errors} />}
                 {result.warnings.length > 0 && <ResultList title="確認してください" tone="warning" items={result.warnings} />}
                 {result.ok && result.passed.length > 0 && <ResultList title="確認できた項目" tone="ok" items={result.passed} />}
 
                 <div className="flex items-center gap-4">
+                    {!fromId && (
                     <button
                         type="button"
                         onClick={() => {
@@ -250,9 +263,10 @@ export default function ThemePackCreateForm() {
                     >
                         最初からやり直す
                     </button>
+                    )}
                 </div>
 
-                <SubmitPanel user={user} result={result} onSubmitted={() => void clearDraft()} />
+                <SubmitPanel user={user} result={result} onSubmitted={() => (fromId ? undefined : void clearDraft())} />
             </div>
         </div>
     );
