@@ -5,6 +5,7 @@ import { Heart } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { auth, onAuthStateChanged, type User } from "@/lib/firebaseAuth";
 import { isPackFavorited, addFavoritePack, removeFavoritePack } from "@/lib/favorites";
+import WipeIcon from "@/components/ui/WipeIcon";
 import { flyFromChip, flyToChip } from "@/lib/flyToChip";
 import { freezeChipCount } from "@/lib/chipCount";
 
@@ -82,7 +83,7 @@ export default function FavoriteButton({ packId }: { packId: string }) {
             aria-pressed={favorited}
             className="p-2 rounded-full transition hover:bg-surface-container-high disabled:opacity-50 disabled:cursor-not-allowed"
         >
-            <Heart className={`w-6 h-6 ${favorited ? "text-rose-500 dark:text-rose-400 fill-rose-500" : "text-outline"}`} />
+            <WipeIcon kind="heart" on={favorited} className="w-6 h-6" />
         </button>
     );
 }

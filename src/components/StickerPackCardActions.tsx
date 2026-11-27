@@ -2,11 +2,12 @@
 
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-import { Heart, ShoppingCart, Check } from "lucide-react";
+import { Check } from "lucide-react";
 import { auth, onAuthStateChanged, type User } from "@/lib/firebaseAuth";
 import { isPackFavorited, addFavoritePack, removeFavoritePack } from "@/lib/favorites";
 import { isPackOwnedByUser } from "@/lib/stickerPacks";
 import { PACKS_OWNED_EVENT } from "@/lib/bulkAcquire";
+import WipeIcon from "@/components/ui/WipeIcon";
 import { useCart } from "@/components/CartProvider";
 import { flyFromChip, flyToChip } from "@/lib/flyToChip";
 import { freezeChipCount } from "@/lib/chipCount";
@@ -124,9 +125,7 @@ export default function StickerPackCardActions({ packId }: { packId: string }) {
                 aria-label={favoriteStatus === "favorited" ? "お気に入り解除" : "お気に入りに追加"}
                 className="p-2 rounded-full bg-surface-container-lowest/80 backdrop-blur-sm shadow-sm border border-glass-edge/70 hover:bg-surface-container-lowest/95 transition-colors"
             >
-                <Heart
-                    className={`w-4 h-4 ${favoriteStatus === "favorited" ? "text-rose-500 dark:text-rose-400 fill-rose-500" : "text-outline"}`}
-                />
+                <WipeIcon kind="heart" on={favoriteStatus === "favorited"} className="w-4 h-4" />
             </button>
             <button
                 type="button"
@@ -138,7 +137,7 @@ export default function StickerPackCardActions({ packId }: { packId: string }) {
                 {getStatus === "owned" ? (
                     <Check className="w-4 h-4 text-emerald-600 dark:text-emerald-400" />
                 ) : (
-                    <ShoppingCart className={`w-4 h-4 ${inCart ? "text-blue-600 dark:text-blue-400 fill-blue-100" : "text-on-surface-subtle"}`} />
+                    <WipeIcon kind="cart" on={inCart} className="w-4 h-4" />
                 )}
             </button>
         </div>

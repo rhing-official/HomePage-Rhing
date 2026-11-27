@@ -29,9 +29,9 @@ export default function Carousel({
     label: string;
     autoplayMs?: number;
 }) {
-    // 幅に応じて、見えている枚数ごとに送る
+    // 常に1枚ずつ送る（"auto" だと、端の近くで、1枚送りと複数枚送りが混ざる）
     // loop: 端から端へ、続けて送れる。項目が少なく、幅に収まる時は、embla が自動でループを切る
-    const [viewportRef, api] = useEmblaCarousel({ align: "start", slidesToScroll: "auto", loop: true });
+    const [viewportRef, api] = useEmblaCarousel({ align: "start", slidesToScroll: 1, loop: true });
     // 自動で送るのを止める理由。どれか1つでも立っている間は、送らない
     const hold = useRef({ hover: false, focus: false, touch: false });
     const [canPrev, setCanPrev] = useState(false);

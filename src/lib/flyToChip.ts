@@ -1,12 +1,11 @@
 // パックをカート・お気に入りに追加した時に、押したボタン（カードのハート・カートの丸ボタンなど）から、
 // メニューのチップ（お気に入り・カート）へ、点を飛ばす。参考にした動画の動き:
-//   1. 押したボタンの周りに、波紋が広がる
-//   2. ボタンの位置に、お気に入りはハート、カートはカートの形が現れる
-//   3. その形が、弧を描き、回りながら小さくなって、チップへ飛ぶ。加速しながら着く。後ろに、淡い輪郭だけの残像が付く（形は、本体と同じ）
-//   4. 着くと、チップのアイコンが弾み、件数のバッジが大きくなる（外した時は、飛び立つ時に弾む）
+//   1. ボタンの位置に、お気に入りはハート、カートはカートの形が現れる
+//   2. その形が、弧を描き、回りながら小さくなって、チップへ飛ぶ。加速しながら着く。後ろに、淡い輪郭だけの残像が付く（形は、本体と同じ）
+//   3. 着くと、チップのアイコンが弾み、件数のバッジが大きくなる（外した時は、飛び立つ時に弾む）
 // 外した時は、チップから、点が一旦真上へ放られ、落ちながら消える（捨てる動き）。
 // 位置は、押した瞬間に画面上で測る（getBoundingClientRect）ので、画面の幅・縦横・密度が違っても、ずれない。
-// チップが画面に無い時（ログイン前など）は、何もしない。
+// チップが画面に無い時（トップページなど、daidai横丁のメニューが出ていない画面）は、点は飛ばさない。ボタンのハート・カートの色の入れ替わり（WipeIcon）は、チップの有無に関わらず動く。
 
 export type FlyTarget = "favorite" | "cart";
 
@@ -40,30 +39,6 @@ const center = (el: Element): Point => {
     const r = el.getBoundingClientRect();
     return { x: r.left + r.width / 2, y: r.top + r.height / 2 };
 };
-
-function ring(at: Point) {
-    const el = document.createElement("div");
-    el.setAttribute("aria-hidden", "true");
-    Object.assign(el.style, {
-        position: "fixed",
-        left: `${at.x - 18}px`,
-        top: `${at.y - 18}px`,
-        width: "36px",
-        height: "36px",
-        borderRadius: "9999px",
-        border: "1px solid var(--color-on-surface)",
-        pointerEvents: "none",
-        zIndex: "9999",
-    });
-    document.body.appendChild(el);
-    el.animate(
-        [
-            { transform: "scale(0.4)", opacity: 0.6 },
-            { transform: "scale(2.6)", opacity: 0 },
-        ],
-        { duration: 600, easing: "cubic-bezier(0.2, 0, 0, 1)" },
-    ).finished.finally(() => el.remove());
-}
 
 // 飛ばす形。お気に入りはハート、カートはカート。アイコンは、lucide-react の形と同じ。
 // 本体は、色で塗った形。残像は、輪郭だけ
@@ -202,7 +177,6 @@ export function flyToChip(button: Element | null, target: FlyTarget, release?: (
             release?.();
             return;
         }
-        ring(center(button));
         fly(target, center(button), to, "collect", undefined, () => {
             bounce(chip);
             release?.();

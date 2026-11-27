@@ -2,11 +2,12 @@
 
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-import { Check, Heart, ShoppingCart } from "lucide-react";
+import { Check } from "lucide-react";
 import { auth, onAuthStateChanged, type User } from "@/lib/firebaseAuth";
 import { addToDesignList, isInDesignList, removeFromDesignList } from "@/lib/designLists";
 import { isThemePackOwned } from "@/lib/themePackReview";
 import { useCart } from "@/components/CartProvider";
+import WipeIcon from "@/components/ui/WipeIcon";
 import { flyFromChip, flyToChip } from "@/lib/flyToChip";
 import { freezeChipCount } from "@/lib/chipCount";
 
@@ -122,13 +123,13 @@ export default function DesignActions({
         return (
             <div className="absolute top-2 right-2 flex gap-2">
                 <button type="button" onClick={toggleFavorite} aria-label={favLabel} className={round}>
-                    <Heart className={`w-4 h-4 ${fav === "favorited" ? "text-rose-500 dark:text-rose-400 fill-rose-500" : "text-outline"}`} />
+                    <WipeIcon kind="heart" on={fav === "favorited"} className="w-4 h-4" />
                 </button>
                 <button type="button" onClick={toggleCart} disabled={cartDisabled} aria-label={cartLabel} className={round}>
                     {own === "owned" ? (
                         <Check className="w-4 h-4 text-emerald-600 dark:text-emerald-400" />
                     ) : (
-                        <ShoppingCart className={`w-4 h-4 ${inCart ? "text-blue-600 dark:text-blue-400 fill-blue-100" : "text-on-surface-subtle"}`} />
+                        <WipeIcon kind="cart" on={inCart} className="w-4 h-4" />
                     )}
                 </button>
             </div>
@@ -139,13 +140,13 @@ export default function DesignActions({
     return (
         <div className="flex gap-3">
             <button type="button" onClick={toggleFavorite} aria-label={favLabel} aria-pressed={fav === "favorited"} className={flat}>
-                <Heart className={`w-6 h-6 ${fav === "favorited" ? "text-rose-500 dark:text-rose-400 fill-rose-500" : "text-outline"}`} />
+                <WipeIcon kind="heart" on={fav === "favorited"} className="w-6 h-6" />
             </button>
             <button type="button" onClick={toggleCart} disabled={cartDisabled} aria-label={cartLabel} className={flat}>
                 {own === "owned" ? (
                     <Check className="w-6 h-6 text-emerald-600 dark:text-emerald-400" />
                 ) : (
-                    <ShoppingCart className={`w-6 h-6 ${inCart ? "text-blue-600 dark:text-blue-400 fill-blue-100" : "text-on-surface-subtle"}`} />
+                    <WipeIcon kind="cart" on={inCart} className="w-6 h-6" />
                 )}
             </button>
         </div>

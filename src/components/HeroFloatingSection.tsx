@@ -256,7 +256,7 @@ export default function HeroFloatingSection() {
                         <motion.div
                             animate={{ y: [0, -10, 0], rotate: [item.rot, item.rot + 1.5, item.rot] }}
                             transition={{ duration: item.duration, repeat: Infinity, ease: "easeInOut", delay: item.delay }}
-                            className={`hero-card ${item.width} h-auto bg-white/40 backdrop-blur-md border border-white/80 p-1 md:p-1.5 rounded-xl shadow-lg shadow-gray-200/20 flex items-center justify-center`}
+                            className={`hero-card ${item.width} h-auto bg-on-surface/40 dark:bg-white/40 backdrop-blur-md border border-on-surface/80 dark:border-white/80 p-1 md:p-1.5 rounded-xl shadow-lg shadow-gray-200/20 flex items-center justify-center`}
                         >
                             <img
                                 src={imageSrc}

@@ -216,6 +216,22 @@ export default function Header() {
         }, RECEDE_RETURN_MS);
     };
 
+    // ドロワーを指で動かしている間（右端から引き出す時と、開いたドロワーを横へ引いて収納する時）の印。
+    const draggingRef = useRef(false);
+    // ドロワーの位置に合わせて、ページの傾き（--recede-progress）を、毎コマ更新する。引き出す時も、収納する時も、同じ作り。
+    // 指を離して、閉じずに元へ戻る時は、ドロワーが全開の位置へ戻ったところで、傾きの動きを tilt に戻す
+    useEffect(
+        () =>
+            drawerX.on("change", (v) => {
+                const html = document.documentElement;
+                if (html.dataset.recede !== "drag") return;
+                const x = Math.min(Math.max(v, 0), DRAWER_WIDTH);
+                html.style.setProperty("--recede-progress", String(1 - x / DRAWER_WIDTH));
+                if (!draggingRef.current && x <= 0.5) setRecedePhase("tilt");
+            }),
+        [drawerX],
+    );
+
     // 画面の右端から左へ引いて、ドロワーを開く。ドロワーは指に追従して出てくる（勝手に最後まで伸びない）。
     // 途中で指を戻せば、そのまま指に追従して収納される。離した時に、半分を超えていたら開き、手前なら閉じる。速く払った時は、その向きに従う。
     // ハンバーガーが見えている幅だけで効く（PC用のナビバーや、画面が左右に分かれる端末では、ボタンが見えないので効かない）。
@@ -236,10 +252,12 @@ export default function Header() {
                     state.active = true;
                     startRecede(state.scrollY, "drag");
                 }
+                draggingRef.current = true;
                 setEdgeDragging(true);
                 setIsOpen(true);
             },
             settle: (open) => {
+                draggingRef.current = false;
                 if (open) {
                     if (recedeRef.current.active) setRecedePhase("tilt"); // 指の位置から、全開の傾きまで動く
                     setEdgeDragging(false); // animate={{ x: 0 }} が、今の位置から全開まで動かす
@@ -258,7 +276,7 @@ export default function Header() {
         let last = { x: 0, t: 0 };
         let velocity = 0; // 右向きが正
         const hamburgerVisible = () =>
-            (document.querySelector<HTMLElement>('button[aria-label="メニューを開く"]')?.getClientRects().length ?? 0) > 0;
+            (document.querySelector<HTMLElement>('button[aria-label^="メニューを"]')?.getClientRects().length ?? 0) > 0;
         const fingerToX = (clientX: number) => Math.min(Math.max(clientX - (window.innerWidth - DRAWER_WIDTH), 0), DRAWER_WIDTH);
         const finish = () => {
             if (dragging) {
@@ -374,7 +392,8 @@ export default function Header() {
             <FoldSideMenu />
 
             {/* ナビゲーションエリア */}
-            <header className="fixed top-6 right-6 lg:right-8 z-50 pointer-events-none fold:hidden">
+            {/* ドロワーを開いている間は、背景の押す範囲（z-70）とドロワー（z-80）より手前に出して、モード切り替えなどを押せるようにする */}
+            <header className={`fixed top-6 right-6 lg:right-8 ${isOpen ? "z-[90]" : "z-50"} pointer-events-none fold:hidden`}>
                 {/*
                   🌟 変更：PC用のナビゲーションバーを美しい半透明のガラスデザインに変更
                   - bg-surface-container-lowest/80, backdrop-blur-md, border-glass-edge/80
@@ -403,9 +422,9 @@ export default function Header() {
                     </div>
                     <span aria-hidden className="block h-6 w-px bg-outline/80" />
                     <button
-                        aria-label="メニューを開く"
+                        aria-label={isOpen ? "メニューを閉じる" : "メニューを開く"}
                         className="flex h-12 w-12 items-center justify-center rounded-full hover:bg-surface-container-lowest/90 transition-colors duration-300 ease-m3-standard"
-                        onClick={openDrawer}
+                        onClick={isOpen ? closeDrawer : openDrawer}
                     >
                         <div className="space-y-1">
                             <span className="block w-5 h-0.5 bg-on-surface"></span>
@@ -449,9 +468,26 @@ export default function Header() {
                             style={{ x: drawerX, y: "-50%", touchAction: "none" }} // 縦は、テキストの範囲だけの高さにして、画面の中央に置く
                             dragConstraints={{ left: 0, right: 256 }} // メニュー幅分のみ右ドラッグを許可
                             dragElastic={{ left: 0, right: 0.15 }}    // 引っ張ったときの心地よい弾力
+                            onDragStart={() => {
+                                // 収納する間も、ページを指に追従させる。全開の傾きと同じ値から始まるので、見た目は跳ねない
+                                draggingRef.current = true;
+                                const html = document.documentElement;
+                                if (recedeRef.current.active && html.dataset.recede === "tilt") {
+                                    html.style.setProperty("--recede-progress", String(1 - Math.min(Math.max(drawerX.get(), 0), DRAWER_WIDTH) / DRAWER_WIDTH));
+                                    html.dataset.recede = "drag";
+                                }
+                            }}
                             onDragEnd={(event, info) => {
+                                draggingRef.current = false;
                                 // ゆっくりでも、右へ40px以上引いたら閉じる。速く払う動きなら、短くても閉じる
-                                if (info.offset.x > 40 || info.velocity.x > 500) closeDrawer();
+                                if (info.offset.x > 40 || info.velocity.x > 500) {
+                                    closeDrawer();
+                                    return;
+                                }
+                                // 閉じずに戻る時は、ドロワーが戻りきるまで追従させる。念の為、戻りきった通知が無くても、tilt に戻す
+                                window.setTimeout(() => {
+                                    if (!draggingRef.current && document.documentElement.dataset.recede === "drag") setRecedePhase("tilt");
+                                }, 700);
                             }}
                             initial={{ x: DRAWER_WIDTH }}
                             animate={edgeDragging ? undefined : { x: 0 }} // 右端から引き出している間は、指が位置を決める

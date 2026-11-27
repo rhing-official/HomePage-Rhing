@@ -347,3 +347,40 @@
     animation: page-dot 0.8s ease-out backwards;
 }
 
+
+/* お気に入り・カートの丸ボタンの、色の入れ替わり（clock wipe、WipeIcon.tsx）。
+   上の層（オンの見た目）を、12時から時計回りに現す（in）、または時計回りに消していく（out）。
+   in と out の終わりの見た目は、静止（on と off）と同じで、状態が変わった時だけ動く */
+@property --wipe-a {
+    syntax: "<angle>";
+    inherits: false;
+    initial-value: 0deg;
+}
+/* in と out は、別の名前にする。同じ名前だと、in の後に out へ変わっても、アニメーションが最初からやり直されない */
+@keyframes chip-wipe-in {
+    from {
+        --wipe-a: 0deg;
+    }
+    to {
+        --wipe-a: 360deg;
+    }
+}
+@keyframes chip-wipe-out {
+    from {
+        --wipe-a: 0deg;
+    }
+    to {
+        --wipe-a: 360deg;
+    }
+}
+[data-wipe="off"] {
+    opacity: 0;
+}
+[data-wipe="in"] {
+    mask-image: conic-gradient(#000 var(--wipe-a), transparent 0);
+    animation: chip-wipe-in 0.45s linear forwards;
+}
+[data-wipe="out"] {
+    mask-image: conic-gradient(transparent var(--wipe-a), #000 0);
+    animation: chip-wipe-out 0.45s linear forwards;
+}
