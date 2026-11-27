@@ -34,10 +34,10 @@ const appServices: Service[] = [
     {
         id: "daidai-yokocho",
         name: "daidai横丁",
-        tagline: "ぺったんが集まる、小さな市場。",
+        tagline: "ぺったんと意匠が集まる、小さな市場。",
         category: "Store",
-        description: "DaiDaiで使えるぺったんを、探して、入手出来るストア。当面は、無料のぺったんを配布しています。クリエイターは、作ったぺったんを出品出来ます。",
-        features: ["DaiDaiで使えるぺったん", "当面は無料", "クリエイターが出品可能", "DaiDaiのアカウントで利用"],
+        description: "DaiDaiで使えるぺったんと、DaiDaiの見た目を着せ替える意匠パックを、探して、入手出来るストア。当面は、無料のものを配布しています。クリエイターは、作ったぺったんを出品し、意匠パックを投稿出来ます。",
+        features: ["DaiDaiで使えるぺったん", "見た目を着せ替える意匠パック", "当面は無料", "クリエイターが出品可能", "DaiDaiのアカウントで利用"],
         link: "/services/daidai-yokocho",
         bgColor: "bg-gray-200/60",
         image: "/logos/daidai-yokocho.png",

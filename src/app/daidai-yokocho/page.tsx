@@ -7,7 +7,7 @@ export const dynamic = "force-dynamic";
 
 export const metadata: Metadata = {
     title: "daidai横丁 | Rhing",
-    description: "DaiDaiで使えるぺったんのストア、daidai横丁。",
+    description: "DaiDaiで使えるぺったんと意匠パックのストア、daidai横丁。",
 };
 
 export default async function DaidaiYokochoPage({ searchParams }: { searchParams: Promise<{ kind?: string }> }) {

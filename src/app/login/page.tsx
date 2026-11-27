@@ -79,13 +79,13 @@ function LoginPageContent() {
                             href="/daidai-yokocho/owned"
                             className="px-8 py-3 rounded-full bg-white/70 backdrop-blur-sm border border-white/80 shadow-sm shadow-blue-300/5 text-primary hover:text-primary hover:border-primary/40 hover:bg-white/90 hover:shadow-md hover:shadow-blue-300/15 transition-all duration-300 text-center"
                         >
-                            所持しているぺったんを管理
+                            購入済みを管理
                         </Link>
                         <Link
                             href="/daidai-yokocho/creator"
                             className="px-8 py-3 rounded-full bg-white/70 backdrop-blur-sm border border-white/80 shadow-sm shadow-blue-300/5 text-primary hover:text-primary hover:border-primary/40 hover:bg-white/90 hover:shadow-md hover:shadow-blue-300/15 transition-all duration-300 text-center"
                         >
-                            出品したぺったんを管理
+                            作成と管理
                         </Link>
                     </div>
                     <button
