@@ -17,6 +17,10 @@ export const THEME_PACK_LIMITS = {
     maxFiles: 20,
     /** pack.jsonの容量（バイト） */
     packJsonMaxBytes: 64 * 1024,
+    /** メニューチップの画像の各辺（px）。PNGだけ */
+    menuChipMaxSide: 512,
+    /** メニューチップの画像の容量（バイト） */
+    menuChipMaxBytes: 512 * 1024,
     /** 1人が投稿できる件数（公開中と審査中の合計）。手順②以降で使う */
     maxPacksPerUser: 5,
 } as const;
@@ -52,6 +56,8 @@ export type ParsedThemePack = {
     shape: { borderWidth: number; radius: number; shadowOffset: [number, number] };
     colors: { light: ThemePackColors; dark: ThemePackColors };
     backgroundImage?: string;
+    /** メニューチップに充てるPNGのファイル名。アプリ側の描画は別作業（形式だけ先に決めてある） */
+    menuChipImage?: string;
 };
 
 export type ParseResult =
@@ -197,9 +203,21 @@ export function parseThemePack(source: string): ParseResult {
         backgroundImage = bg;
     }
 
+    let menuChipImage: string | undefined;
+    const chip = imagesSrc.menuChip;
+    if (chip !== undefined) {
+        if (typeof chip !== "string" || !IMAGE_FILE_PATTERN.test(chip)) {
+            return {
+                ok: false,
+                error: "メニューチップの画像のファイル名が正しくありません。ディレクトリや「..」、URLは使えません。英数字・アンダースコア・ハイフンと、拡張子だけにしてください。",
+            };
+        }
+        menuChipImage = chip;
+    }
+
     return {
         ok: true,
-        pack: { formatVersion, id, name: name.trim(), author, brightness, shape: { borderWidth, radius, shadowOffset }, colors, backgroundImage },
+        pack: { formatVersion, id, name: name.trim(), author, brightness, shape: { borderWidth, radius, shadowOffset }, colors, backgroundImage, menuChipImage },
         warnings,
     };
 }

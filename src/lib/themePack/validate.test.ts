@@ -128,3 +128,51 @@ describe("意匠のzipの検査", () => {
         expect(r.ok).toBe(false);
     });
 });
+
+describe("メニューチップの画像の検査", () => {
+    const withChip = (chip: Uint8Array, name = "chip.png") =>
+        makeZip({
+            "pack.json": text(packJson({ images: { background: "background.png", menuChip: name } })),
+            "background.png": pngBytes(1080, 1920),
+            [name]: chip,
+        });
+
+    it("512px以下のpngは、合格", () => {
+        const r = validateThemePackZip(withChip(pngBytes(256, 128)));
+        expect(r.errors).toEqual([]);
+        expect(r.ok).toBe(true);
+        expect(r.menuChip).toMatchObject({ file: "chip.png", width: 256, height: 128 });
+        expect(r.warnings.join()).not.toContain("使われていない");
+    });
+
+    it("512pxを超えれば、不合格", () => {
+        const r = validateThemePackZip(withChip(pngBytes(513, 100)));
+        expect(r.ok).toBe(false);
+        expect(r.errors.join()).toContain("メニューチップ");
+    });
+
+    it("pngでなければ、不合格", () => {
+        const r = validateThemePackZip(withChip(jpegBytes(100, 100), "chip.jpg"));
+        expect(r.ok).toBe(false);
+        expect(r.errors.join()).toContain("pngにしてください");
+    });
+
+    it("容量が512KBを超えれば、不合格", () => {
+        const r = validateThemePackZip(withChip(pngBytes(100, 100, 512 * 1024)));
+        expect(r.ok).toBe(false);
+        expect(r.errors.join()).toContain("容量");
+    });
+
+    it("zipに無ければ、不合格", () => {
+        const r = validateThemePackZip(
+            makeZip({ "pack.json": text(packJson({ images: { background: "background.png", menuChip: "chip.png" } })), "background.png": pngBytes(10, 10) }),
+        );
+        expect(r.ok).toBe(false);
+        expect(r.errors.join()).toContain("zipの中にありません");
+    });
+
+    it("背景画像と同じファイルは、不合格", () => {
+        const r = validateThemePackZip(makeZip({ "pack.json": text(packJson({ images: { background: "background.png", menuChip: "background.png" } })), "background.png": pngBytes(10, 10) }));
+        expect(r.ok).toBe(false);
+    });
+});

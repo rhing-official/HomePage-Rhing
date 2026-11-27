@@ -74,6 +74,8 @@ export interface ThemePackPreviewData {
     contrast: ContrastReport;
     /** 背景画像の表示用URL（画像だけに使う） */
     backgroundUrl: string | null;
+    /** メニューチップの画像の表示用URL（無ければ省く） */
+    menuChipUrl?: string | null;
     warnings: string[];
 }
 
@@ -89,7 +91,11 @@ export async function loadThemePackPreview(assetPath: string): Promise<ThemePack
         // ファイル名は、検査で、英数字・_・-と拡張子だけに限られている（..や/は入らない）。画像が無い時は、背景なしで出す
         backgroundUrl = await getDownloadURL(ref(storage, `${assetPath}/${pack.backgroundImage}`)).catch(() => null);
     }
-    return { pack, contrast: checkContrast(pack), backgroundUrl, warnings: parsed.warnings };
+    let menuChipUrl: string | null = null;
+    if (pack.menuChipImage) {
+        menuChipUrl = await getDownloadURL(ref(storage, `${assetPath}/${pack.menuChipImage}`)).catch(() => null);
+    }
+    return { pack, contrast: checkContrast(pack), backgroundUrl, menuChipUrl, warnings: parsed.warnings };
 }
 
 // 公開中の意匠（themePacks。誰でも読める）。承認された版だけが入る

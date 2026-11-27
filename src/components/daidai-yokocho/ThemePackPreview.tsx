@@ -9,7 +9,7 @@ import type { ThemePackPreviewData } from "@/lib/themePackReview";
 const FALLBACK = { background: "#f5f5f5", panel: "#ffffff", text: "#222222", accent: "#888888", onAccent: "#ffffff", line: "#444444" };
 
 export default function ThemePackPreview({ data }: { data: ThemePackPreviewData }) {
-    const { pack, contrast, backgroundUrl } = data;
+    const { pack, contrast, backgroundUrl, menuChipUrl } = data;
     const scopes: ("light" | "dark")[] = pack.brightness === "both" ? ["light", "dark"] : [pack.brightness];
     const { borderWidth, radius, shadowOffset } = pack.shape;
     return (
@@ -58,6 +58,13 @@ export default function ThemePackPreview({ data }: { data: ThemePackPreviewData 
                             >
                                 ボタン
                             </button>
+                            {menuChipUrl && (
+                                <div className="flex items-center gap-2 text-xs" style={{ color: c.text }}>
+                                    {/* eslint-disable-next-line @next/next/no-img-element */}
+                                    <img src={menuChipUrl} alt="" className="h-8 w-auto max-w-[96px] object-contain" />
+                                    メニューチップの見本
+                                </div>
+                            )}
                         </div>
                         <ul className="flex flex-wrap gap-3">
                             {COLOR_KEYS.filter((k) => pack.colors[scope][k]).map((k) => (

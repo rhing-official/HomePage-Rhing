@@ -162,13 +162,21 @@ export default function MyDesigns({ uid }: { uid: string }) {
                     <h2 className="text-xl font-bold text-gray-900">意匠を投稿する</h2>
                     <p className="mt-1 text-sm text-gray-500">DaiDaiの色・形・背景を着せ替える、意匠を投稿します。公開の前に、運営が審査し、結果はお知らせに届きます。</p>
                 </div>
-                <Link
-                    href="/daidai-yokocho/creator/themes/new"
-                    className="shrink-0 inline-flex items-center gap-2 rounded-full bg-primary px-6 py-3 text-sm font-bold text-on-primary tracking-wide hover:bg-primary/90 transition"
-                >
-                    <PackagePlus className="w-4 h-4" aria-hidden />
-                    投稿する
-                </Link>
+                <div className="shrink-0 flex flex-wrap items-center gap-3">
+                    <Link
+                        href="/daidai-yokocho/creator/themes/create"
+                        className="inline-flex items-center gap-2 rounded-full bg-primary px-6 py-3 text-sm font-bold text-on-primary tracking-wide hover:bg-primary/90 transition"
+                    >
+                        <PackagePlus className="w-4 h-4" aria-hidden />
+                        新しく作る
+                    </Link>
+                    <Link
+                        href="/daidai-yokocho/creator/themes/new"
+                        className="inline-flex items-center gap-2 rounded-full border border-gray-300 bg-white px-6 py-3 text-sm font-bold text-gray-800 tracking-wide hover:border-primary transition"
+                    >
+                        zipを投稿する
+                    </Link>
+                </div>
             </div>
 
             {/* 投稿した意匠（状態で絞り込める） */}

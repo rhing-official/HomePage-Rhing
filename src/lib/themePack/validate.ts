@@ -16,6 +16,8 @@ export type ValidationResult = {
     contrast?: ContrastReport;
     /** 背景画像の情報（あれば） */
     background?: { file: string; width: number; height: number; bytes: number };
+    /** メニューチップの画像の情報（あれば） */
+    menuChip?: { file: string; width: number; height: number; bytes: number };
     /** 展開したファイル（送信の時に、そのまま保存先へ置く）。キーは、フォルダを除いたファイル名 */
     files?: Map<string, Uint8Array>;
 };
@@ -117,6 +119,16 @@ export function validateThemePackZip(data: Uint8Array): ValidationResult {
         if (pack.backgroundImage === name) {
             result.background = { file: name, width: info.width, height: info.height, bytes: bytes.length };
         }
+        if (pack.menuChipImage === name) {
+            result.menuChip = { file: name, width: info.width, height: info.height, bytes: bytes.length };
+            if (info.type !== "png") result.errors.push(`メニューチップの画像「${name}」は、pngにしてください。`);
+            if (info.width > L.menuChipMaxSide || info.height > L.menuChipMaxSide) {
+                result.errors.push(`メニューチップの画像の大きさが${info.width}×${info.height}です。各辺${L.menuChipMaxSide}px以下にしてください。`);
+            }
+            if (bytes.length > L.menuChipMaxBytes) {
+                result.errors.push(`メニューチップの画像の容量が大きすぎます。${formatBytes(L.menuChipMaxBytes)}以下にしてください。`);
+            }
+        }
     }
 
     // 背景画像の指定
@@ -129,7 +141,19 @@ export function validateThemePackZip(data: Uint8Array): ValidationResult {
             result.passed.push(`背景画像の形式・大きさ・容量に問題はありません（${result.background.width}×${result.background.height}、${formatBytes(result.background.bytes)}）`);
         }
     }
-    const unused = imageNames.filter((n) => n !== pack.backgroundImage);
+    // メニューチップの指定
+    if (pack.menuChipImage) {
+        if (pack.menuChipImage === pack.backgroundImage) {
+            result.errors.push("背景画像とメニューチップの画像に、同じファイルは指定できません。");
+        } else if (!unzip.files.has(pack.menuChipImage)) {
+            result.errors.push(`メニューチップの画像「${pack.menuChipImage}」が、zipの中にありません。`);
+        } else if (!imageNames.includes(pack.menuChipImage)) {
+            result.errors.push(`メニューチップの画像「${pack.menuChipImage}」は、画像ではありません。`);
+        } else if (result.menuChip && result.errors.length === 0) {
+            result.passed.push(`メニューチップの画像の形式・大きさ・容量に問題はありません（${result.menuChip.width}×${result.menuChip.height}、${formatBytes(result.menuChip.bytes)}）`);
+        }
+    }
+    const unused = imageNames.filter((n) => n !== pack.backgroundImage && n !== pack.menuChipImage);
     if (unused.length > 0) {
         result.warnings.push(`pack.jsonで使われていない画像があります。${unused.map((n) => `「${n}」`).join("")}は、今のアプリでは表示されません。`);
     }

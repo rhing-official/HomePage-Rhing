@@ -1,23 +1,16 @@
 "use client";
 
 import { useCallback, useEffect, useRef, useState } from "react";
-import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { AlertTriangle, CheckCircle2, FileArchive, Palette, XCircle } from "lucide-react";
-import { FirebaseError } from "firebase/app";
 import { auth, onAuthStateChanged, type User } from "@/lib/firebaseAuth";
-import { submitThemePack } from "@/lib/firebaseFunctions";
-import { uploadThemePackSubmission } from "@/lib/firebaseStorage";
 import { validateThemePackZip, type ValidationResult } from "@/lib/themePack/validate";
 import { COLOR_KEYS, COLOR_LABELS, THEME_PACK_LIMITS } from "@/lib/themePack/spec";
 import { describeContrast, MIN_CONTRAST_RATIO } from "@/lib/themePack/contrast";
 import { formatBytes } from "@/lib/themePack/zip";
+import SubmitPanel from "./SubmitPanel";
 
 const PAGE_PATH = "/daidai-yokocho/creator/themes/new";
-
-// TODO: 権利の表明と、投稿の規約の文面は、仮のもの。専門家の確認が済んだら、公開の前に差し替える（2026-11-26、意匠の方針）。
-const RIGHTS_STATEMENT =
-    "投稿する素材は、自分で作ったものであるか、投稿に必要な許諾を得たものです。素材の著作権は、投稿者が持ちます。DaiDaiには、配信と表示のための許諾だけを渡します。";
 
 type Checked = { fileName: string; fileSize: number; result: ValidationResult };
 
@@ -28,11 +21,6 @@ export default function ThemePackSubmitForm() {
     const [checking, setChecking] = useState(false);
     const [checked, setChecked] = useState<Checked | null>(null);
     const [dragging, setDragging] = useState(false);
-    const [rights, setRights] = useState(false);
-    const [terms, setTerms] = useState(false);
-    const [submitting, setSubmitting] = useState(false);
-    const [submitError, setSubmitError] = useState<string | null>(null);
-    const [submitted, setSubmitted] = useState(false);
     const inputRef = useRef<HTMLInputElement>(null);
 
     useEffect(
@@ -78,30 +66,6 @@ export default function ThemePackSubmitForm() {
     if (!ready || !user) return null;
 
     const result = checked?.result;
-    const canSubmit = !!result?.ok && !!result.files && rights && terms && !submitting && !submitted;
-
-    // 検査に通った素材を、本人の保存先へ置き、提出する。サーバーが、もう一度検査する
-    const submit = async () => {
-        if (!canSubmit || !result?.files || !user) return;
-        setSubmitting(true);
-        setSubmitError(null);
-        try {
-            const submissionId = crypto.randomUUID();
-            await uploadThemePackSubmission(user.uid, submissionId, result.files);
-            await submitThemePack({ submissionId, rightsAccepted: true });
-            setSubmitted(true);
-        } catch (err) {
-            console.error("意匠を送信できませんでした:", err);
-            setSubmitError(
-                err instanceof FirebaseError && err.code === "functions/resource-exhausted"
-                    ? "投稿できる数の上限に達しています。"
-                    : "送信できませんでした。時間をおいて、もう一度お試しください。",
-            );
-        } finally {
-            setSubmitting(false);
-        }
-    };
-
     return (
         <div className="w-full pb-24">
             <div className="container mx-auto px-6 pb-16 max-w-3xl">
@@ -186,54 +150,13 @@ export default function ThemePackSubmitForm() {
                     </section>
                 )}
 
-                {/* 権利の表明と、規約への同意 */}
-                <section className="mt-10 flex flex-col gap-4 rounded-m3-lg bg-white border border-gray-100 shadow-sm p-6">
-                    <h2 className="font-bold text-gray-900">投稿する前に</h2>
-                    <label className="flex items-start gap-3 text-sm text-gray-700 leading-relaxed cursor-pointer">
-                        <input type="checkbox" checked={rights} onChange={(e) => setRights(e.target.checked)} className="mt-1 w-4 h-4 accent-primary" />
-                        <span>{RIGHTS_STATEMENT}</span>
-                    </label>
-                    <label className="flex items-start gap-3 text-sm text-gray-700 leading-relaxed cursor-pointer">
-                        <input type="checkbox" checked={terms} onChange={(e) => setTerms(e.target.checked)} className="mt-1 w-4 h-4 accent-primary" />
-                        <span>
-                            <Link href="/legal/terms" className="underline underline-offset-2 hover:text-gray-900" target="_blank">
-                                利用規約
-                            </Link>
-                            に同意します。
-                        </span>
-                    </label>
-                    <p className="text-xs text-gray-400 leading-relaxed">この文面は、仮のものです。公開の前に、専門家の確認を受けて差し替えます。</p>
-                </section>
-
-                <div className="mt-8 flex flex-col items-start gap-3">
-                    <button
-                        type="button"
-                        onClick={submit}
-                        disabled={!canSubmit}
-                        className="rounded-full bg-primary px-8 py-3 font-bold text-on-primary tracking-wide transition disabled:opacity-40 disabled:cursor-not-allowed"
-                    >
-                        {submitting ? "送信中…" : submitted ? "提出しました" : "投稿する"}
-                    </button>
-                    {submitted ? (
-                        <p className="text-sm text-green-700 leading-relaxed">
-                            提出しました。運営が審査し、結果はお知らせでお伝えします。
-                        </p>
-                    ) : submitError ? (
-                        <p className="text-sm text-red-600 leading-relaxed">{submitError}</p>
-                    ) : (
-                        <p className="text-sm text-gray-500 leading-relaxed">
-                            {canSubmit
-                                ? "確認と同意は、済んでいます。送ると、運営の審査に進みます。"
-                                : "確認に通り、2つの同意にチェックを入れると、送れるようになります。"}
-                        </p>
-                    )}
-                </div>
+                <SubmitPanel user={user} result={result} />
             </div>
         </div>
     );
 }
 
-function ResultList({ title, tone, items }: { title: string; tone: "error" | "warning" | "ok"; items: string[] }) {
+export function ResultList({ title, tone, items }: { title: string; tone: "error" | "warning" | "ok"; items: string[] }) {
     const Icon = tone === "error" ? XCircle : tone === "warning" ? AlertTriangle : CheckCircle2;
     const color = tone === "error" ? "text-red-600" : tone === "warning" ? "text-amber-600" : "text-green-600";
     return (
