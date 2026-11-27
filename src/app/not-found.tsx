@@ -3,6 +3,7 @@
 import CtaCard from "@/components/ui/CtaCard";
 import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
+import Illustration from "@/components/Illustration";
 
 const exhibits = [
     {
@@ -79,8 +80,7 @@ export default function NotFound() {
                 <div className="flex flex-col lg:flex-row items-end justify-center gap-6 lg:gap-10">
                     {/* 左の人物イラスト（undraw.co "book-lover"） */}
                     <div className="hidden lg:block w-36 xl:w-44 shrink-0 pb-6">
-                        {/* eslint-disable-next-line @next/next/no-img-element */}
-                        <img src="/illustrations/book-lover.svg" alt="" className="w-full h-auto dark:bg-white/90 dark:rounded-3xl dark:p-3" />
+                        <Illustration name="book-lover" className="w-full h-auto" />
                     </div>
 
                     {/* 展示物本体（ランダムで1点だけ表示） */}
@@ -106,8 +106,7 @@ export default function NotFound() {
 
                     {/* 右の人物イラスト（undraw.co "couple-photo"） */}
                     <div className="hidden lg:block w-36 xl:w-44 shrink-0 pb-6">
-                        {/* eslint-disable-next-line @next/next/no-img-element */}
-                        <img src="/illustrations/couple-photo.svg" alt="" className="w-full h-auto dark:bg-white/90 dark:rounded-3xl dark:p-3" />
+                        <Illustration name="couple-photo" className="w-full h-auto" />
                     </div>
                 </div>
             </div>

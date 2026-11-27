@@ -3,7 +3,7 @@ import Image from "next/image";
 import { siteConfig } from "@/data/siteConfig";
 
 const UnderlineLink = ({ href, children, external = false }: { href: string; children: React.ReactNode; external?: boolean }) => {
-    const baseClasses = "group relative inline-block pb-1 text-on-surface font-bold tracking-wide hover:text-primary transition-colors whitespace-nowrap text-sm xl:text-base";
+    const baseClasses = "group relative inline-block pb-1 text-on-surface font-bold tracking-wide transition-colors whitespace-nowrap text-sm xl:text-base";
     const underline = <span className="absolute bottom-0 left-0 w-0 h-[2px] bg-current transition-all duration-300 group-hover:w-full"></span>;
 
     if (external) {
@@ -52,7 +52,7 @@ const mediaGroups = [
 
 export default function Footer() {
     return (
-        <footer className="w-full mt-24">
+        <footer className="force-light w-full mt-24">
             {/* 左右2カラムの分割を lg（1024px以上）から適用 */}
             <div className="w-full flex flex-col lg:flex-row items-stretch min-h-[400px]">
 

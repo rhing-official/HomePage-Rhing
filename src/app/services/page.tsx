@@ -1,6 +1,7 @@
 import { Metadata } from "next";
 import { Suspense } from "react";
 import ServicesTabs from "./ServicesTabs";
+import Illustration from "@/components/Illustration";
 
 export const metadata: Metadata = {
     title: "サービス紹介 | Rhing",
@@ -13,8 +14,7 @@ export default function ServicesPage() {
             {/* ページタイトル */}
             <div className="container mx-auto px-6 pb-24 max-w-4xl">
                 <div className="mb-16 relative flex flex-col items-center justify-center text-center md:min-h-40 lg:min-h-48">
-                    {/* eslint-disable-next-line @next/next/no-img-element */}
-                    <img src="/illustrations/mobile-app.svg" alt="" className="hidden md:block absolute right-0 top-1/2 -translate-y-1/2 w-48 lg:w-56 h-auto dark:bg-white/90 dark:rounded-3xl dark:p-3" />
+                    <Illustration name="mobile-app" className="hidden md:block absolute right-0 top-1/2 -translate-y-1/2 w-48 lg:w-56 h-auto" />
                     <h1 className="text-4xl md:text-5xl font-bold tracking-widest text-on-surface mb-4">SERVICES</h1>
                     <p className="text-on-surface-subtle tracking-wider text-sm">サービス紹介</p>
                 </div>

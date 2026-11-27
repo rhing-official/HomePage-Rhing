@@ -68,3 +68,14 @@ it("ダークは、ライトの全ての色トークンを持つ", () => {
 it("ダークのtertiaryは、surfaceの上で3:1以上", () => {
     expect(contrastRatio(dark.tertiary, dark.surface)).toBeGreaterThanOrEqual(3);
 });
+
+it(".force-lightは、ライトの値と一致する（ダークの中でもライトで表示する場所用）", () => {
+    expect(tokens(block(/\.force-light\s*\{/))).toEqual(light);
+});
+
+// ダークのフッター（.dark .force-light）は、ライトの値に、桃色だけを重ねる。文字は、ライトの色のまま
+it("ダークのフッターの、桃色と文字は、4.5:1以上", () => {
+    const footer = { ...light, ...tokens(block(/\.dark \.force-light\s*\{/)) };
+    expect(footer["secondary-container"]).toBe("#bf9088");
+    expect(contrastRatio(footer["on-surface"], footer["secondary-container"])).toBeGreaterThanOrEqual(4.5);
+});

@@ -40,8 +40,18 @@ export function setPreference(pref: ThemePreference): void {
     } catch {
         // 保存できなくても、この表示には反映する
     }
-    applyTheme(pref);
-    listeners.forEach((l) => l());
+    const apply = () => {
+        applyTheme(pref);
+        listeners.forEach((l) => l());
+    };
+    // 切り替えの瞬間に、古い見た目が、にじんで消え、新しい見た目が、にじんで現れる（globals.cssの::view-transition-*）。
+    // View Transitions APIに対応していないブラウザと、動きを減らす設定の時は、その場で切り替える
+    const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    if (typeof document.startViewTransition === "function" && !reduced) {
+        document.startViewTransition(apply);
+    } else {
+        apply();
+    }
 }
 
 /** useSyncExternalStore用。他のタブでの変更と、OSの設定の変更（システムに合わせる時だけ）も拾う */

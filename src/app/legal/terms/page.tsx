@@ -1,4 +1,5 @@
 import { Metadata } from "next";
+import Illustration from "@/components/Illustration";
 
 export const metadata: Metadata = {
     title: "利用規約 | Rhing",
@@ -73,8 +74,7 @@ export default function TermsPage() {
             {/* ページタイトル */}
             {/* 🌟 修正ポイント1: タイトルエリアをガラスカードのデザインに変更 */}
             <div className="mb-24 relative flex flex-col items-center justify-center text-center py-10 px-8 md:px-14 md:min-h-44 lg:min-h-52 bg-surface-container-lowest/40 backdrop-blur-md border border-glass-edge/80 shadow-elevation-1 rounded-m3-xl">
-                {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img src="/illustrations/terms.svg" alt="" className="hidden xl:block absolute right-full -mr-10 top-1/2 -translate-y-1/2 w-40 h-auto dark:bg-white/90 dark:rounded-3xl dark:p-3" />
+                <Illustration name="terms" className="hidden xl:block absolute right-full -mr-10 top-1/2 -translate-y-1/2 w-40 h-auto" />
                 <h1 className="text-4xl md:text-5xl font-bold tracking-widest text-on-surface mb-4">TERMS OF SERVICE</h1>
                 <p className="text-on-surface-subtle tracking-wider text-sm">利用規約</p>
             </div>

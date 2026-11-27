@@ -1,5 +1,6 @@
 import { Metadata } from "next";
 import Link from "next/link";
+import Illustration from "@/components/Illustration";
 
 export const metadata: Metadata = {
     title: "団体概要・理念 | Rhing",
@@ -11,8 +12,7 @@ export default function AboutPage() {
         <div className="container mx-auto px-6 pb-24 max-w-4xl">
             {/* ページタイトル */}
             <div className="mb-16 relative flex flex-col items-center justify-center text-center md:min-h-40 lg:min-h-48">
-                {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img src="/illustrations/founding-team.svg" alt="" className="hidden md:block absolute left-0 top-1/2 -translate-y-1/2 w-48 lg:w-56 h-auto dark:bg-white/90 dark:rounded-3xl dark:p-3" />
+                <Illustration name="founding-team" className="hidden md:block absolute left-0 top-1/2 -translate-y-1/2 w-48 lg:w-56 h-auto" />
                 <h1 className="text-4xl md:text-5xl font-bold tracking-widest text-on-surface mb-4">ABOUT</h1>
                 <p className="text-on-surface-subtle tracking-wider text-sm">団体概要・理念</p>
             </div>

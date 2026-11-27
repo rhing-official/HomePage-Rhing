@@ -1,6 +1,7 @@
 import { Metadata } from "next";
 import Link from "next/link";
 import { Download } from "lucide-react";
+import Illustration from "@/components/Illustration";
 
 export const metadata: Metadata = {
     title: "クリエイター向けポリシー | Rhing",
@@ -21,8 +22,7 @@ export default function CreatorPolicyPage() {
             {/* ページタイトル */}
             {/* 🌟 修正ポイント1: タイトルエリアをガラスカードのデザインに変更 */}
             <div className="mb-24 relative flex flex-col items-center justify-center text-center py-10 px-8 md:px-14 md:min-h-44 lg:min-h-52 bg-surface-container-lowest/40 backdrop-blur-md border border-glass-edge/80 shadow-elevation-1 rounded-m3-xl">
-                {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img src="/illustrations/terms.svg" alt="" className="hidden lg:block absolute -left-10 top-1/2 -translate-y-1/2 w-48 h-auto dark:bg-white/90 dark:rounded-3xl dark:p-3" />
+                <Illustration name="terms" className="hidden lg:block absolute -left-10 top-1/2 -translate-y-1/2 w-48 h-auto" />
                 <h1 className="text-4xl md:text-5xl font-bold tracking-widest text-on-surface mb-4">CREATOR POLICY</h1>
                 <p className="text-on-surface-subtle tracking-wider text-sm">クリエイター向けポリシー</p>
             </div>

@@ -3,6 +3,7 @@ import { Suspense } from "react";
 import ContactForm from "./ContactForm";
 import { siteConfig } from "@/data/siteConfig";
 import CtaCard from "@/components/ui/CtaCard";
+import Illustration from "@/components/Illustration";
 
 export const metadata: Metadata = {
     title: "お問い合わせ | Rhing",
@@ -19,8 +20,7 @@ export default function ContactPage() {
                   - 丸みの有るデザイン（rounded-3xl）と上下のパディング（py-10）で美しく配置しています
                 */}
                 <div className="mb-16 relative flex flex-col items-center justify-center text-center py-10 px-8 md:px-14 md:min-h-44 lg:min-h-52 bg-surface-container-lowest/40 backdrop-blur-md border border-glass-edge/80 shadow-md shadow-outline-variant/20 rounded-3xl">
-                    {/* eslint-disable-next-line @next/next/no-img-element */}
-                    <img src="/illustrations/new-message.svg" alt="" className="hidden md:block absolute left-8 md:left-14 top-1/2 -translate-y-1/2 w-40 lg:w-48 h-auto dark:bg-white/90 dark:rounded-3xl dark:p-3" />
+                    <Illustration name="new-message" className="hidden md:block absolute left-8 md:left-14 top-1/2 -translate-y-1/2 w-40 lg:w-48 h-auto" />
                     <h1 className="text-4xl md:text-5xl font-bold tracking-widest text-on-surface mb-4">CONTACT</h1>
                     <p className="text-on-surface-subtle tracking-wider text-sm">お問い合わせ</p>
                 </div>

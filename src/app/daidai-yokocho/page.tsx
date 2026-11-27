@@ -2,6 +2,7 @@ import { Metadata } from "next";
 import { getAllStickerPacks } from "@/lib/stickerPacks";
 import CatalogClient from "./CatalogClient";
 import IntroBanner from "@/components/daidai-yokocho/IntroBanner";
+import Illustration from "@/components/Illustration";
 
 export const dynamic = "force-dynamic";
 
@@ -18,10 +19,9 @@ export default async function DaidaiYokochoPage({ searchParams }: { searchParams
         <div className="w-full pb-24">
             {/* ページタイトル */}
             <div className="container mx-auto px-6 pb-4 max-w-4xl">
-                <div className="relative flex flex-col items-center justify-center text-center md:min-h-40 lg:min-h-44">
+                <div className="relative flex flex-col items-center justify-center text-center md:min-h-[11.5rem] lg:min-h-[13.25rem]">
                     <h1 className="text-4xl md:text-5xl font-bold tracking-widest text-on-surface mb-4">daidai横丁</h1>
-                    {/* eslint-disable-next-line @next/next/no-img-element */}
-                    <img src="/illustrations/online-shopping.svg" alt="" className="hidden md:block absolute left-0 top-1/2 -translate-y-1/2 w-48 lg:w-56 h-auto dark:bg-white/90 dark:rounded-3xl dark:p-3" />
+                    <Illustration name="online-shopping" className="hidden md:block absolute left-0 top-1/2 -translate-y-1/2 w-48 lg:w-56 h-auto" />
                 </div>
             </div>
 

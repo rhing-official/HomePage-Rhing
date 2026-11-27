@@ -113,6 +113,79 @@
     --shadow-elevation-3: 0 12px 24px -6px rgb(0 0 0 / 0.55), 0 4px 8px -4px rgb(0 0 0 / 0.45);
 }
 
+/* ダークの中でも、ライトの色のまま表示する場所（フッターなど）。ライトの値を、そのまま入れ直す。
+   ライトの値を変えたら、ここも直す（src/lib/themeTokens.test.ts が、食い違いを検出する） */
+.force-light {
+    color-scheme: light;
+
+    --color-surface: #fcfbf7;
+    --color-surface-tint: #c6e07a;
+    --color-surface-container: #f8f8f8;
+    --color-surface-container-lowest: #ffffff;
+    --color-surface-container-high: #f3f4f6;
+    --color-on-surface: #111827;
+    --color-on-surface-variant: #4b5563;
+    --color-on-surface-subtle: #6b7280;
+    --color-outline: #9ca3af;
+    --color-outline-variant: #e5e7eb;
+    --color-glass-edge: #ffffff;
+    --color-primary: #2563eb;
+    --color-on-primary: #ffffff;
+    --color-primary-container: #dbeafe;
+    --color-on-primary-container: #1e3a8a;
+    --color-secondary-container: #f0cabb;
+    --color-on-secondary-container: #4a2c20;
+    --color-tertiary: #ee7800;
+    --color-vermilion: #c23326;
+    --color-error: #dc2626;
+
+    color: var(--color-on-surface);
+}
+
+/* フッターの桃色は、ダークの時だけ、落ち着いた値にする（ユーザー指定）。文字は、ライトの色のまま */
+.dark .force-light {
+    --color-secondary-container: #bf9088;
+}
+
+/* ライトとダークの切り替えで、古い見た目が滲んで消え、新しい見た目が滲んで現れる（lib/theme.tsのsetPreference）。
+   ブラウザ標準の、既定の動き（単純な重ね合わせ）を、滲みに置き換える */
+@keyframes theme-blur-out {
+    from {
+        opacity: 1;
+        filter: blur(0);
+    }
+    to {
+        opacity: 0;
+        filter: blur(14px);
+    }
+}
+
+@keyframes theme-blur-in {
+    from {
+        opacity: 0;
+        filter: blur(14px);
+    }
+    to {
+        opacity: 1;
+        filter: blur(0);
+    }
+}
+
+::view-transition-old(root),
+::view-transition-new(root) {
+    animation-duration: 0.55s;
+    animation-timing-function: ease-in-out;
+    mix-blend-mode: normal;
+}
+
+::view-transition-old(root) {
+    animation-name: theme-blur-out;
+}
+
+::view-transition-new(root) {
+    animation-name: theme-blur-in;
+}
+
 /* 画面遷移で、新しいページが滲んで現れる（template.tsx）。
    fill-modeをbackwardsにして、終わった後にfilterを残さない（残すと、中のposition: fixedの基準が変わる） */
 @keyframes page-blur-in {

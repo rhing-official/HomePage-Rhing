@@ -50,7 +50,7 @@ function FoldSideMenu() {
                     </Link>
                 );
             })}
-            <ThemeToggle className="mt-auto self-start" menuAlign="left" />
+            <ThemeToggle className="mt-auto self-start" />
         </nav>
     );
 }
