@@ -14,7 +14,7 @@ import {
 } from "@/lib/themePackReview";
 import ThemePackPreview from "./ThemePackPreview";
 
-const cardClass = "bg-white/40 backdrop-blur-md border border-white/80 shadow-elevation-1 rounded-m3-xl";
+const cardClass = "bg-surface-container-lowest/40 backdrop-blur-md border border-glass-edge/80 shadow-elevation-1 rounded-m3-xl";
 const buttonClass = "rounded-full px-4 py-2 text-sm font-bold transition disabled:opacity-40 disabled:cursor-not-allowed";
 const MAX_REASON = 500;
 
@@ -104,16 +104,16 @@ function SubmissionRow({ sub, creator, onChanged }: { sub: ThemePackSubmission; 
     return (
         <li className={`${cardClass} p-5 flex flex-col gap-3`}>
             <div className="flex flex-wrap items-baseline gap-x-3 gap-y-1">
-                <p className="font-bold text-gray-900">{title}</p>
-                <span className="text-xs font-bold px-2.5 py-1 rounded-full bg-gray-100 text-gray-700">{submissionStatusLabel(sub.status)}</span>
-                <span className="text-xs text-gray-500">版{sub.version}</span>
-                <span className="text-xs text-gray-500">{creator}</span>
-                <time className="text-xs text-gray-400">{formatDate(sub.createdAt)}</time>
+                <p className="font-bold text-on-surface">{title}</p>
+                <span className="text-xs font-bold px-2.5 py-1 rounded-full bg-surface-container-high text-on-surface-variant">{submissionStatusLabel(sub.status)}</span>
+                <span className="text-xs text-on-surface-subtle">版{sub.version}</span>
+                <span className="text-xs text-on-surface-subtle">{creator}</span>
+                <time className="text-xs text-outline">{formatDate(sub.createdAt)}</time>
             </div>
-            {sub.decisionNote && <p className="text-xs text-gray-500 whitespace-pre-wrap break-words">理由: {sub.decisionNote}</p>}
+            {sub.decisionNote && <p className="text-xs text-on-surface-subtle whitespace-pre-wrap break-words">理由: {sub.decisionNote}</p>}
 
             <div className="flex flex-wrap gap-3">
-                <button type="button" onClick={toggle} className={`${buttonClass} border border-gray-300 text-gray-700 hover:bg-gray-100`}>
+                <button type="button" onClick={toggle} className={`${buttonClass} border border-outline/50 text-on-surface-variant hover:bg-surface-container-high`}>
                     {open ? "素材を閉じる" : "素材を確認"}
                 </button>
                 {isReviewable(sub.status) && (
@@ -125,7 +125,7 @@ function SubmissionRow({ sub, creator, onChanged }: { sub: ThemePackSubmission; 
                             type="button"
                             disabled={busy}
                             onClick={() => setAction(action === "reject" ? null : "reject")}
-                            className={`${buttonClass} border border-amber-400 text-amber-700 hover:bg-amber-50`}
+                            className={`${buttonClass} border border-amber-400 text-amber-700 dark:text-amber-200 hover:bg-amber-50`}
                         >
                             差し戻し
                         </button>
@@ -136,7 +136,7 @@ function SubmissionRow({ sub, creator, onChanged }: { sub: ThemePackSubmission; 
                         type="button"
                         disabled={busy}
                         onClick={() => setAction(action === "suspend" ? null : "suspend")}
-                        className={`${buttonClass} border border-red-300 text-red-600 hover:bg-red-50`}
+                        className={`${buttonClass} border border-red-300 dark:border-red-800 text-red-600 dark:text-red-400 hover:bg-red-50`}
                     >
                         配信停止
                     </button>
@@ -144,16 +144,16 @@ function SubmissionRow({ sub, creator, onChanged }: { sub: ThemePackSubmission; 
             </div>
 
             {open && (
-                <div className="pt-2 border-t border-gray-200/70">
-                    {previewState === "loading" && <p className="text-sm text-gray-400">読み込み中…</p>}
-                    {previewState === "error" && <p className="text-sm text-red-600">{previewError}</p>}
+                <div className="pt-2 border-t border-outline-variant/70">
+                    {previewState === "loading" && <p className="text-sm text-outline">読み込み中…</p>}
+                    {previewState === "error" && <p className="text-sm text-red-600 dark:text-red-400">{previewError}</p>}
                     {preview && <ThemePackPreview data={preview} />}
                 </div>
             )}
 
             {action && (
-                <div className="flex flex-col gap-2 pt-2 border-t border-gray-200/70">
-                    <label className="text-sm font-bold text-gray-800" htmlFor={`reason-${sub.id}`}>
+                <div className="flex flex-col gap-2 pt-2 border-t border-outline-variant/70">
+                    <label className="text-sm font-bold text-on-surface" htmlFor={`reason-${sub.id}`}>
                         {action === "reject" ? "差し戻しの理由（出品者のお知らせに表示されます）" : "配信停止の理由（出品者にだけ表示されます）"}
                     </label>
                     <textarea
@@ -162,21 +162,21 @@ function SubmissionRow({ sub, creator, onChanged }: { sub: ThemePackSubmission; 
                         onChange={(e) => setReason(e.target.value)}
                         rows={3}
                         maxLength={MAX_REASON}
-                        className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm"
+                        className="w-full rounded-lg border border-outline/50 px-3 py-2 text-sm"
                     />
                     <div className="flex items-center gap-3">
                         <button type="button" disabled={busy || !reasonOk} onClick={submitAction} className={`${buttonClass} bg-red-600 text-white hover:bg-red-700`}>
                             {action === "reject" ? "差し戻す" : "配信を停止する"}
                         </button>
-                        <span className="text-xs text-gray-400">
+                        <span className="text-xs text-outline">
                             {reason.trim().length}/{MAX_REASON}
                         </span>
                     </div>
                 </div>
             )}
 
-            {done && <p className="text-sm text-green-700" role="status">{done}</p>}
-            {error && <p className="text-sm text-red-600" role="alert">{error}</p>}
+            {done && <p className="text-sm text-green-700 dark:text-green-200" role="status">{done}</p>}
+            {error && <p className="text-sm text-red-600 dark:text-red-400" role="alert">{error}</p>}
         </li>
     );
 }
@@ -184,7 +184,7 @@ function SubmissionRow({ sub, creator, onChanged }: { sub: ThemePackSubmission; 
 function Section({ title, children }: { title: string; children: React.ReactNode }) {
     return (
         <section className="flex flex-col gap-3">
-            <h2 className="text-lg font-bold text-gray-900 tracking-wider">{title}</h2>
+            <h2 className="text-lg font-bold text-on-surface tracking-wider">{title}</h2>
             {children}
         </section>
     );
@@ -228,7 +228,7 @@ export default function ThemePackReviewPanel() {
         !loaded && list.length === 0 ? (
             <ListRowSkeleton count={2} />
         ) : list.length === 0 ? (
-            <p className="text-sm text-gray-500">{empty}</p>
+            <p className="text-sm text-on-surface-subtle">{empty}</p>
         ) : (
             <ul className="flex flex-col gap-4">
                 {list.map((s) => (
@@ -239,7 +239,7 @@ export default function ThemePackReviewPanel() {
 
     return (
         <div className="flex flex-col gap-10">
-            {loadError && <p className="text-sm text-red-600" role="alert">{loadError}</p>}
+            {loadError && <p className="text-sm text-red-600 dark:text-red-400" role="alert">{loadError}</p>}
             <Section title={`審査待ち${count(waiting.length)}`}>{render(waiting, "審査待ちの投稿は有りません")}</Section>
             <Section title={`公開中・配信停止${count(published.length)}`}>{render(published, "有りません")}</Section>
             <Section title={`差し戻し・取り下げなど${count(others.length)}`}>{render(others, "有りません")}</Section>

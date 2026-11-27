@@ -20,8 +20,8 @@ import SubmitPanel from "../new/SubmitPanel";
 const BASE_PATH = "/daidai-yokocho/creator/themes/create";
 const HEX = /^#[0-9a-fA-F]{6}$/;
 
-const card = "rounded-m3-lg bg-white border border-gray-100 shadow-sm p-6 flex flex-col gap-4";
-const input = "w-full rounded-lg border border-gray-300 px-3 py-2 text-sm text-gray-900 focus:outline-none focus:border-primary";
+const card = "rounded-m3-lg bg-surface-container-lowest border border-outline-variant shadow-sm p-6 flex flex-col gap-4";
+const input = "w-full rounded-lg border border-outline/50 px-3 py-2 text-sm text-on-surface focus:outline-none focus:border-primary";
 
 export default function ThemePackCreateForm() {
     const router = useRouter();
@@ -126,30 +126,30 @@ export default function ThemePackCreateForm() {
         <div className="w-full pb-24">
             <div className="container mx-auto px-6 pb-16 max-w-3xl flex flex-col gap-8">
                 <div>
-                    <h1 className="flex flex-wrap items-center gap-x-3 gap-y-2 text-3xl font-bold tracking-widest text-gray-900">
+                    <h1 className="flex flex-wrap items-center gap-x-3 gap-y-2 text-3xl font-bold tracking-widest text-on-surface">
                         <Palette className="w-7 h-7 shrink-0" aria-hidden />
                         意匠を作る
                     </h1>
-                    <p className="mt-3 text-sm text-gray-500 leading-relaxed">
+                    <p className="mt-3 text-sm text-on-surface-subtle leading-relaxed">
                         色・形・背景を選んで、意匠を作ります。作りかけは、このブラウザの中に自動で保存されます。サーバーには、投稿するまで送られません。
                         すでにzipを用意している場合は、
-                        <Link href="/daidai-yokocho/creator/themes/new" className="underline underline-offset-2 hover:text-gray-900">
+                        <Link href="/daidai-yokocho/creator/themes/new" className="underline underline-offset-2 hover:text-on-surface">
                             zipを投稿する画面
                         </Link>
                         へ進んでください。
                     </p>
                     {fromId && base && (
-                        <p className="mt-3 rounded-lg bg-primary-container/50 px-4 py-3 text-sm text-gray-800 leading-relaxed">
+                        <p className="mt-3 rounded-lg bg-primary-container/50 px-4 py-3 text-sm text-on-surface leading-relaxed">
                             「{base.name ?? draft.name}」の新しい版（版{base.version + 1}）を作っています。送ると、運営の審査に進みます。この画面の内容は、下書きとしては保存されません。
                         </p>
                     )}
-                    {baseError && <p className="mt-3 text-sm text-red-600">{baseError}</p>}
-                    {saveError && <p className="mt-2 text-sm text-red-600">下書きを保存できませんでした。このブラウザでは、保存が使えない可能性があります。</p>}
+                    {baseError && <p className="mt-3 text-sm text-red-600 dark:text-red-400">{baseError}</p>}
+                    {saveError && <p className="mt-2 text-sm text-red-600 dark:text-red-400">下書きを保存できませんでした。このブラウザでは、保存が使えない可能性があります。</p>}
                 </div>
 
                 {/* 基本 */}
                 <section className={card}>
-                    <h2 className="font-bold text-gray-900">基本</h2>
+                    <h2 className="font-bold text-on-surface">基本</h2>
                     <Field label="名前" hint="1〜40文字">
                         <input className={input} value={draft.name} maxLength={40} onChange={(e) => set({ name: e.target.value })} />
                     </Field>
@@ -164,7 +164,7 @@ export default function ThemePackCreateForm() {
 
                 {/* 形 */}
                 <section className={card}>
-                    <h2 className="font-bold text-gray-900">形</h2>
+                    <h2 className="font-bold text-on-surface">形</h2>
                     <Range
                         label="線の太さ"
                         value={draft.shape.borderWidth}
@@ -195,23 +195,23 @@ export default function ThemePackCreateForm() {
                 {/* 色 */}
                 {scopes.map((scope) => (
                     <section key={scope} className={card}>
-                        <h2 className="font-bold text-gray-900">{scope === "light" ? "明るい外観の色" : "暗い外観の色"}</h2>
-                        <p className="text-xs text-gray-500 leading-relaxed">空にした色は、アプリが標準の色から決めます。</p>
+                        <h2 className="font-bold text-on-surface">{scope === "light" ? "明るい外観の色" : "暗い外観の色"}</h2>
+                        <p className="text-xs text-on-surface-subtle leading-relaxed">空にした色は、アプリが標準の色から決めます。</p>
                         {COLOR_KEYS.map((k) => (
                             <ColorField key={k} label={COLOR_LABELS[k]} value={draft.colors[scope][k] ?? ""} onChange={(v) => setColor(scope, k, v)} />
                         ))}
                     </section>
                 ))}
                 {lowContrast.length > 0 && (
-                    <div className="rounded-m3-lg border border-amber-200 bg-amber-50 p-4 text-sm text-amber-800 leading-relaxed" role="status">
+                    <div className="rounded-m3-lg border border-amber-200 dark:border-amber-800 bg-amber-50 dark:bg-amber-950/40 p-4 text-sm text-amber-800 dark:text-amber-200 leading-relaxed" role="status">
                         文字の読みやすさが、基準の{MIN_CONTRAST_RATIO}を下回る組があります。下の「直してください」に、詳しく出ています。
                     </div>
                 )}
 
                 {/* 画像 */}
                 <section className={card}>
-                    <h2 className="font-bold text-gray-900">背景画像</h2>
-                    <p className="text-xs text-gray-500 leading-relaxed">
+                    <h2 className="font-bold text-on-surface">背景画像</h2>
+                    <p className="text-xs text-on-surface-subtle leading-relaxed">
                         png・webp・jpegで、1枚{formatBytes(THEME_PACK_LIMITS.imageMaxBytes)}以下、各辺{THEME_PACK_LIMITS.imageMaxSide}px以下です。
                     </p>
                     <ImagePicker
@@ -225,8 +225,8 @@ export default function ThemePackCreateForm() {
                     />
                 </section>
                 <section className={card}>
-                    <h2 className="font-bold text-gray-900">メニューチップの画像</h2>
-                    <p className="text-xs text-gray-500 leading-relaxed">
+                    <h2 className="font-bold text-on-surface">メニューチップの画像</h2>
+                    <p className="text-xs text-on-surface-subtle leading-relaxed">
                         pngで、透過できます。1枚{formatBytes(THEME_PACK_LIMITS.menuChipMaxBytes)}以下、各辺{THEME_PACK_LIMITS.menuChipMaxSide}px以下です。アプリでの表示には、アプリ側の対応が要ります。
                     </p>
                     <ImagePicker
@@ -242,8 +242,8 @@ export default function ThemePackCreateForm() {
 
                 {/* プレビューと確認 */}
                 <section className={card} aria-live="polite">
-                    <h2 className="font-bold text-gray-900">プレビュー</h2>
-                    {live ? <ThemePackPreview data={live} /> : <p className="text-sm text-gray-500">名前を入れると、プレビューが出ます。</p>}
+                    <h2 className="font-bold text-on-surface">プレビュー</h2>
+                    {live ? <ThemePackPreview data={live} /> : <p className="text-sm text-on-surface-subtle">名前を入れると、プレビューが出ます。</p>}
                 </section>
                 {result.errors.length > 0 && <ResultList title="直してください" tone="error" items={result.errors} />}
                 {result.warnings.length > 0 && <ResultList title="確認してください" tone="warning" items={result.warnings} />}
@@ -259,7 +259,7 @@ export default function ThemePackCreateForm() {
                                 void clearDraft();
                             }
                         }}
-                        className="text-sm text-gray-500 underline underline-offset-2 hover:text-gray-900"
+                        className="text-sm text-on-surface-subtle underline underline-offset-2 hover:text-on-surface"
                     >
                         最初からやり直す
                     </button>
@@ -282,16 +282,16 @@ function useBlobUrl(bytes: Uint8Array | undefined, type: string): string | null 
 function Field({ label, hint, children }: { label: string; hint?: string; children: React.ReactNode }) {
     return (
         <label className="flex flex-col gap-1">
-            <span className="text-sm font-bold text-gray-800">{label}</span>
+            <span className="text-sm font-bold text-on-surface">{label}</span>
             {children}
-            {hint && <span className="text-xs text-gray-500">{hint}</span>}
+            {hint && <span className="text-xs text-on-surface-subtle">{hint}</span>}
         </label>
     );
 }
 
 function Range({ label, value, min, max, step, onChange }: { label: string; value: number; min: number; max: number; step: number; onChange: (v: number) => void }) {
     return (
-        <label className="flex items-center gap-4 text-sm text-gray-800">
+        <label className="flex items-center gap-4 text-sm text-on-surface">
             <span className="w-28 shrink-0 font-bold">{label}</span>
             <input type="range" min={min} max={max} step={step} value={value} onChange={(e) => onChange(Number(e.target.value))} className="flex-1 accent-primary" />
             <span className="w-10 text-right tabular-nums">{value}</span>
@@ -302,13 +302,13 @@ function Range({ label, value, min, max, step, onChange }: { label: string; valu
 function ColorField({ label, value, onChange }: { label: string; value: string; onChange: (v: string) => void }) {
     return (
         <div className="flex items-center gap-3">
-            <span className="w-36 shrink-0 text-sm font-bold text-gray-800">{label}</span>
+            <span className="w-36 shrink-0 text-sm font-bold text-on-surface">{label}</span>
             <input
                 type="color"
                 aria-label={`${label}の色を選ぶ`}
                 value={HEX.test(value) ? value : "#808080"}
                 onChange={(e) => onChange(e.target.value.toUpperCase())}
-                className="h-9 w-12 shrink-0 cursor-pointer rounded border border-gray-300 bg-white p-0.5"
+                className="h-9 w-12 shrink-0 cursor-pointer rounded border border-outline/50 bg-surface-container-lowest p-0.5"
             />
             <input className={input} value={value} placeholder="#RRGGBB（空で標準）" onChange={(e) => onChange(e.target.value)} />
         </div>
@@ -336,20 +336,20 @@ function ImagePicker({
         <div className="flex flex-wrap items-center gap-4">
             {url && (
                 // eslint-disable-next-line @next/next/no-img-element
-                <img src={url} alt="選んだ画像" className="h-20 w-20 rounded-lg border border-gray-200 bg-gray-50 object-contain" />
+                <img src={url} alt="選んだ画像" className="h-20 w-20 rounded-lg border border-outline-variant bg-surface-container object-contain" />
             )}
             <div className="flex flex-col gap-2 items-start">
                 {info && size !== undefined && (
-                    <span className="text-xs text-gray-600">
+                    <span className="text-xs text-on-surface-variant">
                         {info.width}×{info.height}、{formatBytes(size)}
                     </span>
                 )}
                 <div className="flex gap-3">
-                    <button type="button" onClick={() => inputRef.current?.click()} className="rounded-full border border-gray-300 px-4 py-1.5 text-sm font-bold text-gray-800 hover:border-primary">
+                    <button type="button" onClick={() => inputRef.current?.click()} className="rounded-full border border-outline/50 px-4 py-1.5 text-sm font-bold text-on-surface hover:border-primary">
                         {url ? "選び直す" : "画像を選ぶ"}
                     </button>
                     {url && (
-                        <button type="button" onClick={onRemove} className="text-sm text-gray-500 underline underline-offset-2 hover:text-gray-900">
+                        <button type="button" onClick={onRemove} className="text-sm text-on-surface-subtle underline underline-offset-2 hover:text-on-surface">
                             外す
                         </button>
                     )}

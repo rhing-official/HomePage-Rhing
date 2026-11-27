@@ -63,7 +63,7 @@ export default function EditDraftPage({ params }: { params: Promise<{ draftId: s
                 {loading ? (
                     <EditorSkeleton />
                 ) : !draft ? (
-                    <p className="text-gray-500 text-sm">編集出来る下書きが見つかりません。</p>
+                    <p className="text-on-surface-subtle text-sm">編集出来る下書きが見つかりません。</p>
                 ) : (
                     <CreatePackForm
                         uid={user.uid}

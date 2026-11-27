@@ -68,20 +68,20 @@ export default function CatalogClient({ packs, initialKind }: { packs: StickerPa
                         onChange={(e) => setQuery(e.target.value)}
                         placeholder="検索"
                         aria-label="検索"
-                        className="h-12 w-full pl-5 pr-11 rounded-full bg-white/70 backdrop-blur-sm border border-white/80 shadow-sm shadow-blue-300/5 text-sm text-gray-700 placeholder:text-gray-400 focus:outline-none focus:border-blue-200 focus:bg-white/90 transition-all duration-300"
+                        className="h-12 w-full pl-5 pr-11 rounded-full bg-surface-container-lowest/70 backdrop-blur-sm border border-glass-edge/80 shadow-sm shadow-blue-300/5 text-sm text-on-surface-variant placeholder:text-outline focus:outline-none focus:border-blue-200 focus:bg-surface-container-lowest/90 transition-all duration-300"
                     />
                     {query && (
                         <button
                             type="button"
                             onClick={() => setQuery("")}
                             aria-label="検索の文字を消す"
-                            className="absolute right-2 top-1/2 flex h-8 w-8 -translate-y-1/2 items-center justify-center rounded-full text-gray-400 hover:text-gray-700 transition-colors"
+                            className="absolute right-2 top-1/2 flex h-8 w-8 -translate-y-1/2 items-center justify-center rounded-full text-outline hover:text-on-surface-variant transition-colors"
                         >
                             <X className="h-4 w-4" />
                         </button>
                     )}
                     <div className="absolute left-0 top-full z-30 hidden w-full max-w-2xl pt-2 group-hover:block group-focus-within:block">
-                        <div className="max-h-[70vh] overflow-y-auto rounded-m3-lg bg-white shadow-2xl">
+                        <div className="max-h-[70vh] overflow-y-auto rounded-m3-lg bg-surface-container-lowest shadow-2xl">
                             {kind === "petan" ? (
                                 <PackFilterPanel
                                     showSummary={false}
@@ -101,14 +101,14 @@ export default function CatalogClient({ packs, initialKind }: { packs: StickerPa
 
             {/* 説明と、結果の状態を、1行にまとめる。文は、切り替えても行の高さが変わらないよう、1行に収める */}
             <div className="mb-6 flex min-h-8 flex-wrap items-center justify-between gap-x-6 gap-y-2">
-                <p className="text-sm text-gray-500">
+                <p className="text-sm text-on-surface-subtle">
                     {kind === "petan" ? "DaiDaiで使えるぺったんを探せます。" : "DaiDaiの色・形・背景を着せ替える意匠を探せます。"}
                 </p>
                 <div className="flex flex-wrap items-center gap-x-4 gap-y-2" role="status">
                     {kind === "petan" ? (
                         <>
                             {(query.trim() !== "" || activeFilterCount > 0) && (
-                                <span className="text-sm text-gray-500">
+                                <span className="text-sm text-on-surface-subtle">
                                     {filteredPacks.length}件{activeFilterCount > 0 ? `　絞り込み${activeFilterCount}件を適用中` : ""}
                                     {activeFilterCount > 0 && (
                                         <button
@@ -128,7 +128,7 @@ export default function CatalogClient({ packs, initialKind }: { packs: StickerPa
                     ) : (
                         <>
                         {designCount !== null && (query.trim() !== "" || designActive > 0) && (
-                            <span className="text-sm text-gray-500">
+                            <span className="text-sm text-on-surface-subtle">
                                 {designCount}件{designActive > 0 ? `　絞り込み${designActive}件を適用中` : ""}
                                 {designActive > 0 && (
                                     <button
@@ -157,7 +157,7 @@ export default function CatalogClient({ packs, initialKind }: { packs: StickerPa
             <div hidden={kind !== "petan"}>
                 <>
             {filteredPacks.length === 0 ? (
-                <div className="text-center text-gray-500">
+                <div className="text-center text-on-surface-subtle">
                     <p>{packs.length === 0 ? "横丁に並んでいるぺったんは有りません" : "条件に一致するぺったんが見つかりませんでした"}</p>
                 </div>
             ) : (

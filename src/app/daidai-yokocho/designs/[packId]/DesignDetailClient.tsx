@@ -55,12 +55,12 @@ export default function DesignDetailClient({ packId }: { packId: string }) {
         };
     }, [packId]);
 
-    if (state.kind === "loading") return <p className="text-center text-sm text-gray-400 pb-24">読み込み中…</p>;
+    if (state.kind === "loading") return <p className="text-center text-sm text-outline pb-24">読み込み中…</p>;
     if (state.kind !== "ready") {
         return (
             <div className="container mx-auto px-6 max-w-3xl pb-24 text-center">
-                <p className="text-gray-600">{state.kind === "missing" ? "意匠が見つかりません。公開が終わった可能性があります。" : "意匠を読み込めませんでした。時間をおいて、もう一度お試しください。"}</p>
-                <Link href="/daidai-yokocho?kind=design" className="mt-6 inline-block text-sm font-bold text-blue-600 hover:text-blue-800">
+                <p className="text-on-surface-variant">{state.kind === "missing" ? "意匠が見つかりません。公開が終わった可能性があります。" : "意匠を読み込めませんでした。時間をおいて、もう一度お試しください。"}</p>
+                <Link href="/daidai-yokocho?kind=design" className="mt-6 inline-block text-sm font-bold text-blue-600 dark:text-blue-400 hover:text-blue-800">
                     意匠の一覧へ戻る
                 </Link>
             </div>
@@ -73,45 +73,45 @@ export default function DesignDetailClient({ packId }: { packId: string }) {
             <div className="container mx-auto px-6 max-w-6xl">
                 <div className="grid grid-cols-1 md:grid-cols-[minmax(0,1.15fr)_minmax(0,1fr)] gap-8 lg:gap-14 items-start">
                     {/* 左: プレビュー */}
-                    <div className="rounded-2xl bg-white border border-gray-100 shadow-sm p-6">
+                    <div className="rounded-2xl bg-surface-container-lowest border border-outline-variant shadow-sm p-6">
                         {data ? (
                             <ThemePackPreview data={data} />
                         ) : previewFailed ? (
-                            <p className="text-sm text-gray-400">プレビューを読み込めませんでした。</p>
+                            <p className="text-sm text-outline">プレビューを読み込めませんでした。</p>
                         ) : (
-                            <p className="text-sm text-gray-400">読み込み中…</p>
+                            <p className="text-sm text-outline">読み込み中…</p>
                         )}
                     </div>
 
                     {/* 右: 商品情報と取得（PCでは追従） */}
                     <div className="md:sticky md:top-28 flex flex-col gap-6">
                         <div>
-                            <span className="text-xs font-bold tracking-widest text-gray-500 mb-2 block">意匠</span>
-                            <h1 className="text-2xl md:text-3xl font-bold text-gray-900 tracking-wider">{pack.name}</h1>
+                            <span className="text-xs font-bold tracking-widest text-on-surface-subtle mb-2 block">意匠</span>
+                            <h1 className="text-2xl md:text-3xl font-bold text-on-surface tracking-wider">{pack.name}</h1>
                             {creator && (
                                 <Link href={`/daidai-yokocho/creator/${pack.creatorId}`} className="mt-4 flex items-center gap-2 w-fit group">
                                     {creator.iconUrl ? (
                                         // eslint-disable-next-line @next/next/no-img-element
-                                        <img src={creator.iconUrl} alt="" className="w-7 h-7 rounded-full object-cover border border-white/80" />
+                                        <img src={creator.iconUrl} alt="" className="w-7 h-7 rounded-full object-cover border border-glass-edge/80" />
                                     ) : (
-                                        <div className="w-7 h-7 rounded-full bg-gray-200" />
+                                        <div className="w-7 h-7 rounded-full bg-outline-variant" />
                                     )}
-                                    <span className="text-sm text-gray-600 group-hover:text-primary transition-colors">
+                                    <span className="text-sm text-on-surface-variant group-hover:text-primary transition-colors">
                                         {creator.nickname ?? (creator.rhingSeed && `@${creator.rhingSeed}`)}
                                     </span>
                                 </Link>
                             )}
                         </div>
 
-                        <p className="text-4xl font-bold text-emerald-600">無料</p>
+                        <p className="text-4xl font-bold text-emerald-600 dark:text-emerald-400">無料</p>
 
                         {pack.status === "withdrawn" && (
-                            <p className="rounded-m3-md border border-gray-200 bg-gray-50 text-gray-600 px-4 py-3 text-sm">
+                            <p className="rounded-m3-md border border-outline-variant bg-surface-container text-on-surface-variant px-4 py-3 text-sm">
                                 この意匠は、取り下げられました。新しく取得することは出来ません。取得済みの方は、引き続き使えます。
                             </p>
                         )}
                         {pack.status === "suspended" && (
-                            <p className="rounded-m3-md border border-red-200 bg-red-50 text-red-700 px-4 py-3 text-sm">
+                            <p className="rounded-m3-md border border-red-200 dark:border-red-800 bg-red-50 dark:bg-red-950/40 text-red-700 dark:text-red-200 px-4 py-3 text-sm">
                                 この意匠は、配信を停止しました。取得済みの方の表示は、標準に戻ります。
                             </p>
                         )}
@@ -121,24 +121,24 @@ export default function DesignDetailClient({ packId }: { packId: string }) {
                             <DesignActions packId={pack.id} status={pack.status ?? ""} variant="detail" />
                         </div>
 
-                        <ul className="text-xs text-gray-500 leading-relaxed list-disc pl-5 space-y-1">
+                        <ul className="text-xs text-on-surface-subtle leading-relaxed list-disc pl-5 space-y-1">
                             <li>取得した意匠は、DaiDaiアプリの設定から選べるようになります。アプリでの対応は、準備中です。</li>
                             <li>取得した意匠は、「購入済み」の意匠の側から確認出来ます。</li>
                         </ul>
 
-                        <dl className="text-sm border-t border-gray-200">
-                            <div className="flex gap-4 py-3 border-b border-gray-100">
-                                <dt className="w-24 shrink-0 text-gray-500">対応する外観</dt>
-                                <dd className="text-gray-800">{brightnessLabel[pack.brightness] ?? ""}</dd>
+                        <dl className="text-sm border-t border-outline-variant">
+                            <div className="flex gap-4 py-3 border-b border-outline-variant">
+                                <dt className="w-24 shrink-0 text-on-surface-subtle">対応する外観</dt>
+                                <dd className="text-on-surface">{brightnessLabel[pack.brightness] ?? ""}</dd>
                             </div>
-                            <div className="flex gap-4 py-3 border-b border-gray-100">
-                                <dt className="w-24 shrink-0 text-gray-500">版</dt>
-                                <dd className="text-gray-800">{pack.version}</dd>
+                            <div className="flex gap-4 py-3 border-b border-outline-variant">
+                                <dt className="w-24 shrink-0 text-on-surface-subtle">版</dt>
+                                <dd className="text-on-surface">{pack.version}</dd>
                             </div>
                             {pack.approvedAt && (
-                                <div className="flex gap-4 py-3 border-b border-gray-100">
-                                    <dt className="w-24 shrink-0 text-gray-500">公開日</dt>
-                                    <dd className="text-gray-800">{formatDate(pack.approvedAt)}</dd>
+                                <div className="flex gap-4 py-3 border-b border-outline-variant">
+                                    <dt className="w-24 shrink-0 text-on-surface-subtle">公開日</dt>
+                                    <dd className="text-on-surface">{formatDate(pack.approvedAt)}</dd>
                                 </div>
                             )}
                         </dl>
@@ -147,7 +147,7 @@ export default function DesignDetailClient({ packId }: { packId: string }) {
 
                 {others.length > 0 && (
                     <section className="mt-20">
-                        <h2 className="text-lg font-bold text-gray-900 tracking-wider mb-6">このクリエイターの、他の意匠</h2>
+                        <h2 className="text-lg font-bold text-on-surface tracking-wider mb-6">このクリエイターの、他の意匠</h2>
                         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
                             {others.map((p) => (
                                 <DesignCard key={p.id} pack={p} creator={creator} />

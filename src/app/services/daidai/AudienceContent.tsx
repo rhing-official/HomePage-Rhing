@@ -105,7 +105,7 @@ const pillars: { icon: typeof ShieldCheck; title: string; desc: React.ReactNode 
         desc: (
             <>
                 電話番号と現在地は集めません。Googleでログインすると、Gmailアドレスが保存されます。Appleでログインした場合は、メールアドレスも名前も受け取りません。
-                <a href="#data" className="underline underline-offset-2 hover:text-gray-900">詳しくは、こちら</a>
+                <a href="#data" className="underline underline-offset-2 hover:text-on-surface">詳しくは、こちら</a>
             </>
         ),
     },
@@ -125,8 +125,8 @@ type FeatureStatus = "近日実装予定" | "将来実装予定" | "検討中";
 
 const featureRoadmapBadge: Record<FeatureStatus, string> = {
     近日実装予定: "text-tertiary bg-tertiary/10",
-    将来実装予定: "text-gray-500 bg-gray-100",
-    検討中: "text-gray-400 border border-gray-300",
+    将来実装予定: "text-on-surface-subtle bg-surface-container-high",
+    検討中: "text-outline border border-outline/50",
 };
 
 const featureRoadmap: { name: string; status: FeatureStatus }[] = [
@@ -172,16 +172,16 @@ const notPlannedFeatures = [
 ];
 
 function RoadmapRow({ status, items, muted = false }: { status: FeatureStatus | "実装しない機能"; items: string[]; muted?: boolean }) {
-    const badge = status === "実装しない機能" ? "text-gray-400 border border-gray-300" : featureRoadmapBadge[status];
+    const badge = status === "実装しない機能" ? "text-outline border border-outline/50" : featureRoadmapBadge[status];
     return (
-        <div className={`bg-white shadow-sm border border-gray-100 rounded-m3-lg p-6 md:p-8 flex flex-col md:flex-row gap-4 md:gap-10`}>
+        <div className={`bg-surface-container-lowest shadow-sm border border-outline-variant rounded-m3-lg p-6 md:p-8 flex flex-col md:flex-row gap-4 md:gap-10`}>
             <div className="md:w-40 shrink-0">
                 <span className={`inline-block text-xs font-bold tracking-wide rounded-full px-3 py-1 ${badge}`}>{status}</span>
             </div>
             <ul className="flex-1 grid sm:grid-cols-2 lg:grid-cols-3 gap-x-8 gap-y-3">
                 {items.map((f) => (
-                    <li key={f} className={"flex items-start gap-3 text-sm leading-relaxed text-gray-600"}>
-                        <span className={`w-1.5 h-1.5 rounded-full shrink-0 mt-2 ${muted ? "bg-gray-900" : "bg-tertiary"}`} />
+                    <li key={f} className={"flex items-start gap-3 text-sm leading-relaxed text-on-surface-variant"}>
+                        <span className={`w-1.5 h-1.5 rounded-full shrink-0 mt-2 ${muted ? "bg-on-surface" : "bg-tertiary"}`} />
                         {f}
                     </li>
                 ))}
@@ -208,13 +208,13 @@ function FeatureRoadmapSection({ id }: { id: string }) {
                 <RoadmapRow status="近日実装予定" items={itemsOf("近日実装予定")} />
 
                 {/* 時期の目処がある予定は、近日実装予定とは分けて扱う */}
-                <div className="bg-white rounded-m3-lg shadow-sm border border-gray-100 p-6 md:p-8 flex flex-col md:flex-row gap-4 md:gap-10">
+                <div className="bg-surface-container-lowest rounded-m3-lg shadow-sm border border-outline-variant p-6 md:p-8 flex flex-col md:flex-row gap-4 md:gap-10">
                     <div className="md:w-40 shrink-0">
-                        <span className="inline-block text-xs font-bold tracking-wide rounded-full px-3 py-1 text-gray-600 bg-gray-100">
+                        <span className="inline-block text-xs font-bold tracking-wide rounded-full px-3 py-1 text-on-surface-variant bg-surface-container-high">
                             時期の目処が有る予定
                         </span>
                     </div>
-                    <div className="flex-1 flex items-start gap-3 text-sm text-gray-600 leading-relaxed">
+                    <div className="flex-1 flex items-start gap-3 text-sm text-on-surface-variant leading-relaxed">
                         <span className="w-1.5 h-1.5 bg-tertiary rounded-full shrink-0 mt-2" />
                         <p>
                             {audience === "general" ? "メッセージを、送った人と受け取った人だけが読める暗号化" : "メッセージのE2E暗号化"}を、2027年夏頃を目処に実装する予定です。約束ではなく、予定です。専門家のセキュリティレビューを経て本番に投入します。
@@ -227,7 +227,7 @@ function FeatureRoadmapSection({ id }: { id: string }) {
                     onClick={() => setOpen((v) => !v)}
                     aria-expanded={open}
                     aria-controls={`${id}-more`}
-                    className="self-start inline-flex items-center gap-2 text-sm font-bold text-gray-700 border border-gray-300 rounded-full px-5 py-2 hover:bg-white transition-colors"
+                    className="self-start inline-flex items-center gap-2 text-sm font-bold text-on-surface-variant border border-outline/50 rounded-full px-5 py-2 hover:bg-surface-container-lowest transition-colors"
                 >
                     将来実装予定・検討中・実装しない機能を{open ? "閉じる" : "見る"}
                     <ChevronDown className={`w-4 h-4 transition-transform ${open ? "rotate-180" : ""}`} strokeWidth={1.5} />
@@ -273,10 +273,10 @@ function GeneralContent() {
             {/* 3支柱ブロック */}
             <div id="pillars" className="grid md:grid-cols-3 gap-8 mb-24 scroll-mt-8">
                 {pillars.map((p, i) => (
-                    <div key={i} className="bg-white p-8 rounded-m3-lg shadow-sm border border-gray-100 text-left">
+                    <div key={i} className="bg-surface-container-lowest p-8 rounded-m3-lg shadow-sm border border-outline-variant text-left">
                         <p.icon className="w-8 h-8 mb-4 text-tertiary" strokeWidth={1.5} />
                         <h3 className="text-lg font-bold mb-3 text-balance">{p.title}</h3>
-                        <p className="text-gray-600 text-sm leading-relaxed text-pretty">{p.desc}</p>
+                        <p className="text-on-surface-variant text-sm leading-relaxed text-pretty">{p.desc}</p>
                     </div>
                 ))}
             </div>
@@ -291,16 +291,16 @@ function GeneralContent() {
                 <div className="flex flex-col lg:flex-row gap-12 items-center">
                     <div className="w-full lg:w-1/2">
                         <SectionHeading label="TALK" title="一対（いっつい）・広場（ひろば）" icon={MessageCircle} mb="mb-4" />
-                        <p className="text-gray-600 leading-relaxed text-pretty mb-6">
+                        <p className="text-on-surface-variant leading-relaxed text-pretty mb-6">
                             友達との1対1のやりとりは「一対」。一対の中に寄合を複数作って、話題毎に分けることもできます。
                         </p>
                         <ul className="space-y-2">
-                            <li className="flex items-center gap-3 text-gray-700 text-sm">
-                                <MessageCircle className="w-4 h-4 text-gray-500" strokeWidth={1.5} />
+                            <li className="flex items-center gap-3 text-on-surface-variant text-sm">
+                                <MessageCircle className="w-4 h-4 text-on-surface-subtle" strokeWidth={1.5} />
                                 一対の中に複数の寄合を作成可能
                             </li>
-                            <li className="flex items-center gap-3 text-gray-700 text-sm">
-                                <Users className="w-4 h-4 text-gray-500" strokeWidth={1.5} />
+                            <li className="flex items-center gap-3 text-on-surface-variant text-sm">
+                                <Users className="w-4 h-4 text-on-surface-subtle" strokeWidth={1.5} />
                                 3人以上のグループ「広場」
                             </li>
                         </ul>
@@ -314,7 +314,7 @@ function GeneralContent() {
                 <div className="flex flex-col lg:flex-row-reverse gap-12 items-center">
                     <div className="w-full lg:w-1/2">
                         <SectionHeading label="STICKERS" title="メッセージに合わせて届くぺったん" icon={StickyNote} mb="mb-4" />
-                        <p className="text-gray-600 leading-relaxed text-pretty">
+                        <p className="text-on-surface-variant leading-relaxed text-pretty">
                             メッセージの内容に合わせて使えそうなぺったんを自動で提案してくれます。
                         </p>
                     </div>
@@ -327,7 +327,7 @@ function GeneralContent() {
                 <div className="flex flex-col lg:flex-row gap-12 items-center">
                     <div className="w-full lg:w-1/2">
                         <SectionHeading label="CALL" title="音声・ビデオ通話" icon={Mic} mb="mb-4" />
-                        <p className="text-gray-600 leading-relaxed text-pretty">
+                        <p className="text-on-surface-variant leading-relaxed text-pretty">
                             一対でも広場でも、音声・ビデオ通話が使えます。
                         </p>
                     </div>
@@ -340,7 +340,7 @@ function GeneralContent() {
                 <div className="flex flex-col lg:flex-row-reverse gap-12 items-center">
                     <div className="w-full lg:w-1/2">
                         <SectionHeading label="APPEARANCE" title="好みの見た目に切り替え" icon={Palette} mb="mb-4" />
-                        <p className="text-gray-600 leading-relaxed text-pretty">
+                        <p className="text-on-surface-variant leading-relaxed text-pretty">
                             「フラット」「ガラス」「劇画」「版画」の4スタイルに加え、外観は胡粉・墨・鈍色・漆黒の4つから選べます。アクセントカラーはカラーコードで自由に指定でき、フォントも25種類から選べます。
                         </p>
                     </div>
@@ -351,7 +351,7 @@ function GeneralContent() {
             </div>
 
             {/* スクリーンショットギャラリー */}
-            <div id="screenshots" className="bg-white/50 rounded-m3-xl p-8 md:p-12 mb-24 scroll-mt-8">
+            <div id="screenshots" className="bg-surface-container-lowest/50 rounded-m3-xl p-8 md:p-12 mb-24 scroll-mt-8">
                 <div className="text-center mb-12">
                     <SectionHeading label="SCREENSHOTS" title="アプリの画面" icon={Smartphone} mb="mb-0" center />
                 </div>
@@ -367,24 +367,24 @@ function GeneralContent() {
             {/* その他の機能タイル */}
             <div id="more" className="grid md:grid-cols-2 lg:grid-cols-3 gap-6 mb-24 scroll-mt-8">
                 {moreFeatures.map((f, i) => (
-                    <div key={i} className="bg-white p-6 rounded-m3-lg shadow-sm border border-gray-100">
+                    <div key={i} className="bg-surface-container-lowest p-6 rounded-m3-lg shadow-sm border border-outline-variant">
                         <f.icon className="w-6 h-6 mb-3 text-tertiary" strokeWidth={1.5} />
-                        <h3 className="text-base font-bold mb-2 text-gray-900 text-balance">{f.title}</h3>
-                        <p className="text-gray-600 text-sm leading-relaxed text-pretty">{f.desc}</p>
+                        <h3 className="text-base font-bold mb-2 text-on-surface text-balance">{f.title}</h3>
+                        <p className="text-on-surface-variant text-sm leading-relaxed text-pretty">{f.desc}</p>
                     </div>
                 ))}
             </div>
 
             {/* 極みプラン */}
-            <div id="plan" className="bg-white rounded-m3-lg shadow-sm border border-gray-100 p-8 md:p-12 text-center max-w-2xl mx-auto mb-24 scroll-mt-8">
+            <div id="plan" className="bg-surface-container-lowest rounded-m3-lg shadow-sm border border-outline-variant p-8 md:p-12 text-center max-w-2xl mx-auto mb-24 scroll-mt-8">
                 <span className="inline-block text-xs font-bold tracking-widest text-tertiary bg-tertiary/10 rounded-full px-4 py-1 mb-4">
                     ご利用いただけます
                 </span>
-                <h3 className="text-2xl font-bold text-gray-900 mb-2">極み</h3>
-                <p className="text-gray-500 text-sm mb-6">￥300 / 月</p>
+                <h3 className="text-2xl font-bold text-on-surface mb-2">極み</h3>
+                <p className="text-on-surface-subtle text-sm mb-6">￥300 / 月</p>
                 <ul className="space-y-2 text-left w-fit max-w-full mx-auto mb-6">
                     {["既読の非表示", "限定フォント10種", "プロフィールカードを3枚から10枚に、SNSのURLの登録上限も拡大", "複数アカウントの切り替え"].map((feature) => (
-                        <li key={feature} className="flex items-center gap-3 text-gray-700 text-sm">
+                        <li key={feature} className="flex items-center gap-3 text-on-surface-variant text-sm">
                             <span className="w-1.5 h-1.5 bg-tertiary rounded-full shrink-0" />
                             {feature}
                         </li>
@@ -399,7 +399,7 @@ function GeneralContent() {
                     アプリで購入する
                     <ArrowRight className="w-5 h-5" />
                 </a>
-                <p className="text-xs text-gray-400 tracking-wide leading-relaxed">
+                <p className="text-xs text-outline tracking-wide leading-relaxed">
                     ログインして、アプリの「設定」の「アカウント」から、購入と契約の管理ができます。特典は、今後も追加していく予定です。
                 </p>
             </div>
@@ -445,12 +445,12 @@ function GeekContent() {
                 {/* 技術スタック */}
                 <div id="stack" className="scroll-mt-8">
                     <SectionHeading label="TECH STACK" title="技術スタック" icon={Cpu} mb="mb-8" />
-                    <div className="overflow-x-auto bg-white rounded-m3-lg shadow-sm border border-gray-100">
+                    <div className="overflow-x-auto bg-surface-container-lowest rounded-m3-lg shadow-sm border border-outline-variant">
                         <table className="w-full text-left">
-                            <tbody className="text-gray-600">
+                            <tbody className="text-on-surface-variant">
                                 {techStack.map((row, i) => (
-                                    <tr key={i} className="border-b last:border-0 border-gray-100">
-                                        <td className="p-5 font-bold text-gray-800 whitespace-nowrap align-top w-40">{row[0]}</td>
+                                    <tr key={i} className="border-b last:border-0 border-outline-variant">
+                                        <td className="p-5 font-bold text-on-surface whitespace-nowrap align-top w-40">{row[0]}</td>
                                         <td className="p-5 text-sm leading-relaxed">{row[1]}</td>
                                     </tr>
                                 ))}
@@ -462,7 +462,7 @@ function GeekContent() {
                 {/* プライバシー・セキュリティ設計 */}
                 <div id="security" className="scroll-mt-8">
                     <SectionHeading label="PRIVACY & SECURITY" title="プライバシー・セキュリティ設計" icon={Lock} mb="mb-8" />
-                    <ul className="space-y-4 text-gray-600 leading-relaxed text-sm">
+                    <ul className="space-y-4 text-on-surface-variant leading-relaxed text-sm">
                         <li>
                             メールアドレスは、画面に表示せず、DaiDai自身のデータベース（Firestore）にも保存しません。Googleでログインした場合は、認証基盤（Firebase Authentication）にGoogleアカウントのメールアドレスが保存されます。Appleでログインした場合は、メールアドレスも名前も受け取りません（スコープを要求しない設定）。電話番号と現在地は集めません。アカウントはGoogle/Apple認証への委任、またはパスキー（WebAuthn、DaiDai自身がRelying Partyとして運用）で成立させており、DaiDai自身はパスワード等の認証情報を保持しません。
                         </li>
@@ -485,7 +485,7 @@ function GeekContent() {
                 {/* アーキテクチャ */}
                 <div id="architecture" className="scroll-mt-8">
                     <SectionHeading label="ARCHITECTURE" title="アーキテクチャ" icon={Network} mb="mb-8" />
-                    <ul className="space-y-4 text-gray-600 leading-relaxed text-sm">
+                    <ul className="space-y-4 text-on-surface-variant leading-relaxed text-sm">
                         <li>
                             バックエンドをFirebaseから段階的に移行していく計画の為、全レイヤーをRepositoryパターンで抽象化しており、UI・ビジネスロジックからFirestore等のSDKを直接叩きません。
                         </li>
@@ -503,19 +503,19 @@ function GeekContent() {
                 {/* 実装ロードマップ */}
                 <div id="roadmap" className="scroll-mt-8">
                     <SectionHeading label="ROADMAP" title="実装ロードマップ" icon={Route} mb="mb-8" />
-                    <div className="overflow-x-auto bg-white rounded-m3-lg shadow-sm border border-gray-100 mb-6">
+                    <div className="overflow-x-auto bg-surface-container-lowest rounded-m3-lg shadow-sm border border-outline-variant mb-6">
                         <table className="w-full text-left">
                             <thead>
-                                <tr className="border-b border-gray-100 text-gray-400 text-xs uppercase tracking-widest">
+                                <tr className="border-b border-outline-variant text-outline text-xs uppercase tracking-widest">
                                     <th className="p-5">フェーズ</th>
                                     <th className="p-5">主な内容</th>
                                     <th className="p-5">状況</th>
                                 </tr>
                             </thead>
-                            <tbody className="text-gray-600 text-sm">
+                            <tbody className="text-on-surface-variant text-sm">
                                 {roadmap.map((row, i) => (
-                                    <tr key={i} className="border-b last:border-0 border-gray-100 align-top">
-                                        <td className="p-5 font-bold text-gray-800 whitespace-nowrap">{row[0]}</td>
+                                    <tr key={i} className="border-b last:border-0 border-outline-variant align-top">
+                                        <td className="p-5 font-bold text-on-surface whitespace-nowrap">{row[0]}</td>
                                         <td className="p-5 leading-relaxed">{row[1]}</td>
                                         <td className="p-5 leading-relaxed">{row[2]}</td>
                                     </tr>
@@ -523,7 +523,7 @@ function GeekContent() {
                             </tbody>
                         </table>
                     </div>
-                    <p className="text-xs text-gray-400 leading-relaxed">
+                    <p className="text-xs text-outline leading-relaxed">
                         現時点で前倒し実装済みの主な機能: パスキー（WebAuthn）ログイン、2段階認証（TOTP）、QRコードログイン、複数会話部屋（寄合）機能、広場のカスタムロール（権限・複数付与対応）、共有ノート、共有カレンダー、投票、通知音・着信音のカスタマイズ、3種類のUIスタイル（フラット・劇画・ガラス）、ダークモード。
                     </p>
                 </div>

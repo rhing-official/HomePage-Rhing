@@ -36,7 +36,7 @@ function Box({ checked, onChange, label, className = "" }: { checked: boolean; o
                 onChange();
             }}
             className={`flex h-6 w-6 shrink-0 items-center justify-center rounded-md border-2 transition ${
-                checked ? "border-blue-600 bg-blue-600 text-white" : "border-gray-400 bg-white/90 text-transparent hover:border-blue-500"
+                checked ? "border-blue-600 bg-blue-600 text-white" : "border-outline bg-surface-container-lowest/90 text-transparent hover:border-blue-500"
             } ${className}`}
         >
             <Check className="h-4 w-4" aria-hidden />
@@ -73,11 +73,11 @@ export function SelectionToolbar({
 
     return (
         <div className="mb-6 flex flex-wrap items-center gap-x-5 gap-y-2">
-            <label className="flex items-center gap-2 text-sm text-gray-700">
+            <label className="flex items-center gap-2 text-sm text-on-surface-variant">
                 <Box checked={all} onChange={() => (all ? onClear() : onSelectAll(ids))} label="全て選択" />
                 全て選択
             </label>
-            <span className="text-sm text-gray-500" role="status">
+            <span className="text-sm text-on-surface-subtle" role="status">
                 {chosen.length > 0 ? `${chosen.length}件を選択中` : ""}
             </span>
             <span className="flex-1" />

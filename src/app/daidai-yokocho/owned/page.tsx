@@ -24,8 +24,8 @@ type OwnedEntry = StickerPack | PublicThemePack;
 
 // 取り下げ・配信停止になった意匠は、取得済みでも、そのことを示す
 const STATUS_NOTE: Record<string, { label: string; className: string }> = {
-    withdrawn: { label: "取り下げ", className: "bg-gray-100 text-gray-600" },
-    suspended: { label: "配信停止", className: "bg-red-100 text-red-700" },
+    withdrawn: { label: "取り下げ", className: "bg-surface-container-high text-on-surface-variant" },
+    suspended: { label: "配信停止", className: "bg-red-100 dark:bg-red-900/40 text-red-700 dark:text-red-200" },
 };
 
 // ぺったんと意匠を、1つの一覧にまとめた購入済み。取得した新しい順に並べる。増えても見つけやすいよう、種別で絞れる
@@ -128,7 +128,7 @@ export default function OwnedPage() {
     return (
         <div className="w-full pb-24">
             <div className="container mx-auto px-6 pb-16 max-w-4xl">
-                <h1 className="flex items-center gap-3 text-3xl font-bold tracking-widest text-gray-900 mb-12">
+                <h1 className="flex items-center gap-3 text-3xl font-bold tracking-widest text-on-surface mb-12">
                     <PackageCheck className="w-7 h-7 shrink-0" aria-hidden />
                     購入済み
                 </h1>
@@ -136,10 +136,10 @@ export default function OwnedPage() {
                 {loading ? (
                     <PackGridSkeleton count={3} />
                 ) : failed ? (
-                    <p className="text-sm text-red-600">購入済みを読み込めませんでした。時間をおいて、もう一度お試しください。</p>
+                    <p className="text-sm text-red-600 dark:text-red-400">購入済みを読み込めませんでした。時間をおいて、もう一度お試しください。</p>
                 ) : items.length === 0 ? (
                     <div className="flex flex-col items-start gap-4">
-                        <p className="text-gray-400 text-sm">まだ購入済みが有りません。</p>
+                        <p className="text-outline text-sm">まだ購入済みが有りません。</p>
                         <FindInYokochoLink />
                     </div>
                 ) : (
@@ -158,7 +158,7 @@ export default function OwnedPage() {
                             }}
                         />
                         {shown.length === 0 ? (
-                            <p className="text-gray-400 text-sm">この種別の購入済みは、まだ有りません。</p>
+                            <p className="text-outline text-sm">この種別の購入済みは、まだ有りません。</p>
                         ) : (
                             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
                                 {shown.map((item) => {

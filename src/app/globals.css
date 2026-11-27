@@ -26,6 +26,10 @@
     }
 }
 
+/* ダークモード。`<html class="dark">`で切り替える（layout.tsxの描画前のスクリプトと、lib/theme.ts）。
+   dark: 色のトークンの値を、.darkで上書きする。色は、トークン（bg-surface、text-on-surface など）で書けば、両方に効く */
+@custom-variant dark (&:where(.dark, .dark *));
+
 @theme {
     --font-sans: var(--font-kiwi-maru), sans-serif;
     --font-serif: var(--font-kiwi-maru), serif;
@@ -38,10 +42,17 @@
     --color-surface: #fcfbf7;
     --color-surface-tint: #c6e07a;
     --color-surface-container: #f8f8f8;
+    /* 白いカードの面（旧bg-white）と、薄い灰色の面（旧bg-gray-50/100） */
+    --color-surface-container-lowest: #ffffff;
+    --color-surface-container-high: #f3f4f6;
     --color-on-surface: #111827;
     --color-on-surface-variant: #4b5563;
+    /* 補足の文字（旧text-gray-500） */
+    --color-on-surface-subtle: #6b7280;
     --color-outline: #9ca3af;
     --color-outline-variant: #e5e7eb;
+    /* ガラス風のカードの縁（旧border-white）。ライトは白、ダークは、面から少し浮いて見える明るさ */
+    --color-glass-edge: #ffffff;
     --color-primary: #2563eb;
     --color-on-primary: #ffffff;
     --color-primary-container: #dbeafe;
@@ -65,6 +76,41 @@
 
     /* モーション（M3の標準イージング） */
     --ease-m3-standard: cubic-bezier(0.2, 0, 0, 1);
+}
+
+/* ダークの値。ライトと同じ役割で、暖色寄りの暗い灰を土台にする。primaryは、暗い背景で読める明るい青にする。
+   文字と背景の組のコントラストは、src/lib/themeTokens.test.ts で確かめている */
+:root {
+    color-scheme: light;
+}
+
+.dark {
+    color-scheme: dark;
+
+    --color-surface: #171613;
+    --color-surface-tint: #34421a;
+    --color-surface-container: #1d1c18;
+    --color-surface-container-lowest: #201f1b;
+    --color-surface-container-high: #292822;
+    --color-on-surface: #ecebe6;
+    --color-on-surface-variant: #b9b7ae;
+    --color-on-surface-subtle: #a3a198;
+    --color-outline: #8a877d;
+    --color-outline-variant: #3b3933;
+    --color-glass-edge: #4a483f;
+    --color-primary: #93c5fd;
+    --color-on-primary: #0b2545;
+    --color-primary-container: #1e3a8a;
+    --color-on-primary-container: #dbeafe;
+    --color-secondary-container: #3a2a22;
+    --color-on-secondary-container: #f0cabb;
+    --color-tertiary: #ffa040;
+    --color-vermilion: #ff8a7a;
+    --color-error: #f87171;
+
+    --shadow-elevation-1: 0 1px 3px 0 rgb(0 0 0 / 0.45), 0 1px 2px -1px rgb(0 0 0 / 0.45);
+    --shadow-elevation-2: 0 4px 10px -2px rgb(0 0 0 / 0.5), 0 2px 4px -2px rgb(0 0 0 / 0.45);
+    --shadow-elevation-3: 0 12px 24px -6px rgb(0 0 0 / 0.55), 0 4px 8px -4px rgb(0 0 0 / 0.45);
 }
 
 /* 画面遷移で、新しいページが滲んで現れる（template.tsx）。

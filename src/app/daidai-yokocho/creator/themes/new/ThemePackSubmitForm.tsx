@@ -70,11 +70,11 @@ export default function ThemePackSubmitForm() {
         <div className="w-full pb-24">
             <div className="container mx-auto px-6 pb-16 max-w-3xl">
                 <div className="mb-10">
-                    <h1 className="flex flex-wrap items-center gap-x-3 gap-y-2 text-3xl font-bold tracking-widest text-gray-900">
+                    <h1 className="flex flex-wrap items-center gap-x-3 gap-y-2 text-3xl font-bold tracking-widest text-on-surface">
                         <Palette className="w-7 h-7 shrink-0" aria-hidden />
                         意匠を投稿する
                     </h1>
-                    <p className="mt-3 text-sm text-gray-500 leading-relaxed">
+                    <p className="mt-3 text-sm text-on-surface-subtle leading-relaxed">
                         意匠のzipを選ぶと、ブラウザの中で、決まりに合っているかを確認します。選んだファイルは、ここでは送られません。
                     </p>
                 </div>
@@ -94,14 +94,14 @@ export default function ThemePackSubmitForm() {
                         if (f) void check(f);
                     }}
                     className={`flex flex-col items-start gap-3 rounded-m3-lg border-2 border-dashed p-8 cursor-pointer transition-colors ${
-                        dragging ? "border-primary bg-primary-container/40" : "border-gray-300 bg-white hover:border-primary/60"
+                        dragging ? "border-primary bg-primary-container/40" : "border-outline/50 bg-surface-container-lowest hover:border-primary/60"
                     }`}
                 >
-                    <span className="flex items-center gap-3 text-gray-900 font-bold">
+                    <span className="flex items-center gap-3 text-on-surface font-bold">
                         <FileArchive className="w-6 h-6 text-primary" aria-hidden />
                         zipを選ぶ、またはここへドロップ
                     </span>
-                    <span className="text-sm text-gray-500 leading-relaxed">
+                    <span className="text-sm text-on-surface-subtle leading-relaxed">
                         pack.jsonと画像を、zipの直下か、idと同じ名前のディレクトリの中に置いてください。画像は、png・webp・jpegで、1枚{formatBytes(THEME_PACK_LIMITS.imageMaxBytes)}以下、各辺{THEME_PACK_LIMITS.imageMaxSide}px以下です。zip全体は{formatBytes(THEME_PACK_LIMITS.totalMaxBytes)}以下にしてください。
                     </span>
                     <input
@@ -118,22 +118,22 @@ export default function ThemePackSubmitForm() {
                     />
                 </label>
 
-                {checking && <p className="mt-6 text-sm text-gray-500">確認しています。</p>}
+                {checking && <p className="mt-6 text-sm text-on-surface-subtle">確認しています。</p>}
 
                 {checked && result && (
                     <section className="mt-8 flex flex-col gap-6" aria-live="polite">
                         <div
-                            className={`rounded-m3-lg border p-6 ${result.ok ? "border-green-200 bg-green-50" : "border-red-200 bg-red-50"}`}
+                            className={`rounded-m3-lg border p-6 ${result.ok ? "border-green-200 dark:border-green-800 bg-green-50 dark:bg-green-950/40" : "border-red-200 dark:border-red-800 bg-red-50 dark:bg-red-950/40"}`}
                         >
-                            <p className="flex items-center gap-3 font-bold text-gray-900">
+                            <p className="flex items-center gap-3 font-bold text-on-surface">
                                 {result.ok ? (
-                                    <CheckCircle2 className="w-6 h-6 text-green-600 shrink-0" aria-hidden />
+                                    <CheckCircle2 className="w-6 h-6 text-green-600 dark:text-green-400 shrink-0" aria-hidden />
                                 ) : (
-                                    <XCircle className="w-6 h-6 text-red-600 shrink-0" aria-hidden />
+                                    <XCircle className="w-6 h-6 text-red-600 dark:text-red-400 shrink-0" aria-hidden />
                                 )}
                                 {result.ok ? "確認に通りました" : "直す所があります"}
                             </p>
-                            <p className="mt-2 text-sm text-gray-600 break-all">
+                            <p className="mt-2 text-sm text-on-surface-variant break-all">
                                 {checked.fileName}（{formatBytes(checked.fileSize)}）
                             </p>
                         </div>
@@ -158,13 +158,13 @@ export default function ThemePackSubmitForm() {
 
 export function ResultList({ title, tone, items }: { title: string; tone: "error" | "warning" | "ok"; items: string[] }) {
     const Icon = tone === "error" ? XCircle : tone === "warning" ? AlertTriangle : CheckCircle2;
-    const color = tone === "error" ? "text-red-600" : tone === "warning" ? "text-amber-600" : "text-green-600";
+    const color = tone === "error" ? "text-red-600 dark:text-red-400" : tone === "warning" ? "text-amber-600 dark:text-amber-400" : "text-green-600 dark:text-green-400";
     return (
-        <div className="rounded-m3-lg bg-white border border-gray-100 shadow-sm p-6">
-            <h2 className="font-bold text-gray-900 mb-3">{title}</h2>
+        <div className="rounded-m3-lg bg-surface-container-lowest border border-outline-variant shadow-sm p-6">
+            <h2 className="font-bold text-on-surface mb-3">{title}</h2>
             <ul className="flex flex-col gap-3">
                 {items.map((t, i) => (
-                    <li key={i} className="flex items-start gap-3 text-sm text-gray-700 leading-relaxed">
+                    <li key={i} className="flex items-start gap-3 text-sm text-on-surface-variant leading-relaxed">
                         <Icon className={`w-4 h-4 mt-1 shrink-0 ${color}`} aria-hidden />
                         <span>{t}</span>
                     </li>
@@ -179,9 +179,9 @@ function ColorPreview({ result }: { result: ValidationResult }) {
     const pack = result.pack!;
     const scopes: ("light" | "dark")[] = pack.brightness === "both" ? ["light", "dark"] : [pack.brightness];
     return (
-        <div className="rounded-m3-lg bg-white border border-gray-100 shadow-sm p-6">
-            <h2 className="font-bold text-gray-900 mb-1">{pack.name}</h2>
-            <p className="text-xs text-gray-500 mb-4">
+        <div className="rounded-m3-lg bg-surface-container-lowest border border-outline-variant shadow-sm p-6">
+            <h2 className="font-bold text-on-surface mb-1">{pack.name}</h2>
+            <p className="text-xs text-on-surface-subtle mb-4">
                 id: {pack.id}　対応する外観: {pack.brightness === "both" ? "明るい・暗いの両方" : pack.brightness === "light" ? "明るいだけ" : "暗いだけ"}
             </p>
             {scopes.map((scope) => {
@@ -190,14 +190,14 @@ function ColorPreview({ result }: { result: ValidationResult }) {
                 const checks = result.contrast?.checks.filter((c) => c.scope === scope) ?? [];
                 return (
                     <div key={scope} className="mb-5 last:mb-0">
-                        <h3 className="text-sm font-bold text-gray-800 mb-2">{scope === "light" ? "明るい外観" : "暗い外観"}</h3>
+                        <h3 className="text-sm font-bold text-on-surface mb-2">{scope === "light" ? "明るい外観" : "暗い外観"}</h3>
                         {specified.length === 0 ? (
-                            <p className="text-sm text-gray-500">色は書かれていません。アプリの標準の色になります。</p>
+                            <p className="text-sm text-on-surface-subtle">色は書かれていません。アプリの標準の色になります。</p>
                         ) : (
                             <ul className="flex flex-wrap gap-3 mb-3">
                                 {specified.map((k) => (
-                                    <li key={k} className="flex items-center gap-2 text-xs text-gray-700">
-                                        <span className="w-6 h-6 rounded-full border border-gray-300 shrink-0" style={{ backgroundColor: colors[k] }} aria-hidden />
+                                    <li key={k} className="flex items-center gap-2 text-xs text-on-surface-variant">
+                                        <span className="w-6 h-6 rounded-full border border-outline/50 shrink-0" style={{ backgroundColor: colors[k] }} aria-hidden />
                                         {COLOR_LABELS[k]} {colors[k]}
                                     </li>
                                 ))}
@@ -208,12 +208,12 @@ function ColorPreview({ result }: { result: ValidationResult }) {
                                 {checks.map((c) => (
                                     <li key={`${c.fg}-${c.bg}`} className="flex items-center gap-3 text-sm">
                                         <span
-                                            className="rounded-md border border-gray-300 px-3 py-1 text-xs font-bold"
+                                            className="rounded-md border border-outline/50 px-3 py-1 text-xs font-bold"
                                             style={{ color: c.fgHex, backgroundColor: c.bgHex }}
                                         >
                                             Aa あ
                                         </span>
-                                        <span className={c.pass ? "text-gray-700" : "text-red-600"}>
+                                        <span className={c.pass ? "text-on-surface-variant" : "text-red-600 dark:text-red-400"}>
                                             {describeContrast(c)}。{c.pass ? "" : `基準は${MIN_CONTRAST_RATIO}以上です。`}
                                         </span>
                                     </li>

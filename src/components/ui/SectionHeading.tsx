@@ -19,8 +19,8 @@ type Props = {
 export default function SectionHeading({ label, title, icon: Icon, tone = "orange", mb = "mb-8", center = false }: Props) {
     return (
         <>
-            <span className={`text-xs font-bold tracking-widest text-gray-500 mb-2 block ${center ? "text-center" : ""}`}>{label}</span>
-            <h2 className={`text-2xl font-bold ${mb} tracking-wide text-gray-900 text-balance flex items-center gap-3 ${center ? "justify-center" : ""}`}>
+            <span className={`text-xs font-bold tracking-widest text-on-surface-subtle mb-2 block ${center ? "text-center" : ""}`}>{label}</span>
+            <h2 className={`text-2xl font-bold ${mb} tracking-wide text-on-surface text-balance flex items-center gap-3 ${center ? "justify-center" : ""}`}>
                 <Icon className={`w-5 h-5 ${toneClass[tone]} shrink-0`} strokeWidth={1.5} />
                 {title}
             </h2>

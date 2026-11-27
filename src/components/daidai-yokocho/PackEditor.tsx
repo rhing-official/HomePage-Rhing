@@ -51,7 +51,7 @@ export default function PackEditor(props: PackEditorProps) {
         };
     }, [uid, pack.id]);
 
-    if (draft === undefined) return <p className="text-gray-400 text-sm">読み込み中...</p>;
+    if (draft === undefined) return <p className="text-outline text-sm">読み込み中...</p>;
     return <PackEditorForm key={pack.id} {...props} initialDraft={draft} />;
 }
 
@@ -292,15 +292,15 @@ function PackEditorForm({
     };
 
     return (
-        <div className="bg-white/40 backdrop-blur-md border border-white/80 shadow-sm rounded-2xl p-6 flex flex-col gap-4">
+        <div className="bg-surface-container-lowest/40 backdrop-blur-md border border-glass-edge/80 shadow-sm rounded-2xl p-6 flex flex-col gap-4">
             <div className="flex items-center justify-between gap-4">
                 <Link
                     href={`/daidai-yokocho/${pack.id}`}
-                    className="text-xs text-gray-400 hover:text-blue-600 transition-colors"
+                    className="text-xs text-outline hover:text-blue-600 transition-colors"
                 >
                     販売ページを見る →
                 </Link>
-                <span className="text-xs text-gray-400">閲覧数: {viewCount === undefined ? "…" : (viewCount ?? "-")} / 売上数: {pack.salesCount} / 利用者数: {pack.ownerCount}</span>
+                <span className="text-xs text-outline">閲覧数: {viewCount === undefined ? "…" : (viewCount ?? "-")} / 売上数: {pack.salesCount} / 利用者数: {pack.ownerCount}</span>
             </div>
 
             {hasDraft && (
@@ -315,7 +315,7 @@ function PackEditorForm({
                         const isCover = cover.type === "existing" && sticker.stickerId === cover.id;
                         return (
                             <div key={sticker.stickerId || i} className="flex flex-col items-center gap-1 w-28">
-                                <div className="relative w-16 h-16 rounded-lg overflow-hidden border border-gray-200 bg-white/70">
+                                <div className="relative w-16 h-16 rounded-lg overflow-hidden border border-outline-variant bg-surface-container-lowest/70">
                                     {sticker.imageUrl && (
                                         <button
                                             type="button"
@@ -336,9 +336,9 @@ function PackEditorForm({
                                         }}
                                         aria-pressed={isCover}
                                         aria-label={isCover ? "ぺったんの代表（選択中）" : "ぺったんの代表にする"}
-                                        className="absolute bottom-0 left-0 bg-white/85 w-5 h-5 flex items-center justify-center"
+                                        className="absolute bottom-0 left-0 bg-surface-container-lowest/85 w-5 h-5 flex items-center justify-center"
                                     >
-                                        <Star className={`w-3.5 h-3.5 ${isCover ? "text-amber-500 fill-amber-500" : "text-gray-400"}`} />
+                                        <Star className={`w-3.5 h-3.5 ${isCover ? "text-amber-500 dark:text-amber-400 fill-amber-500" : "text-outline"}`} />
                                     </button>
                                 </div>
                                 <StickerRowActions
@@ -356,7 +356,7 @@ function PackEditorForm({
                                         setRolesMessage(null);
                                     }}
                                     aria-label={`${sticker.name || "画像"}の役割`}
-                                    className="w-full text-[11px] rounded border border-gray-200 bg-white/70 px-1 py-0.5"
+                                    className="w-full text-[11px] rounded border border-outline-variant bg-surface-container-lowest/70 px-1 py-0.5"
                                 >
                                     <option value="">役割なし</option>
                                     {roleOptions.map((r) => (
@@ -371,7 +371,7 @@ function PackEditorForm({
                         );
                     })}
                 </div>
-                <p className="text-xs text-gray-400">★をつけた画像が、ぺったんの代表（一覧等に最初に出る画像）になります。画像をクリックすると、拡大して見られます。</p>
+                <p className="text-xs text-outline">★をつけた画像が、ぺったんの代表（一覧等に最初に出る画像）になります。画像をクリックすると、拡大して見られます。</p>
                 <div className="flex flex-wrap items-center gap-3">
                     <button
                         type="button"
@@ -382,10 +382,10 @@ function PackEditorForm({
                         {savingRoles ? "保存中..." : "役割を保存"}
                     </button>
                     {rolesMessage && (
-                        <span className={`text-xs ${rolesMessage.ok ? "text-emerald-700" : "text-red-600"}`} role="status">{rolesMessage.text}</span>
+                        <span className={`text-xs ${rolesMessage.ok ? "text-emerald-700 dark:text-emerald-200" : "text-red-600 dark:text-red-400"}`} role="status">{rolesMessage.text}</span>
                     )}
                 </div>
-                <p className="text-xs text-gray-400">役割は、「役割を保存」を押すとすぐに反映されます（「公開する」は不要）。ぺったんの提案で、入力した文に合うぺったんを出す為に使われます。</p>
+                <p className="text-xs text-outline">役割は、「役割を保存」を押すとすぐに反映されます（「公開する」は不要）。ぺったんの提案で、入力した文に合うぺったんを出す為に使われます。</p>
                 <AnimatePresence>
                     {viewerIndex !== null && viewerIndex < pack.stickers.length && (
                         <ImageViewer
@@ -398,7 +398,7 @@ function PackEditorForm({
                 </AnimatePresence>
             </div>
 
-            <div className="flex flex-col gap-2 pt-3 border-t border-white/60">
+            <div className="flex flex-col gap-2 pt-3 border-t border-glass-edge/60">
                 <StickerImagePicker
                     entries={pendingStickers}
                     onChange={handlePendingChange}
@@ -410,14 +410,14 @@ function PackEditorForm({
                         setNotice(null);
                     }}
                 />
-                <p className="text-xs text-gray-400">
+                <p className="text-xs text-outline">
                     追加する画像は、役割を設定してから、「公開する」で公開中のぺったんに入ります（追加済みの画像は、各画像の「差し替え」で変えられます。削除は、利用者がいなければ直接、いれば運営への申請になります）。
                 </p>
             </div>
 
             {/* ぺったん名と価格は、行を分けて入力する */}
-            <div className="flex flex-col gap-4 pt-3 border-t border-white/60">
-                <label className="flex flex-col gap-1.5 text-sm text-gray-600">
+            <div className="flex flex-col gap-4 pt-3 border-t border-glass-edge/60">
+                <label className="flex flex-col gap-1.5 text-sm text-on-surface-variant">
                     ぺったん名
                     <input
                         value={name}
@@ -425,10 +425,10 @@ function PackEditorForm({
                             setName(e.target.value);
                             setNotice(null);
                         }}
-                        className="rounded-lg border border-gray-200 px-4 py-2.5 bg-white/70 text-sm text-gray-900"
+                        className="rounded-lg border border-outline-variant px-4 py-2.5 bg-surface-container-lowest/70 text-sm text-on-surface"
                     />
                 </label>
-                <label className="flex flex-col gap-1.5 text-sm text-gray-600">
+                <label className="flex flex-col gap-1.5 text-sm text-on-surface-variant">
                     価格（円）
                     <input
                         type="number"
@@ -439,15 +439,15 @@ function PackEditorForm({
                             setPrice(e.target.value);
                             setNotice(null);
                         }}
-                        className="w-full sm:w-48 rounded-lg border border-gray-200 px-4 py-2.5 bg-white/70 text-sm text-gray-900"
+                        className="w-full sm:w-48 rounded-lg border border-outline-variant px-4 py-2.5 bg-surface-container-lowest/70 text-sm text-on-surface"
                     />
                 </label>
-                <p className="text-xs text-gray-400 -mt-2">
+                <p className="text-xs text-outline -mt-2">
                     現在の価格: {formatPackPrice(pack.price)}
                     {pack.price === 0 && "（有料ぺったんの出品は準備中の為、当面は無料のみ設定出来ます）"}
                 </p>
-                {error && <p className="text-xs text-red-600">{error}</p>}
-                {notice && <p className="text-xs text-emerald-700" role="status">{notice}</p>}
+                {error && <p className="text-xs text-red-600 dark:text-red-400">{error}</p>}
+                {notice && <p className="text-xs text-emerald-700 dark:text-emerald-200" role="status">{notice}</p>}
                 <div className="flex flex-col sm:flex-row gap-3">
                     <button
                         type="button"
@@ -471,17 +471,17 @@ function PackEditorForm({
                         type="button"
                         onClick={handleDiscardDraft}
                         disabled={busy !== null}
-                        className="self-start text-xs font-bold text-red-600 hover:text-red-800 transition-colors disabled:text-gray-300"
+                        className="self-start text-xs font-bold text-red-600 dark:text-red-400 hover:text-red-800 transition-colors disabled:text-outline"
                     >
                         保存した編集内容を破棄する
                     </button>
                 )}
             </div>
 
-            <div className="flex flex-col gap-2 pt-3 border-t border-white/60">
+            <div className="flex flex-col gap-2 pt-3 border-t border-glass-edge/60">
                 {confirmingDelete ? (
                     <div className="flex flex-wrap items-center gap-3">
-                        <span className="text-sm text-gray-700">本当に削除しますか？この操作は取り消せません。</span>
+                        <span className="text-sm text-on-surface-variant">本当に削除しますか？この操作は取り消せません。</span>
                         <button
                             onClick={() => setConfirmingDelete(false)}
                             disabled={deleting}
@@ -503,12 +503,12 @@ function PackEditorForm({
                         onClick={() => setConfirmingDelete(true)}
                         disabled={!canDelete}
                         title={canDelete ? undefined : "現在利用しているユーザーがいるため削除出来ません"}
-                        className="self-start text-sm font-bold text-red-600 hover:text-red-800 transition-colors disabled:text-gray-300 disabled:cursor-not-allowed"
+                        className="self-start text-sm font-bold text-red-600 dark:text-red-400 hover:text-red-800 transition-colors disabled:text-outline disabled:cursor-not-allowed"
                     >
                         このぺったんを削除する
                     </button>
                 )}
-                {deleteError && <p className="text-xs text-red-600">{deleteError}</p>}
+                {deleteError && <p className="text-xs text-red-600 dark:text-red-400">{deleteError}</p>}
             </div>
         </div>
     );

@@ -56,10 +56,10 @@ async function fetchOwnProfile(uid: string): Promise<OwnProfile | null> {
 
 // お気に入り・カートのバーの中の、1つ分のボタン
 const quickIconClass =
-    "flex items-center justify-center w-12 h-12 hover:bg-white/90 transition-colors duration-300";
+    "flex items-center justify-center w-12 h-12 hover:bg-surface-container-lowest/90 transition-colors duration-300";
 
 const menuItemClass =
-    "flex items-center gap-3 w-full text-left px-4 py-2.5 rounded-xl text-sm text-gray-700 font-bold hover:bg-white/70 hover:text-blue-600 transition-colors";
+    "flex items-center gap-3 w-full text-left px-4 py-2.5 rounded-xl text-sm text-on-surface-variant font-bold hover:bg-surface-container-lowest/70 hover:text-blue-600 transition-colors";
 
 export default function DaidaiYokochoMenu() {
     const containerRef = useRef<HTMLDivElement>(null);
@@ -161,7 +161,7 @@ export default function DaidaiYokochoMenu() {
                     {/* お気に入り・カート・アカウントを1つのバーにする（モバイルは縦、PCは横）。お気に入りとカートは、ログイン中だけ */}
                     <nav
                         aria-label="お気に入り・カート・アカウント"
-                        className="flex flex-col-reverse md:flex-row items-center bg-white/80 backdrop-blur-md rounded-full shadow-lg border border-white/60 shadow-blue-300/10 overflow-hidden"
+                        className="flex flex-col-reverse md:flex-row items-center bg-surface-container-lowest/80 backdrop-blur-md rounded-full shadow-lg border border-glass-edge/60 shadow-blue-300/10 overflow-hidden"
                     >
                         {user && (
                             <>
@@ -170,27 +170,27 @@ export default function DaidaiYokochoMenu() {
                                     aria-label={favoriteCount > 0 ? `お気に入り（${favoriteCount}件）` : "お気に入り"}
                                     className={`relative ${quickIconClass}`}
                                 >
-                                    <Heart className="w-5 h-5 text-gray-700" />
+                                    <Heart className="w-5 h-5 text-on-surface-variant" />
                                     {favoriteCount > 0 && (
                                         <span className="pointer-events-none absolute top-1 right-1 min-w-4 h-4 px-1 rounded-full bg-rose-500 text-white text-[10px] font-bold flex items-center justify-center">
                                             {favoriteCount}
                                         </span>
                                     )}
                                 </Link>
-                                <span aria-hidden className="block h-px w-6 md:h-6 md:w-px bg-gray-300/80" />
+                                <span aria-hidden className="block h-px w-6 md:h-6 md:w-px bg-outline/80" />
                                 <Link
                                     href="/daidai-yokocho/cart"
                                     aria-label={cartCount > 0 ? `カート（${cartCount}件）` : "カート"}
                                     className={`relative ${quickIconClass}`}
                                 >
-                                    <ShoppingCart className="w-5 h-5 text-gray-700" />
+                                    <ShoppingCart className="w-5 h-5 text-on-surface-variant" />
                                     {cartCount > 0 && (
                                         <span className="pointer-events-none absolute top-1 right-1 min-w-4 h-4 px-1 rounded-full bg-blue-600 text-white text-[10px] font-bold flex items-center justify-center">
                                             {cartCount}
                                         </span>
                                     )}
                                 </Link>
-                                <span aria-hidden className="block h-px w-6 md:h-6 md:w-px bg-gray-300/80" />
+                                <span aria-hidden className="block h-px w-6 md:h-6 md:w-px bg-outline/80" />
                             </>
                         )}
                         <button
@@ -200,7 +200,7 @@ export default function DaidaiYokochoMenu() {
                             className={`relative ${quickIconClass}`}
                         >
                             {unreadLabel && (
-                                <span aria-label="未読のお知らせが有ります" className="pointer-events-none absolute top-2 right-2 w-2.5 h-2.5 rounded-full bg-red-500 border border-white" />
+                                <span aria-label="未読のお知らせが有ります" className="pointer-events-none absolute top-2 right-2 w-2.5 h-2.5 rounded-full bg-red-500 border border-glass-edge" />
                             )}
                             {profileLoading ? (
                                 <Skeleton className="w-9 h-9 rounded-full" />
@@ -208,7 +208,7 @@ export default function DaidaiYokochoMenu() {
                                 // eslint-disable-next-line @next/next/no-img-element
                                 <img src={displayProfile.iconUrl} alt="" className="w-9 h-9 rounded-full object-cover" />
                             ) : (
-                                <PersonIcon className="w-6 h-6 text-gray-700" />
+                                <PersonIcon className="w-6 h-6 text-on-surface-variant" />
                             )}
                         </button>
                     </nav>
@@ -220,7 +220,7 @@ export default function DaidaiYokochoMenu() {
                             animate={{ opacity: 1, scale: 1, y: 0 }}
                             exit={{ opacity: 0, scale: 0.95, y: -4 }}
                             transition={{ duration: 0.15 }}
-                            className="absolute top-full right-0 mt-2 w-72 bg-white/90 backdrop-blur-md rounded-2xl shadow-2xl border border-white/70 p-4 flex flex-col gap-2"
+                            className="absolute top-full right-0 mt-2 w-72 bg-surface-container-lowest/90 backdrop-blur-md rounded-2xl shadow-2xl border border-glass-edge/70 p-4 flex flex-col gap-2"
                         >
                             <div className="mb-1">
                                 {!authReady ? null : user ? (
@@ -229,7 +229,7 @@ export default function DaidaiYokochoMenu() {
                                             setOpen(false);
                                             setShowProfileEdit(true);
                                         }}
-                                        className="flex items-center gap-3 px-1 py-1.5 w-full rounded-xl hover:bg-white/70 transition-colors"
+                                        className="flex items-center gap-3 px-1 py-1.5 w-full rounded-xl hover:bg-surface-container-lowest/70 transition-colors"
                                     >
                                         {profileLoading ? (
                                             <Skeleton className="w-12 h-12 rounded-full shrink-0" />
@@ -238,10 +238,10 @@ export default function DaidaiYokochoMenu() {
                                             <img
                                                 src={displayProfile.iconUrl}
                                                 alt=""
-                                                className="w-12 h-12 rounded-full object-cover border border-white/80 shrink-0"
+                                                className="w-12 h-12 rounded-full object-cover border border-glass-edge/80 shrink-0"
                                             />
                                         ) : (
-                                            <div className="w-12 h-12 rounded-full bg-gray-200 shrink-0" />
+                                            <div className="w-12 h-12 rounded-full bg-outline-variant shrink-0" />
                                         )}
                                         <div className="min-w-0 text-left">
                                             {profileLoading ? (
@@ -251,11 +251,11 @@ export default function DaidaiYokochoMenu() {
                                                 </div>
                                             ) : (
                                                 <>
-                                                    <p className="font-bold text-gray-900 truncate">
+                                                    <p className="font-bold text-on-surface truncate">
                                                         {displayProfile?.nickname ?? user.displayName ?? "DaiDaiアカウント"}
                                                     </p>
                                                     {displayProfile?.rhingSeed && (
-                                                        <p className="text-xs text-gray-400 truncate">@{displayProfile.rhingSeed}</p>
+                                                        <p className="text-xs text-outline truncate">@{displayProfile.rhingSeed}</p>
                                                     )}
                                                 </>
                                             )}
@@ -270,7 +270,7 @@ export default function DaidaiYokochoMenu() {
                                         }}
                                         className="flex flex-col gap-3 px-1"
                                     >
-                                        <p className="text-sm text-gray-600">認証アプリの6桁コードを入力してください</p>
+                                        <p className="text-sm text-on-surface-variant">認証アプリの6桁コードを入力してください</p>
                                         <input
                                             value={code}
                                             onChange={(e) => handleCodeChange(e.target.value)}
@@ -281,7 +281,7 @@ export default function DaidaiYokochoMenu() {
                                             inputMode="numeric"
                                             maxLength={6}
                                             autoFocus
-                                            className="w-full text-center rounded-lg border border-gray-300 px-4 py-2 text-lg tracking-widest"
+                                            className="w-full text-center rounded-lg border border-outline/50 px-4 py-2 text-lg tracking-widest"
                                         />
                                         <div className="flex gap-2">
                                             <button
@@ -303,14 +303,14 @@ export default function DaidaiYokochoMenu() {
                                 ) : (
                                     <div className="flex flex-col items-center gap-3">
                                         <GoogleSignInButton mode={mode} redirecting={redirecting} onRedirect={startGoogleRedirect} containerRef={buttonContainerRef} />
-                                        <div className="w-full border-t border-gray-200/70" />
+                                        <div className="w-full border-t border-outline-variant/70" />
                                         <button
                                             type="button"
                                             onClick={() => {
                                                 setOpen(false);
                                                 setShowPasskeySignIn(true);
                                             }}
-                                            className="flex items-center justify-center gap-2 w-full px-4 py-2 rounded-full border border-gray-300 text-sm text-gray-700 hover:bg-white/70 transition-colors"
+                                            className="flex items-center justify-center gap-2 w-full px-4 py-2 rounded-full border border-outline/50 text-sm text-on-surface-variant hover:bg-surface-container-lowest/70 transition-colors"
                                         >
                                             <KeyRound className="w-4 h-4" />
                                             パスキーでログイン
@@ -326,7 +326,7 @@ export default function DaidaiYokochoMenu() {
                                                     // エラー表示はpasskeyRegisterErrorに反映済み
                                                 }
                                             }}
-                                            className="text-xs text-gray-500 hover:text-gray-800 transition-colors disabled:opacity-50"
+                                            className="text-xs text-on-surface-subtle hover:text-on-surface transition-colors disabled:opacity-50"
                                         >
                                             {registeringPasskey ? "作成中..." : "Rhing Seedでアカウントを作成"}
                                         </button>
@@ -336,20 +336,20 @@ export default function DaidaiYokochoMenu() {
                                                 setOpen(false);
                                                 setShowPasskeyRecovery(true);
                                             }}
-                                            className="text-xs text-gray-500 hover:text-gray-800 transition-colors"
+                                            className="text-xs text-on-surface-subtle hover:text-on-surface transition-colors"
                                         >
                                             パスキーが使えない場合
                                         </button>
                                         {passkeyRegisterError && (
-                                            <p className="text-xs text-red-600">{passkeyRegisterError}</p>
+                                            <p className="text-xs text-red-600 dark:text-red-400">{passkeyRegisterError}</p>
                                         )}
                                     </div>
                                 )}
-                                {error && <p className="mt-2 text-xs text-red-600 px-1">{error}</p>}
+                                {error && <p className="mt-2 text-xs text-red-600 dark:text-red-400 px-1">{error}</p>}
                             </div>
 
                             {user && !resolver && (
-                                <div className="flex flex-col gap-0.5 border-t border-gray-200/70 pt-2">
+                                <div className="flex flex-col gap-0.5 border-t border-outline-variant/70 pt-2">
                                     <Link href="/daidai-yokocho/notices" onClick={close} className={menuItemClass}>
                                         <Bell className="w-4 h-4 shrink-0" />
                                         <span className="flex-1">お知らせ</span>
@@ -404,7 +404,7 @@ export default function DaidaiYokochoMenu() {
                                             close();
                                             setShowDeleteDialog(true);
                                         }}
-                                        className={`${menuItemClass} text-red-600 hover:text-red-700`}
+                                        className={`${menuItemClass} text-red-600 dark:text-red-400 hover:text-red-700`}
                                     >
                                         <Trash2 className="w-4 h-4 shrink-0" />
                                         アカウント削除

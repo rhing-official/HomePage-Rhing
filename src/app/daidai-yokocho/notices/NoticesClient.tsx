@@ -10,10 +10,10 @@ import { fetchNotices, markNoticesRead } from "@/lib/noticesClient";
 const NOTICES_PATH = "/daidai-yokocho/notices";
 
 const toneClass: Record<NoticeTone, string> = {
-    success: "bg-green-100 text-green-800",
-    warning: "bg-amber-100 text-amber-800",
-    danger: "bg-red-100 text-red-800",
-    neutral: "bg-gray-100 text-gray-700",
+    success: "bg-green-100 dark:bg-green-900/40 text-green-800 dark:text-green-200",
+    warning: "bg-amber-100 dark:bg-amber-900/40 text-amber-800 dark:text-amber-200",
+    danger: "bg-red-100 dark:bg-red-900/40 text-red-800 dark:text-red-200",
+    neutral: "bg-surface-container-high text-on-surface-variant",
 };
 
 function formatDate(d: Date | null): string {
@@ -64,32 +64,32 @@ export default function NoticesClient() {
     return (
         <div className="w-full pb-24">
             <div className="container mx-auto px-6 pb-16 max-w-3xl">
-                <h1 className="flex items-center gap-3 text-3xl font-bold tracking-widest text-gray-900 mb-12">
+                <h1 className="flex items-center gap-3 text-3xl font-bold tracking-widest text-on-surface mb-12">
                     <Bell className="w-7 h-7 shrink-0" aria-hidden />
                     お知らせ
                 </h1>
 
                 {failed ? (
-                    <p className="text-sm text-red-600">お知らせを読み込めませんでした。時間をおいて、もう一度お試しください。</p>
+                    <p className="text-sm text-red-600 dark:text-red-400">お知らせを読み込めませんでした。時間をおいて、もう一度お試しください。</p>
                 ) : notices === null ? (
-                    <p className="text-sm text-gray-400">読み込み中…</p>
+                    <p className="text-sm text-outline">読み込み中…</p>
                 ) : notices.length === 0 ? (
-                    <p className="text-sm text-gray-400">お知らせは有りません。</p>
+                    <p className="text-sm text-outline">お知らせは有りません。</p>
                 ) : (
                     <ul className="flex flex-col gap-4">
                         {notices.map((n) => {
                             const meta = noticeKindMeta(n.kind);
                             return (
-                                <li key={n.id} className="rounded-2xl bg-white/80 border border-white/70 shadow-sm p-5 text-left">
+                                <li key={n.id} className="rounded-2xl bg-surface-container-lowest/80 border border-glass-edge/70 shadow-sm p-5 text-left">
                                     <div className="flex items-center gap-3 mb-2">
                                         {meta && (
                                             <span className={`text-xs font-bold px-2.5 py-1 rounded-full ${toneClass[meta.tone]}`}>
                                                 {meta.title}
                                             </span>
                                         )}
-                                        <time className="text-xs text-gray-400">{formatDate(n.createdAt)}</time>
+                                        <time className="text-xs text-outline">{formatDate(n.createdAt)}</time>
                                     </div>
-                                    <p className="text-sm text-gray-800 leading-relaxed whitespace-pre-wrap break-words">{formatNoticeContent(n.content)}</p>
+                                    <p className="text-sm text-on-surface leading-relaxed whitespace-pre-wrap break-words">{formatNoticeContent(n.content)}</p>
                                 </li>
                             );
                         })}

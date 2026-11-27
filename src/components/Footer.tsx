@@ -3,7 +3,7 @@ import Image from "next/image";
 import { siteConfig } from "@/data/siteConfig";
 
 const UnderlineLink = ({ href, children, external = false }: { href: string; children: React.ReactNode; external?: boolean }) => {
-    const baseClasses = "group relative inline-block pb-1 text-gray-800 font-bold tracking-wide hover:text-black transition-colors whitespace-nowrap text-sm xl:text-base";
+    const baseClasses = "group relative inline-block pb-1 text-on-surface font-bold tracking-wide hover:text-primary transition-colors whitespace-nowrap text-sm xl:text-base";
     const underline = <span className="absolute bottom-0 left-0 w-0 h-[2px] bg-current transition-all duration-300 group-hover:w-full"></span>;
 
     if (external) {
@@ -82,7 +82,7 @@ export default function Footer() {
 
                         {/* お問い合わせ */}
                         <div>
-                            <h3 className="text-gray-900 font-black text-lg xl:text-xl mb-6 tracking-widest border-b-2 border-gray-900/20 pb-3 pl-2 whitespace-nowrap">
+                            <h3 className="text-on-surface font-black text-lg xl:text-xl mb-6 tracking-widest border-b-2 border-on-surface/20 pb-3 pl-2 whitespace-nowrap">
                                 お問い合わせ
                             </h3>
                             <ul className="space-y-4 pl-2">
@@ -93,7 +93,7 @@ export default function Footer() {
 
                         {/* 法務関連 */}
                         <div>
-                            <h3 className="text-gray-900 font-black text-lg xl:text-xl mb-6 tracking-widest border-b-2 border-gray-900/20 pb-3 pl-2 whitespace-nowrap">
+                            <h3 className="text-on-surface font-black text-lg xl:text-xl mb-6 tracking-widest border-b-2 border-on-surface/20 pb-3 pl-2 whitespace-nowrap">
                                 法務関連
                             </h3>
                             <ul className="space-y-4 pl-2">
@@ -108,13 +108,13 @@ export default function Footer() {
 
                         {/* 発信・交流。役割ごとに、小見出しで区切る（読む: 発信の本編、集う: コミュニティ、話す: SNS、作る: ソース） */}
                         <div>
-                            <h3 className="text-gray-900 font-black text-lg xl:text-xl mb-6 tracking-widest border-b-2 border-gray-900/20 pb-3 pl-2 whitespace-nowrap">
+                            <h3 className="text-on-surface font-black text-lg xl:text-xl mb-6 tracking-widest border-b-2 border-on-surface/20 pb-3 pl-2 whitespace-nowrap">
                                 発信・交流
                             </h3>
                             <div className="space-y-5 pl-2">
                                 {mediaGroups.map((group) => (
                                     <div key={group.label} className="flex flex-col gap-2 xl:flex-row xl:items-baseline xl:gap-4">
-                                        <p className="shrink-0 text-xs font-bold tracking-widest text-gray-500 xl:w-10">{group.label}</p>
+                                        <p className="shrink-0 text-xs font-bold tracking-widest text-on-surface-variant xl:w-10">{group.label}</p>
                                         <ul className="flex flex-wrap gap-x-5 gap-y-2">
                                             {group.links.map((link) => (
                                                 <li key={link.name}>

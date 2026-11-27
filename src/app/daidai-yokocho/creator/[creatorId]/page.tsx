@@ -43,27 +43,27 @@ export default async function CreatorProfilePage({
     return (
         <div className="w-full pb-24">
             <div className="container mx-auto px-6 pb-24 max-w-4xl">
-                <div className="bg-white/40 backdrop-blur-md border border-white/80 shadow-md shadow-gray-200/30 rounded-3xl overflow-hidden p-8 md:p-12 mb-12">
+                <div className="bg-surface-container-lowest/40 backdrop-blur-md border border-glass-edge/80 shadow-md shadow-outline-variant/30 rounded-3xl overflow-hidden p-8 md:p-12 mb-12">
                     <div className="flex flex-col sm:flex-row items-center sm:items-start gap-6">
                         {creator.iconUrl ? (
                             // eslint-disable-next-line @next/next/no-img-element
                             <img
                                 src={creator.iconUrl}
                                 alt=""
-                                className="w-24 h-24 rounded-full object-cover border border-white/80 shrink-0"
+                                className="w-24 h-24 rounded-full object-cover border border-glass-edge/80 shrink-0"
                             />
                         ) : (
-                            <div className="w-24 h-24 rounded-full bg-gray-200 shrink-0" />
+                            <div className="w-24 h-24 rounded-full bg-outline-variant shrink-0" />
                         )}
                         <div className="flex-1 text-center sm:text-left">
-                            <h1 className="text-2xl font-bold text-gray-900">
+                            <h1 className="text-2xl font-bold text-on-surface">
                                 {creator.nickname ?? (creator.rhingSeed && `@${creator.rhingSeed}`)}
                             </h1>
                             {creator.nickname && creator.rhingSeed && (
-                                <p className="text-sm text-gray-400 mt-1">@{creator.rhingSeed}</p>
+                                <p className="text-sm text-outline mt-1">@{creator.rhingSeed}</p>
                             )}
                             {creator.statusMessage && (
-                                <p className="text-sm text-gray-600 mt-4">{creator.statusMessage}</p>
+                                <p className="text-sm text-on-surface-variant mt-4">{creator.statusMessage}</p>
                             )}
                             <SnsLinkList urls={creator.snsLinkUrls} />
                             <div className="mt-6">

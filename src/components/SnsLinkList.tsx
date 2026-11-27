@@ -15,7 +15,7 @@ function parseHttpUrl(raw: string): URL | null {
 
 function ServiceIcon({ origin }: { origin: string }) {
     const [failed, setFailed] = useState(false);
-    if (failed) return <Link2 className="w-4 h-4 text-gray-400 shrink-0" aria-hidden />;
+    if (failed) return <Link2 className="w-4 h-4 text-outline shrink-0" aria-hidden />;
     return (
         // リンク先のサービスのfavicon。取得できなければ汎用のリンクアイコンにする
         // eslint-disable-next-line @next/next/no-img-element
@@ -48,7 +48,7 @@ export default function SnsLinkList({ urls }: { urls: string[] }) {
                         href={url.href}
                         target="_blank"
                         rel="noreferrer noopener"
-                        className="inline-flex items-center gap-2 text-xs text-blue-600 hover:text-blue-700 underline decoration-dotted break-all"
+                        className="inline-flex items-center gap-2 text-xs text-blue-600 dark:text-blue-400 hover:text-blue-700 underline decoration-dotted break-all"
                     >
                         <ServiceIcon origin={url.origin} />
                         <span>{raw}</span>

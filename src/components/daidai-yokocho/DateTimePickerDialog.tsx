@@ -105,8 +105,8 @@ export default function DateTimePickerDialog({
         onSubmit(text);
     };
 
-    const navButton = "p-2 rounded-full text-gray-700 hover:bg-gray-100 transition-colors disabled:text-gray-300 disabled:hover:bg-transparent disabled:cursor-not-allowed";
-    const select_ = "rounded-lg border border-gray-200 bg-white/70 px-3 py-2 text-sm text-gray-800";
+    const navButton = "p-2 rounded-full text-on-surface-variant hover:bg-surface-container-high transition-colors disabled:text-outline disabled:hover:bg-transparent disabled:cursor-not-allowed";
+    const select_ = "rounded-lg border border-outline-variant bg-surface-container-lowest/70 px-3 py-2 text-sm text-on-surface";
 
     return (
         <ModalPortal>
@@ -120,14 +120,14 @@ export default function DateTimePickerDialog({
                 if (e.target === e.currentTarget) onClose();
             }}
         >
-            <div className="w-full max-w-sm bg-white rounded-m3-xl shadow-elevation-3 p-6 flex flex-col gap-4">
-                <p className="text-2xl text-gray-900">{pickedLabel}</p>
+            <div className="w-full max-w-sm bg-surface-container-lowest rounded-m3-xl shadow-elevation-3 p-6 flex flex-col gap-4">
+                <p className="text-2xl text-on-surface">{pickedLabel}</p>
 
                 <div className="flex items-center">
                     <button type="button" className={navButton} aria-label="前の月" disabled={!canGoPrevious} onClick={() => setView(prevMonth)}>
                         <ChevronLeft className="w-5 h-5" />
                     </button>
-                    <p className="flex-1 text-center font-bold text-gray-900">
+                    <p className="flex-1 text-center font-bold text-on-surface">
                         {view.year}/{String(view.month).padStart(2, "0")}
                     </p>
                     <button type="button" className={navButton} aria-label="次の月" disabled={!canGoNext} onClick={() => setView(nextMonth)}>
@@ -138,7 +138,7 @@ export default function DateTimePickerDialog({
                 <div>
                     <div className="grid grid-cols-7 mb-1">
                         {weekdayLabels().map((label) => (
-                            <span key={label} className="text-xs text-gray-500 text-center">{label}</span>
+                            <span key={label} className="text-xs text-on-surface-subtle text-center">{label}</span>
                         ))}
                     </div>
                     <div ref={gridRef} className="grid grid-cols-7 gap-0.5" role="grid">
@@ -151,8 +151,8 @@ export default function DateTimePickerDialog({
                             const look = isPicked
                                 ? "bg-primary text-on-primary font-bold"
                                 : !enabled
-                                  ? "text-gray-900/25 cursor-not-allowed"
-                                  : `text-gray-900 hover:bg-gray-100 ${isToday ? "border-2 border-gray-400" : ""}`;
+                                  ? "text-on-surface/25 cursor-not-allowed"
+                                  : `text-on-surface hover:bg-surface-container-high ${isToday ? "border-2 border-outline" : ""}`;
                             return (
                                 <button
                                     key={key}
@@ -173,7 +173,7 @@ export default function DateTimePickerDialog({
                     </div>
                 </div>
 
-                <div className="flex items-center gap-2 text-sm text-gray-700">
+                <div className="flex items-center gap-2 text-sm text-on-surface-variant">
                     <span className="mr-1">時刻（日本時間）</span>
                     <select value={hour} onChange={(e) => { setHour(Number(e.target.value)); setError(null); }} aria-label="時" className={select_}>
                         {Array.from({ length: 24 }, (_, h) => (
@@ -188,10 +188,10 @@ export default function DateTimePickerDialog({
                     </select>
                 </div>
 
-                {error && <p className="text-sm text-red-600" role="alert">{error}</p>}
+                {error && <p className="text-sm text-red-600 dark:text-red-400" role="alert">{error}</p>}
 
                 <div className="flex justify-end gap-3">
-                    <button type="button" onClick={onClose} className="px-5 py-2 rounded-full text-sm font-bold text-gray-600 hover:bg-gray-100 transition-colors">
+                    <button type="button" onClick={onClose} className="px-5 py-2 rounded-full text-sm font-bold text-on-surface-variant hover:bg-surface-container-high transition-colors">
                         キャンセル
                     </button>
                     <button type="button" onClick={handleDone} className="px-5 py-2 rounded-full text-sm font-bold bg-primary text-on-primary hover:bg-primary/90 transition-colors">

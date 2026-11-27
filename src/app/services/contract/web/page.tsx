@@ -26,7 +26,7 @@ const sections = [
 
 export default function ContractWebPage() {
     return (
-        <div className="w-full text-gray-800 pb-32">
+        <div className="w-full text-on-surface pb-32">
             <ContractHero
                 category="Contract / Web"
                 title="HP制作"
@@ -36,23 +36,23 @@ export default function ContractWebPage() {
 
             <div className="container mx-auto px-6 max-w-5xl flex flex-col gap-12">
                 <section className={`${cardClass} p-8 md:p-12`}>
-                    <h2 className="text-2xl font-bold text-gray-900 tracking-wider mb-6">3年間の維持費</h2>
+                    <h2 className="text-2xl font-bold text-on-surface tracking-wider mb-6">3年間の維持費</h2>
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                         <div className="rounded-m3-lg bg-primary-container/60 p-6">
-                            <p className="text-sm text-gray-600 mb-1">本サービス</p>
-                            <p className="text-3xl font-bold text-gray-900">約6,000円</p>
-                            <p className="text-xs text-gray-500 mt-2">ドメイン代 年2,000円 × 3年</p>
+                            <p className="text-sm text-on-surface-variant mb-1">本サービス</p>
+                            <p className="text-3xl font-bold text-on-surface">約6,000円</p>
+                            <p className="text-xs text-on-surface-subtle mt-2">ドメイン代 年2,000円 × 3年</p>
                         </div>
-                        <div className="rounded-m3-lg bg-white/60 p-6">
-                            <p className="text-sm text-gray-600 mb-1">WordPress</p>
-                            <p className="text-3xl font-bold text-gray-900">約114,000円</p>
-                            <p className="text-xs text-gray-500 mt-2">（ドメイン代 年2,000円 ＋ サーバー代 月3,000円）× 3年</p>
+                        <div className="rounded-m3-lg bg-surface-container-lowest/60 p-6">
+                            <p className="text-sm text-on-surface-variant mb-1">WordPress</p>
+                            <p className="text-3xl font-bold text-on-surface">約114,000円</p>
+                            <p className="text-xs text-on-surface-subtle mt-2">（ドメイン代 年2,000円 ＋ サーバー代 月3,000円）× 3年</p>
                         </div>
                     </div>
                 </section>
 
                 <ContractSection title="見積もり">
-                    <p className="text-gray-700 leading-relaxed mb-6">ページ数と機能を選ぶと、見積もりの目安が出ます。</p>
+                    <p className="text-on-surface-variant leading-relaxed mb-6">ページ数と機能を選ぶと、見積もりの目安が出ます。</p>
                     <EstimateSimulator kind="web" />
                 </ContractSection>
 
@@ -60,8 +60,8 @@ export default function ContractWebPage() {
                 <ContractNotes sections={sections} />
 
                 <section className={`${cardClass} p-8 md:p-12`}>
-                    <h2 className="text-2xl font-bold text-gray-900 tracking-wider mb-4">制作実績</h2>
-                    <p className="text-gray-700 leading-relaxed">
+                    <h2 className="text-2xl font-bold text-on-surface tracking-wider mb-4">制作実績</h2>
+                    <p className="text-on-surface-variant leading-relaxed">
                         このサイト（rhing.jp）は、HTML・CSS・TypeScriptで制作・運用しています。ポートフォリオとして、ご覧ください。
                     </p>
                 </section>

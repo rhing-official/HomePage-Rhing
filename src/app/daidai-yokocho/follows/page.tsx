@@ -55,7 +55,7 @@ export default function FollowedCreatorsPage() {
     return (
         <div className="w-full pb-24">
             <div className="container mx-auto px-6 pb-16 max-w-4xl">
-                <h1 className="flex items-center gap-3 text-3xl font-bold tracking-widest text-gray-900 mb-12">
+                <h1 className="flex items-center gap-3 text-3xl font-bold tracking-widest text-on-surface mb-12">
                     <Users className="w-7 h-7 shrink-0" aria-hidden />
                     フォロー中のクリエイター
                 </h1>
@@ -64,7 +64,7 @@ export default function FollowedCreatorsPage() {
                     <ListRowSkeleton />
                 ) : creators.length === 0 ? (
                     <div className="flex flex-col items-start gap-4">
-                        <p className="text-gray-400 text-sm">まだ誰もフォローしていません。</p>
+                        <p className="text-outline text-sm">まだ誰もフォローしていません。</p>
                         <FindInYokochoLink />
                     </div>
                 ) : (
@@ -72,7 +72,7 @@ export default function FollowedCreatorsPage() {
                         {creators.map((creator) => (
                             <div
                                 key={creator.userId}
-                                className="bg-white/40 backdrop-blur-md border border-white/80 shadow-sm rounded-2xl p-5 flex items-center justify-between gap-4"
+                                className="bg-surface-container-lowest/40 backdrop-blur-md border border-glass-edge/80 shadow-sm rounded-2xl p-5 flex items-center justify-between gap-4"
                             >
                                 <Link
                                     href={`/daidai-yokocho/creator/${creator.userId}`}
@@ -83,24 +83,24 @@ export default function FollowedCreatorsPage() {
                                         <img
                                             src={creator.iconUrl}
                                             alt=""
-                                            className="w-10 h-10 rounded-full object-cover border border-white/80 shrink-0"
+                                            className="w-10 h-10 rounded-full object-cover border border-glass-edge/80 shrink-0"
                                         />
                                     ) : (
-                                        <div className="w-10 h-10 rounded-full bg-gray-200 shrink-0" />
+                                        <div className="w-10 h-10 rounded-full bg-outline-variant shrink-0" />
                                     )}
                                     <div className="min-w-0">
-                                        <p className="font-bold text-gray-900 truncate">
+                                        <p className="font-bold text-on-surface truncate">
                                             {creator.nickname ?? (creator.rhingSeed && `@${creator.rhingSeed}`)}
                                         </p>
                                         {creator.nickname && creator.rhingSeed && (
-                                            <p className="text-xs text-gray-400 truncate">@{creator.rhingSeed}</p>
+                                            <p className="text-xs text-outline truncate">@{creator.rhingSeed}</p>
                                         )}
                                     </div>
                                 </Link>
                                 <button
                                     type="button"
                                     onClick={() => handleUnfollow(creator.userId)}
-                                    className="text-sm text-gray-400 hover:text-red-600 transition-colors shrink-0"
+                                    className="text-sm text-outline hover:text-red-600 transition-colors shrink-0"
                                 >
                                     フォロー解除
                                 </button>

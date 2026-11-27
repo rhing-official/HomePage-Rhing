@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useSyncExternalStore } from "react";
 import {
     Chart as ChartJS,
     CategoryScale,
@@ -11,6 +11,7 @@ import {
     Legend,
 } from "chart.js";
 import { Bar } from "react-chartjs-2";
+import { subscribeTheme } from "@/lib/theme";
 import { months, type Amount, type YearData } from "@/data/financialData";
 import {
     calculateRatio,
@@ -26,6 +27,25 @@ import {
 ChartJS.register(CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend);
 
 const tabs = [...months, "年次"];
+
+// グラフの色は、サイトの色トークン（globals.css）から読む。テーマが切り替わったら、読み直して描き直す
+function readChartColors() {
+    const css = getComputedStyle(document.documentElement);
+    const get = (name: string, fallback: string) => css.getPropertyValue(name).trim() || fallback;
+    return {
+        current: get("--color-on-surface", "#111111"),
+        previous: get("--color-outline", "#9ca3af"),
+        text: get("--color-on-surface-variant", "#4b5563"),
+        grid: get("--color-outline-variant", "#e5e7eb"),
+    };
+}
+const isDarkNow = () => document.documentElement.classList.contains("dark");
+
+function useChartColors() {
+    // テーマが変わるたびに、値が変わる（真偽値）ので、描き直される
+    useSyncExternalStore(subscribeTheme, isDarkNow, () => false);
+    return typeof document === "undefined" ? null : readChartColors();
+}
 
 const incomeRows: { key: "subscription" | "creatorMarket" | "donation" | "other"; label: string }[] = [
     { key: "subscription", label: "サブスクリプション" },
@@ -47,8 +67,8 @@ const numberOrZero = (v: Amount) => (v === "-" ? 0 : v);
 
 // 前年比の表示（改善は緑、悪化は赤、計算できないときは「-」）
 function RatioLabel({ ratio, positive }: { ratio: string | null; positive: boolean | null }) {
-    if (!ratio) return <span className="text-gray-400 font-bold">-</span>;
-    return <span className={`font-bold ${positive ? "text-green-600" : "text-red-600"}`}>{ratio}</span>;
+    if (!ratio) return <span className="text-outline font-bold">-</span>;
+    return <span className={`font-bold ${positive ? "text-green-600 dark:text-green-400" : "text-red-600 dark:text-red-400"}`}>{ratio}</span>;
 }
 
 export default function FinancialClient({ years }: { years: Record<string, YearData> }) {
@@ -74,18 +94,20 @@ export default function FinancialClient({ years }: { years: Record<string, YearD
     const annualExpense = sumAmounts(monthly.map((m) => m.expense));
     const annualProfit = netProfit(annualIncome, annualExpense);
 
+    const colors = useChartColors();
+
     const chartData = {
         labels: months,
         datasets: [
             {
                 label: `${activeYear} 収入`,
                 data: monthly.map((m) => numberOrZero(m.income)),
-                backgroundColor: "#111111",
+                backgroundColor: colors?.current ?? "#111111",
             },
             {
                 label: "前年度 収入",
                 data: monthly.map((m) => numberOrZero(m.prevIncome)),
-                backgroundColor: "#cccccc",
+                backgroundColor: colors?.previous ?? "#cccccc",
             },
         ],
     };
@@ -94,8 +116,12 @@ export default function FinancialClient({ years }: { years: Record<string, YearD
         responsive: true,
         maintainAspectRatio: false,
         plugins: {
-            legend: { position: "top" as const },
+            legend: { position: "top" as const, labels: { color: colors?.text } },
             title: { display: false },
+        },
+        scales: {
+            x: { ticks: { color: colors?.text }, grid: { color: colors?.grid } },
+            y: { ticks: { color: colors?.text }, grid: { color: colors?.grid } },
         },
     };
 
@@ -112,7 +138,7 @@ export default function FinancialClient({ years }: { years: Record<string, YearD
                         <select
                             value={activeYear}
                             onChange={(e) => setActiveYear(e.target.value)}
-                            className="w-full appearance-none bg-white border-2 border-gray-300 rounded-full px-8 py-4 text-lg font-bold tracking-widest text-gray-900 shadow-sm cursor-pointer outline-none transition-all duration-300 hover:border-blue-500 focus:border-blue-500 focus:ring-2 focus:ring-blue-200"
+                            className="w-full appearance-none bg-surface-container-lowest border-2 border-outline/50 rounded-full px-8 py-4 text-lg font-bold tracking-widest text-on-surface shadow-sm cursor-pointer outline-none transition-all duration-300 hover:border-blue-500 focus:border-blue-500 focus:ring-2 focus:ring-blue-200"
                         >
                             {availableYears.map((year) => (
                                 <option key={year} value={year}>
@@ -120,7 +146,7 @@ export default function FinancialClient({ years }: { years: Record<string, YearD
                                 </option>
                             ))}
                         </select>
-                        <div className="pointer-events-none absolute inset-y-0 right-6 flex items-center text-gray-500">
+                        <div className="pointer-events-none absolute inset-y-0 right-6 flex items-center text-on-surface-subtle">
                             <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M19 9l-7 7-7-7" />
                             </svg>
@@ -128,15 +154,15 @@ export default function FinancialClient({ years }: { years: Record<string, YearD
                     </div>
                 </div>
 
-                <div className="flex justify-between items-center border-b border-gray-200 overflow-x-auto pb-0">
+                <div className="flex justify-between items-center border-b border-outline-variant overflow-x-auto pb-0">
                     {tabs.map((tab) => (
                         <button
                             key={tab}
                             onClick={() => setActiveTab(tab)}
                             className={`px-4 py-5 text-base font-bold tracking-widest transition-colors whitespace-nowrap ${
                                 activeTab === tab
-                                    ? "border-b-2 border-gray-900 text-gray-900"
-                                    : "text-gray-400 hover:text-gray-600"
+                                    ? "border-b-2 border-on-surface text-on-surface"
+                                    : "text-outline hover:text-on-surface-variant"
                             }`}
                         >
                             {tab}
@@ -149,20 +175,20 @@ export default function FinancialClient({ years }: { years: Record<string, YearD
             <div className="bg-surface-container p-8 md:p-12 rounded-m3-lg min-h-[500px]">
                 {isAnnualTab ? (
                     <div className="w-full">
-                        <h2 className="text-2xl font-bold mb-8 tracking-widest text-gray-900 text-center">
+                        <h2 className="text-2xl font-bold mb-8 tracking-widest text-on-surface text-center">
                             {activeYear} 年間収支推移（前年度比）
                         </h2>
                         <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-10">
-                            <div className="bg-white p-6 rounded-xl shadow-sm border border-gray-100 text-center">
-                                <span className="text-xs font-bold tracking-widest text-gray-500 block mb-2">年間収入</span>
-                                <p className="text-2xl font-bold text-gray-900">{formatCurrency(annualIncome)}</p>
+                            <div className="bg-surface-container-lowest p-6 rounded-xl shadow-sm border border-outline-variant text-center">
+                                <span className="text-xs font-bold tracking-widest text-on-surface-subtle block mb-2">年間収入</span>
+                                <p className="text-2xl font-bold text-on-surface">{formatCurrency(annualIncome)}</p>
                             </div>
-                            <div className="bg-white p-6 rounded-xl shadow-sm border border-gray-100 text-center">
-                                <span className="text-xs font-bold tracking-widest text-gray-500 block mb-2">年間支出</span>
-                                <p className="text-2xl font-bold text-gray-900">{formatCurrency(annualExpense)}</p>
+                            <div className="bg-surface-container-lowest p-6 rounded-xl shadow-sm border border-outline-variant text-center">
+                                <span className="text-xs font-bold tracking-widest text-on-surface-subtle block mb-2">年間支出</span>
+                                <p className="text-2xl font-bold text-on-surface">{formatCurrency(annualExpense)}</p>
                             </div>
-                            <div className="bg-gray-900 text-white p-6 rounded-xl text-center">
-                                <span className="text-xs font-bold tracking-widest text-gray-300 block mb-2">年間純利益</span>
+                            <div className="bg-on-surface text-surface p-6 rounded-xl text-center">
+                                <span className="text-xs font-bold tracking-widest text-outline block mb-2">年間純利益</span>
                                 <p className="text-2xl font-bold">{formatCurrency(annualProfit)}</p>
                             </div>
                         </div>
@@ -172,28 +198,28 @@ export default function FinancialClient({ years }: { years: Record<string, YearD
                     </div>
                 ) : current && currentMonth ? (
                     <div className="w-full">
-                        <h2 className="text-2xl font-bold mb-10 tracking-widest text-gray-900 border-b border-gray-200 pb-4">
+                        <h2 className="text-2xl font-bold mb-10 tracking-widest text-on-surface border-b border-outline-variant pb-4">
                             {activeYear} {activeTab} 収支報告
                         </h2>
 
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                             {/* ---- 収入カード ---- */}
-                            <div className="bg-white p-8 rounded-xl shadow-sm border border-gray-100">
-                                <span className="text-sm font-bold tracking-widest text-gray-500 block mb-2">INCOME / 収入</span>
-                                <p className="text-4xl font-bold text-gray-900 mb-4">{formatCurrency(current.income)}</p>
+                            <div className="bg-surface-container-lowest p-8 rounded-xl shadow-sm border border-outline-variant">
+                                <span className="text-sm font-bold tracking-widest text-on-surface-subtle block mb-2">INCOME / 収入</span>
+                                <p className="text-4xl font-bold text-on-surface mb-4">{formatCurrency(current.income)}</p>
 
-                                <div className="bg-gray-50 rounded-lg p-4 mb-4 space-y-2">
-                                    <p className="text-xs font-bold text-gray-400 tracking-widest mb-3">BREAKDOWN / 内訳</p>
+                                <div className="bg-surface-container rounded-lg p-4 mb-4 space-y-2">
+                                    <p className="text-xs font-bold text-outline tracking-widest mb-3">BREAKDOWN / 内訳</p>
                                     {incomeRows.map((row) => (
-                                        <div key={row.key} className="flex justify-between text-sm text-gray-600">
+                                        <div key={row.key} className="flex justify-between text-sm text-on-surface-variant">
                                             <span>{row.label}</span>
                                             <span className="font-medium">{formatCurrency(currentMonth.incomeDetail[row.key])}</span>
                                         </div>
                                     ))}
                                 </div>
 
-                                <div className="flex justify-between items-center text-sm border-t border-gray-100 pt-4">
-                                    <span className="text-gray-500">前年同月: {formatCurrency(current.prevIncome)}</span>
+                                <div className="flex justify-between items-center text-sm border-t border-outline-variant pt-4">
+                                    <span className="text-on-surface-subtle">前年同月: {formatCurrency(current.prevIncome)}</span>
                                     <RatioLabel
                                         ratio={calculateRatio(current.income, current.prevIncome)}
                                         positive={isPositive(current.income, current.prevIncome)}
@@ -202,22 +228,22 @@ export default function FinancialClient({ years }: { years: Record<string, YearD
                             </div>
 
                             {/* ---- 支出カード ---- */}
-                            <div className="bg-white p-8 rounded-xl shadow-sm border border-gray-100">
-                                <span className="text-sm font-bold tracking-widest text-gray-500 block mb-2">EXPENSE / 支出</span>
-                                <p className="text-4xl font-bold text-gray-900 mb-4">{formatCurrency(current.expense)}</p>
+                            <div className="bg-surface-container-lowest p-8 rounded-xl shadow-sm border border-outline-variant">
+                                <span className="text-sm font-bold tracking-widest text-on-surface-subtle block mb-2">EXPENSE / 支出</span>
+                                <p className="text-4xl font-bold text-on-surface mb-4">{formatCurrency(current.expense)}</p>
 
-                                <div className="bg-gray-50 rounded-lg p-4 mb-4 space-y-2">
-                                    <p className="text-xs font-bold text-gray-400 tracking-widest mb-3">BREAKDOWN / 内訳</p>
+                                <div className="bg-surface-container rounded-lg p-4 mb-4 space-y-2">
+                                    <p className="text-xs font-bold text-outline tracking-widest mb-3">BREAKDOWN / 内訳</p>
                                     {expenseRows.map((row) => (
-                                        <div key={row.key} className="flex justify-between text-sm text-gray-600">
+                                        <div key={row.key} className="flex justify-between text-sm text-on-surface-variant">
                                             <span>{row.label}</span>
                                             <span className="font-medium">{formatCurrency(currentMonth.expenseDetail[row.key])}</span>
                                         </div>
                                     ))}
                                 </div>
 
-                                <div className="flex justify-between items-center text-sm border-t border-gray-100 pt-4">
-                                    <span className="text-gray-500">前年同月: {formatCurrency(current.prevExpense)}</span>
+                                <div className="flex justify-between items-center text-sm border-t border-outline-variant pt-4">
+                                    <span className="text-on-surface-subtle">前年同月: {formatCurrency(current.prevExpense)}</span>
                                     <RatioLabel
                                         ratio={calculateRatio(current.expense, current.prevExpense)}
                                         positive={isPositive(current.expense, current.prevExpense, true)}
@@ -227,14 +253,14 @@ export default function FinancialClient({ years }: { years: Record<string, YearD
                         </div>
 
                         {/* 純利益バー */}
-                        <div className="mt-8 bg-gray-900 text-white p-8 rounded-xl flex flex-col md:flex-row justify-between items-center">
+                        <div className="mt-8 bg-on-surface text-surface p-8 rounded-xl flex flex-col md:flex-row justify-between items-center">
                             <span className="text-lg font-bold tracking-widest mb-2 md:mb-0">当月純利益</span>
                             <span className="text-3xl font-bold">{formatCurrency(netProfit(current.income, current.expense))}</span>
                         </div>
                     </div>
                 ) : null}
 
-                <p className="mt-10 text-xs text-gray-400 leading-relaxed">
+                <p className="mt-10 text-xs text-outline leading-relaxed">
                     「¥ -」は、未確定、または該当なしです。年間の合計には、確定した月の金額だけを含めます。
                 </p>
             </div>

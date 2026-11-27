@@ -98,7 +98,7 @@ export default function StickerRowActions({
                   ? `削除の申請は、却下されました${request.decisionNote ? `（${request.decisionNote}）` : ""}`
                   : null;
 
-    const link = "text-[11px] font-bold transition-colors disabled:text-gray-300 disabled:cursor-not-allowed";
+    const link = "text-[11px] font-bold transition-colors disabled:text-outline disabled:cursor-not-allowed";
 
     return (
         <div className="flex flex-col items-center gap-0.5 w-full">
@@ -115,7 +115,7 @@ export default function StickerRowActions({
                     type="button"
                     onClick={handleDelete}
                     disabled={busy || inProgress || scheduledPack}
-                    className={`${link} text-red-600 hover:text-red-800`}
+                    className={`${link} text-red-600 dark:text-red-400 hover:text-red-800`}
                 >
                     {hasUsers ? "削除を申請" : "削除"}
                 </button>
@@ -131,10 +131,10 @@ export default function StickerRowActions({
                     if (file) void handleReplace(file);
                 }}
             />
-            {busy && <span className="text-[10px] text-gray-400">処理中...</span>}
-            {statusNote && <span className="text-[10px] text-gray-500 text-center leading-tight">{statusNote}</span>}
+            {busy && <span className="text-[10px] text-outline">処理中...</span>}
+            {statusNote && <span className="text-[10px] text-on-surface-subtle text-center leading-tight">{statusNote}</span>}
             {message && (
-                <span className={`text-[10px] text-center leading-tight ${message.ok ? "text-emerald-700" : "text-red-600"}`} role="status">
+                <span className={`text-[10px] text-center leading-tight ${message.ok ? "text-emerald-700 dark:text-emerald-200" : "text-red-600 dark:text-red-400"}`} role="status">
                     {message.text}
                 </span>
             )}

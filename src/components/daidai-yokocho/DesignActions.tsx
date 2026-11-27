@@ -100,34 +100,34 @@ export default function DesignActions({
 
     if (variant === "card") {
         const round =
-            "p-2 rounded-full bg-white/80 backdrop-blur-sm shadow-sm border border-white/70 hover:bg-white/95 transition-colors disabled:cursor-not-allowed disabled:opacity-60";
+            "p-2 rounded-full bg-surface-container-lowest/80 backdrop-blur-sm shadow-sm border border-glass-edge/70 hover:bg-surface-container-lowest/95 transition-colors disabled:cursor-not-allowed disabled:opacity-60";
         return (
             <div className="absolute top-2 right-2 flex gap-2">
                 <button type="button" onClick={toggleFavorite} aria-label={favLabel} className={round}>
-                    <Heart className={`w-4 h-4 ${fav === "favorited" ? "text-rose-500 fill-rose-500" : "text-gray-400"}`} />
+                    <Heart className={`w-4 h-4 ${fav === "favorited" ? "text-rose-500 dark:text-rose-400 fill-rose-500" : "text-outline"}`} />
                 </button>
                 <button type="button" onClick={toggleCart} disabled={cartDisabled} aria-label={cartLabel} className={round}>
                     {own === "owned" ? (
-                        <Check className="w-4 h-4 text-emerald-600" />
+                        <Check className="w-4 h-4 text-emerald-600 dark:text-emerald-400" />
                     ) : (
-                        <ShoppingCart className={`w-4 h-4 ${inCart ? "text-blue-600 fill-blue-100" : "text-gray-500"}`} />
+                        <ShoppingCart className={`w-4 h-4 ${inCart ? "text-blue-600 dark:text-blue-400 fill-blue-100" : "text-on-surface-subtle"}`} />
                     )}
                 </button>
             </div>
         );
     }
 
-    const flat = "p-3 rounded-full border border-gray-200 bg-white hover:bg-gray-50 transition disabled:cursor-not-allowed disabled:opacity-50";
+    const flat = "p-3 rounded-full border border-outline-variant bg-surface-container-lowest hover:bg-surface-container transition disabled:cursor-not-allowed disabled:opacity-50";
     return (
         <div className="flex gap-3">
             <button type="button" onClick={toggleFavorite} aria-label={favLabel} aria-pressed={fav === "favorited"} className={flat}>
-                <Heart className={`w-6 h-6 ${fav === "favorited" ? "text-rose-500 fill-rose-500" : "text-gray-400"}`} />
+                <Heart className={`w-6 h-6 ${fav === "favorited" ? "text-rose-500 dark:text-rose-400 fill-rose-500" : "text-outline"}`} />
             </button>
             <button type="button" onClick={toggleCart} disabled={cartDisabled} aria-label={cartLabel} className={flat}>
                 {own === "owned" ? (
-                    <Check className="w-6 h-6 text-emerald-600" />
+                    <Check className="w-6 h-6 text-emerald-600 dark:text-emerald-400" />
                 ) : (
-                    <ShoppingCart className={`w-6 h-6 ${inCart ? "text-blue-600 fill-blue-100" : "text-gray-500"}`} />
+                    <ShoppingCart className={`w-6 h-6 ${inCart ? "text-blue-600 dark:text-blue-400 fill-blue-100" : "text-on-surface-subtle"}`} />
                 )}
             </button>
         </div>

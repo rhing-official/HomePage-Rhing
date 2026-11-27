@@ -16,7 +16,7 @@ export default function KindSwitch({ value, onChange, className = "mb-8" }: { va
             aria-checked={value === "design"}
             aria-label="ぺったんと意匠を切り替える"
             onClick={() => onChange(value === "design" ? "petan" : "design")}
-            className={`relative mx-auto flex h-12 w-64 items-center rounded-full bg-white/70 border border-white/80 shadow-inner p-1 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600 ${className}`}
+            className={`relative mx-auto flex h-12 w-64 items-center rounded-full bg-surface-container-lowest/70 border border-glass-edge/80 shadow-inner p-1 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600 ${className}`}
         >
             <motion.span
                 aria-hidden
@@ -29,7 +29,7 @@ export default function KindSwitch({ value, onChange, className = "mb-8" }: { va
                 <span
                     key={k}
                     className={`relative z-10 flex-1 text-center text-sm font-bold tracking-wider transition-colors duration-200 ${
-                        value === k ? "text-white" : "text-gray-500"
+                        value === k ? "text-white" : "text-on-surface-subtle"
                     }`}
                 >
                     {KIND_LABELS[k]}

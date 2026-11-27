@@ -174,7 +174,7 @@ export default function CartPage() {
     return (
         <div className="w-full pb-24">
             <div className="container mx-auto px-6 pb-16 max-w-4xl">
-                <h1 className="flex items-center gap-3 text-3xl font-bold tracking-widest text-gray-900 mb-12">
+                <h1 className="flex items-center gap-3 text-3xl font-bold tracking-widest text-on-surface mb-12">
                     <ShoppingCart className="w-7 h-7 shrink-0" aria-hidden />
                     カート
                 </h1>
@@ -184,16 +184,16 @@ export default function CartPage() {
                 ) : items.length === 0 ? (
                     <div className="flex flex-col items-start gap-4">
                         {result ? (
-                            <p className="text-sm text-gray-700" role="status">
+                            <p className="text-sm text-on-surface-variant" role="status">
                                 {result.acquired}件入手しました
                                 {result.failed > 0 && `。${result.failed}件は失敗しました。もう一度お試しください`}
                                 。
-                                <Link href="/daidai-yokocho/owned" className="text-blue-600 hover:underline ml-1">
+                                <Link href="/daidai-yokocho/owned" className="text-blue-600 dark:text-blue-400 hover:underline ml-1">
                                     購入済みを見る →
                                 </Link>
                             </p>
                         ) : (
-                            <p className="text-gray-400 text-sm">カートは空です。</p>
+                            <p className="text-outline text-sm">カートは空です。</p>
                         )}
                         <FindInYokochoLink />
                     </div>
@@ -237,12 +237,12 @@ export default function CartPage() {
 
                         <div className="mt-8 flex flex-col gap-3 items-start">
                             {paid > 0 && (
-                                <p className="text-sm text-amber-600">
+                                <p className="text-sm text-amber-600 dark:text-amber-400">
                                     有料のぺったん{paid}件は、現在購入出来ません。カートには残ります。
                                 </p>
                             )}
                             {result && !running && (
-                                <p className="text-sm text-gray-700" role="status">
+                                <p className="text-sm text-on-surface-variant" role="status">
                                     {result.acquired}件入手しました
                                     {result.alreadyOwned > 0 && `。入手済みが${result.alreadyOwned}件有りました`}
                                     {result.failed > 0 && `。${result.failed}件は失敗しました。もう一度お試しください`}

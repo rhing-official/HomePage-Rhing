@@ -59,7 +59,7 @@ export default function FavoriteButton({ packId }: { packId: string }) {
     // 記号（ハート）だけで状態が分かるようにする。文字は出さず、読み上げ用のラベルだけ付ける
     if (!authReady || status === "loading") {
         return (
-            <button disabled aria-label="読み込み中" className="p-2 rounded-full text-gray-300 cursor-not-allowed">
+            <button disabled aria-label="読み込み中" className="p-2 rounded-full text-outline cursor-not-allowed">
                 <Heart className="w-6 h-6" />
             </button>
         );
@@ -72,9 +72,9 @@ export default function FavoriteButton({ packId }: { packId: string }) {
             disabled={submitting}
             aria-label={favorited ? "お気に入り解除" : "お気に入りに追加"}
             aria-pressed={favorited}
-            className="p-2 rounded-full transition hover:bg-gray-100 disabled:opacity-50 disabled:cursor-not-allowed"
+            className="p-2 rounded-full transition hover:bg-surface-container-high disabled:opacity-50 disabled:cursor-not-allowed"
         >
-            <Heart className={`w-6 h-6 ${favorited ? "text-rose-500 fill-rose-500" : "text-gray-400"}`} />
+            <Heart className={`w-6 h-6 ${favorited ? "text-rose-500 dark:text-rose-400 fill-rose-500" : "text-outline"}`} />
         </button>
     );
 }

@@ -65,28 +65,28 @@ export default function AccountDeleteDialog({
                 animate={{ opacity: 1, scale: 1 }}
                 exit={{ opacity: 0, scale: 0.95 }}
                 onClick={(e) => e.stopPropagation()}
-                className="bg-white/90 backdrop-blur-md rounded-3xl shadow-2xl border border-white/80 max-w-sm w-full p-8 flex flex-col gap-4"
+                className="bg-surface-container-lowest/90 backdrop-blur-md rounded-3xl shadow-2xl border border-glass-edge/80 max-w-sm w-full p-8 flex flex-col gap-4"
             >
-                <h2 className="text-lg font-bold text-gray-900">アカウントを削除しますか？</h2>
-                <p className="text-sm text-gray-500 -mt-2">DaiDaiのアカウントも削除されます</p>
+                <h2 className="text-lg font-bold text-on-surface">アカウントを削除しますか？</h2>
+                <p className="text-sm text-on-surface-subtle -mt-2">DaiDaiのアカウントも削除されます</p>
 
                 <button
                     type="button"
                     onClick={handleRequestDeletion}
                     disabled={submitting}
-                    className="w-full text-left px-5 py-3 rounded-2xl border border-gray-200 hover:bg-gray-50 transition disabled:opacity-50"
+                    className="w-full text-left px-5 py-3 rounded-2xl border border-outline-variant hover:bg-surface-container transition disabled:opacity-50"
                 >
-                    <span className="block font-bold text-gray-900">30日後に削除</span>
-                    <span className="block text-xs text-gray-500 mt-1">30日以内に再ログインすれば取り消せます</span>
+                    <span className="block font-bold text-on-surface">30日後に削除</span>
+                    <span className="block text-xs text-on-surface-subtle mt-1">30日以内に再ログインすれば取り消せます</span>
                 </button>
 
                 <button
                     type="button"
                     onClick={handleDeleteImmediately}
                     disabled={submitting}
-                    className="w-full text-left px-5 py-3 rounded-2xl border border-red-200 hover:bg-red-50 transition disabled:opacity-50"
+                    className="w-full text-left px-5 py-3 rounded-2xl border border-red-200 dark:border-red-800 hover:bg-red-50 transition disabled:opacity-50"
                 >
-                    <span className="block font-bold text-red-600">今すぐ削除</span>
+                    <span className="block font-bold text-red-600 dark:text-red-400">今すぐ削除</span>
                     <span className="block text-xs text-red-400 mt-1">この操作は取り消せません</span>
                 </button>
 
@@ -99,8 +99,8 @@ export default function AccountDeleteDialog({
                     やめる
                 </button>
 
-                {submitting && <p className="text-xs text-gray-400 text-center">処理中...</p>}
-                {error && <p className="text-sm text-red-600">{error}</p>}
+                {submitting && <p className="text-xs text-outline text-center">処理中...</p>}
+                {error && <p className="text-sm text-red-600 dark:text-red-400">{error}</p>}
             </motion.div>
         </motion.div>
         </ModalPortal>

@@ -47,22 +47,22 @@ export default function SubmitPanel({ user, result, onSubmitted }: { user: User;
 
     return (
         <>
-            <section className="mt-10 flex flex-col gap-4 rounded-m3-lg bg-white border border-gray-100 shadow-sm p-6">
-                <h2 className="font-bold text-gray-900">投稿する前に</h2>
-                <label className="flex items-start gap-3 text-sm text-gray-700 leading-relaxed cursor-pointer">
+            <section className="mt-10 flex flex-col gap-4 rounded-m3-lg bg-surface-container-lowest border border-outline-variant shadow-sm p-6">
+                <h2 className="font-bold text-on-surface">投稿する前に</h2>
+                <label className="flex items-start gap-3 text-sm text-on-surface-variant leading-relaxed cursor-pointer">
                     <input type="checkbox" checked={rights} onChange={(e) => setRights(e.target.checked)} className="mt-1 w-4 h-4 accent-primary" />
                     <span>{RIGHTS_STATEMENT}</span>
                 </label>
-                <label className="flex items-start gap-3 text-sm text-gray-700 leading-relaxed cursor-pointer">
+                <label className="flex items-start gap-3 text-sm text-on-surface-variant leading-relaxed cursor-pointer">
                     <input type="checkbox" checked={terms} onChange={(e) => setTerms(e.target.checked)} className="mt-1 w-4 h-4 accent-primary" />
                     <span>
-                        <Link href="/legal/terms" className="underline underline-offset-2 hover:text-gray-900" target="_blank">
+                        <Link href="/legal/terms" className="underline underline-offset-2 hover:text-on-surface" target="_blank">
                             利用規約
                         </Link>
                         に同意します。
                     </span>
                 </label>
-                <p className="text-xs text-gray-400 leading-relaxed">この文面は、仮のものです。公開の前に、専門家の確認を受けて差し替えます。</p>
+                <p className="text-xs text-outline leading-relaxed">この文面は、仮のものです。公開の前に、専門家の確認を受けて差し替えます。</p>
             </section>
 
             <div className="mt-8 flex flex-col items-start gap-3">
@@ -75,11 +75,11 @@ export default function SubmitPanel({ user, result, onSubmitted }: { user: User;
                     {submitting ? "送信中…" : submitted ? "提出しました" : "投稿する"}
                 </button>
                 {submitted ? (
-                    <p className="text-sm text-green-700 leading-relaxed">提出しました。運営が審査し、結果はお知らせでお伝えします。</p>
+                    <p className="text-sm text-green-700 dark:text-green-200 leading-relaxed">提出しました。運営が審査し、結果はお知らせでお伝えします。</p>
                 ) : submitError ? (
-                    <p className="text-sm text-red-600 leading-relaxed">{submitError}</p>
+                    <p className="text-sm text-red-600 dark:text-red-400 leading-relaxed">{submitError}</p>
                 ) : (
-                    <p className="text-sm text-gray-500 leading-relaxed">
+                    <p className="text-sm text-on-surface-subtle leading-relaxed">
                         {canSubmit
                             ? "確認と同意は、済んでいます。送ると、運営の審査に進みます。"
                             : "確認に通り、2つの同意にチェックを入れると、送れるようになります。"}

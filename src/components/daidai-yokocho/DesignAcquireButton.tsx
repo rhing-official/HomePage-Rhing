@@ -68,7 +68,7 @@ export default function DesignAcquireButton({ packId, status, redirectPath }: { 
         }, "取得を外せませんでした");
 
     const base = "w-full rounded-full px-8 py-3 font-bold tracking-wide transition";
-    if (!authReady) return <div className={`${base} h-12 bg-gray-100`} aria-hidden />;
+    if (!authReady) return <div className={`${base} h-12 bg-surface-container-high`} aria-hidden />;
 
     if (!user) {
         return status === "approved" ? (
@@ -82,31 +82,31 @@ export default function DesignAcquireButton({ packId, status, redirectPath }: { 
         );
     }
 
-    if (owned === "loading") return <div className={`${base} h-12 bg-gray-100`} aria-hidden />;
+    if (owned === "loading") return <div className={`${base} h-12 bg-surface-container-high`} aria-hidden />;
 
     if (owned === "owned") {
         return (
             <div className="flex flex-col gap-3">
-                <button type="button" disabled className={`${base} flex items-center justify-center gap-2 border border-emerald-300 bg-emerald-50 text-emerald-700 cursor-default`}>
+                <button type="button" disabled className={`${base} flex items-center justify-center gap-2 border border-emerald-300 dark:border-emerald-800 bg-emerald-50 dark:bg-emerald-950/40 text-emerald-700 dark:text-emerald-200 cursor-default`}>
                     <Check className="w-5 h-5" aria-hidden />
                     取得済み
                 </button>
                 {confirming ? (
                     <div className="flex flex-wrap items-center gap-3 text-sm">
-                        <span className="text-gray-700">取得を外しますか？ 着せ替えが標準に戻ります。</span>
-                        <button type="button" disabled={busy} onClick={uninstall} className="font-bold text-red-600 hover:text-red-800 disabled:opacity-40">
+                        <span className="text-on-surface-variant">取得を外しますか？ 着せ替えが標準に戻ります。</span>
+                        <button type="button" disabled={busy} onClick={uninstall} className="font-bold text-red-600 dark:text-red-400 hover:text-red-800 disabled:opacity-40">
                             外す
                         </button>
-                        <button type="button" disabled={busy} onClick={() => setConfirming(false)} className="text-gray-500 hover:text-gray-800">
+                        <button type="button" disabled={busy} onClick={() => setConfirming(false)} className="text-on-surface-subtle hover:text-on-surface">
                             やめる
                         </button>
                     </div>
                 ) : (
-                    <button type="button" onClick={() => setConfirming(true)} className="self-start text-xs text-gray-500 hover:text-red-600 underline underline-offset-4">
+                    <button type="button" onClick={() => setConfirming(true)} className="self-start text-xs text-on-surface-subtle hover:text-red-600 underline underline-offset-4">
                         取得を外す
                     </button>
                 )}
-                {error && <p className="text-xs text-red-600" role="alert">{error}</p>}
+                {error && <p className="text-xs text-red-600 dark:text-red-400" role="alert">{error}</p>}
             </div>
         );
     }
@@ -121,7 +121,7 @@ export default function DesignAcquireButton({ packId, status, redirectPath }: { 
             >
                 {status !== "approved" ? "取得できません" : busy ? "取得中…" : "取得する"}
             </button>
-            {error && <p className="text-xs text-red-600" role="alert">{error}</p>}
+            {error && <p className="text-xs text-red-600 dark:text-red-400" role="alert">{error}</p>}
         </div>
     );
 }

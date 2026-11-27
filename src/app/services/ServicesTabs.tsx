@@ -28,7 +28,7 @@ const appServices: Service[] = [
         description: "プライバシーを守る、メッセージアプリ。広告なし、電話番号・メールアドレス不要で、あなたのデータを売却しません。家族や友人との語らいから、コミュニティでの交流まで、安心して繋がれる場所を提供します。",
         features: ["厳重なプライバシー保護", "広告なし", "電話番号・メアド不要", "Web・Android・iOS β版対応", "Windows,macOS,Linux対応予定"],
         link: "/services/daidai",
-        bgColor: "bg-gray-300/60",
+        bgColor: "bg-outline/60",
         image: "/logos/daidai.png",
     },
     {
@@ -39,7 +39,7 @@ const appServices: Service[] = [
         description: "DaiDaiで使えるぺったんと、DaiDaiの見た目を着せ替える意匠を、探して、入手出来るストア。当面は、無料のものを配布しています。クリエイターは、作ったぺったんを出品し、意匠を投稿出来ます。",
         features: ["DaiDaiで使えるぺったん", "見た目を着せ替える意匠", "当面は無料", "クリエイターが出品可能", "DaiDaiのアカウントで利用"],
         link: "/services/daidai-yokocho",
-        bgColor: "bg-gray-200/60",
+        bgColor: "bg-outline-variant/60",
         image: "/logos/daidai-yokocho.png",
     },
     {
@@ -50,7 +50,7 @@ const appServices: Service[] = [
         description: "カスタマイズが豊富で、複数プラットフォームを跨いで同じ使用感で使えます。現在はAndroid・Windows・Linuxで利用可能です。",
         features: ["CBZ,PDF,EPUBの読み込み", "設定のカスタマイズ", "ローカル完結", "Android,Linux,Windows対応", "iOS,macOS対応予定"],
         link: "/services/dolce",
-        bgColor: "bg-gray-200/60",
+        bgColor: "bg-outline-variant/60",
         image: "/logos/dolce.png",
     }
 ];
@@ -64,7 +64,7 @@ const contractServices: Service[] = [
         description: "WordPressを使わず、HTML・CSS・TypeScriptで一から作るホームページ制作を承ります。無料のホスティングを使う為、サーバー代は0円。維持費はドメイン代だけです。",
         features: ["フルスクラッチ実装", "サーバー代0円", "27,500円から", "機能を選ぶと見積もりが出ます"],
         link: "/services/contract/web",
-        bgColor: "bg-gray-200/60",
+        bgColor: "bg-outline-variant/60",
         image: "/illustrations/website-setup.svg",
     },
     {
@@ -75,7 +75,7 @@ const contractServices: Service[] = [
         description: "用途がはっきりした小さなアプリを、Flutterで制作します。WebとAndroidに対応でき、機能と画面を先に決めて、その範囲で定額にします。",
         features: ["Flutterで制作", "Web・Android対応", "100,000円〜", "機能を選ぶと見積もりが出ます"],
         link: "/services/contract/app",
-        bgColor: "bg-gray-300/60",
+        bgColor: "bg-outline/60",
         image: "/illustrations/mobile-app.svg",
     },
 ];
@@ -99,7 +99,7 @@ export default function ServicesTabs() {
     return (
         <>
             <div className="flex justify-center mb-16 px-6">
-                <div role="tablist" className="relative grid grid-cols-2 w-64 border-b border-gray-200">
+                <div role="tablist" className="relative grid grid-cols-2 w-64 border-b border-outline-variant">
                     <motion.div
                         className="absolute bottom-0 left-0 h-0.5 w-1/2 bg-primary"
                         animate={{ x: tab === "app" ? 0 : "100%" }}
@@ -112,7 +112,7 @@ export default function ServicesTabs() {
                             role="tab"
                             aria-selected={tab === t.id}
                             onClick={() => select(t.id)}
-                            className={`relative z-10 pb-2 text-sm font-bold tracking-wide text-center transition-colors ${tab === t.id ? "text-gray-900" : "text-gray-400 hover:text-gray-600"}`}
+                            className={`relative z-10 pb-2 text-sm font-bold tracking-wide text-center transition-colors ${tab === t.id ? "text-on-surface" : "text-outline hover:text-on-surface-variant"}`}
                         >
                             {t.label}
                         </button>
@@ -134,7 +134,7 @@ export default function ServicesTabs() {
                     return (
                         <section
                             key={service.id}
-                            className="container mx-auto px-6 max-w-5xl bg-white/40 backdrop-blur-md border border-white/80 shadow-md shadow-gray-200/30 rounded-m3-xl overflow-hidden p-8 md:p-12 lg:p-16"
+                            className="container mx-auto px-6 max-w-5xl bg-surface-container-lowest/40 backdrop-blur-md border border-glass-edge/80 shadow-md shadow-outline-variant/30 rounded-m3-xl overflow-hidden p-8 md:p-12 lg:p-16"
                         >
                             {/*
                               🌟 修正ポイント:
@@ -162,7 +162,7 @@ export default function ServicesTabs() {
                                     ) : (
                                         // ▼ 画像が用意できたら、サービスの image に public/ 以下のパスを入れる
                                         <div className={`absolute inset-0 w-full h-full ${service.bgColor} flex items-center justify-center transition-transform duration-700 group-hover:scale-105`}>
-                                            <span className="text-gray-400 font-bold tracking-widest text-xl border border-gray-400 p-4 transition-colors group-hover:text-gray-600 group-hover:border-gray-600">
+                                            <span className="text-outline font-bold tracking-widest text-xl border border-outline p-4 transition-colors group-hover:text-on-surface-variant group-hover:border-on-surface">
                                                 {service.name} Image
                                             </span>
                                         </div>
@@ -171,28 +171,28 @@ export default function ServicesTabs() {
 
                                 {/* テキストエリア（PCでは左側に配置されます） */}
                                 <div className="w-full lg:w-1/2 flex flex-col justify-center">
-                                    <span className="text-xs font-bold tracking-widest text-gray-500 mb-2 block">
+                                    <span className="text-xs font-bold tracking-widest text-on-surface-subtle mb-2 block">
                                         {service.category}
                                     </span>
 
                                     {/* キャッチコピー */}
-                                    <p className="text-lg font-medium text-gray-400 mb-2 tracking-widest">
+                                    <p className="text-lg font-medium text-outline mb-2 tracking-widest">
                                         {service.tagline}
                                     </p>
 
-                                    <h2 className="text-4xl md:text-5xl font-bold text-gray-900 mb-8 tracking-wider">
+                                    <h2 className="text-4xl md:text-5xl font-bold text-on-surface mb-8 tracking-wider">
                                         {service.name}
                                     </h2>
 
-                                    <p className="text-gray-700 leading-relaxed text-base mb-8">
+                                    <p className="text-on-surface-variant leading-relaxed text-base mb-8">
                                         {service.description}
                                     </p>
 
                                     {/* 特徴リスト */}
                                     <ul className="space-y-3 mb-0">
                                         {service.features.map((feature, i) => (
-                                            <li key={i} className="flex items-center text-gray-600 font-medium">
-                                                <span className="w-1.5 h-1.5 bg-[#111] rounded-full mr-3 block"></span>
+                                            <li key={i} className="flex items-center text-on-surface-variant font-medium">
+                                                <span className="w-1.5 h-1.5 bg-on-surface rounded-full mr-3 block"></span>
                                                 {feature}
                                             </li>
                                         ))}

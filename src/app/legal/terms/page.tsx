@@ -72,11 +72,11 @@ export default function TermsPage() {
         <div className="container mx-auto px-6 pb-32 max-w-4xl">
             {/* ページタイトル */}
             {/* 🌟 修正ポイント1: タイトルエリアをガラスカードのデザインに変更 */}
-            <div className="mb-24 relative flex flex-col items-center justify-center text-center py-10 px-8 md:px-14 md:min-h-44 lg:min-h-52 bg-white/40 backdrop-blur-md border border-white/80 shadow-elevation-1 rounded-m3-xl">
+            <div className="mb-24 relative flex flex-col items-center justify-center text-center py-10 px-8 md:px-14 md:min-h-44 lg:min-h-52 bg-surface-container-lowest/40 backdrop-blur-md border border-glass-edge/80 shadow-elevation-1 rounded-m3-xl">
                 {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img src="/illustrations/terms.svg" alt="" className="hidden xl:block absolute right-full -mr-10 top-1/2 -translate-y-1/2 w-40 h-auto" />
-                <h1 className="text-4xl md:text-5xl font-bold tracking-widest text-gray-900 mb-4">TERMS OF SERVICE</h1>
-                <p className="text-gray-500 tracking-wider text-sm">利用規約</p>
+                <img src="/illustrations/terms.svg" alt="" className="hidden xl:block absolute right-full -mr-10 top-1/2 -translate-y-1/2 w-40 h-auto dark:bg-white/90 dark:rounded-3xl dark:p-3" />
+                <h1 className="text-4xl md:text-5xl font-bold tracking-widest text-on-surface mb-4">TERMS OF SERVICE</h1>
+                <p className="text-on-surface-subtle tracking-wider text-sm">利用規約</p>
             </div>
 
             {/* 条文リスト */}
@@ -85,22 +85,22 @@ export default function TermsPage() {
                     /* 
                       🌟 修正ポイント2: 条文カードをガラスデザイン仕様に変更 
                       - 黒の太い左境界線（border-l-4 border-l-gray-900）は維持しています。
-                      - bg-white/40 (半透明), backdrop-blur-md, border-white/80 (他3辺の境界線) を設定しています。
-                      - ホバー時には、明るいガラス（hover:bg-white/60）とほのかなブルーの影（hover:shadow-blue-300/10）へ滑らかに遷移します。
+                      - bg-surface-container-lowest/40 (半透明), backdrop-blur-md, border-glass-edge/80 (他3辺の境界線) を設定しています。
+                      - ホバー時には、明るいガラス（hover:bg-surface-container-lowest/60）とほのかなブルーの影（hover:shadow-blue-300/10）へ滑らかに遷移します。
                     */
                     <section
                         key={index}
-                        className="bg-white/40 backdrop-blur-md p-8 md:p-10 border border-white/80 border-l-4 border-l-gray-900 shadow-elevation-1 rounded-r-m3-lg hover:bg-white/60 hover:shadow-elevation-3 transition-all duration-500"
+                        className="bg-surface-container-lowest/40 backdrop-blur-md p-8 md:p-10 border border-glass-edge/80 border-l-4 border-l-gray-900 shadow-elevation-1 rounded-r-m3-lg hover:bg-surface-container-lowest/60 hover:shadow-elevation-3 transition-all duration-500"
                     >
                         {/* 🌟 区切り線をガラスの透過率に合うように微調整 */}
-                        <h3 className="text-xl font-bold text-gray-900 mb-6 tracking-wide border-b border-gray-900/10 pb-4">
+                        <h3 className="text-xl font-bold text-on-surface mb-6 tracking-wide border-b border-on-surface/10 pb-4">
                             {term.title}
                         </h3>
-                        <p className="text-gray-700 leading-relaxed text-lg font-medium">
+                        <p className="text-on-surface-variant leading-relaxed text-lg font-medium">
                             {term.content}
                         </p>
                         {term.items && (
-                            <ol className="list-decimal pl-6 mt-4 space-y-2 text-gray-700 leading-relaxed text-lg font-medium">
+                            <ol className="list-decimal pl-6 mt-4 space-y-2 text-on-surface-variant leading-relaxed text-lg font-medium">
                                 {term.items.map((item, i) => (
                                     <li key={i}>{item}</li>
                                 ))}

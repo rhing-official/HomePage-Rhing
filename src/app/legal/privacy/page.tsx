@@ -10,11 +10,11 @@ export default function PrivacyPolicyPage() {
         <div className="container mx-auto px-6 pb-32 max-w-4xl">
             {/* タイトル */}
             {/* 🌟 修正ポイント1: タイトルエリアをガラスカードのデザインに変更 */}
-            <div className="mb-24 relative flex flex-col items-center justify-center text-center py-10 px-8 md:px-14 md:min-h-44 lg:min-h-52 bg-white/40 backdrop-blur-md border border-white/80 shadow-elevation-1 rounded-m3-xl">
+            <div className="mb-24 relative flex flex-col items-center justify-center text-center py-10 px-8 md:px-14 md:min-h-44 lg:min-h-52 bg-surface-container-lowest/40 backdrop-blur-md border border-glass-edge/80 shadow-elevation-1 rounded-m3-xl">
                 {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img src="/illustrations/terms.svg" alt="" className="hidden lg:block absolute -left-10 top-1/2 -translate-y-1/2 w-48 h-auto" />
-                <h1 className="text-4xl md:text-5xl font-bold tracking-widest text-gray-900 mb-4">PRIVACY POLICY</h1>
-                <p className="text-gray-500 tracking-wider text-sm">プライバシーポリシー</p>
+                <img src="/illustrations/terms.svg" alt="" className="hidden lg:block absolute -left-10 top-1/2 -translate-y-1/2 w-48 h-auto dark:bg-white/90 dark:rounded-3xl dark:p-3" />
+                <h1 className="text-4xl md:text-5xl font-bold tracking-widest text-on-surface mb-4">PRIVACY POLICY</h1>
+                <p className="text-on-surface-subtle tracking-wider text-sm">プライバシーポリシー</p>
             </div>
 
             {/* 🌟 ページ全体を統一したスペース設定で管理します */}
@@ -23,41 +23,41 @@ export default function PrivacyPolicyPage() {
                 {/* 基本方針 */}
                 {/* 
                   🌟 修正ポイント2: セクション全体をガラス風カードに変更 
-                  - bg-white/40 (半透明), backdrop-blur-md (ぼかし), border-white/80, shadow-md
+                  - bg-surface-container-lowest/40 (半透明), backdrop-blur-md (ぼかし), border-glass-edge/80, shadow-md
                   - 左の黒太線（border-l-4 border-l-gray-900）は維持しています
                 */}
-                <section className="bg-white/40 backdrop-blur-md p-8 md:p-12 border border-white/80 border-l-4 border-l-gray-900 shadow-elevation-1 rounded-r-m3-lg hover:bg-white/60 hover:shadow-elevation-3 transition-all duration-500">
-                    <h2 className="text-2xl font-black text-gray-900 mb-8 tracking-wide border-b border-gray-900/10 pb-4">基本方針</h2>
-                    <p className="text-gray-700 leading-loose text-lg font-medium mb-6">
+                <section className="bg-surface-container-lowest/40 backdrop-blur-md p-8 md:p-12 border border-glass-edge/80 border-l-4 border-l-gray-900 shadow-elevation-1 rounded-r-m3-lg hover:bg-surface-container-lowest/60 hover:shadow-elevation-3 transition-all duration-500">
+                    <h2 className="text-2xl font-black text-on-surface mb-8 tracking-wide border-b border-on-surface/10 pb-4">基本方針</h2>
+                    <p className="text-on-surface-variant leading-loose text-lg font-medium mb-6">
                         Rhingは、ユーザーのプライバシーを尊重します。以下の情報を一切収集しません。
                     </p>
-                    {/* 🌟 修正ポイント3: リスト項目自体も重なりのある半透明ガラス調（bg-white/50 border-white/40）に */}
-                    <ul className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-gray-700">
+                    {/* 🌟 修正ポイント3: リスト項目自体も重なりのある半透明ガラス調（bg-surface-container-lowest/50 border-glass-edge/40）に */}
+                    <ul className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-on-surface-variant">
                         {["メールアドレス", "電話番号", "詳細な住所（番地等）", "現在地（GPS・IPアドレスからの推定を含む）", "マイナンバー", "氏名"].map((item) => (
-                            <li key={item} className="flex items-center gap-3 bg-white/50 border border-white/40 p-4 rounded-lg">
-                                <span className="text-red-500 font-bold">・</span> {item}
+                            <li key={item} className="flex items-center gap-3 bg-surface-container-lowest/50 border border-glass-edge/40 p-4 rounded-lg">
+                                <span className="text-red-500 dark:text-red-400 font-bold">・</span> {item}
                             </li>
                         ))}
                     </ul>
-                    <p className="text-gray-700 leading-loose mt-6">
+                    <p className="text-on-surface-variant leading-loose mt-6">
                         但し、決済（購入・寄付）の際は、決済代行事業者のStripeが、決済に必要な情報（メールアドレス、カード名義、カード情報等）を取得します。また、一部の機能の為、お住まいの国・地域（居住地）のみ、ユーザー自身の申告に基づいて保存します。詳しくは下記「収集する情報」をご覧ください。
                     </p>
                 </section>
 
                 {/* 収集する情報テーブル */}
-                <section className="bg-white/40 backdrop-blur-md p-8 md:p-12 border border-white/80 border-l-4 border-l-gray-900 shadow-elevation-1 rounded-r-m3-lg hover:bg-white/60 hover:shadow-elevation-3 transition-all duration-500">
-                    <h2 className="text-2xl font-black text-gray-900 mb-8 tracking-wide border-b border-gray-900/10 pb-4">収集する情報</h2>
+                <section className="bg-surface-container-lowest/40 backdrop-blur-md p-8 md:p-12 border border-glass-edge/80 border-l-4 border-l-gray-900 shadow-elevation-1 rounded-r-m3-lg hover:bg-surface-container-lowest/60 hover:shadow-elevation-3 transition-all duration-500">
+                    <h2 className="text-2xl font-black text-on-surface mb-8 tracking-wide border-b border-on-surface/10 pb-4">収集する情報</h2>
                     <div className="overflow-x-auto">
                         <table className="w-full text-left border-collapse">
                             {/* 🌟 テーブルヘッダーと行のボーダーをガラスに合わせて美しく調整 */}
-                            <thead className="bg-gray-900/90 text-white">
+                            <thead className="bg-on-surface/90 text-surface">
                                 <tr>
                                     <th className="p-4 rounded-tl-lg">項目</th>
                                     <th className="p-4">目的</th>
                                     <th className="p-4 rounded-tr-lg">保存期間</th>
                                 </tr>
                             </thead>
-                            <tbody className="text-gray-700">
+                            <tbody className="text-on-surface-variant">
                                 {[
                                     { k: "Rhing Seed", p: "アカウント識別", t: "アカウント削除まで" },
                                     { k: "決済情報（メールアドレス、カード名義等）", p: "決済の処理・購入履歴管理・領収の通知（Stripeが取得）", t: "法令で定められた期間" },
@@ -67,7 +67,7 @@ export default function PrivacyPolicyPage() {
                                     { k: "意匠の取得の記録（取得した意匠と版・日時）", p: "取得済みの表示・配信停止の通知", t: "取得を外すか、アカウント削除まで" },
                                     { k: "居住地（国・都道府県・タイムゾーン）", p: "伝書鳩（予定）・安否確認（予定）・利用地域の把握（国単位の集計のみ）", t: "アカウント削除まで" },
                                 ].map((row, i) => (
-                                    <tr key={i} className="border-b border-gray-900/10 hover:bg-white/50 transition-colors">
+                                    <tr key={i} className="border-b border-on-surface/10 hover:bg-surface-container-lowest/50 transition-colors">
                                         <td className="p-4 font-bold">{row.k}</td>
                                         <td className="p-4">{row.p}</td>
                                         <td className="p-4">{row.t}</td>
@@ -77,16 +77,16 @@ export default function PrivacyPolicyPage() {
                         </table>
                     </div>
 
-                    <h3 className="text-lg font-bold text-gray-900 mt-10 mb-4">決済時の情報について</h3>
-                    <ul className="list-disc pl-6 space-y-2 leading-relaxed text-gray-700">
+                    <h3 className="text-lg font-bold text-on-surface mt-10 mb-4">決済時の情報について</h3>
+                    <ul className="list-disc pl-6 space-y-2 leading-relaxed text-on-surface-variant">
                         <li>決済（購入・寄付）の際は、Stripeの決済画面でメールアドレスの入力が求められます。メールアドレスはStripeが取得し、決済の処理や領収の通知に使われます。</li>
                         <li>クレジットカード情報はStripeが管理し、Rhingは保持しません。</li>
                         <li>Rhingは、Stripeの管理画面で、メールアドレス等の決済に関する情報を確認出来ます。決済の確認やお問い合わせへの対応の為に確認します。</li>
                         <li>DaiDaiのアカウントの登録・利用には、メールアドレスを使いません。</li>
                     </ul>
 
-                    <h3 className="text-lg font-bold text-gray-900 mt-10 mb-4">居住地について</h3>
-                    <ul className="list-disc pl-6 space-y-2 leading-relaxed text-gray-700">
+                    <h3 className="text-lg font-bold text-on-surface mt-10 mb-4">居住地について</h3>
+                    <ul className="list-disc pl-6 space-y-2 leading-relaxed text-on-surface-variant">
                         <li>国は必須です。都道府県は日本の場合のみ、タイムゾーンは時差が複数有る国の場合のみ、任意で申告します。</li>
                         <li>ユーザー自身の申告に基づくもので、現在地（GPS・IPアドレスからの推定）は使わず、番地等の詳細な住所も取得しません。</li>
                         <li>本人だけが読める領域に保存し、他のユーザーには表示されません。</li>
@@ -95,29 +95,29 @@ export default function PrivacyPolicyPage() {
                 </section>
 
                 {/* データの取り扱い */}
-                <section className="bg-white/40 backdrop-blur-md p-8 md:p-12 border border-white/80 border-l-4 border-l-gray-900 shadow-elevation-1 rounded-r-m3-lg hover:bg-white/60 hover:shadow-elevation-3 transition-all duration-500">
-                    <h2 className="text-2xl font-black text-gray-900 mb-12 tracking-wide border-b border-gray-900/10 pb-4">データの取り扱い</h2>
+                <section className="bg-surface-container-lowest/40 backdrop-blur-md p-8 md:p-12 border border-glass-edge/80 border-l-4 border-l-gray-900 shadow-elevation-1 rounded-r-m3-lg hover:bg-surface-container-lowest/60 hover:shadow-elevation-3 transition-all duration-500">
+                    <h2 className="text-2xl font-black text-on-surface mb-12 tracking-wide border-b border-on-surface/10 pb-4">データの取り扱い</h2>
 
-                    <div className="text-gray-800">
+                    <div className="text-on-surface">
                         <div className="mb-16"> {/* 1. 暗号化 */}
-                            <h4 className="text-2xl font-bold text-gray-900 mb-6">1. 暗号化</h4>
-                            <ul className="list-disc pl-6 space-y-3 leading-relaxed text-lg text-gray-700">
+                            <h4 className="text-2xl font-bold text-on-surface mb-6">1. 暗号化</h4>
+                            <ul className="list-disc pl-6 space-y-3 leading-relaxed text-lg text-on-surface-variant">
                                 <li>全ての通信はTLS 1.3で暗号化</li>
                                 <li>メッセージはE2E暗号化し、運営も閲覧不可</li>
                             </ul>
                         </div>
 
                         <div className="mb-16"> {/* 2. 第三者提供 */}
-                            <h4 className="text-2xl font-bold text-gray-900 mb-6">2. 第三者提供</h4>
-                            <ul className="list-disc pl-6 space-y-3 leading-relaxed text-lg text-gray-700">
+                            <h4 className="text-2xl font-bold text-on-surface mb-6">2. 第三者提供</h4>
+                            <ul className="list-disc pl-6 space-y-3 leading-relaxed text-lg text-on-surface-variant">
                                 <li>Rhingは、ユーザーの個人情報を第三者に提供・売却しない</li>
                                 <li>法令に基づく開示請求が有った場合も、最小限の範囲で対応</li>
                             </ul>
                         </div>
 
                         <div> {/* 3. データ削除 */}
-                            <h4 className="text-2xl font-bold text-gray-900 mb-6">3. データ削除</h4>
-                            <ul className="list-disc pl-6 space-y-3 leading-relaxed text-lg text-gray-700">
+                            <h4 className="text-2xl font-bold text-on-surface mb-6">3. データ削除</h4>
+                            <ul className="list-disc pl-6 space-y-3 leading-relaxed text-lg text-on-surface-variant">
                                 <li>アカウント削除時、即時または30日以内に全データを完全削除</li>
                             </ul>
                         </div>
@@ -125,29 +125,29 @@ export default function PrivacyPolicyPage() {
                 </section>
 
                 {/* 第三者サービステーブル */}
-                <section className="bg-white/40 backdrop-blur-md p-8 md:p-12 border border-white/80 border-l-4 border-l-gray-900 shadow-elevation-1 rounded-r-m3-lg hover:bg-white/60 hover:shadow-elevation-3 transition-all duration-500">
-                    <h2 className="text-2xl font-black text-gray-900 mb-6 tracking-wide border-b border-gray-900/10 pb-4">第三者サービス</h2>
+                <section className="bg-surface-container-lowest/40 backdrop-blur-md p-8 md:p-12 border border-glass-edge/80 border-l-4 border-l-gray-900 shadow-elevation-1 rounded-r-m3-lg hover:bg-surface-container-lowest/60 hover:shadow-elevation-3 transition-all duration-500">
+                    <h2 className="text-2xl font-black text-on-surface mb-6 tracking-wide border-b border-on-surface/10 pb-4">第三者サービス</h2>
                     <div className="overflow-x-auto">
                         <table className="w-full text-left border-collapse">
                             <thead>
-                                <tr className="bg-gray-900/90 text-white">
+                                <tr className="bg-on-surface/90 text-surface">
                                     <th className="p-4 rounded-tl-lg">サービス</th>
                                     <th className="p-4">用途</th>
                                     <th className="p-4 rounded-tr-lg">ユーザーデータ</th>
                                 </tr>
                             </thead>
-                            <tbody className="text-gray-700">
-                                <tr className="border-b border-gray-900/10 hover:bg-white/50 transition-colors">
+                            <tbody className="text-on-surface-variant">
+                                <tr className="border-b border-on-surface/10 hover:bg-surface-container-lowest/50 transition-colors">
                                     <td className="p-4 font-bold">Stripe</td>
                                     <td className="p-4">決済処理</td>
                                     <td className="p-4 text-sm">決済情報（メールアドレス、カード名義、クレジットカード情報等。クレジットカード情報はStripeが管理）</td>
                                 </tr>
-                                <tr className="border-b border-gray-900/10 hover:bg-white/50 transition-colors">
+                                <tr className="border-b border-on-surface/10 hover:bg-surface-container-lowest/50 transition-colors">
                                     <td className="p-4 font-bold">Google Cloud Platform</td>
                                     <td className="p-4">サーバー・データベース</td>
                                     <td className="p-4 text-sm">メッセージ、ユーザー情報（暗号化済み）</td>
                                 </tr>
-                                <tr className="border-b border-gray-900/10 hover:bg-white/50 transition-colors">
+                                <tr className="border-b border-on-surface/10 hover:bg-surface-container-lowest/50 transition-colors">
                                     <td className="p-4 font-bold">NOWPayments</td>
                                     <td className="p-4">寄付の決済処理（ビットコイン）</td>
                                     <td className="p-4 text-sm">決済情報（送金元アドレス、金額等）</td>
@@ -158,9 +158,9 @@ export default function PrivacyPolicyPage() {
                 </section>
 
                 {/* ユーザーの権利 */}
-                <section className="bg-white/40 backdrop-blur-md p-8 md:p-12 border border-white/80 border-l-4 border-l-gray-900 shadow-elevation-1 rounded-r-m3-lg hover:bg-white/60 hover:shadow-elevation-3 transition-all duration-500">
-                    <h2 className="text-2xl font-black text-gray-900 mb-6 tracking-wide border-b border-gray-900/10 pb-4">ユーザーの権利</h2>
-                    <ul className="list-disc pl-6 space-y-2 text-gray-700 text-lg">
+                <section className="bg-surface-container-lowest/40 backdrop-blur-md p-8 md:p-12 border border-glass-edge/80 border-l-4 border-l-gray-900 shadow-elevation-1 rounded-r-m3-lg hover:bg-surface-container-lowest/60 hover:shadow-elevation-3 transition-all duration-500">
+                    <h2 className="text-2xl font-black text-on-surface mb-6 tracking-wide border-b border-on-surface/10 pb-4">ユーザーの権利</h2>
+                    <ul className="list-disc pl-6 space-y-2 text-on-surface-variant text-lg">
                         <li>データの開示請求</li>
                         <li>データの訂正・削除請求</li>
                         <li>サービス利用の停止・アカウント削除請求</li>

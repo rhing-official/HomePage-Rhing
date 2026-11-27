@@ -76,16 +76,16 @@ export default function ProfileEditModal({
                 animate={{ opacity: 1, scale: 1 }}
                 exit={{ opacity: 0, scale: 0.95 }}
                 onClick={(e) => e.stopPropagation()}
-                className="bg-white/90 backdrop-blur-md rounded-3xl shadow-2xl border border-white/80 max-w-sm w-full p-8 flex flex-col gap-5"
+                className="bg-surface-container-lowest/90 backdrop-blur-md rounded-3xl shadow-2xl border border-glass-edge/80 max-w-sm w-full p-8 flex flex-col gap-5"
             >
-                <h2 className="text-lg font-bold text-gray-900">プロフィールを編集</h2>
+                <h2 className="text-lg font-bold text-on-surface">プロフィールを編集</h2>
 
                 <div className="flex flex-col items-center gap-2">
                     {displayIconUrl ? (
                         // eslint-disable-next-line @next/next/no-img-element
-                        <img src={displayIconUrl} alt="" className="w-20 h-20 rounded-full object-cover border border-white/80" />
+                        <img src={displayIconUrl} alt="" className="w-20 h-20 rounded-full object-cover border border-glass-edge/80" />
                     ) : (
-                        <div className="w-20 h-20 rounded-full bg-gray-200" />
+                        <div className="w-20 h-20 rounded-full bg-outline-variant" />
                     )}
                     <input
                         ref={fileInputRef}
@@ -122,7 +122,7 @@ export default function ProfileEditModal({
                     </div>
                 </div>
 
-                <label className="flex flex-col gap-1.5 text-sm text-gray-600">
+                <label className="flex flex-col gap-1.5 text-sm text-on-surface-variant">
                     呼び名
                     <div className="relative">
                         <input
@@ -130,14 +130,14 @@ export default function ProfileEditModal({
                             onChange={(e) => setNickname(e.target.value)}
                             maxLength={20}
                             placeholder="未設定では「風吹けば名無し」となります"
-                            className="w-full rounded-lg border border-gray-200 pl-4 pr-9 py-2 bg-white/70"
+                            className="w-full rounded-lg border border-outline-variant pl-4 pr-9 py-2 bg-surface-container-lowest/70"
                         />
                         {nickname && (
                             <button
                                 type="button"
                                 onClick={() => setNickname("")}
                                 aria-label="呼び名をクリア"
-                                className="absolute right-2 top-1/2 -translate-y-1/2 w-6 h-6 flex items-center justify-center rounded-full text-gray-400 hover:bg-gray-100 hover:text-gray-600 transition"
+                                className="absolute right-2 top-1/2 -translate-y-1/2 w-6 h-6 flex items-center justify-center rounded-full text-outline hover:bg-surface-container-high hover:text-on-surface-variant transition"
                             >
                                 ×
                             </button>
@@ -145,17 +145,17 @@ export default function ProfileEditModal({
                     </div>
                 </label>
 
-                <label className="flex flex-col gap-1.5 text-sm text-gray-600">
+                <label className="flex flex-col gap-1.5 text-sm text-on-surface-variant">
                     Rhing Seed
                     <input
                         value={current.rhingSeed}
                         disabled
-                        className="rounded-lg border border-gray-200 px-4 py-2 bg-gray-50 text-gray-400"
+                        className="rounded-lg border border-outline-variant px-4 py-2 bg-surface-container text-outline"
                     />
-                    <span className="text-xs text-gray-400">DaiDaiと共通のため変更出来ません</span>
+                    <span className="text-xs text-outline">DaiDaiと共通のため変更出来ません</span>
                 </label>
 
-                {error && <p className="text-sm text-red-600">{error}</p>}
+                {error && <p className="text-sm text-red-600 dark:text-red-400">{error}</p>}
 
                 <div className="flex gap-3">
                     <button

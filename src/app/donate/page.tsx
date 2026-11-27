@@ -37,14 +37,14 @@ export default function DonatePage() {
         <div className="container mx-auto px-6 pb-24 max-w-4xl">
             {/* ページタイトル */}
             <div className="mb-16 flex flex-col items-center justify-center text-center md:min-h-40 lg:min-h-48">
-                <h1 className="text-4xl md:text-5xl font-bold tracking-widest text-gray-900 mb-4">DONATE</h1>
-                <p className="text-gray-500 tracking-wider text-sm">寄付・支援</p>
+                <h1 className="text-4xl md:text-5xl font-bold tracking-widest text-on-surface mb-4">DONATE</h1>
+                <p className="text-on-surface-subtle tracking-wider text-sm">寄付・支援</p>
             </div>
 
             {/* 受付状況の案内 */}
-            <div className="mb-16 text-center bg-white/40 backdrop-blur-md border border-white/80 shadow-elevation-1 rounded-m3-xl p-8 md:p-10">
-                <p className="text-gray-900 font-bold tracking-wider mb-2">現在は、クレジット・デビット、Apple Pay・Google Pay、ビットコインで受け付けています</p>
-                <p className="text-gray-600 leading-relaxed text-sm">
+            <div className="mb-16 text-center bg-surface-container-lowest/40 backdrop-blur-md border border-glass-edge/80 shadow-elevation-1 rounded-m3-xl p-8 md:p-10">
+                <p className="text-on-surface font-bold tracking-wider mb-2">現在は、クレジット・デビット、Apple Pay・Google Pay、ビットコインで受け付けています</p>
+                <p className="text-on-surface-variant leading-relaxed text-sm">
                     PayPayは準備中です。<br className="hidden md:block" />
                     受付を開始した際は、noteとDiscord公式サーバーでお知らせします。
                 </p>
@@ -52,12 +52,12 @@ export default function DonatePage() {
 
             {/* 趣旨 */}
             <section className="mb-24">
-                <h2 className="text-2xl font-bold mb-10 tracking-widest border-b border-gray-200 pb-4 text-gray-900">
+                <h2 className="text-2xl font-bold mb-10 tracking-widest border-b border-outline-variant pb-4 text-on-surface">
                     SUPPORT
-                    <span className="block text-sm text-gray-500 font-normal mt-2 tracking-normal">Rhingを支援するということ</span>
+                    <span className="block text-sm text-on-surface-subtle font-normal mt-2 tracking-normal">Rhingを支援するということ</span>
                 </h2>
                 <div className="bg-surface-container p-8 md:p-14 rounded-m3-lg">
-                    <p className="text-gray-700 leading-loose text-lg">
+                    <p className="text-on-surface-variant leading-loose text-lg">
                         Rhingは広告に頼らず、貴方のデータを売却しない形でサービスを運営する事を目指しています。
                         頂いた寄付は、サービスの開発・運営の継続に役立てます。
                         かもしれませんし、代表者のお小遣いになるかもしれません。
@@ -69,24 +69,24 @@ export default function DonatePage() {
 
             {/* お支払い方法 */}
             <section className="mb-24">
-                <h2 className="text-2xl font-bold mb-10 tracking-widest border-b border-gray-200 pb-4 text-gray-900">
+                <h2 className="text-2xl font-bold mb-10 tracking-widest border-b border-outline-variant pb-4 text-on-surface">
                     METHOD
-                    <span className="block text-sm text-gray-500 font-normal mt-2 tracking-normal">お支払い方法を選ぶ</span>
+                    <span className="block text-sm text-on-surface-subtle font-normal mt-2 tracking-normal">お支払い方法を選ぶ</span>
                 </h2>
                 <DonateMethods />
             </section>
 
             {/* よくある質問 */}
             <section>
-                <h2 className="text-2xl font-bold mb-10 tracking-widest border-b border-gray-200 pb-4 text-gray-900">
+                <h2 className="text-2xl font-bold mb-10 tracking-widest border-b border-outline-variant pb-4 text-on-surface">
                     FAQ
-                    <span className="block text-sm text-gray-500 font-normal mt-2 tracking-normal">よくある質問</span>
+                    <span className="block text-sm text-on-surface-subtle font-normal mt-2 tracking-normal">よくある質問</span>
                 </h2>
-                <dl className="divide-y divide-gray-200 border-b border-gray-200">
+                <dl className="divide-y divide-outline-variant border-b border-outline-variant">
                     {faqs.map((faq) => (
                         <div key={faq.q} className="py-8 px-4">
-                            <dt className="font-bold text-gray-900 tracking-wider mb-3">{faq.q}</dt>
-                            <dd className="text-gray-700 leading-relaxed">{faq.a}</dd>
+                            <dt className="font-bold text-on-surface tracking-wider mb-3">{faq.q}</dt>
+                            <dd className="text-on-surface-variant leading-relaxed">{faq.a}</dd>
                         </div>
                     ))}
                 </dl>

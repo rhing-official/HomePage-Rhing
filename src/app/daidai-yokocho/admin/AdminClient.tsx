@@ -29,7 +29,7 @@ import {
 
 const DEFAULT_NOTICE_DAYS = 7;
 const SLOW_LOAD_MS = 15000; // これを超えても読み込みが終わらなければ、接続の案内を出す
-const cardClass = "bg-white/40 backdrop-blur-md border border-white/80 shadow-elevation-1 rounded-m3-xl";
+const cardClass = "bg-surface-container-lowest/40 backdrop-blur-md border border-glass-edge/80 shadow-elevation-1 rounded-m3-xl";
 
 type AccessState = "loading" | "denied" | "admin";
 
@@ -125,20 +125,20 @@ function RequestRow({
 
     const deleteAtParts = parseDateKey(deleteAt.slice(0, 10));
     const dateInput = (
-        <div className="flex flex-col gap-1 text-xs text-gray-500">
+        <div className="flex flex-col gap-1 text-xs text-on-surface-subtle">
             削除する日時（日本時間）
             <button
                 type="button"
                 onClick={() => setPickingDate(true)}
                 disabled={urgent}
-                className="self-start disabled:opacity-40 disabled:cursor-not-allowed rounded-lg border border-gray-200 bg-white/70 px-3 py-2 text-sm text-gray-800 text-left hover:bg-white transition-colors"
+                className="self-start disabled:opacity-40 disabled:cursor-not-allowed rounded-lg border border-outline-variant bg-surface-container-lowest/70 px-3 py-2 text-sm text-on-surface text-left hover:bg-surface-container-lowest transition-colors"
             >
                 {deleteAtParts.month}月{deleteAtParts.day}日（{weekdayName(deleteAtParts.year, deleteAtParts.month, deleteAtParts.day)}）{deleteAt.slice(11, 16)}
             </button>
-            <label className="flex items-start gap-2 mt-1 text-xs text-gray-700 cursor-pointer max-w-xs">
+            <label className="flex items-start gap-2 mt-1 text-xs text-on-surface-variant cursor-pointer max-w-xs">
                 <input type="checkbox" checked={urgent} onChange={(e) => setUrgent(e.target.checked)} className="mt-0.5" />
                 <span>
-                    <span className="font-bold text-red-600">緊急</span>（すぐに削除する）。権利侵害等、待てない場合だけ。お知らせは送られ、5分以内に削除されます
+                    <span className="font-bold text-red-600 dark:text-red-400">緊急</span>（すぐに削除する）。権利侵害等、待てない場合だけ。お知らせは送られ、5分以内に削除されます
                 </span>
             </label>
             {pickingDate && (
@@ -162,35 +162,35 @@ function RequestRow({
                 {/* ぺったん名は大きく、押しやすく（販売ページを開いて、画像を確認できる） */}
                 <Link
                     href={`/daidai-yokocho/${request.packId}`}
-                    className="text-xl font-bold text-gray-900 hover:text-primary underline underline-offset-4 decoration-gray-300 hover:decoration-primary transition-colors py-1"
+                    className="text-xl font-bold text-on-surface hover:text-primary underline underline-offset-4 decoration-outline/50 hover:decoration-primary transition-colors py-1"
                 >
                     {request.packName || request.packId}
-                    {isSticker && <span className="font-normal text-gray-600">の「{request.stickerName || request.stickerId}」</span>}
+                    {isSticker && <span className="font-normal text-on-surface-variant">の「{request.stickerName || request.stickerId}」</span>}
                 </Link>
-                <span className="text-xs rounded-full bg-gray-100 px-2 py-0.5 font-bold text-gray-600">
+                <span className="text-xs rounded-full bg-surface-container-high px-2 py-0.5 font-bold text-on-surface-variant">
                     {isSticker ? "画像1枚" : "ぺったん"}
                 </span>
                 <span className="text-xs rounded-full bg-primary-container px-2 py-0.5 font-bold text-on-primary-container">
                     {deletionStatusLabel(request.status)}
                 </span>
-                <span className="text-xs text-gray-500">
+                <span className="text-xs text-on-surface-subtle">
                     出品者 {creator} ・ 利用者 {request.ownerCount}人
                     {request.requestedAt ? ` ・ 申請 ${formatJstSlash(request.requestedAt)}` : ""}
                 </span>
             </div>
-            <p className="text-sm text-gray-700 whitespace-pre-wrap break-words">理由: {request.reason || "（なし）"}</p>
+            <p className="text-sm text-on-surface-variant whitespace-pre-wrap break-words">理由: {request.reason || "（なし）"}</p>
 
             {request.status === "scheduled" && request.scheduledDeleteAt && (
-                <p className="text-sm font-bold text-red-600">
+                <p className="text-sm font-bold text-red-600 dark:text-red-400">
                     {formatJstDateTime(request.scheduledDeleteAt)}に削除されます
                     {request.noticeCount !== null ? `（お知らせ ${request.noticeCount}人）` : ""}
                 </p>
             )}
-            {request.noticeError && <p className="text-xs text-red-600">お知らせの送信に失敗しました: {request.noticeError}</p>}
-            {request.status === "failed" && <p className="text-xs text-red-600">削除に失敗しました: {request.error}</p>}
-            {request.status === "rejected" && request.decisionNote && <p className="text-xs text-gray-500">却下の理由: {request.decisionNote}</p>}
+            {request.noticeError && <p className="text-xs text-red-600 dark:text-red-400">お知らせの送信に失敗しました: {request.noticeError}</p>}
+            {request.status === "failed" && <p className="text-xs text-red-600 dark:text-red-400">削除に失敗しました: {request.error}</p>}
+            {request.status === "rejected" && request.decisionNote && <p className="text-xs text-on-surface-subtle">却下の理由: {request.decisionNote}</p>}
             {request.status === "completed" && request.completedAt && (
-                <p className="text-xs text-gray-500">{formatJstDateTime(request.completedAt)}に削除しました</p>
+                <p className="text-xs text-on-surface-subtle">{formatJstDateTime(request.completedAt)}に削除しました</p>
             )}
 
             {(request.status === "pending" || request.status === "failed") && (
@@ -200,7 +200,7 @@ function RequestRow({
                         {request.status === "failed" ? "日時を決め直して承認" : "承認して、日時を指定"}
                     </button>
                     {request.status === "pending" && (
-                        <button type="button" disabled={busy} onClick={reject} className={`${button} border border-gray-300 text-gray-700 hover:bg-gray-100`}>
+                        <button type="button" disabled={busy} onClick={reject} className={`${button} border border-outline/50 text-on-surface-variant hover:bg-surface-container-high`}>
                             却下
                         </button>
                     )}
@@ -208,12 +208,12 @@ function RequestRow({
             )}
             {request.status === "scheduled" && (
                 <div className="flex flex-wrap gap-3">
-                    <button type="button" disabled={busy} onClick={cancel} className={`${button} border border-red-300 text-red-600 hover:bg-red-50`}>
+                    <button type="button" disabled={busy} onClick={cancel} className={`${button} border border-red-300 dark:border-red-800 text-red-600 dark:text-red-400 hover:bg-red-50`}>
                         予定を取り消す
                     </button>
                 </div>
             )}
-            {error && <p className="text-sm text-red-600" role="alert">{error}</p>}
+            {error && <p className="text-sm text-red-600 dark:text-red-400" role="alert">{error}</p>}
         </li>
     );
 }
@@ -221,8 +221,8 @@ function RequestRow({
 function Section({ title, hint, children }: { title: string; hint?: string; children: React.ReactNode }) {
     return (
         <section className="flex flex-col gap-3">
-            <h2 className="text-lg font-bold text-gray-900 tracking-wider">{title}</h2>
-            {hint && <p className="text-xs text-gray-500 -mt-1">{hint}</p>}
+            <h2 className="text-lg font-bold text-on-surface tracking-wider">{title}</h2>
+            {hint && <p className="text-xs text-on-surface-subtle -mt-1">{hint}</p>}
             {children}
         </section>
     );
@@ -313,7 +313,7 @@ export default function AdminClient() {
         !loaded && list.length === 0 ? (
             <ListRowSkeleton count={2} />
         ) : list.length === 0 ? (
-            <p className="text-sm text-gray-500">{empty}</p>
+            <p className="text-sm text-on-surface-subtle">{empty}</p>
         ) : (
             <ul className="flex flex-col gap-4">
                 {list.map((r) => (
@@ -325,9 +325,9 @@ export default function AdminClient() {
     return (
         <div className="container mx-auto px-6 max-w-3xl pb-24 flex flex-col gap-10">
             <div>
-                <h1 className="text-2xl font-bold text-gray-900 tracking-wider">管理画面</h1>
+                <h1 className="text-2xl font-bold text-on-surface tracking-wider">管理画面</h1>
                 {/* 2つの説明を、同じ場所に重ねる。高さが長い方に揃うので、切り替えてもスイッチの位置が動かない */}
-                <div className="mt-1 grid text-sm text-gray-500">
+                <div className="mt-1 grid text-sm text-on-surface-subtle">
                     <p className={`col-start-1 row-start-1 ${kind === "petan" ? "" : "invisible"}`} aria-hidden={kind !== "petan"}>
                         daidai横丁のぺったんの削除の申請を、確認して承認・却下します。
                     </p>
@@ -337,7 +337,7 @@ export default function AdminClient() {
                 </div>
             </div>
             <KindSwitch value={kind} onChange={switchKind} className="-mt-4" />
-            <p className="text-xs text-gray-400 -mt-6">
+            <p className="text-xs text-outline -mt-6">
                 ログイン中: {user.email ?? "（メールアドレスなし）"}（{user.uid.slice(0, 8)}）
             </p>
             {designOpened && (
@@ -347,9 +347,9 @@ export default function AdminClient() {
             )}
             <div hidden={kind !== "petan"} className="flex flex-col gap-10">
                 <>
-                {loadError && <p className="text-sm text-red-600" role="alert">{loadError}</p>}
+                {loadError && <p className="text-sm text-red-600 dark:text-red-400" role="alert">{loadError}</p>}
                 {slow && !loaded && !loadError && (
-                    <p className="text-sm text-amber-700" role="status">
+                    <p className="text-sm text-amber-700 dark:text-amber-200" role="status">
                         Firestoreに接続出来ていません。VPN・ブラウザの拡張機能（広告ブロッカー）・ネットワークを確認してください。
                     </p>
                 )}

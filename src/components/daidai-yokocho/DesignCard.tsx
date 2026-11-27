@@ -55,12 +55,12 @@ export default function DesignCard({ pack, creator, owned = false }: { pack: Pub
     }, [pack.assetPath]);
 
     return (
-        <div className="group flex flex-col bg-white border border-gray-100 shadow-sm hover:shadow-xl hover:shadow-blue-300/15 transition-all duration-300 overflow-hidden rounded-2xl">
+        <div className="group flex flex-col bg-surface-container-lowest border border-outline-variant shadow-sm hover:shadow-xl hover:shadow-blue-300/15 transition-all duration-300 overflow-hidden rounded-2xl">
             <Link href={`/daidai-yokocho/designs/${pack.id}`} className="flex flex-col">
                 <div className="relative overflow-hidden">
                     <DesignSwatch data={data} className="w-full aspect-[4/3] transition-transform duration-500 group-hover:scale-105" />
                     {owned && (
-                        <span className="absolute bottom-3 right-3 flex items-center gap-1 rounded-full bg-white/90 px-2.5 py-1 text-xs font-bold text-emerald-600 shadow-sm" aria-label="取得済み">
+                        <span className="absolute bottom-3 right-3 flex items-center gap-1 rounded-full bg-surface-container-lowest/90 px-2.5 py-1 text-xs font-bold text-emerald-600 dark:text-emerald-400 shadow-sm" aria-label="取得済み">
                             <Check className="w-3.5 h-3.5" aria-hidden />
                             取得済み
                         </span>
@@ -68,8 +68,8 @@ export default function DesignCard({ pack, creator, owned = false }: { pack: Pub
                     <DesignActions packId={pack.id} variant="card" />
                 </div>
                 <div className="px-6 pt-3 flex flex-col gap-1">
-                    <span className="text-sm font-bold whitespace-nowrap text-emerald-600">無料</span>
-                    <h2 className="text-base font-bold text-gray-900 group-hover:text-blue-600 transition-colors truncate">{pack.name}</h2>
+                    <span className="text-sm font-bold whitespace-nowrap text-emerald-600 dark:text-emerald-400">無料</span>
+                    <h2 className="text-base font-bold text-on-surface group-hover:text-blue-600 transition-colors truncate">{pack.name}</h2>
                 </div>
             </Link>
 
@@ -83,11 +83,11 @@ export default function DesignCard({ pack, creator, owned = false }: { pack: Pub
                     <Link href={`/daidai-yokocho/creator/${creator.userId}`} className="group/creator flex items-center gap-2 min-w-0 w-fit">
                         {creator.iconUrl ? (
                             // eslint-disable-next-line @next/next/no-img-element
-                            <img src={creator.iconUrl} alt="" className="w-5 h-5 -ml-0.5 rounded-full object-cover shrink-0 border border-white/80" />
+                            <img src={creator.iconUrl} alt="" className="w-5 h-5 -ml-0.5 rounded-full object-cover shrink-0 border border-glass-edge/80" />
                         ) : (
-                            <div className="w-5 h-5 -ml-0.5 rounded-full bg-gray-200 shrink-0" />
+                            <div className="w-5 h-5 -ml-0.5 rounded-full bg-outline-variant shrink-0" />
                         )}
-                        <span className="text-xs text-gray-500 group-hover/creator:text-blue-600 transition-colors truncate">
+                        <span className="text-xs text-on-surface-subtle group-hover/creator:text-blue-600 transition-colors truncate">
                             {creator.nickname ?? (creator.rhingSeed && `@${creator.rhingSeed}`)}
                         </span>
                     </Link>

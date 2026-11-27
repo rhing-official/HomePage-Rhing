@@ -1,8 +1,8 @@
 import type { ItemKind } from "@/lib/mixedList";
 
 const META: Record<ItemKind, { label: string; className: string }> = {
-    petan: { label: "ぺったん", className: "bg-amber-100 text-amber-700" },
-    design: { label: "意匠", className: "bg-indigo-100 text-indigo-700" },
+    petan: { label: "ぺったん", className: "bg-amber-100 dark:bg-amber-900/40 text-amber-700 dark:text-amber-200" },
+    design: { label: "意匠", className: "bg-indigo-100 dark:bg-indigo-900/40 text-indigo-700 dark:text-indigo-200" },
 };
 
 // お気に入りとカートの、ぺったんと意匠を混ぜた一覧で、種別を見分ける小さなバッジ

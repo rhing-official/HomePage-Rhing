@@ -4,7 +4,7 @@ import { X } from "lucide-react";
 import { PRICE_FILTER_OPTIONS, SEARCH_TARGET_OPTIONS, EMPTY_FILTERS, type PackFilters } from "@/lib/packFilter";
 
 export const inputClass =
-    "w-full px-4 py-2.5 rounded-full bg-white/80 border border-gray-200 text-sm text-gray-700 placeholder:text-gray-400 focus:outline-none focus:border-blue-200 transition-colors";
+    "w-full px-4 py-2.5 rounded-full bg-surface-container-lowest/80 border border-outline-variant text-sm text-on-surface-variant placeholder:text-outline focus:outline-none focus:border-blue-200 transition-colors";
 
 export function toggle(list: string[], value: string): string[] {
     return list.includes(value) ? list.filter((v) => v !== value) : [...list, value];
@@ -19,7 +19,7 @@ export function Chip({ active, onClick, children }: { active: boolean; onClick: 
             className={`px-3.5 py-1.5 rounded-full text-sm border transition ${
                 active
                     ? "bg-primary text-on-primary border-primary"
-                    : "bg-white/70 text-primary border-primary/30 hover:bg-primary-container/60"
+                    : "bg-surface-container-lowest/70 text-primary border-primary/30 hover:bg-primary-container/60"
             }`}
         >
             {children}
@@ -62,9 +62,9 @@ export default function PackFilterPanel({
 
     return (
         <div className="flex flex-col gap-3">
-            <div className="bg-white/70 backdrop-blur-md border border-white/80 shadow-elevation-1 rounded-m3-lg p-5 flex flex-col gap-5">
+            <div className="bg-surface-container-lowest/70 backdrop-blur-md border border-glass-edge/80 shadow-elevation-1 rounded-m3-lg p-5 flex flex-col gap-5">
                 <fieldset>
-                    <legend className="text-xs font-bold text-gray-500 mb-2">検索する項目</legend>
+                    <legend className="text-xs font-bold text-on-surface-subtle mb-2">検索する項目</legend>
                     <div className="flex flex-wrap gap-2">
                         {SEARCH_TARGET_OPTIONS.filter((o) => showCreatorFields || o.value !== "creator").map((o) => (
                             <Chip
@@ -83,7 +83,7 @@ export default function PackFilterPanel({
                 </fieldset>
 
                 <fieldset>
-                    <legend className="text-xs font-bold text-gray-500 mb-2">価格</legend>
+                    <legend className="text-xs font-bold text-on-surface-subtle mb-2">価格</legend>
                     <div className="flex flex-wrap gap-2">
                         {PRICE_FILTER_OPTIONS.map((o) => (
                             <Chip key={o.value} active={filters.price === o.value} onClick={() => set({ price: o.value })}>
@@ -95,7 +95,7 @@ export default function PackFilterPanel({
 
                 {showCreatorFields && (
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                        <label className="flex flex-col gap-2 text-xs font-bold text-gray-500">
+                        <label className="flex flex-col gap-2 text-xs font-bold text-on-surface-subtle">
                             Rhing Seed
                             <input
                                 value={filters.seed}
@@ -104,7 +104,7 @@ export default function PackFilterPanel({
                                 className={inputClass}
                             />
                         </label>
-                        <label className="flex flex-col gap-2 text-xs font-bold text-gray-500">
+                        <label className="flex flex-col gap-2 text-xs font-bold text-on-surface-subtle">
                             呼び名
                             <input
                                 value={filters.nickname}
@@ -118,7 +118,7 @@ export default function PackFilterPanel({
 
                 {categories.length > 0 && (
                     <fieldset>
-                        <legend className="text-xs font-bold text-gray-500 mb-2">カテゴリ（いずれか）</legend>
+                        <legend className="text-xs font-bold text-on-surface-subtle mb-2">カテゴリ（いずれか）</legend>
                         <div className="flex flex-wrap gap-2">
                             {categories.map((c) => (
                                 <Chip key={c} active={filters.categories.includes(c)} onClick={() => set({ categories: toggle(filters.categories, c) })}>
@@ -131,7 +131,7 @@ export default function PackFilterPanel({
 
                 {tags.length > 0 && (
                     <fieldset>
-                        <legend className="text-xs font-bold text-gray-500 mb-2">タグ（全てを含む）</legend>
+                        <legend className="text-xs font-bold text-on-surface-subtle mb-2">タグ（全てを含む）</legend>
                         <div className="flex flex-wrap gap-2">
                             {tags.map((t) => (
                                 <Chip key={t} active={filters.tags.includes(t)} onClick={() => set({ tags: toggle(filters.tags, t) })}>
@@ -161,12 +161,12 @@ export default function PackFilterPanel({
                     <button
                         type="button"
                         onClick={() => onChange(EMPTY_FILTERS)}
-                        className="text-xs text-gray-500 hover:text-red-600 underline underline-offset-4 ml-1"
+                        className="text-xs text-on-surface-subtle hover:text-red-600 underline underline-offset-4 ml-1"
                     >
                         全て解除
                     </button>
                 )}
-                <p className="text-sm text-gray-500 ml-auto" role="status">
+                <p className="text-sm text-on-surface-subtle ml-auto" role="status">
                     {resultCount}件
                 </p>
             </div>

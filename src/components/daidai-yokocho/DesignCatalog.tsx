@@ -64,11 +64,11 @@ export default function DesignCatalog({ query, filters, onCount, onShown }: { qu
     return (
         <div>
             {failed ? (
-                <p className="text-center text-sm text-red-600">意匠を読み込めませんでした。時間をおいて、もう一度お試しください。</p>
+                <p className="text-center text-sm text-red-600 dark:text-red-400">意匠を読み込めませんでした。時間をおいて、もう一度お試しください。</p>
             ) : packs === null ? (
-                <p className="text-center text-sm text-gray-400">読み込み中…</p>
+                <p className="text-center text-sm text-outline">読み込み中…</p>
             ) : shown.length === 0 ? (
-                <p className="text-center text-gray-500">{packs.length === 0 ? "公開されている意匠は有りません" : "条件に一致する意匠が見つかりませんでした"}</p>
+                <p className="text-center text-on-surface-subtle">{packs.length === 0 ? "公開されている意匠は有りません" : "条件に一致する意匠が見つかりませんでした"}</p>
             ) : (
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
                     {shown.map((p) => (

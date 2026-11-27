@@ -163,7 +163,7 @@ export default function CreatorDashboardPage() {
     return (
         <div className="w-full pb-24">
             <div className="container mx-auto px-6 pb-16 max-w-4xl">
-                <h1 className="flex items-center gap-3 text-3xl font-bold tracking-widest text-gray-900 mb-12">
+                <h1 className="flex items-center gap-3 text-3xl font-bold tracking-widest text-on-surface mb-12">
                     <PenTool className="w-7 h-7 shrink-0" aria-hidden />
                     作成と管理
                 </h1>
@@ -204,7 +204,7 @@ export default function CreatorDashboardPage() {
 
                 {/* 作成済みのぺったん（公開中と下書きを、絞り込める） */}
                 <div className="mt-16">
-                    <h2 className="text-xl font-bold text-gray-900 mb-4">作成済みのぺったん</h2>
+                    <h2 className="text-xl font-bold text-on-surface mb-4">作成済みのぺったん</h2>
 
                     <div className="flex flex-wrap gap-2 mb-6" role="group" aria-label="公開中・下書きで絞り込む">
                         {STATUS_FILTER_OPTIONS.map((o) => {
@@ -219,7 +219,7 @@ export default function CreatorDashboardPage() {
                                     className={`px-4 py-1.5 rounded-full text-sm border transition ${
                                         active
                                             ? "bg-primary text-on-primary border-primary"
-                                            : "bg-white/70 text-primary border-primary/30 hover:bg-primary-container/60"
+                                            : "bg-surface-container-lowest/70 text-primary border-primary/30 hover:bg-primary-container/60"
                                     }`}
                                 >
                                     {o.label}（{count}）
@@ -231,7 +231,7 @@ export default function CreatorDashboardPage() {
                     {loadingPacks ? (
                         <ThumbRowSkeleton />
                     ) : visibleItems.length === 0 ? (
-                        <p className="text-gray-400 text-sm">
+                        <p className="text-outline text-sm">
                             {items.length === 0 ? "まだぺったんを作成していません。" : "条件に一致するぺったんが有りません。"}
                         </p>
                     ) : (
@@ -241,9 +241,9 @@ export default function CreatorDashboardPage() {
                                     // 公開中: 行のどこを押しても販売ページへ移る（「編集」ボタンだけは、編集画面へ）
                                     <div
                                         key={`pack-${item.pack.id}`}
-                                        className="group relative flex items-center gap-4 bg-white/40 backdrop-blur-md border border-white/80 shadow-sm rounded-2xl p-4 hover:bg-white/70 hover:shadow-md transition-all"
+                                        className="group relative flex items-center gap-4 bg-surface-container-lowest/40 backdrop-blur-md border border-glass-edge/80 shadow-sm rounded-2xl p-4 hover:bg-surface-container-lowest/70 hover:shadow-md transition-all"
                                     >
-                                        <div className="w-16 h-16 shrink-0 bg-white rounded-xl overflow-hidden flex items-center justify-center">
+                                        <div className="w-16 h-16 shrink-0 bg-surface-container-lowest rounded-xl overflow-hidden flex items-center justify-center">
                                             {getPackCover(item.pack)?.imageUrl && (
                                                 // eslint-disable-next-line @next/next/no-img-element
                                                 <img src={getPackCover(item.pack)!.imageUrl} alt="" className="w-full h-full object-contain p-1" />
@@ -256,7 +256,7 @@ export default function CreatorDashboardPage() {
                                                 </span>
                                                 <Link
                                                     href={`/daidai-yokocho/${item.pack.id}`}
-                                                    className="block min-w-0 font-bold text-gray-900 truncate after:absolute after:inset-0 after:content-[''] group-hover:text-primary transition-colors"
+                                                    className="block min-w-0 font-bold text-on-surface truncate after:absolute after:inset-0 after:content-[''] group-hover:text-primary transition-colors"
                                                 >
                                                     {item.pack.name}
                                                 </Link>
@@ -267,9 +267,9 @@ export default function CreatorDashboardPage() {
                                                 </span>
                                             )}
                                             {deleteButtonState(item.pack).note && (
-                                                <p className="relative z-10 mt-1 text-xs font-bold text-red-600">{deleteButtonState(item.pack).note}</p>
+                                                <p className="relative z-10 mt-1 text-xs font-bold text-red-600 dark:text-red-400">{deleteButtonState(item.pack).note}</p>
                                             )}
-                                            <p className="text-xs text-gray-500 mt-1">
+                                            <p className="text-xs text-on-surface-subtle mt-1">
                                                 {formatPackPrice(item.pack.price)} ・ 閲覧回数 {viewCounts.get(item.pack.id) ?? "-"} ・ 利用者数 {item.pack.ownerCount}
                                             </p>
                                         </div>
@@ -289,7 +289,7 @@ export default function CreatorDashboardPage() {
                                                     disabled={state.disabled || deletingId === item.pack.id}
                                                     title={state.note}
                                                     onClick={() => handleDeletePack(item.pack)}
-                                                    className="relative z-10 shrink-0 text-sm font-bold text-red-600 hover:text-red-800 transition-colors disabled:text-gray-300 disabled:cursor-not-allowed disabled:hover:text-gray-300"
+                                                    className="relative z-10 shrink-0 text-sm font-bold text-red-600 dark:text-red-400 hover:text-red-800 transition-colors disabled:text-outline disabled:cursor-not-allowed disabled:hover:text-outline"
                                                 >
                                                     {deletingId === item.pack.id ? "削除中..." : state.label}
                                                 </button>
@@ -300,9 +300,9 @@ export default function CreatorDashboardPage() {
                     
                                     <div
                                         key={`draft-${item.draft.id}`}
-                                        className="flex items-center gap-4 bg-white/40 backdrop-blur-md border border-dashed border-primary/40 shadow-sm rounded-2xl p-4"
+                                        className="flex items-center gap-4 bg-surface-container-lowest/40 backdrop-blur-md border border-dashed border-primary/40 shadow-sm rounded-2xl p-4"
                                     >
-                                        <div className="w-16 h-16 shrink-0 bg-white rounded-xl overflow-hidden flex items-center justify-center">
+                                        <div className="w-16 h-16 shrink-0 bg-surface-container-lowest rounded-xl overflow-hidden flex items-center justify-center">
                                             {(item.draft.stickers.find((st) => st.stickerId === item.draft.coverStickerId) ?? item.draft.stickers[0])?.imageUrl && (
                                                 // eslint-disable-next-line @next/next/no-img-element
                                                 <img
@@ -313,14 +313,14 @@ export default function CreatorDashboardPage() {
                                             )}
                                         </div>
                                         <div className="min-w-0 flex-1">
-                                            <p className="font-bold text-gray-900 truncate">
+                                            <p className="font-bold text-on-surface truncate">
                                                 <span className="mr-2 inline-block rounded-full border border-dashed border-primary/60 bg-primary-container px-2 py-0.5 text-[10px] font-bold text-on-primary-container align-middle">
                                                     下書き
                                                 </span>
                                                 {item.draft.name || "無題の下書き"}
                                             </p>
                                             {/* 未公開のぺったんは、価格だけを出す（作成時は、無料のみ） */}
-                                            <p className="text-xs text-gray-500 mt-1">{formatPackPrice(0)}</p>
+                                            <p className="text-xs text-on-surface-subtle mt-1">{formatPackPrice(0)}</p>
                                         </div>
                                         <Link
                                             href={`/daidai-yokocho/creator/drafts/${item.draft.id}`}
@@ -336,7 +336,7 @@ export default function CreatorDashboardPage() {
                                                 await deletePackDraft(user.uid, item.draft, true);
                                                 reloadDrafts(user.uid);
                                             }}
-                                            className="shrink-0 text-sm font-bold text-red-600 hover:text-red-800 transition-colors"
+                                            className="shrink-0 text-sm font-bold text-red-600 dark:text-red-400 hover:text-red-800 transition-colors"
                                         >
                                             削除
                                         </button>

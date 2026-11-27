@@ -62,7 +62,7 @@ export default function BulkAddToCartButton({ packs, label }: { packs: StickerPa
                 </Button>
             )}
             {result && !running && (
-                <p className="text-sm text-gray-600" role="status">
+                <p className="text-sm text-on-surface-variant" role="status">
                     {failed ? (
                         "カートに追加出来ませんでした。時間をおいてお試しください。"
                     ) : (
@@ -70,7 +70,7 @@ export default function BulkAddToCartButton({ packs, label }: { packs: StickerPa
                             {result.added}件をカートに追加しました
                             {result.skippedOverLimit > 0 && `（上限のため${result.skippedOverLimit}件は追加出来ませんでした）`}
                             {" "}
-                            <Link href="/daidai-yokocho/cart" className="text-blue-600 hover:underline">
+                            <Link href="/daidai-yokocho/cart" className="text-blue-600 dark:text-blue-400 hover:underline">
                                 カートを見る →
                             </Link>
                         </>

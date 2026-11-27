@@ -25,8 +25,8 @@ const menuCards = [
 function TrendingHeader() {
     return (
         <div className="flex flex-col items-center mb-16">
-            <p className="text-sm font-bold text-gray-400 tracking-[0.2em] mb-2 uppercase">DAIDAI YOKOCHO</p>
-            <h2 className="text-3xl font-bold tracking-widest text-gray-900 mb-8">daidai横丁で人気のぺったんと意匠</h2>
+            <p className="text-sm font-bold text-outline tracking-[0.2em] mb-2 uppercase">DAIDAI YOKOCHO</p>
+            <h2 className="text-3xl font-bold tracking-widest text-on-surface mb-8">daidai横丁で人気のぺったんと意匠</h2>
 
             <Button href="/daidai-yokocho" variant="glass">
                 全て見る →
@@ -82,8 +82,8 @@ export default function Home() {
             <section className="container mx-auto px-4 py-24 max-w-screen-2xl">
                 {/* 見出しと「全てのニュース」ボタン */}
                 <div className="flex flex-col items-center mb-16">
-                    <p className="text-sm font-bold text-gray-400 tracking-[0.2em] mb-2 uppercase">NEWS</p>
-                    <h2 className="text-3xl font-bold tracking-widest text-gray-900 mb-8">最新情報</h2>
+                    <p className="text-sm font-bold text-outline tracking-[0.2em] mb-2 uppercase">NEWS</p>
+                    <h2 className="text-3xl font-bold tracking-widest text-on-surface mb-8">最新情報</h2>
 
                     <Button href="https://note.com/rhing_official/all" variant="glass">
                         全てのニュース →
@@ -98,9 +98,9 @@ export default function Home() {
                             key={news.id}
                             target="_blank"
                             rel="noopener noreferrer"
-                            className="group flex flex-col h-full bg-white/50 backdrop-blur-md border border-white/70 shadow-elevation-1 hover:shadow-elevation-3 transition-all duration-300 ease-m3-standard overflow-hidden rounded-m3-md"
+                            className="group flex flex-col h-full bg-surface-container-lowest/50 backdrop-blur-md border border-glass-edge/70 shadow-elevation-1 hover:shadow-elevation-3 transition-all duration-300 ease-m3-standard overflow-hidden rounded-m3-md"
                         >
-                            <div className="relative w-full aspect-[16/9] overflow-hidden bg-gray-100/50">
+                            <div className="relative w-full aspect-[16/9] overflow-hidden bg-surface-container-high/50">
                                 <img
                                     src={news.image}
                                     alt={news.title}
@@ -109,13 +109,13 @@ export default function Home() {
                             </div>
                             <div className="p-6 flex flex-col flex-grow space-y-4">
                                 <div className="flex justify-between items-center">
-                                    <time className="text-xs font-bold text-gray-400 tracking-wider">{news.date}</time>
+                                    <time className="text-xs font-bold text-outline tracking-wider">{news.date}</time>
                                     <Badge>{news.category}</Badge>
                                 </div>
-                                <h2 className="text-base font-bold text-gray-900 group-hover:text-primary transition-colors leading-snug">
+                                <h2 className="text-base font-bold text-on-surface group-hover:text-primary transition-colors leading-snug">
                                     {news.title}
                                 </h2>
-                                <p className="text-sm text-gray-500 leading-relaxed line-clamp-3">
+                                <p className="text-sm text-on-surface-subtle leading-relaxed line-clamp-3">
                                     {news.description}
                                 </p>
                             </div>

@@ -33,7 +33,7 @@ export default function DonateMethods() {
                         return (
                             <div
                                 key={m.id}
-                                className="flex flex-col items-center justify-center border border-gray-300 text-gray-400 rounded-m3-lg p-6 text-center"
+                                className="flex flex-col items-center justify-center border border-outline/50 text-outline rounded-m3-lg p-6 text-center"
                             >
                                 <p className="font-bold tracking-wide mb-1">
                                     {m.name.map((line) => (
@@ -53,7 +53,7 @@ export default function DonateMethods() {
                             className={`flex flex-col items-center justify-center rounded-m3-lg p-6 text-center font-bold tracking-wide transition-colors ${
                                 isSelected
                                     ? "bg-primary text-on-primary"
-                                    : "bg-white/60 border border-outline text-on-surface hover:bg-white hover:border-primary"
+                                    : "bg-surface-container-lowest/60 border border-outline text-on-surface hover:bg-surface-container-lowest hover:border-primary"
                             }`}
                         >
                             <p className="mb-1">
@@ -68,11 +68,11 @@ export default function DonateMethods() {
             </div>
 
             {(selectedPanel === "stripe" || selectedPanel === "wallet") && (
-                <div className="mt-8 bg-white/40 backdrop-blur-md border border-white/80 shadow-elevation-1 rounded-m3-xl p-8 md:p-10">
-                    <h3 className="text-lg font-bold text-gray-900 tracking-wider mb-4">
+                <div className="mt-8 bg-surface-container-lowest/40 backdrop-blur-md border border-glass-edge/80 shadow-elevation-1 rounded-m3-xl p-8 md:p-10">
+                    <h3 className="text-lg font-bold text-on-surface tracking-wider mb-4">
                         {selectedPanel === "stripe" ? "カードで寄付する" : "Apple Pay・Google Payで寄付する"}
                     </h3>
-                    <ul className="list-disc pl-6 space-y-2 text-gray-700 text-sm leading-relaxed mb-8">
+                    <ul className="list-disc pl-6 space-y-2 text-on-surface-variant text-sm leading-relaxed mb-8">
                         {selectedPanel === "stripe" ? (
                             <li>クレジットカード・デビットカードをお使いいただけます。</li>
                         ) : (
@@ -93,15 +93,15 @@ export default function DonateMethods() {
             )}
 
             {selectedPanel === "bitcoin" && (
-                <div className="mt-8 bg-white/40 backdrop-blur-md border border-white/80 shadow-elevation-1 rounded-m3-xl p-8 md:p-10">
-                    <h3 className="text-lg font-bold text-gray-900 tracking-wider mb-4">ビットコインで寄付する</h3>
-                    <ul className="list-disc pl-6 space-y-2 text-gray-700 text-sm leading-relaxed mb-8">
+                <div className="mt-8 bg-surface-container-lowest/40 backdrop-blur-md border border-glass-edge/80 shadow-elevation-1 rounded-m3-xl p-8 md:p-10">
+                    <h3 className="text-lg font-bold text-on-surface tracking-wider mb-4">ビットコインで寄付する</h3>
+                    <ul className="list-disc pl-6 space-y-2 text-on-surface-variant text-sm leading-relaxed mb-8">
                         <li>金額は、寄付ページで自由に入力出来ます。</li>
                         <li>ネットワーク手数料の都合で、最低額が有ります。目安は約0.0002625BTC です。</li>
                         <li>ネットワーク手数料は、お支払いになる方の負担です。価格変動が有り、お支払い後の返金はできません。</li>
                         <li>決済は、NOWPayments の寄付ページ（外部サイト）で行います。</li>
                         <li>少額の寄付は、カードからお願いします（ビットコインは、最低額が高めです）。</li>
-                        <li>お支払い後、しばらく経っても反映されない等の場合は、<a href="/contact?type=user" className="underline underline-offset-4 hover:text-gray-900 transition-colors">お問い合わせ</a>からご連絡ください。</li>
+                        <li>お支払い後、しばらく経っても反映されない等の場合は、<a href="/contact?type=user" className="underline underline-offset-4 hover:text-on-surface transition-colors">お問い合わせ</a>からご連絡ください。</li>
                     </ul>
                     <Button href={BITCOIN_DONATION_URL} size="lg" className="w-full sm:w-auto">
                         寄付ページへ進む

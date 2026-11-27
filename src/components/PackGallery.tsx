@@ -24,7 +24,7 @@ export default function PackGallery({
     const items = [...(cover ? [cover] : []), ...stickers.filter((s) => s !== cover)].filter((s) => s.imageUrl);
     if (items.length === 0) {
         return (
-            <div className="aspect-square w-full rounded-m3-lg bg-white border border-gray-100 flex items-center justify-center text-gray-300 text-sm">
+            <div className="aspect-square w-full rounded-m3-lg bg-surface-container-lowest border border-outline-variant flex items-center justify-center text-outline text-sm">
                 No Image
             </div>
         );
@@ -37,11 +37,11 @@ export default function PackGallery({
                 type="button"
                 onClick={() => setViewerOpen(true)}
                 aria-label="画像を全画面で表示"
-                className="relative aspect-square w-full rounded-m3-lg bg-white border border-gray-100 shadow-elevation-1 flex items-center justify-center overflow-hidden cursor-zoom-in"
+                className="relative aspect-square w-full rounded-m3-lg bg-surface-container-lowest border border-outline-variant shadow-elevation-1 flex items-center justify-center overflow-hidden cursor-zoom-in"
             >
                 {/* keyで、画像が切り替わるたびに、読み込み前のパルスからやり直す */}
                 <LoadingImage key={current.imageUrl} src={current.imageUrl} alt={current.name || packName} className="w-full h-full object-contain p-6" />
-                <span className="absolute bottom-3 right-3 p-2 rounded-full bg-white/80 shadow-elevation-1 text-gray-500" aria-hidden>
+                <span className="absolute bottom-3 right-3 p-2 rounded-full bg-surface-container-lowest/80 shadow-elevation-1 text-on-surface-subtle" aria-hidden>
                     <Maximize2 className="w-4 h-4" />
                 </span>
             </button>
@@ -54,8 +54,8 @@ export default function PackGallery({
                                 onClick={() => setIndex(i)}
                                 aria-label={`${sticker.name || `${i + 1}枚目`}を表示`}
                                 aria-current={i === index}
-                                className={`relative aspect-square w-full rounded-m3-md bg-white overflow-hidden border-2 transition ${
-                                    i === index ? "border-primary" : "border-gray-100 hover:border-outline"
+                                className={`relative aspect-square w-full rounded-m3-md bg-surface-container-lowest overflow-hidden border-2 transition ${
+                                    i === index ? "border-primary" : "border-outline-variant hover:border-outline"
                                 }`}
                             >
                                 <LoadingImage src={sticker.imageUrl} alt="" className="w-full h-full object-contain p-1" />

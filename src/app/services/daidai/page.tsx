@@ -37,12 +37,12 @@ const platforms: Platform[] = [
 
 export default function DaiDaiPage() {
     return (
-        <div className="w-full text-gray-800 pb-32">
+        <div className="w-full text-on-surface pb-32">
             {/* ヒーローエリア */}
             <div className="container mx-auto px-6 pb-24 text-center">
-                <h1 className="text-4xl md:text-5xl font-bold tracking-widest text-gray-900 mb-4">DaiDai</h1>
+                <h1 className="text-4xl md:text-5xl font-bold tracking-widest text-on-surface mb-4">DaiDai</h1>
                 <p className="text-xl md:text-2xl tracking-[0.2em] mb-8 text-tertiary">「整う、守る、私に馴染む。」</p>
-                <p className="text-gray-600 leading-relaxed mx-auto">
+                <p className="text-on-surface-variant leading-relaxed mx-auto">
                     広告なし、電話番号・メールアドレスの入力が不要な、プライバシーを大切にするメッセージアプリ
                 </p>
             </div>
@@ -60,19 +60,19 @@ export default function DaiDaiPage() {
                         className="lg:w-2/5"
                     />
 
-                    <div className="lg:w-3/5 bg-white/50 backdrop-blur-md border border-white/80 shadow-elevation-2 rounded-lg p-8">
-                        <h2 className="text-lg font-bold mb-6 tracking-widest text-gray-900">対応プラットフォーム</h2>
+                    <div className="lg:w-3/5 bg-surface-container-lowest/50 backdrop-blur-md border border-glass-edge/80 shadow-elevation-2 rounded-lg p-8">
+                        <h2 className="text-lg font-bold mb-6 tracking-widest text-on-surface">対応プラットフォーム</h2>
                         <div className="grid grid-cols-2 sm:grid-cols-3 gap-4">
                             {platforms.map((p) => {
                                 const available = p.status === "available";
                                 const cardClass = available
-                                    ? "bg-white text-gray-800 border border-gray-200 hover:bg-tertiary/10 hover:border-tertiary/30 rounded-xl p-5 text-center font-bold tracking-wide transition-colors duration-300"
-                                    : "border border-gray-200 text-gray-400 rounded-xl p-5 text-center";
+                                    ? "bg-surface-container-lowest text-on-surface border border-outline-variant hover:bg-tertiary/10 hover:border-tertiary/30 rounded-xl p-5 text-center font-bold tracking-wide transition-colors duration-300"
+                                    : "border border-outline-variant text-outline rounded-xl p-5 text-center";
                                 const content = available ? (
                                     p.note ? (
                                         <>
                                             <p>{p.name}</p>
-                                            <p className="text-xs font-medium tracking-widest text-gray-500 mt-1">{p.note}</p>
+                                            <p className="text-xs font-medium tracking-widest text-on-surface-subtle mt-1">{p.note}</p>
                                         </>
                                     ) : (
                                         p.name
@@ -96,7 +96,7 @@ export default function DaiDaiPage() {
                             })}
                         </div>
                         <EnvironmentList
-                            className="mt-8 pt-6 border-t border-gray-200"
+                            className="mt-8 pt-6 border-t border-outline-variant"
                             items={[
                                 { os: "iPad 第9世代", detail: "iPadOS 27 β・Floorp・TestFlight" },
                                 { os: "motorola edge 50s pro", detail: "Android 16・Firefox・APK" },

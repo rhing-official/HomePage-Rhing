@@ -94,7 +94,7 @@ export default function PurchaseButton({ packId, extra }: { packId: string; extr
 
     if (!authReady || status === "loading") {
         return (
-            <button disabled className="w-full bg-gray-200 text-gray-400 px-8 py-3.5 rounded-full cursor-not-allowed">
+            <button disabled className="w-full bg-outline-variant text-outline px-8 py-3.5 rounded-full cursor-not-allowed">
                 読み込み中...
             </button>
         );
@@ -143,7 +143,7 @@ export default function PurchaseButton({ packId, extra }: { packId: string; extr
                 {cartButton}
                 {extra}
             </div>
-            {error && <p className="text-sm text-red-600">{error}</p>}
+            {error && <p className="text-sm text-red-600 dark:text-red-400">{error}</p>}
         </div>
     );
 }

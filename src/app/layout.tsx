@@ -4,6 +4,7 @@ import "./globals.css";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import ScrollToTop from "@/components/ScrollToTop"; // 🌟 復活
+import { THEME_INIT_SCRIPT } from "@/lib/theme";
 
 const kiwiMaru = Kiwi_Maru({
     weight: ["300", "400", "500"],
@@ -22,6 +23,9 @@ export const metadata = {
     description: "Rhing Web",
     openGraph: { siteName: "Rhing" },
 };
+
+// ダークモードに対応している印。ブラウザの組み込みの部品と、Dark Readerなどの拡張が、二重に変換しないための手掛かりになる
+export const viewport = { colorScheme: "light dark" };
 
 // Googleの検索結果に表示されるサイト名を「Rhing」にするための構造化データ
 const websiteJsonLd = {
@@ -42,6 +46,10 @@ export default function RootLayout({
           🌟 Dark Reader対策の suppressHydrationWarning はこの位置に残します
         */
         <html lang="ja" className={kiwiMaru.variable} suppressHydrationWarning>
+            <head>
+                {/* 描画の前に、保存済みの設定かOSの設定から、dark クラスを付ける（ライトで一瞬描かれてから暗くなる、ちらつきを避ける） */}
+                <script dangerouslySetInnerHTML={{ __html: THEME_INIT_SCRIPT }} />
+            </head>
             {/* 
               🌟 修正ポイント: 
               bodyタグの内側で、このように <Header />, <main>, <Footer />, <ScrollToTop /> 

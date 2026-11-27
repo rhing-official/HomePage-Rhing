@@ -30,7 +30,7 @@ export function AudienceToggle() {
     const { audience, setAudience } = useAudience();
 
     return (
-        <div className="relative grid grid-cols-2 w-64 border-b border-gray-200">
+        <div className="relative grid grid-cols-2 w-64 border-b border-outline-variant">
             <motion.div
                 className="absolute bottom-0 left-0 h-0.5 w-1/2 bg-tertiary"
                 animate={{ x: audience === "general" ? 0 : "100%" }}
@@ -39,7 +39,7 @@ export function AudienceToggle() {
             <button
                 type="button"
                 onClick={() => setAudience("general")}
-                className={`relative z-10 pb-2 text-sm font-bold tracking-wide text-center transition-colors ${audience === "general" ? "text-gray-900" : "text-gray-400 hover:text-gray-600"
+                className={`relative z-10 pb-2 text-sm font-bold tracking-wide text-center transition-colors ${audience === "general" ? "text-on-surface" : "text-outline hover:text-on-surface-variant"
                     }`}
             >
                 一般向け
@@ -47,7 +47,7 @@ export function AudienceToggle() {
             <button
                 type="button"
                 onClick={() => setAudience("geek")}
-                className={`relative z-10 pb-2 text-sm font-bold tracking-wide text-center transition-colors ${audience === "geek" ? "text-gray-900" : "text-gray-400 hover:text-gray-600"
+                className={`relative z-10 pb-2 text-sm font-bold tracking-wide text-center transition-colors ${audience === "geek" ? "text-on-surface" : "text-outline hover:text-on-surface-variant"
                     }`}
             >
                 ギーク向け

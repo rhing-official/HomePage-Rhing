@@ -35,9 +35,9 @@ const BADGE_CLASS: Record<string, string> = {
     approved: "bg-primary text-on-primary",
     submitted: "bg-primary-container text-on-primary-container",
     inReview: "bg-primary-container text-on-primary-container",
-    rejected: "bg-amber-100 text-amber-800",
-    withdrawn: "bg-gray-100 text-gray-600",
-    suspended: "bg-red-100 text-red-700",
+    rejected: "bg-amber-100 dark:bg-amber-900/40 text-amber-800 dark:text-amber-200",
+    withdrawn: "bg-surface-container-high text-on-surface-variant",
+    suspended: "bg-red-100 dark:bg-red-900/40 text-red-700 dark:text-red-200",
 };
 
 function Row({ sub, canWithdraw, canUpdate, onChanged }: { sub: ThemePackSubmission; canWithdraw: boolean; canUpdate: boolean; onChanged: () => void }) {
@@ -82,37 +82,37 @@ function Row({ sub, canWithdraw, canUpdate, onChanged }: { sub: ThemePackSubmiss
 
     return (
         <li
-            className={`${published ? "group relative hover:bg-white/70 hover:shadow-md" : ""} flex items-center gap-4 bg-white/40 backdrop-blur-md border border-white/80 shadow-sm rounded-2xl p-4 transition-all text-left`}
+            className={`${published ? "group relative hover:bg-surface-container-lowest/70 hover:shadow-md" : ""} flex items-center gap-4 bg-surface-container-lowest/40 backdrop-blur-md border border-glass-edge/80 shadow-sm rounded-2xl p-4 transition-all text-left`}
         >
-            <DesignSwatch data={data} className="w-16 h-16 shrink-0 rounded-xl border border-white/80 overflow-hidden [&>span]:hidden" />
+            <DesignSwatch data={data} className="w-16 h-16 shrink-0 rounded-xl border border-glass-edge/80 overflow-hidden [&>span]:hidden" />
             <div className="min-w-0 flex-1">
                 <div className="flex items-center gap-2 min-w-0">
-                    <span className={`shrink-0 rounded-full px-2 py-0.5 text-[10px] font-bold ${BADGE_CLASS[sub.status] ?? "bg-gray-100 text-gray-600"}`}>
+                    <span className={`shrink-0 rounded-full px-2 py-0.5 text-[10px] font-bold ${BADGE_CLASS[sub.status] ?? "bg-surface-container-high text-on-surface-variant"}`}>
                         {published ? "公開中" : submissionStatusLabel(sub.status)}
                     </span>
                     {published ? (
                         <Link
                             href={`/daidai-yokocho/designs/${sub.packId}`}
-                            className="block min-w-0 font-bold text-gray-900 truncate after:absolute after:inset-0 after:content-[''] group-hover:text-primary transition-colors"
+                            className="block min-w-0 font-bold text-on-surface truncate after:absolute after:inset-0 after:content-[''] group-hover:text-primary transition-colors"
                         >
                             {title}
                         </Link>
                     ) : (
-                        <p className="min-w-0 font-bold text-gray-900 truncate">{title}</p>
+                        <p className="min-w-0 font-bold text-on-surface truncate">{title}</p>
                     )}
                 </div>
-                <p className="text-xs text-gray-500 mt-1">
+                <p className="text-xs text-on-surface-subtle mt-1">
                     無料 ・ 版{sub.version}
                     {sub.createdAt ? ` ・ ${sub.createdAt.toLocaleDateString("ja-JP")}に投稿` : ""}
                     {ownerCount !== null ? ` ・ 利用者数 ${ownerCount}` : ""}
                 </p>
                 {sub.status === "rejected" && sub.decisionNote && (
-                    <p className="relative z-10 mt-1 text-xs font-bold text-amber-800 whitespace-pre-wrap break-words">差し戻しの理由: {sub.decisionNote}</p>
+                    <p className="relative z-10 mt-1 text-xs font-bold text-amber-800 dark:text-amber-200 whitespace-pre-wrap break-words">差し戻しの理由: {sub.decisionNote}</p>
                 )}
                 {sub.status === "suspended" && sub.decisionNote && (
-                    <p className="relative z-10 mt-1 text-xs font-bold text-red-700 whitespace-pre-wrap break-words">配信停止の理由: {sub.decisionNote}</p>
+                    <p className="relative z-10 mt-1 text-xs font-bold text-red-700 dark:text-red-200 whitespace-pre-wrap break-words">配信停止の理由: {sub.decisionNote}</p>
                 )}
-                {error && <p className="relative z-10 mt-1 text-xs text-red-600" role="alert">{error}</p>}
+                {error && <p className="relative z-10 mt-1 text-xs text-red-600 dark:text-red-400" role="alert">{error}</p>}
             </div>
             {canUpdate && (
                 <Link
@@ -127,7 +127,7 @@ function Row({ sub, canWithdraw, canUpdate, onChanged }: { sub: ThemePackSubmiss
                     type="button"
                     disabled={busy}
                     onClick={withdraw}
-                    className="relative z-10 shrink-0 text-sm font-bold text-red-600 hover:text-red-800 transition-colors disabled:text-gray-300 disabled:cursor-not-allowed"
+                    className="relative z-10 shrink-0 text-sm font-bold text-red-600 dark:text-red-400 hover:text-red-800 transition-colors disabled:text-outline disabled:cursor-not-allowed"
                 >
                     {busy ? "取り下げ中..." : "取り下げる"}
                 </button>
@@ -168,10 +168,10 @@ export default function MyDesigns({ uid }: { uid: string }) {
     return (
         <div>
             {/* 投稿の入口（ぺったんの、作成のカードに当たる） */}
-            <div className="bg-white/40 backdrop-blur-md border border-white/80 shadow-sm rounded-2xl p-6 flex flex-wrap items-center justify-between gap-4">
+            <div className="bg-surface-container-lowest/40 backdrop-blur-md border border-glass-edge/80 shadow-sm rounded-2xl p-6 flex flex-wrap items-center justify-between gap-4">
                 <div className="min-w-0">
-                    <h2 className="text-xl font-bold text-gray-900">意匠を投稿する</h2>
-                    <p className="mt-1 text-sm text-gray-500">DaiDaiの色・形・背景を着せ替える、意匠を投稿します。公開の前に、運営が審査し、結果はお知らせに届きます。</p>
+                    <h2 className="text-xl font-bold text-on-surface">意匠を投稿する</h2>
+                    <p className="mt-1 text-sm text-on-surface-subtle">DaiDaiの色・形・背景を着せ替える、意匠を投稿します。公開の前に、運営が審査し、結果はお知らせに届きます。</p>
                 </div>
                 <div className="shrink-0 flex flex-wrap items-center gap-3">
                     <Link
@@ -183,7 +183,7 @@ export default function MyDesigns({ uid }: { uid: string }) {
                     </Link>
                     <Link
                         href="/daidai-yokocho/creator/themes/new"
-                        className="inline-flex items-center gap-2 rounded-full border border-gray-300 bg-white px-6 py-3 text-sm font-bold text-gray-800 tracking-wide hover:border-primary transition"
+                        className="inline-flex items-center gap-2 rounded-full border border-outline/50 bg-surface-container-lowest px-6 py-3 text-sm font-bold text-on-surface tracking-wide hover:border-primary transition"
                     >
                         zipを投稿する
                     </Link>
@@ -192,7 +192,7 @@ export default function MyDesigns({ uid }: { uid: string }) {
 
             {/* 投稿した意匠（状態で絞り込める） */}
             <div className="mt-16">
-                <h2 className="text-xl font-bold text-gray-900 mb-4">投稿した意匠</h2>
+                <h2 className="text-xl font-bold text-on-surface mb-4">投稿した意匠</h2>
 
                 <div className="flex flex-wrap gap-2 mb-6" role="group" aria-label="状態で絞り込む">
                     {FILTER_OPTIONS.map((o) => {
@@ -205,7 +205,7 @@ export default function MyDesigns({ uid }: { uid: string }) {
                                 onClick={() => setFilter(o.value)}
                                 aria-pressed={active}
                                 className={`px-4 py-1.5 rounded-full text-sm border transition ${
-                                    active ? "bg-primary text-on-primary border-primary" : "bg-white/70 text-primary border-primary/30 hover:bg-primary-container/60"
+                                    active ? "bg-primary text-on-primary border-primary" : "bg-surface-container-lowest/70 text-primary border-primary/30 hover:bg-primary-container/60"
                                 }`}
                             >
                                 {o.label}（{count}）
@@ -215,11 +215,11 @@ export default function MyDesigns({ uid }: { uid: string }) {
                 </div>
 
                 {failed ? (
-                    <p className="text-sm text-red-600">投稿を読み込めませんでした。</p>
+                    <p className="text-sm text-red-600 dark:text-red-400">投稿を読み込めませんでした。</p>
                 ) : subs === null ? (
-                    <p className="text-sm text-gray-400">読み込み中…</p>
+                    <p className="text-sm text-outline">読み込み中…</p>
                 ) : visible.length === 0 ? (
-                    <p className="text-gray-400 text-sm">{items.length === 0 ? "まだ意匠を投稿していません。" : "条件に一致する意匠が有りません。"}</p>
+                    <p className="text-outline text-sm">{items.length === 0 ? "まだ意匠を投稿していません。" : "条件に一致する意匠が有りません。"}</p>
                 ) : (
                     <ul className="flex flex-col gap-4">
                         {visible.map((s) => (

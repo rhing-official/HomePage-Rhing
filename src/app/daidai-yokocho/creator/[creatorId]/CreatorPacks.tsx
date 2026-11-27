@@ -42,14 +42,14 @@ export default function CreatorPacks({ packs, creator }: { packs: StickerPack[];
             )}
             <div hidden={kind !== "petan"}>
             <div className="mb-6 flex flex-wrap items-center justify-between gap-4">
-                <h2 className="text-lg font-bold text-gray-900">出品ぺったん</h2>
+                <h2 className="text-lg font-bold text-on-surface">出品ぺったん</h2>
                 {filtered.length > 0 && (
                     <BulkAddToCartButton packs={filtered} label="表示中のぺったんを全てカートに追加" />
                 )}
             </div>
 
             {packs.length === 0 ? (
-                <p className="text-gray-500">出品しているぺったんは有りません</p>
+                <p className="text-on-surface-subtle">出品しているぺったんは有りません</p>
             ) : (
                 <>
                     <div className="mb-8 flex flex-col gap-4">
@@ -57,7 +57,7 @@ export default function CreatorPacks({ packs, creator }: { packs: StickerPack[];
                             value={query}
                             onChange={(e) => setQuery(e.target.value)}
                             placeholder="検索"
-                            className="w-full px-5 py-3 rounded-full bg-white/70 backdrop-blur-sm border border-white/80 shadow-sm shadow-blue-300/5 text-sm text-gray-700 placeholder:text-gray-400 focus:outline-none focus:border-blue-200 focus:bg-white/90 transition-all duration-300"
+                            className="w-full px-5 py-3 rounded-full bg-surface-container-lowest/70 backdrop-blur-sm border border-glass-edge/80 shadow-sm shadow-blue-300/5 text-sm text-on-surface-variant placeholder:text-outline focus:outline-none focus:border-blue-200 focus:bg-surface-container-lowest/90 transition-all duration-300"
                         />
                         <PackFilterPanel
                             filters={filters}
@@ -70,7 +70,7 @@ export default function CreatorPacks({ packs, creator }: { packs: StickerPack[];
                     </div>
 
                     {filtered.length === 0 ? (
-                        <p className="text-gray-500">条件に一致するぺったんが見つかりませんでした</p>
+                        <p className="text-on-surface-subtle">条件に一致するぺったんが見つかりませんでした</p>
                     ) : (
                         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
                             {filtered.map((pack) => (

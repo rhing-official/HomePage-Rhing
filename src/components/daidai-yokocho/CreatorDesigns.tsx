@@ -22,13 +22,13 @@ export default function CreatorDesigns({ creator }: { creator: CreatorProfile })
 
     return (
         <>
-            <h2 className="mb-6 text-lg font-bold text-gray-900">公開中の意匠</h2>
+            <h2 className="mb-6 text-lg font-bold text-on-surface">公開中の意匠</h2>
             {failed ? (
-                <p className="text-sm text-red-600">意匠を読み込めませんでした。</p>
+                <p className="text-sm text-red-600 dark:text-red-400">意匠を読み込めませんでした。</p>
             ) : packs === null ? (
-                <p className="text-sm text-gray-400">読み込み中…</p>
+                <p className="text-sm text-outline">読み込み中…</p>
             ) : packs.length === 0 ? (
-                <p className="text-gray-500">公開している意匠は有りません</p>
+                <p className="text-on-surface-subtle">公開している意匠は有りません</p>
             ) : (
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
                     {packs.map((p) => (

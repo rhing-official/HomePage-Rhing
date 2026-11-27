@@ -14,12 +14,12 @@ export default function ThemePackPreview({ data }: { data: ThemePackPreviewData 
     const { borderWidth, radius, shadowOffset } = pack.shape;
     return (
         <div className="flex flex-col gap-5">
-            <p className="text-xs text-gray-500">
+            <p className="text-xs text-on-surface-subtle">
                 id: {pack.id}　作者の表示: {pack.author || "（無し）"}　外観: {pack.brightness === "both" ? "明るい・暗い" : pack.brightness === "light" ? "明るい" : "暗い"}
                 　線の太さ {borderWidth}、角の丸み {radius}、影 {shadowOffset[0]}・{shadowOffset[1]}
             </p>
             {data.warnings.length > 0 && (
-                <ul className="text-xs text-amber-700 list-disc pl-5">
+                <ul className="text-xs text-amber-700 dark:text-amber-200 list-disc pl-5">
                     {data.warnings.map((w, i) => (
                         <li key={i}>{w}</li>
                     ))}
@@ -36,9 +36,9 @@ export default function ThemePackPreview({ data }: { data: ThemePackPreviewData 
                 };
                 return (
                     <div key={scope} className="flex flex-col gap-3">
-                        <h4 className="text-sm font-bold text-gray-800">{scope === "light" ? "明るい外観" : "暗い外観"}</h4>
+                        <h4 className="text-sm font-bold text-on-surface">{scope === "light" ? "明るい外観" : "暗い外観"}</h4>
                         <div
-                            className="p-5 flex flex-col gap-4 rounded-xl border border-gray-200 bg-cover bg-center"
+                            className="p-5 flex flex-col gap-4 rounded-xl border border-outline-variant bg-cover bg-center"
                             style={{
                                 backgroundColor: c.background,
                                 backgroundImage: backgroundUrl ? `url(${backgroundUrl})` : undefined,
@@ -68,19 +68,19 @@ export default function ThemePackPreview({ data }: { data: ThemePackPreviewData 
                         </div>
                         <ul className="flex flex-wrap gap-3">
                             {COLOR_KEYS.filter((k) => pack.colors[scope][k]).map((k) => (
-                                <li key={k} className="flex items-center gap-2 text-xs text-gray-700">
-                                    <span className="w-5 h-5 rounded-full border border-gray-300" style={{ backgroundColor: pack.colors[scope][k] }} aria-hidden />
+                                <li key={k} className="flex items-center gap-2 text-xs text-on-surface-variant">
+                                    <span className="w-5 h-5 rounded-full border border-outline/50" style={{ backgroundColor: pack.colors[scope][k] }} aria-hidden />
                                     {COLOR_LABELS[k]} {pack.colors[scope][k]}
                                 </li>
                             ))}
                         </ul>
                         <ul className="flex flex-col gap-1">
                             {checks.map((k) => (
-                                <li key={`${k.fg}-${k.bg}`} className={`text-xs ${k.pass ? "text-gray-600" : "text-red-600 font-bold"}`}>
+                                <li key={`${k.fg}-${k.bg}`} className={`text-xs ${k.pass ? "text-on-surface-variant" : "text-red-600 dark:text-red-400 font-bold"}`}>
                                     {describeContrast(k)}。{k.pass ? "" : `基準は${MIN_CONTRAST_RATIO}以上です。`}
                                 </li>
                             ))}
-                            {skipped.length > 0 && <li className="text-xs text-gray-400">色の指定が足りない組は、確認していません。</li>}
+                            {skipped.length > 0 && <li className="text-xs text-outline">色の指定が足りない組は、確認していません。</li>}
                         </ul>
                     </div>
                 );

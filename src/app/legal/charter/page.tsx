@@ -22,13 +22,13 @@ export default function CharterPage() {
         <div className="container mx-auto px-6 pb-32 max-w-4xl">
             {/* 
               🌟 修正ポイント1: ページタイトルをガラスカードのデザインに変更
-              - bg-white/40 (半透明), backdrop-blur-md (ぼかし), border-white/80, shadow-md
+              - bg-surface-container-lowest/40 (半透明), backdrop-blur-md (ぼかし), border-glass-edge/80, shadow-md
             */}
-            <div className="mb-24 relative flex flex-col items-center justify-center text-center py-10 px-8 md:px-14 md:min-h-44 lg:min-h-52 bg-white/40 backdrop-blur-md border border-white/80 shadow-elevation-1 rounded-m3-xl">
+            <div className="mb-24 relative flex flex-col items-center justify-center text-center py-10 px-8 md:px-14 md:min-h-44 lg:min-h-52 bg-surface-container-lowest/40 backdrop-blur-md border border-glass-edge/80 shadow-elevation-1 rounded-m3-xl">
                 {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img src="/illustrations/terms.svg" alt="" className="hidden md:block absolute left-8 md:left-14 top-1/2 -translate-y-1/2 w-40 lg:w-48 h-auto" />
-                <h1 className="text-4xl md:text-5xl font-bold tracking-widest text-gray-900 mb-4">CHARTER</h1>
-                <p className="text-gray-500 tracking-wider text-sm">Rhing憲章</p>
+                <img src="/illustrations/terms.svg" alt="" className="hidden md:block absolute left-8 md:left-14 top-1/2 -translate-y-1/2 w-40 lg:w-48 h-auto dark:bg-white/90 dark:rounded-3xl dark:p-3" />
+                <h1 className="text-4xl md:text-5xl font-bold tracking-widest text-on-surface mb-4">CHARTER</h1>
+                <p className="text-on-surface-subtle tracking-wider text-sm">Rhing憲章</p>
             </div>
 
             {/* 条文リスト */}
@@ -37,18 +37,18 @@ export default function CharterPage() {
                     /* 
                       🌟 修正ポイント2: 条文カードをガラスデザイン仕様に変更 
                       - 黒の太い左境界線（border-l-4 border-l-gray-900）の風格は維持しています。
-                      - bg-white/40, backdrop-blur-md, border-white/80 (他3辺の境界線) を設定しています。
-                      - ホバー時には、明るいガラス（hover:bg-white/60）とほのかなブルーの影（hover:shadow-blue-300/10）へ滑らかに遷移します。
+                      - bg-surface-container-lowest/40, backdrop-blur-md, border-glass-edge/80 (他3辺の境界線) を設定しています。
+                      - ホバー時には、明るいガラス（hover:bg-surface-container-lowest/60）とほのかなブルーの影（hover:shadow-blue-300/10）へ滑らかに遷移します。
                     */
                     <section
                         key={index}
-                        className="bg-white/40 backdrop-blur-md p-8 md:p-12 border border-white/80 border-l-4 border-l-gray-900 shadow-elevation-1 rounded-r-m3-lg hover:bg-white/60 hover:shadow-elevation-3 transition-all duration-500"
+                        className="bg-surface-container-lowest/40 backdrop-blur-md p-8 md:p-12 border border-glass-edge/80 border-l-4 border-l-gray-900 shadow-elevation-1 rounded-r-m3-lg hover:bg-surface-container-lowest/60 hover:shadow-elevation-3 transition-all duration-500"
                     >
                         {/* 🌟 区切り線をガラスの透過率に合うように微調整 */}
-                        <h3 className="text-2xl font-black text-gray-900 mb-6 tracking-wide border-b border-gray-900/10 pb-4">
+                        <h3 className="text-2xl font-black text-on-surface mb-6 tracking-wide border-b border-on-surface/10 pb-4">
                             {article.title}
                         </h3>
-                        <p className="text-gray-700 leading-loose text-lg font-medium">
+                        <p className="text-on-surface-variant leading-loose text-lg font-medium">
                             {article.content}
                         </p>
                     </section>

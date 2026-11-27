@@ -106,10 +106,10 @@ export default function StickerPackCardActions({ packId }: { packId: string }) {
                 type="button"
                 onClick={handleFavoriteClick}
                 aria-label={favoriteStatus === "favorited" ? "お気に入り解除" : "お気に入りに追加"}
-                className="p-2 rounded-full bg-white/80 backdrop-blur-sm shadow-sm border border-white/70 hover:bg-white/95 transition-colors"
+                className="p-2 rounded-full bg-surface-container-lowest/80 backdrop-blur-sm shadow-sm border border-glass-edge/70 hover:bg-surface-container-lowest/95 transition-colors"
             >
                 <Heart
-                    className={`w-4 h-4 ${favoriteStatus === "favorited" ? "text-rose-500 fill-rose-500" : "text-gray-400"}`}
+                    className={`w-4 h-4 ${favoriteStatus === "favorited" ? "text-rose-500 dark:text-rose-400 fill-rose-500" : "text-outline"}`}
                 />
             </button>
             <button
@@ -117,12 +117,12 @@ export default function StickerPackCardActions({ packId }: { packId: string }) {
                 onClick={handleCartClick}
                 disabled={getStatus === "owned"}
                 aria-label={getStatus === "owned" ? "入手済み" : inCart ? "カートを見る" : "カートに追加"}
-                className="p-2 rounded-full bg-white/80 backdrop-blur-sm shadow-sm border border-white/70 hover:bg-white/95 transition-colors disabled:cursor-not-allowed disabled:opacity-70"
+                className="p-2 rounded-full bg-surface-container-lowest/80 backdrop-blur-sm shadow-sm border border-glass-edge/70 hover:bg-surface-container-lowest/95 transition-colors disabled:cursor-not-allowed disabled:opacity-70"
             >
                 {getStatus === "owned" ? (
-                    <Check className="w-4 h-4 text-emerald-600" />
+                    <Check className="w-4 h-4 text-emerald-600 dark:text-emerald-400" />
                 ) : (
-                    <ShoppingCart className={`w-4 h-4 ${inCart ? "text-blue-600 fill-blue-100" : "text-gray-500"}`} />
+                    <ShoppingCart className={`w-4 h-4 ${inCart ? "text-blue-600 dark:text-blue-400 fill-blue-100" : "text-on-surface-subtle"}`} />
                 )}
             </button>
         </div>

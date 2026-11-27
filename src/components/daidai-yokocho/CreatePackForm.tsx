@@ -153,30 +153,30 @@ export default function CreatePackForm({
     return (
         <form
             onSubmit={handleSubmit}
-            className="bg-white/40 backdrop-blur-md border border-white/80 shadow-md shadow-gray-200/30 rounded-3xl p-8 flex flex-col gap-5"
+            className="bg-surface-container-lowest/40 backdrop-blur-md border border-glass-edge/80 shadow-md shadow-outline-variant/30 rounded-3xl p-8 flex flex-col gap-5"
         >
             {/* 下書きの編集画面では、ページの見出し「ぺったんの編集」があるので、フォームの見出しは出さない */}
-            {!draft && <h2 className="text-xl font-bold text-gray-900">新規ぺったんを作成</h2>}
+            {!draft && <h2 className="text-xl font-bold text-on-surface">新規ぺったんを作成</h2>}
 
-            <label className="flex flex-col gap-1.5 text-sm text-gray-600">
+            <label className="flex flex-col gap-1.5 text-sm text-on-surface-variant">
                 ぺったん名
                 <input
                     value={name}
                     onChange={(e) => setName(e.target.value)}
-                    className="rounded-lg border border-gray-200 px-4 py-2 bg-white/70"
+                    className="rounded-lg border border-outline-variant px-4 py-2 bg-surface-container-lowest/70"
                 />
             </label>
 
-            <p className="text-sm text-gray-500 bg-gray-50 border border-gray-200 rounded-lg px-4 py-2.5">
+            <p className="text-sm text-on-surface-subtle bg-surface-container border border-outline-variant rounded-lg px-4 py-2.5">
                 価格: 無料（0円）— 有料ぺったんの出品は準備中の為、現在は無料配布のみ対応しています。
             </p>
 
-            <label className="flex flex-col gap-1.5 text-sm text-gray-600">
+            <label className="flex flex-col gap-1.5 text-sm text-on-surface-variant">
                 カテゴリ（任意）
                 <select
                     value={category}
                     onChange={(e) => setCategory(e.target.value)}
-                    className="rounded-lg border border-gray-200 px-4 py-2 bg-white/70"
+                    className="rounded-lg border border-outline-variant px-4 py-2 bg-surface-container-lowest/70"
                 >
                     <option value="">選択しない</option>
                     {STICKER_PACK_CATEGORIES.map((c) => (
@@ -185,14 +185,14 @@ export default function CreatePackForm({
                 </select>
             </label>
 
-            <div className="flex flex-col gap-1.5 text-sm text-gray-600">
+            <div className="flex flex-col gap-1.5 text-sm text-on-surface-variant">
                 タグ（任意、最大{MAX_TAGS}個）
                 <TagInput tags={tags} onChange={setTags} suggestions={tagSuggestions} />
             </div>
 
-            <div className="flex flex-col gap-1.5 text-sm text-gray-600">
+            <div className="flex flex-col gap-1.5 text-sm text-on-surface-variant">
                 画像（{MIN_STICKERS_PER_PACK}枚以上、GIF/WebPアニメーション対応）
-                <p className="text-xs text-gray-400">
+                <p className="text-xs text-outline">
                     それぞれに役割を設定すると、メッセージ内容に応じたぺったん提案（DaiDaiアプリ側の機能）に使われます（任意）
                 </p>
                 <StickerImagePicker
@@ -204,12 +204,12 @@ export default function CreatePackForm({
                     onCoverChange={setCoverIndex}
                 />
                 {stickers.length > 0 && (
-                    <p className="text-xs text-gray-400">★をつけた画像が、ぺったんの代表（一覧等に最初に出る画像）になります。</p>
+                    <p className="text-xs text-outline">★をつけた画像が、ぺったんの代表（一覧等に最初に出る画像）になります。</p>
                 )}
             </div>
 
-            {error && <p className="text-sm text-red-600">{error}</p>}
-            {notice && <p className="text-sm text-emerald-700" role="status">{notice}</p>}
+            {error && <p className="text-sm text-red-600 dark:text-red-400">{error}</p>}
+            {notice && <p className="text-sm text-emerald-700 dark:text-emerald-200" role="status">{notice}</p>}
 
             <div className="flex flex-col sm:flex-row gap-3">
                 <button
@@ -225,14 +225,14 @@ export default function CreatePackForm({
                     disabled={!isValid || busy}
                     className={`px-8 py-3 rounded-full shadow-lg font-bold transition ${isValid && !busy
                         ? "bg-primary text-on-primary hover:bg-primary/90 cursor-pointer"
-                        : "bg-gray-200 text-gray-400 cursor-not-allowed shadow-none"
+                        : "bg-outline-variant text-outline cursor-not-allowed shadow-none"
                         }`}
                 >
                     {submitting ? "公開中..." : "公開する"}
                 </button>
             </div>
             {!isValid && (
-                <p className="text-xs text-gray-400">公開するには、ぺったん名と、{MIN_STICKERS_PER_PACK}枚以上の画像が必要です。途中なら、下書き保存ができます。</p>
+                <p className="text-xs text-outline">公開するには、ぺったん名と、{MIN_STICKERS_PER_PACK}枚以上の画像が必要です。途中なら、下書き保存ができます。</p>
             )}
         </form>
     );
@@ -266,14 +266,14 @@ function TagInput({
 
     return (
         <div className="relative">
-            <div className="flex flex-wrap items-center gap-2 rounded-lg border border-gray-200 px-3 py-2 bg-white/70">
+            <div className="flex flex-wrap items-center gap-2 rounded-lg border border-outline-variant px-3 py-2 bg-surface-container-lowest/70">
                 {tags.map((tag) => (
                     <span key={tag} className="flex items-center gap-1 bg-primary-container text-on-primary-container text-sm px-3 py-1 rounded-full">
                         #{tag}
                         <button
                             type="button"
                             onClick={() => onChange(tags.filter((t) => t !== tag))}
-                            className="text-gray-400 hover:text-gray-700"
+                            className="text-outline hover:text-on-surface-variant"
                             aria-label={`${tag}を削除`}
                         >
                             ×
@@ -303,13 +303,13 @@ function TagInput({
                 )}
             </div>
             {showSuggestions && filtered.length > 0 && (
-                <div className="absolute z-10 mt-1 w-full rounded-lg border border-gray-200 bg-white shadow-md overflow-hidden">
+                <div className="absolute z-10 mt-1 w-full rounded-lg border border-outline-variant bg-surface-container-lowest shadow-md overflow-hidden">
                     {filtered.map((s) => (
                         <button
                             key={s}
                             type="button"
                             onClick={() => addTag(s)}
-                            className="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-50"
+                            className="block w-full text-left px-4 py-2 text-sm text-on-surface-variant hover:bg-surface-container"
                         >
                             #{s}
                         </button>

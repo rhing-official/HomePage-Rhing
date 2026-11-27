@@ -34,13 +34,13 @@ export default function ScreenshotPlaceholder({ label, aspect = "video", src, al
 
     if (src) {
         const image = <Image src={src} alt={alt ?? label} fill sizes={sizes[aspect]} className="object-cover" />;
-        const frame = `relative ${aspectClass} w-full overflow-hidden rounded-m3-lg border border-gray-200 bg-black ${className}`;
+        const frame = `relative ${aspectClass} w-full overflow-hidden rounded-m3-lg border border-outline-variant bg-black ${className}`;
         // 拡大表示が使える場所では、押すと全画面で開く（daidai横丁の商品画像と同じ作り）
         if (viewer) {
             return (
                 <button type="button" onClick={() => viewer.open(src)} aria-label="画像を全画面で表示" className={`${frame} block cursor-zoom-in`}>
                     {image}
-                    <span className="absolute bottom-2 right-2 p-1.5 rounded-full bg-white/80 shadow-elevation-1 text-gray-500" aria-hidden>
+                    <span className="absolute bottom-2 right-2 p-1.5 rounded-full bg-surface-container-lowest/80 shadow-elevation-1 text-on-surface-subtle" aria-hidden>
                         <Maximize2 className="w-4 h-4" />
                     </span>
                 </button>
@@ -51,9 +51,9 @@ export default function ScreenshotPlaceholder({ label, aspect = "video", src, al
 
     return (
         <div
-            className={`${aspectClass} w-full rounded-m3-lg border-2 border-dashed border-gray-300 bg-gray-100/60 flex items-center justify-center p-6 ${className}`}
+            className={`${aspectClass} w-full rounded-m3-lg border-2 border-dashed border-outline/50 bg-surface-container-high/60 flex items-center justify-center p-6 ${className}`}
         >
-            <span className="text-gray-400 text-sm text-center leading-relaxed tracking-wide">{label}</span>
+            <span className="text-outline text-sm text-center leading-relaxed tracking-wide">{label}</span>
         </div>
     );
 }

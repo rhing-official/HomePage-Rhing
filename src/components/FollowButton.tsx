@@ -55,7 +55,7 @@ export default function FollowButton({ creatorId }: { creatorId: string }) {
 
     if (!authReady || status === "loading") {
         return (
-            <button disabled className="px-6 py-2 rounded-full bg-gray-200 text-gray-400 cursor-not-allowed text-sm font-bold">
+            <button disabled className="px-6 py-2 rounded-full bg-outline-variant text-outline cursor-not-allowed text-sm font-bold">
                 読み込み中...
             </button>
         );
@@ -67,7 +67,7 @@ export default function FollowButton({ creatorId }: { creatorId: string }) {
             disabled={submitting}
             className={`px-6 py-2 rounded-full text-sm font-bold transition disabled:opacity-50 disabled:cursor-not-allowed ${
                 status === "following"
-                    ? "bg-white/70 border border-primary/50 text-primary hover:bg-primary-container/60"
+                    ? "bg-surface-container-lowest/70 border border-primary/50 text-primary hover:bg-primary-container/60"
                     : "bg-primary text-on-primary hover:bg-primary/90 shadow"
             }`}
         >

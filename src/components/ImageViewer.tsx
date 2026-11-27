@@ -216,7 +216,7 @@ export default function ImageViewer({
     const current = images[index];
     if (!current) return null;
 
-    const navButton = "absolute top-1/2 -translate-y-1/2 z-10 p-3 rounded-full bg-white/80 shadow-elevation-2 text-gray-700 hover:bg-white transition disabled:hidden";
+    const navButton = "absolute top-1/2 -translate-y-1/2 z-10 p-3 rounded-full bg-surface-container-lowest/80 shadow-elevation-2 text-on-surface-variant hover:bg-surface-container-lowest transition disabled:hidden";
 
     return createPortal(
         // 背景は、ふわっと現れる・消える（PackGalleryなどのAnimatePresenceが閉じる動きを待つ）。

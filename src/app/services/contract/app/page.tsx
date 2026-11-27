@@ -26,7 +26,7 @@ const sections = [
 
 export default function ContractAppPage() {
     return (
-        <div className="w-full text-gray-800 pb-32">
+        <div className="w-full text-on-surface pb-32">
             <ContractHero
                 category="Contract / App"
                 title="アプリ制作"
@@ -36,7 +36,7 @@ export default function ContractAppPage() {
 
             <div className="container mx-auto px-6 max-w-5xl flex flex-col gap-12">
                 <ContractSection title="見積もり">
-                    <p className="text-gray-700 leading-relaxed mb-6">
+                    <p className="text-on-surface-variant leading-relaxed mb-6">
                         種類と画面の数、オプションを選ぶと、見積もりの目安が出ます。金額は目安で、機能・画面の一覧をお伺いしてから確定します。
                     </p>
                     <EstimateSimulator kind="app" />
@@ -46,8 +46,8 @@ export default function ContractAppPage() {
                 <ContractNotes sections={sections} />
 
                 <section className={`${cardClass} p-8 md:p-12`}>
-                    <h2 className="text-2xl font-bold text-gray-900 tracking-wider mb-4">制作実績</h2>
-                    <p className="text-gray-700 leading-relaxed">
+                    <h2 className="text-2xl font-bold text-on-surface tracking-wider mb-4">制作実績</h2>
+                    <p className="text-on-surface-variant leading-relaxed">
                         メッセージアプリ「DaiDai」を、Flutter・Firebase・WebRTCで個人で設計・開発・運用しています（Web・Androidに対応）。
                     </p>
                 </section>

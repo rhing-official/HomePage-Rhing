@@ -26,7 +26,7 @@ export default function Loading() {
                             </div>
                             <Skeleton className="h-10 w-32 rounded-full" />
                             <Skeleton className="h-12 w-full rounded-full" />
-                            <div className="flex flex-col gap-3 pt-4 border-t border-gray-200">
+                            <div className="flex flex-col gap-3 pt-4 border-t border-outline-variant">
                                 {Array.from({ length: 3 }, (_, i) => (
                                     <Skeleton key={i} className="h-4 w-full rounded-full" />
                                 ))}

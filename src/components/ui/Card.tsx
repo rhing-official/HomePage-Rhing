@@ -5,9 +5,9 @@ export type CardVariant = "glass" | "filled" | "outlined";
 export type CardShape = "md" | "lg" | "xl";
 
 const variants: Record<CardVariant, string> = {
-    glass: "bg-white/50 backdrop-blur-md border border-white/80 shadow-elevation-1",
+    glass: "bg-surface-container-lowest/50 backdrop-blur-md border border-glass-edge/80 shadow-elevation-1",
     filled: "bg-surface-container",
-    outlined: "bg-white/60 border border-outline-variant",
+    outlined: "bg-surface-container-lowest/60 border border-outline-variant",
 };
 
 const shapes: Record<CardShape, string> = {
@@ -25,7 +25,7 @@ export default function Card({
     ...rest
 }: ComponentProps<"div"> & { variant?: CardVariant; shape?: CardShape; interactive?: boolean }) {
     const hover = interactive
-        ? "transition-all duration-300 ease-m3-standard hover:shadow-elevation-3 hover:bg-white/80"
+        ? "transition-all duration-300 ease-m3-standard hover:shadow-elevation-3 hover:bg-surface-container-lowest/80"
         : "";
     return <div className={`${variants[variant]} ${shapes[shape]} ${hover} ${className}`.trim()} {...rest} />;
 }

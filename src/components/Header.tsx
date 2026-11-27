@@ -4,6 +4,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { usePathname } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
+import ThemeToggle from "@/components/ThemeToggle";
 
 const NavLink = ({ href, children, onClick }: { href: string; children: React.ReactNode; onClick?: () => void }) => (
     <Link href={href} onClick={onClick} className="group relative block py-3 px-4 font-bold text-on-surface hover:text-primary transition-colors">
@@ -29,7 +30,7 @@ function FoldSideMenu() {
     return (
         <nav
             aria-label="サイドメニュー"
-            className="hidden fold:flex fixed top-0 left-0 z-50 h-full w-[var(--fold-menu-width)] flex-col gap-2 overflow-y-auto bg-white/80 backdrop-blur-md border-r border-white/40 shadow-elevation-3 px-4 py-8"
+            className="hidden fold:flex fixed top-0 left-0 z-50 h-full w-[var(--fold-menu-width)] flex-col gap-2 overflow-y-auto bg-surface/80 backdrop-blur-md border-r border-outline-variant/60 shadow-elevation-3 px-4 py-8"
         >
             <Link href="/" className="mb-6 block px-2">
                 <Image src="/Rhing logo.svg" alt="Rhing" width={240} height={80} className="h-12 w-auto aspect-[3/1] object-contain" />
@@ -49,6 +50,7 @@ function FoldSideMenu() {
                     </Link>
                 );
             })}
+            <ThemeToggle className="mt-auto self-start" menuAlign="left" />
         </nav>
     );
 }
@@ -81,9 +83,9 @@ export default function Header() {
             <header className="fixed top-6 right-6 lg:right-8 z-50 pointer-events-none fold:hidden">
                 {/*
                   🌟 変更：PC用のナビゲーションバーを美しい半透明のガラスデザインに変更
-                  - bg-white/80, backdrop-blur-md, border-white/80
+                  - bg-surface-container-lowest/80, backdrop-blur-md, border-glass-edge/80
                 */}
-                <nav className="pointer-events-auto hidden lg:flex bg-white/80 backdrop-blur-md shadow-elevation-3 rounded-full px-6 py-2 border border-white/80">
+                <nav className="pointer-events-auto hidden lg:flex items-center bg-surface/80 backdrop-blur-md shadow-elevation-3 rounded-full px-6 py-2 border border-outline-variant/60">
                     <NavLink href="/">TOP</NavLink>
                     <NavLink href="/about">ABOUT</NavLink>
                     <NavLink href="/services">SERVICES</NavLink>
@@ -91,22 +93,29 @@ export default function Header() {
                     <NavLink href="/financial">FINANCIAL</NavLink>
                     <NavLink href="/daidai-yokocho">daidai横丁</NavLink>
                     <NavLink href="https://note.com/rhing_official/all">NEWS</NavLink>
+                    <ThemeToggle className="ml-2" />
                 </nav>
 
                 {/*
                   🌟 変更：ハンバーガーボタンもガラス風デザインに変更
-                  - bg-white/80, backdrop-blur-sm, border-white/60, shadow-blue-300/10
+                  - bg-surface-container-lowest/80, backdrop-blur-sm, border-glass-edge/60, shadow-blue-300/10
                 */}
-                <button
-                    className="lg:hidden pointer-events-auto p-3 bg-white/80 backdrop-blur-sm rounded-full shadow-elevation-2 border border-white/60 hover:bg-white/90 transition-all duration-300 ease-m3-standard"
-                    onClick={() => setIsOpen(true)}
-                >
-                    <div className="space-y-1">
-                        <span className="block w-5 h-0.5 bg-gray-800"></span>
-                        <span className="block w-5 h-0.5 bg-gray-800"></span>
-                        <span className="block w-5 h-0.5 bg-gray-800"></span>
+                <div className="lg:hidden pointer-events-auto flex items-center gap-2">
+                    <div className="rounded-full bg-surface/80 backdrop-blur-sm shadow-elevation-2 border border-outline-variant/60">
+                        <ThemeToggle />
                     </div>
-                </button>
+                    <button
+                        aria-label="メニューを開く"
+                        className="p-3 bg-surface/80 backdrop-blur-sm rounded-full shadow-elevation-2 border border-outline-variant/60 hover:bg-surface/90 transition-all duration-300 ease-m3-standard"
+                        onClick={() => setIsOpen(true)}
+                    >
+                        <div className="space-y-1">
+                            <span className="block w-5 h-0.5 bg-on-surface"></span>
+                            <span className="block w-5 h-0.5 bg-on-surface"></span>
+                            <span className="block w-5 h-0.5 bg-on-surface"></span>
+                        </div>
+                    </button>
+                </div>
             </header>
 
             {/* ドロワーメニュー */}
@@ -116,7 +125,7 @@ export default function Header() {
                         <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} onClick={() => setIsOpen(false)} className="fixed inset-0 bg-black/20 z-[70] pointer-events-auto" />
                         {/*
                           🌟 変更1：メニュー本体を半透明の磨りガラスデザインに変更
-                          - bg-white/80, backdrop-blur-md, border-l border-white/40
+                          - bg-surface-container-lowest/80, backdrop-blur-md, border-l border-glass-edge/40
 
                           🌟 変更2：右スワイプで閉じる高機能ドラッグ処理を追加
                           - drag="x" で横方向のみドラッグ可能に。
@@ -138,7 +147,7 @@ export default function Header() {
                             exit={{ x: "100%" }}
                             transition={{ type: "spring", damping: 25 }}
                             /* 掴んでスライドできることが感覚的にわかるよう、カーソル表現を追加しています */
-                            className="fixed top-0 right-0 w-64 h-full bg-white/80 backdrop-blur-md z-[80] p-10 flex flex-col justify-center gap-6 pointer-events-auto shadow-elevation-3 border-l border-white/40 cursor-grab active:cursor-grabbing select-none"
+                            className="fixed top-0 right-0 w-64 h-full bg-surface/80 backdrop-blur-md z-[80] p-10 flex flex-col justify-center gap-6 pointer-events-auto shadow-elevation-3 border-l border-outline-variant/60 text-on-surface cursor-grab active:cursor-grabbing select-none"
                         >
                             <button className="absolute top-8 right-8 text-2xl font-bold" onClick={() => setIsOpen(false)}>×</button>
                             <NavLink href="/" onClick={() => setIsOpen(false)}>TOP</NavLink>

@@ -109,11 +109,11 @@ export default function StickerImagePicker({
             >
                 {label}
             </button>
-            <p className="text-xs text-gray-500">
+            <p className="text-xs text-on-surface-subtle">
                 PNG・WebP・JPEG・GIF／長辺{STICKER_MAX_SIDE_PX}px以下（SVGは対象外）／1枚{STICKER_MAX_BYTES / 1024 / 1024}MBまで。画像をクリックすると、拡大して見られます
             </p>
             {rejected.length > 0 && (
-                <ul className="text-xs text-red-600 space-y-0.5" role="alert">
+                <ul className="text-xs text-red-600 dark:text-red-400 space-y-0.5" role="alert">
                     {rejected.map((r) => (
                         <li key={r}>{r}</li>
                     ))}
@@ -123,7 +123,7 @@ export default function StickerImagePicker({
                 <div className="flex flex-wrap gap-3">
                     {entries.map((entry, i) => (
                         <div key={i} className="flex flex-col items-center gap-1 w-20">
-                            <div className="relative w-16 h-16 rounded-lg overflow-hidden border border-gray-200 bg-white/70">
+                            <div className="relative w-16 h-16 rounded-lg overflow-hidden border border-outline-variant bg-surface-container-lowest/70">
                                 {previews[i] && (
                                     <button
                                         type="button"
@@ -141,9 +141,9 @@ export default function StickerImagePicker({
                                         onClick={() => onCoverChange(i)}
                                         aria-pressed={coverIndex === i}
                                         aria-label={coverIndex === i ? "ぺったんの代表（選択中）" : "ぺったんの代表にする"}
-                                        className="absolute bottom-0 left-0 bg-white/85 w-5 h-5 flex items-center justify-center"
+                                        className="absolute bottom-0 left-0 bg-surface-container-lowest/85 w-5 h-5 flex items-center justify-center"
                                     >
-                                        <Star className={`w-3.5 h-3.5 ${coverIndex === i ? "text-amber-500 fill-amber-500" : "text-gray-400"}`} />
+                                        <Star className={`w-3.5 h-3.5 ${coverIndex === i ? "text-amber-500 dark:text-amber-400 fill-amber-500" : "text-outline"}`} />
                                     </button>
                                 )}
                                 <button
@@ -162,7 +162,7 @@ export default function StickerImagePicker({
                                     next[i] = { ...entry, roles: e.target.value ? [e.target.value] : [] };
                                     onChange(next);
                                 }}
-                                className="w-full text-[11px] rounded border border-gray-200 bg-white/70 px-1 py-0.5"
+                                className="w-full text-[11px] rounded border border-outline-variant bg-surface-container-lowest/70 px-1 py-0.5"
                             >
                                 <option value="">役割なし</option>
                                 {roleOptions.map((r) => (

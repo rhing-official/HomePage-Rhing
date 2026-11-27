@@ -9,7 +9,7 @@ export default function LoadingImage({ src, alt, className = "" }: { src: string
     const [state, setState] = useState<"loading" | "loaded" | "error">("loading");
     return (
         <>
-            {state === "loading" && <div aria-hidden="true" className="absolute inset-0 bg-gray-200/60 motion-safe:animate-pulse" />}
+            {state === "loading" && <div aria-hidden="true" className="absolute inset-0 bg-outline-variant/60 motion-safe:animate-pulse" />}
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img
                 src={src}

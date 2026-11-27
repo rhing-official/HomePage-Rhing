@@ -5,7 +5,7 @@ export default function PackEditHeader({ status }: { status: "published" | "draf
     const published = status === "published";
     return (
         <div className="mb-12">
-            <h1 className="flex flex-wrap items-center gap-x-3 gap-y-2 text-3xl font-bold tracking-widest text-gray-900">
+            <h1 className="flex flex-wrap items-center gap-x-3 gap-y-2 text-3xl font-bold tracking-widest text-on-surface">
                 <Pencil className="w-7 h-7 shrink-0" aria-hidden />
                 ぺったんの編集
                 <span
@@ -18,7 +18,7 @@ export default function PackEditHeader({ status }: { status: "published" | "draf
                     {published ? "公開中" : "下書き"}
                 </span>
             </h1>
-            <p className="mt-3 text-sm text-gray-500">
+            <p className="mt-3 text-sm text-on-surface-subtle">
                 {published
                     ? "公開中のぺったんです。「公開する」を押すまで、販売ページは変わりません。"
                     : "まだ公開されていません。「公開する」を押すと、販売ページに並びます。"}

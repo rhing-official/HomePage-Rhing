@@ -275,7 +275,7 @@ export default function HeroFloatingSection() {
                 transition={{ duration: 1.2, ease: "easeOut" }}
                 className="text-center z-20"
             >
-                <h1 className="text-3xl md:text-5xl lg:text-6xl tracking-widest text-[#111] leading-relaxed">
+                <h1 className="text-3xl md:text-5xl lg:text-6xl tracking-widest text-on-surface leading-relaxed">
                     結んでも、<br className="block sm:hidden" />縛らない。
                 </h1>
             </motion.div>

@@ -14,7 +14,7 @@ import {
     type Estimate,
 } from "@/lib/contractEstimate";
 
-const cardClass = "bg-white/40 backdrop-blur-md border border-white/80 shadow-elevation-1 rounded-m3-xl";
+const cardClass = "bg-surface-container-lowest/40 backdrop-blur-md border border-glass-edge/80 shadow-elevation-1 rounded-m3-xl";
 
 function Stepper({ value, min, max, onChange, unit }: { value: number; min: number; max: number; onChange: (v: number) => void; unit: string }) {
     const button = "w-9 h-9 rounded-full border border-primary/50 text-primary flex items-center justify-center hover:bg-primary-container/60 disabled:opacity-30 disabled:cursor-not-allowed transition-colors";
@@ -23,9 +23,9 @@ function Stepper({ value, min, max, onChange, unit }: { value: number; min: numb
             <button type="button" className={button} onClick={() => onChange(value - 1)} disabled={value <= min} aria-label="減らす">
                 <Minus className="w-4 h-4" />
             </button>
-            <span className="text-2xl font-bold text-gray-900 tabular-nums min-w-[4.5rem] text-center">
+            <span className="text-2xl font-bold text-on-surface tabular-nums min-w-[4.5rem] text-center">
                 {value}
-                <span className="text-sm font-medium text-gray-500 ml-1">{unit}</span>
+                <span className="text-sm font-medium text-on-surface-subtle ml-1">{unit}</span>
             </span>
             <button type="button" className={button} onClick={() => onChange(value + 1)} disabled={value >= max} aria-label="増やす">
                 <Plus className="w-4 h-4" />
@@ -45,8 +45,8 @@ function Check({ checked, onChange, disabled, label, hint }: { checked: boolean;
                 className="mt-1 w-4 h-4 accent-[var(--color-primary)]"
             />
             <span>
-                <span className="block font-bold text-gray-900">{label}</span>
-                <span className="block text-sm text-gray-600 leading-relaxed">{hint}</span>
+                <span className="block font-bold text-on-surface">{label}</span>
+                <span className="block text-sm text-on-surface-variant leading-relaxed">{hint}</span>
             </span>
         </label>
     );
@@ -54,8 +54,8 @@ function Check({ checked, onChange, disabled, label, hint }: { checked: boolean;
 
 function Section({ title, children }: { title: string; children: React.ReactNode }) {
     return (
-        <div className="py-6 border-b border-gray-200 last:border-b-0">
-            <h3 className="text-sm font-bold tracking-widest text-gray-500 mb-4">{title}</h3>
+        <div className="py-6 border-b border-outline-variant last:border-b-0">
+            <h3 className="text-sm font-bold tracking-widest text-on-surface-subtle mb-4">{title}</h3>
             {children}
         </div>
     );
@@ -65,32 +65,32 @@ function Result({ estimate, summary }: { estimate: Estimate; summary: string }) 
     const message = `【自動見積もり（目安）】\n${summary}\n合計の目安: ${formatYen(estimate.total)}${estimate.lines.length > 0 ? "〜" : ""}\n制作期間の目安: ${estimate.days}日\n\n（ご相談内容をご記入ください）`;
     return (
         <div className={`${cardClass} p-8 lg:sticky lg:top-28`}>
-            <p className="text-xs font-bold tracking-widest text-gray-500 mb-2">ESTIMATE</p>
-            <p className="text-sm text-gray-600">合計の目安</p>
-            <p className="text-4xl font-bold text-gray-900 mt-1">
+            <p className="text-xs font-bold tracking-widest text-on-surface-subtle mb-2">ESTIMATE</p>
+            <p className="text-sm text-on-surface-variant">合計の目安</p>
+            <p className="text-4xl font-bold text-on-surface mt-1">
                 {formatYen(estimate.total)}
-                <span className="text-lg font-medium text-gray-500">〜</span>
+                <span className="text-lg font-medium text-on-surface-subtle">〜</span>
             </p>
-            <p className="text-sm text-gray-600 mt-3">制作期間の目安: <span className="font-bold text-gray-900">{estimate.days}日</span></p>
+            <p className="text-sm text-on-surface-variant mt-3">制作期間の目安: <span className="font-bold text-on-surface">{estimate.days}日</span></p>
 
-            <dl className="mt-6 text-sm border-t border-gray-200">
+            <dl className="mt-6 text-sm border-t border-outline-variant">
                 {estimate.lines.map((line) => (
-                    <div key={line.label} className="flex justify-between gap-4 py-2.5 border-b border-gray-100">
-                        <dt className="text-gray-600">{line.label}</dt>
-                        <dd className="text-gray-900 tabular-nums shrink-0">{formatYen(line.amount)}</dd>
+                    <div key={line.label} className="flex justify-between gap-4 py-2.5 border-b border-outline-variant">
+                        <dt className="text-on-surface-variant">{line.label}</dt>
+                        <dd className="text-on-surface tabular-nums shrink-0">{formatYen(line.amount)}</dd>
                     </div>
                 ))}
             </dl>
 
             {estimate.notes.length > 0 && (
-                <ul className="mt-4 text-sm text-gray-700 space-y-1 list-disc pl-5">
+                <ul className="mt-4 text-sm text-on-surface-variant space-y-1 list-disc pl-5">
                     {estimate.notes.map((note) => (
                         <li key={note}>{note}</li>
                     ))}
                 </ul>
             )}
 
-            <p className="mt-4 text-xs text-gray-500 leading-relaxed">
+            <p className="mt-4 text-xs text-on-surface-subtle leading-relaxed">
                 自動の見積もりは目安です。正式なお見積もりは、ご依頼の内容を伺ってからお出しします。
             </p>
 
@@ -117,7 +117,7 @@ function WebSimulator() {
             <div className={`${cardClass} px-8`}>
                 <Section title="ページ数">
                     <Stepper value={pages} min={1} max={WEB_PRICING.maxPages + 1} onChange={setPages} unit="ページ" />
-                    <p className="text-xs text-gray-500 mt-3">
+                    <p className="text-xs text-on-surface-subtle mt-3">
                         4ページまでは同額です（1ページのみは、更にお安くなります）。5ページ以上は、1ページ毎に{formatYen(WEB_PRICING.extraPage.price)}です。
                     </p>
                 </Section>
@@ -138,7 +138,7 @@ function WebSimulator() {
                     </div>
                 </Section>
                 <Section title="全プランに含まれるもの">
-                    <ul className="text-sm text-gray-700 space-y-1 list-disc pl-5">
+                    <ul className="text-sm text-on-surface-variant space-y-1 list-disc pl-5">
                         <li>SEOの基本対策（タイトル・メタディスクリプション・見出し構造・画像のalt属性）</li>
                         <li>無料の修正3回</li>
                         <li>スマホ・タブレット・PCに合わせた表示</li>
@@ -179,7 +179,7 @@ function AppSimulator() {
                                     className={`px-4 py-2 rounded-full border text-sm font-bold transition-colors ${
                                         selected
                                             ? "border-primary bg-primary-container text-on-primary-container"
-                                            : "border-gray-300 bg-white/50 text-gray-600 hover:bg-primary-container/40"
+                                            : "border-outline/50 bg-surface-container-lowest/50 text-on-surface-variant hover:bg-primary-container/40"
                                     }`}
                                 >
                                     {p.label}
@@ -187,14 +187,14 @@ function AppSimulator() {
                             );
                         })}
                     </div>
-                    <p className="text-xs text-gray-500 mt-3 leading-relaxed">
+                    <p className="text-xs text-on-surface-subtle mt-3 leading-relaxed">
                         複数選べます。Webのみは画面{APP_PRICING.web.includedScreens}つまで、Androidを含むと画面{APP_PRICING.webAndroid.includedScreens}つまで（ログインとデータ保存を含みます）。
                         iOS・macOS・Windows・Linuxは、別途お見積もりです。
                     </p>
                 </Section>
                 <Section title="画面の数">
                     <Stepper value={screens} min={1} max={APP_PRICING.maxScreens + 1} onChange={setScreens} unit="画面" />
-                    <p className="text-xs text-gray-500 mt-3">
+                    <p className="text-xs text-on-surface-subtle mt-3">
                         含まれる画面数を超えた分は、1画面毎に{formatYen(APP_PRICING.extraScreen.price)}です。
                     </p>
                 </Section>

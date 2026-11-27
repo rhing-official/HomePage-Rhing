@@ -21,7 +21,7 @@ export default function KindFilter({
     onChange: (next: KindFilterValue) => void;
 }) {
     return (
-        <div role="tablist" aria-label="種別で絞る" className="mb-6 inline-flex rounded-full border border-white/80 bg-white/70 p-1 shadow-inner">
+        <div role="tablist" aria-label="種別で絞る" className="mb-6 inline-flex rounded-full border border-glass-edge/80 bg-surface-container-lowest/70 p-1 shadow-inner">
             {TABS.map((t) => {
                 const active = value === t.value;
                 return (
@@ -32,11 +32,11 @@ export default function KindFilter({
                         aria-selected={active}
                         onClick={() => onChange(t.value)}
                         className={`rounded-full px-4 py-2 text-sm font-bold tracking-wider transition-colors duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-600 ${
-                            active ? "bg-blue-600 text-white shadow" : "text-gray-500 hover:text-gray-800"
+                            active ? "bg-blue-600 text-white shadow" : "text-on-surface-subtle hover:text-on-surface"
                         }`}
                     >
                         {t.label}
-                        <span className={`ml-1.5 text-xs ${active ? "text-white/80" : "text-gray-400"}`}>{counts[t.value]}</span>
+                        <span className={`ml-1.5 text-xs ${active ? "text-white/80" : "text-outline"}`}>{counts[t.value]}</span>
                     </button>
                 );
             })}

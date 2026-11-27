@@ -55,17 +55,17 @@ export default function PasskeyRecoveryDialog({
                 animate={{ opacity: 1, scale: 1 }}
                 exit={{ opacity: 0, scale: 0.95 }}
                 onClick={(e) => e.stopPropagation()}
-                className="bg-white/90 backdrop-blur-md rounded-3xl shadow-2xl border border-white/80 max-w-sm w-full p-8 flex flex-col gap-5"
+                className="bg-surface-container-lowest/90 backdrop-blur-md rounded-3xl shadow-2xl border border-glass-edge/80 max-w-sm w-full p-8 flex flex-col gap-5"
             >
-                <h2 className="text-lg font-bold text-gray-900">アカウントの復旧</h2>
+                <h2 className="text-lg font-bold text-on-surface">アカウントの復旧</h2>
 
                 {!questions ? (
                     <>
-                        <p className="text-sm text-gray-600">登録済みのRhing Seedを入力してください。</p>
-                        <label className="flex flex-col gap-1.5 text-sm text-gray-600">
+                        <p className="text-sm text-on-surface-variant">登録済みのRhing Seedを入力してください。</p>
+                        <label className="flex flex-col gap-1.5 text-sm text-on-surface-variant">
                             Rhing Seed
                             <div className="relative">
-                                <span className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400">@</span>
+                                <span className="absolute left-4 top-1/2 -translate-y-1/2 text-outline">@</span>
                                 <input
                                     value={rhingSeed}
                                     onChange={(e) => setRhingSeed(e.target.value)}
@@ -73,16 +73,16 @@ export default function PasskeyRecoveryDialog({
                                     onKeyDown={(e) => {
                                         if (e.key === "Enter" && !submitting) handleNext();
                                     }}
-                                    className="w-full rounded-lg border border-gray-200 pl-8 pr-4 py-2 bg-white/70"
+                                    className="w-full rounded-lg border border-outline-variant pl-8 pr-4 py-2 bg-surface-container-lowest/70"
                                 />
                             </div>
                         </label>
                     </>
                 ) : (
                     <>
-                        <p className="text-sm text-gray-600">以下の質問に回答してください。</p>
+                        <p className="text-sm text-on-surface-variant">以下の質問に回答してください。</p>
                         {questions.questions.map((q, i) => (
-                            <label key={i} className="flex flex-col gap-1.5 text-sm text-gray-600">
+                            <label key={i} className="flex flex-col gap-1.5 text-sm text-on-surface-variant">
                                 {q}
                                 <input
                                     type="password"
@@ -94,14 +94,14 @@ export default function PasskeyRecoveryDialog({
                                     onKeyDown={(e) => {
                                         if (e.key === "Enter" && !submitting) handleSubmit();
                                     }}
-                                    className="w-full rounded-lg border border-gray-200 px-4 py-2 bg-white/70"
+                                    className="w-full rounded-lg border border-outline-variant px-4 py-2 bg-surface-container-lowest/70"
                                 />
                             </label>
                         ))}
                     </>
                 )}
 
-                {error && <p className="text-sm text-red-600">{error}</p>}
+                {error && <p className="text-sm text-red-600 dark:text-red-400">{error}</p>}
 
                 <div className="flex gap-3">
                     <button

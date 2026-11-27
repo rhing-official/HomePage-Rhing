@@ -71,20 +71,20 @@ export default function OnboardingModal({
                 animate={{ opacity: 1, scale: 1 }}
                 exit={{ opacity: 0, scale: 0.95 }}
                 onClick={(e) => e.stopPropagation()}
-                className="bg-white/90 backdrop-blur-md rounded-3xl shadow-2xl border border-white/80 max-w-sm w-full p-8 flex flex-col gap-5"
+                className="bg-surface-container-lowest/90 backdrop-blur-md rounded-3xl shadow-2xl border border-glass-edge/80 max-w-sm w-full p-8 flex flex-col gap-5"
             >
                 <div>
-                    <h2 className="text-lg font-bold text-gray-900">daidai横丁へようこそ</h2>
-                    <p className="text-sm text-gray-500 mt-1">
+                    <h2 className="text-lg font-bold text-on-surface">daidai横丁へようこそ</h2>
+                    <p className="text-sm text-on-surface-subtle mt-1">
                         daidai横丁で表示する呼び名・アイコンを設定しましょう(後からいつでも変更出来ます)。
                     </p>
-                    <p className="text-xs text-gray-400 mt-2">
+                    <p className="text-xs text-outline mt-2">
                         daidai横丁について詳しくは
                         <a
                             href="/services/daidai-yokocho"
                             target="_blank"
                             rel="noopener noreferrer"
-                            className="underline underline-offset-2 hover:text-gray-600 transition-colors"
+                            className="underline underline-offset-2 hover:text-on-surface-variant transition-colors"
                         >
                             こちら
                         </a>
@@ -95,9 +95,9 @@ export default function OnboardingModal({
                 <div className="flex flex-col items-center gap-2">
                     {previewUrl ? (
                         // eslint-disable-next-line @next/next/no-img-element
-                        <img src={previewUrl} alt="" className="w-20 h-20 rounded-full object-cover border border-white/80" />
+                        <img src={previewUrl} alt="" className="w-20 h-20 rounded-full object-cover border border-glass-edge/80" />
                     ) : (
-                        <div className="w-20 h-20 rounded-full bg-gray-200" />
+                        <div className="w-20 h-20 rounded-full bg-outline-variant" />
                     )}
                     <input
                         ref={fileInputRef}
@@ -118,7 +118,7 @@ export default function OnboardingModal({
                     </button>
                 </div>
 
-                <label className="flex flex-col gap-1.5 text-sm text-gray-600">
+                <label className="flex flex-col gap-1.5 text-sm text-on-surface-variant">
                     呼び名
                     <div className="relative">
                         <input
@@ -126,14 +126,14 @@ export default function OnboardingModal({
                             onChange={(e) => setNickname(e.target.value)}
                             maxLength={20}
                             placeholder="未設定では「風吹けば名無し」となります"
-                            className="w-full rounded-lg border border-gray-200 pl-4 pr-9 py-2 bg-white/70"
+                            className="w-full rounded-lg border border-outline-variant pl-4 pr-9 py-2 bg-surface-container-lowest/70"
                         />
                         {nickname && (
                             <button
                                 type="button"
                                 onClick={() => setNickname("")}
                                 aria-label="呼び名をクリア"
-                                className="absolute right-2 top-1/2 -translate-y-1/2 w-6 h-6 flex items-center justify-center rounded-full text-gray-400 hover:bg-gray-100 hover:text-gray-600 transition"
+                                className="absolute right-2 top-1/2 -translate-y-1/2 w-6 h-6 flex items-center justify-center rounded-full text-outline hover:bg-surface-container-high hover:text-on-surface-variant transition"
                             >
                                 ×
                             </button>
@@ -141,7 +141,7 @@ export default function OnboardingModal({
                     </div>
                 </label>
 
-                {error && <p className="text-sm text-red-600">{error}</p>}
+                {error && <p className="text-sm text-red-600 dark:text-red-400">{error}</p>}
 
                 <div className="flex gap-3">
                     <button

@@ -145,11 +145,11 @@ export default function ContactForm() {
             )}
 
             {/* タブ切り替えボタン */}
-            <div className="flex justify-center gap-12 border-b border-gray-200 mb-12">
+            <div className="flex justify-center gap-12 border-b border-outline-variant mb-12">
                 <button
                     disabled={status === "submitting"}
                     onClick={() => setActiveTab("user")}
-                    className={`px-8 py-4 text-center font-bold tracking-widest transition-colors ${activeTab === "user" ? "border-b-2 border-blue-600 text-blue-600" : "text-gray-400 hover:text-gray-600"
+                    className={`px-8 py-4 text-center font-bold tracking-widest transition-colors ${activeTab === "user" ? "border-b-2 border-blue-600 text-blue-600 dark:text-blue-400" : "text-outline hover:text-on-surface-variant"
                         } disabled:opacity-50`}
                 >
                     利用者向け
@@ -157,7 +157,7 @@ export default function ContactForm() {
                 <button
                     disabled={status === "submitting"}
                     onClick={() => setActiveTab("business")}
-                    className={`px-8 py-4 text-center font-bold tracking-widest transition-colors ${activeTab === "business" ? "border-b-2 border-blue-600 text-blue-600" : "text-gray-400 hover:text-gray-600"
+                    className={`px-8 py-4 text-center font-bold tracking-widest transition-colors ${activeTab === "business" ? "border-b-2 border-blue-600 text-blue-600 dark:text-blue-400" : "text-outline hover:text-on-surface-variant"
                         } disabled:opacity-50`}
                 >
                     企業向け
@@ -173,15 +173,15 @@ export default function ContactForm() {
                         initial={{ opacity: 0, y: 20 }}
                         animate={{ opacity: 1, y: 0 }}
                         exit={{ opacity: 0, y: -20 }}
-                        className="text-center py-16 bg-white/40 backdrop-blur-md border border-white/80 shadow-md shadow-gray-200/30 rounded-2xl p-8 md:p-12"
+                        className="text-center py-16 bg-surface-container-lowest/40 backdrop-blur-md border border-glass-edge/80 shadow-md shadow-outline-variant/30 rounded-2xl p-8 md:p-12"
                     >
-                        <div className="w-16 h-16 bg-green-50/80 border border-green-200/40 text-green-600 rounded-full flex items-center justify-center mx-auto mb-6 shadow-sm">
+                        <div className="w-16 h-16 bg-green-50/80 dark:bg-green-950/40 border border-green-200/40 dark:border-green-800 text-green-600 dark:text-green-400 rounded-full flex items-center justify-center mx-auto mb-6 shadow-sm">
                             <svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M5 13l4 4L19 7"></path>
                             </svg>
                         </div>
-                        <h2 className="text-2xl font-bold text-gray-900 mb-4 tracking-wider">送信が完了しました</h2>
-                        <p className="text-gray-500 leading-relaxed max-w-md mx-auto">
+                        <h2 className="text-2xl font-bold text-on-surface mb-4 tracking-wider">送信が完了しました</h2>
+                        <p className="text-on-surface-subtle leading-relaxed max-w-md mx-auto">
                             お問い合わせいただきありがとうございます。内容を確認の上、代表より折り返しご連絡いたします。
                         </p>
                         <button
@@ -203,7 +203,7 @@ export default function ContactForm() {
                         exit={{ opacity: 0 }}
                         onSubmit={handleSubmit}
                         onPaste={handlePaste}
-                        className="space-y-8 bg-white/40 backdrop-blur-md p-8 md:p-12 rounded-2xl border border-white/80 shadow-md shadow-gray-200/30"
+                        className="space-y-8 bg-surface-container-lowest/40 backdrop-blur-md p-8 md:p-12 rounded-2xl border border-glass-edge/80 shadow-md shadow-outline-variant/30"
                     >
                         <input type="checkbox" name="botcheck" className="hidden" style={{ display: 'none' }} />
 
@@ -218,16 +218,16 @@ export default function ContactForm() {
                                 >
                                     {/* 貴社名 */}
                                     <div>
-                                        <label htmlFor="company" className="block text-sm font-bold text-gray-700 mb-2">貴社名 <span className="text-red-500 ml-1 text-xs font-normal">必須</span></label>
-                                        <input type="text" id="company" name="貴社名" required={activeTab === "business"} className="w-full px-4 py-3 bg-white/50 border border-white/80 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:bg-white/80 transition-all" placeholder="例：株式会社Rhing" />
+                                        <label htmlFor="company" className="block text-sm font-bold text-on-surface-variant mb-2">貴社名 <span className="text-red-500 dark:text-red-400 ml-1 text-xs font-normal">必須</span></label>
+                                        <input type="text" id="company" name="貴社名" required={activeTab === "business"} className="w-full px-4 py-3 bg-surface-container-lowest/50 border border-glass-edge/80 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:bg-surface-container-lowest/80 transition-all" placeholder="例：株式会社Rhing" />
                                     </div>
 
                                     {/* ご担当者名（企業向けでのみ表示） */}
                                     <div>
-                                        <label htmlFor="name" className="block text-sm font-bold text-gray-700 mb-2">
-                                            ご担当者名 <span className="text-red-500 ml-1 text-xs font-normal">必須</span>
+                                        <label htmlFor="name" className="block text-sm font-bold text-on-surface-variant mb-2">
+                                            ご担当者名 <span className="text-red-500 dark:text-red-400 ml-1 text-xs font-normal">必須</span>
                                         </label>
-                                        <input type="text" id="name" name="ご担当者名" required={activeTab === "business"} className="w-full px-4 py-3 bg-white/50 border border-white/80 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:bg-white/80 transition-all" placeholder="例：山田 太郎" />
+                                        <input type="text" id="name" name="ご担当者名" required={activeTab === "business"} className="w-full px-4 py-3 bg-surface-container-lowest/50 border border-glass-edge/80 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:bg-surface-container-lowest/80 transition-all" placeholder="例：山田 太郎" />
                                     </div>
                                 </motion.div>
                             )}
@@ -235,27 +235,27 @@ export default function ContactForm() {
 
                         {/* 共通項目：メールアドレス */}
                         <div>
-                            <label htmlFor="email" className="block text-sm font-bold text-gray-700 mb-2">メールアドレス <span className="text-red-500 ml-1 text-xs font-normal">必須</span></label>
-                            <input type="email" id="email" name="メールアドレス" required className="w-full px-4 py-3 bg-white/50 border border-white/80 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:bg-white/80 transition-all" placeholder="例：your-email@example.com" />
+                            <label htmlFor="email" className="block text-sm font-bold text-on-surface-variant mb-2">メールアドレス <span className="text-red-500 dark:text-red-400 ml-1 text-xs font-normal">必須</span></label>
+                            <input type="email" id="email" name="メールアドレス" required className="w-full px-4 py-3 bg-surface-container-lowest/50 border border-glass-edge/80 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:bg-surface-container-lowest/80 transition-all" placeholder="例：your-email@example.com" />
                         </div>
 
                         {/* お問い合わせ種別 */}
                         <div>
-                            <label htmlFor="category" className="block text-sm font-bold text-gray-700 mb-2">お問い合わせ種別 <span className="text-red-500 ml-1 text-xs font-normal">必須</span></label>
-                            <select id="category" name="お問い合わせ種別" required className="w-full px-4 py-3 bg-white/50 border border-white/80 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:bg-white/80 transition-all appearance-none cursor-pointer">
-                                <option value="" className="text-gray-900 bg-white">選択してください</option>
+                            <label htmlFor="category" className="block text-sm font-bold text-on-surface-variant mb-2">お問い合わせ種別 <span className="text-red-500 dark:text-red-400 ml-1 text-xs font-normal">必須</span></label>
+                            <select id="category" name="お問い合わせ種別" required className="w-full px-4 py-3 bg-surface-container-lowest/50 border border-glass-edge/80 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:bg-surface-container-lowest/80 transition-all appearance-none cursor-pointer">
+                                <option value="" className="text-on-surface bg-surface-container-lowest">選択してください</option>
                                 {activeTab === "user" ? (
                                     <>
-                                        <option value="サービスの使い方について" className="text-gray-900 bg-white">サービスの使い方について</option>
-                                        <option value="不具合の報告" className="text-gray-900 bg-white">不具合 of 報告</option>
-                                        <option value="ご意見・ご要望" className="text-gray-900 bg-white">ご意見・ご要望</option>
-                                        <option value="その他" className="text-gray-900 bg-white">その他</option>
+                                        <option value="サービスの使い方について" className="text-on-surface bg-surface-container-lowest">サービスの使い方について</option>
+                                        <option value="不具合の報告" className="text-on-surface bg-surface-container-lowest">不具合 of 報告</option>
+                                        <option value="ご意見・ご要望" className="text-on-surface bg-surface-container-lowest">ご意見・ご要望</option>
+                                        <option value="その他" className="text-on-surface bg-surface-container-lowest">その他</option>
                                     </>
                                 ) : (
                                     <>
-                                        <option value="協業・提携について" className="text-gray-900 bg-white">協業・提携について</option>
-                                        <option value="取材・メディア掲載について" className="text-gray-900 bg-white">取材・メディア掲載について</option>
-                                        <option value="その他" className="text-gray-900 bg-white">その他</option>
+                                        <option value="協業・提携について" className="text-on-surface bg-surface-container-lowest">協業・提携について</option>
+                                        <option value="取材・メディア掲載について" className="text-on-surface bg-surface-container-lowest">取材・メディア掲載について</option>
+                                        <option value="その他" className="text-on-surface bg-surface-container-lowest">その他</option>
                                     </>
                                 )}
                             </select>
@@ -263,19 +263,19 @@ export default function ContactForm() {
 
                         {/* 共通項目：お問い合わせ内容 */}
                         <div>
-                            <label htmlFor="message" className="block text-sm font-bold text-gray-700 mb-2">お問い合わせ内容 <span className="text-red-500 ml-1 text-xs font-normal">必須</span></label>
-                            <textarea id="message" name="お問い合わせ内容" required rows={6} defaultValue={(searchParams.get("message") ?? "").slice(0, 1000)} className="w-full px-4 py-3 bg-white/50 border border-white/80 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:bg-white/80 transition-all resize-none" placeholder="お問い合わせ内容をご記入ください。"></textarea>
+                            <label htmlFor="message" className="block text-sm font-bold text-on-surface-variant mb-2">お問い合わせ内容 <span className="text-red-500 dark:text-red-400 ml-1 text-xs font-normal">必須</span></label>
+                            <textarea id="message" name="お問い合わせ内容" required rows={6} defaultValue={(searchParams.get("message") ?? "").slice(0, 1000)} className="w-full px-4 py-3 bg-surface-container-lowest/50 border border-glass-edge/80 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:bg-surface-container-lowest/80 transition-all resize-none" placeholder="お問い合わせ内容をご記入ください。"></textarea>
                         </div>
 
                         {/* 画像添付：ファイル選択・ドラッグ&ドロップ・クリップボード貼り付け(Ctrl+V)に対応 */}
                         <div>
-                            <label className="block text-sm font-bold text-gray-700 mb-2">
-                                画像を添付 <span className="text-gray-400 ml-1 text-xs font-normal">任意・最大{MAX_ATTACHMENTS}枚、各5MBまで</span>
+                            <label className="block text-sm font-bold text-on-surface-variant mb-2">
+                                画像を添付 <span className="text-outline ml-1 text-xs font-normal">任意・最大{MAX_ATTACHMENTS}枚、各5MBまで</span>
                             </label>
                             <div
                                 onDragOver={(e) => e.preventDefault()}
                                 onDrop={handleDrop}
-                                className="border-2 border-dashed border-gray-300/80 rounded-lg p-6 text-center bg-white/30 hover:bg-white/50 transition-colors"
+                                className="border-2 border-dashed border-outline/40 rounded-lg p-6 text-center bg-surface-container-lowest/30 hover:bg-surface-container-lowest/50 transition-colors"
                             >
                                 <input
                                     ref={fileInputRef}
@@ -288,7 +288,7 @@ export default function ContactForm() {
                                         e.target.value = "";
                                     }}
                                 />
-                                <p className="text-sm text-gray-500 mb-3">
+                                <p className="text-sm text-on-surface-subtle mb-3">
                                     画像をここにドラッグ&ドロップ、またはコピーした画像をこのフォーム内で貼り付け
                                 </p>
                                 <button
@@ -301,7 +301,7 @@ export default function ContactForm() {
                             </div>
 
                             {attachmentError && (
-                                <p className="text-red-500 text-xs mt-2">{attachmentError}</p>
+                                <p className="text-red-500 dark:text-red-400 text-xs mt-2">{attachmentError}</p>
                             )}
 
                             {previewUrls.length > 0 && (
@@ -309,11 +309,11 @@ export default function ContactForm() {
                                     {previewUrls.map((url, index) => (
                                         <div key={url} className="relative w-20 h-20">
                                             {/* eslint-disable-next-line @next/next/no-img-element */}
-                                            <img src={url} alt="" className="w-20 h-20 object-cover rounded-lg border border-white/80" />
+                                            <img src={url} alt="" className="w-20 h-20 object-cover rounded-lg border border-glass-edge/80" />
                                             <button
                                                 type="button"
                                                 onClick={() => removeAttachment(index)}
-                                                className="absolute -top-2 -right-2 w-5 h-5 rounded-full bg-gray-800 text-white text-xs flex items-center justify-center hover:bg-gray-600"
+                                                className="absolute -top-2 -right-2 w-5 h-5 rounded-full bg-on-surface text-surface text-xs flex items-center justify-center hover:bg-on-surface-variant"
                                                 aria-label="添付を削除"
                                             >
                                                 ×
@@ -326,7 +326,7 @@ export default function ContactForm() {
 
                         {/* 送信状況に応じたエラーメッセージ */}
                         {status === "error" && (
-                            <p className="text-red-500 text-sm font-bold text-center">
+                            <p className="text-red-500 dark:text-red-400 text-sm font-bold text-center">
                                 送信中にエラーが発生しました。お手数ですが、時間をおいて再度お試しください。
                             </p>
                         )}
@@ -336,7 +336,7 @@ export default function ContactForm() {
                             <button
                                 type="submit"
                                 disabled={status === "submitting"}
-                                className="w-full md:w-auto px-12 py-4 bg-primary hover:bg-primary/90 disabled:bg-gray-400 text-on-primary font-bold rounded-full transition-colors tracking-widest disabled:cursor-not-allowed shadow-md"
+                                className="w-full md:w-auto px-12 py-4 bg-primary hover:bg-primary/90 disabled:bg-outline text-on-primary font-bold rounded-full transition-colors tracking-widest disabled:cursor-not-allowed shadow-md"
                             >
                                 {status === "submitting" ? "送信中..." : "送信する"}
                             </button>

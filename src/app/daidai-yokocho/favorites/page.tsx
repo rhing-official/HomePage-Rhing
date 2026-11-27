@@ -126,7 +126,7 @@ export default function FavoritesPage() {
     return (
         <div className="w-full pb-24">
             <div className="container mx-auto px-6 pb-16 max-w-4xl">
-                <h1 className="flex items-center gap-3 text-3xl font-bold tracking-widest text-gray-900 mb-12">
+                <h1 className="flex items-center gap-3 text-3xl font-bold tracking-widest text-on-surface mb-12">
                     <Heart className="w-7 h-7 shrink-0" aria-hidden />
                     お気に入り
                 </h1>
@@ -135,7 +135,7 @@ export default function FavoritesPage() {
                     <PackGridSkeleton count={3} />
                 ) : items.length === 0 ? (
                     <div className="flex flex-col items-start gap-4">
-                        <p className="text-gray-400 text-sm">まだお気に入りが有りません。</p>
+                        <p className="text-outline text-sm">まだお気に入りが有りません。</p>
                         <FindInYokochoLink />
                     </div>
                 ) : (
@@ -155,7 +155,7 @@ export default function FavoritesPage() {
                             }
                         />
                         {cartResult && !adding && (
-                            <p className="-mt-3 mb-6 text-sm text-gray-600" role="status">
+                            <p className="-mt-3 mb-6 text-sm text-on-surface-variant" role="status">
                                 {cartResult.failed ? (
                                     "カートに追加出来ませんでした。時間をおいてお試しください。"
                                 ) : (
@@ -163,7 +163,7 @@ export default function FavoritesPage() {
                                         {cartResult.added}件をカートに追加しました
                                         {cartResult.skipped > 0 && `。入手済み・カート済み・上限の為、${cartResult.skipped}件は追加していません`}
                                         {" "}
-                                        <Link href="/daidai-yokocho/cart" className="text-blue-600 hover:underline">
+                                        <Link href="/daidai-yokocho/cart" className="text-blue-600 dark:text-blue-400 hover:underline">
                                             カートを見る →
                                         </Link>
                                     </>

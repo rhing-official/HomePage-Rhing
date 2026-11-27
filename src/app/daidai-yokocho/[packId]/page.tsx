@@ -47,7 +47,7 @@ export default async function StickerPackDetailPage({
         getStickerPacksByCreator(pack.creatorId),
     ]);
     const otherPacks = creatorPacks.filter((p) => p.id !== pack.id).slice(0, 3);
-    const priceClass = pack.price === 0 ? "text-emerald-600" : "text-amber-600";
+    const priceClass = pack.price === 0 ? "text-emerald-600 dark:text-emerald-400" : "text-amber-600 dark:text-amber-400";
     const favoriteSlot = (
         <span className="shrink-0 w-12 h-12 flex items-center justify-center rounded-full border border-outline">
             <FavoriteButton packId={pack.id} />
@@ -60,12 +60,12 @@ export default async function StickerPackDetailPage({
                 <PackViewTracker packId={pack.id} />
 
                 {purchase === "success" && (
-                    <div className="mb-6 rounded-m3-md border border-emerald-200 bg-emerald-50 text-emerald-700 px-6 py-4 text-sm font-bold">
+                    <div className="mb-6 rounded-m3-md border border-emerald-200 dark:border-emerald-800 bg-emerald-50 dark:bg-emerald-950/40 text-emerald-700 dark:text-emerald-200 px-6 py-4 text-sm font-bold">
                         ご購入ありがとうございます。DaiDaiアプリでぺったんが使えるようになりました。
                     </div>
                 )}
                 {purchase === "cancel" && (
-                    <div className="mb-6 rounded-m3-md border border-gray-200 bg-gray-50 text-gray-600 px-6 py-4 text-sm">
+                    <div className="mb-6 rounded-m3-md border border-outline-variant bg-surface-container text-on-surface-variant px-6 py-4 text-sm">
                         購入がキャンセルされました。よろしければもう一度お試しください。
                     </div>
                 )}
@@ -78,9 +78,9 @@ export default async function StickerPackDetailPage({
                     <div className="md:sticky md:top-28 flex flex-col gap-6">
                         <div>
                             {pack.category && (
-                                <span className="text-xs font-bold tracking-widest text-gray-500 mb-2 block">{pack.category}</span>
+                                <span className="text-xs font-bold tracking-widest text-on-surface-subtle mb-2 block">{pack.category}</span>
                             )}
-                            <h1 className="text-2xl md:text-3xl font-bold text-gray-900 tracking-wider">{pack.name}</h1>
+                            <h1 className="text-2xl md:text-3xl font-bold text-on-surface tracking-wider">{pack.name}</h1>
 
                             {creator && (
                                 <Link
@@ -89,11 +89,11 @@ export default async function StickerPackDetailPage({
                                 >
                                     {creator.iconUrl ? (
                                         // eslint-disable-next-line @next/next/no-img-element
-                                        <img src={creator.iconUrl} alt="" className="w-7 h-7 rounded-full object-cover border border-white/80" />
+                                        <img src={creator.iconUrl} alt="" className="w-7 h-7 rounded-full object-cover border border-glass-edge/80" />
                                     ) : (
-                                        <div className="w-7 h-7 rounded-full bg-gray-200" />
+                                        <div className="w-7 h-7 rounded-full bg-outline-variant" />
                                     )}
-                                    <span className="text-sm text-gray-600 group-hover:text-primary transition-colors">
+                                    <span className="text-sm text-on-surface-variant group-hover:text-primary transition-colors">
                                         {creator.nickname ?? (creator.rhingSeed && `@${creator.rhingSeed}`)}
                                     </span>
                                 </Link>
@@ -107,39 +107,39 @@ export default async function StickerPackDetailPage({
                             <PurchaseButton packId={pack.id} extra={favoriteSlot} />
                         </div>
 
-                        <ul className="text-xs text-gray-500 leading-relaxed list-disc pl-5 space-y-1">
+                        <ul className="text-xs text-on-surface-subtle leading-relaxed list-disc pl-5 space-y-1">
                             <li>入手すると、DaiDaiアプリでこのぺったんが使えるようになります。</li>
                             <li>入手したぺったんは、「購入済みのぺったん」から確認出来ます。</li>
                             {pack.price > 0 && <li>18歳未満の方は、保護者の同意を得てからご購入ください。</li>}
                         </ul>
 
                         {/* 商品情報 */}
-                        <dl className="text-sm border-t border-gray-200">
-                            <div className="flex gap-4 py-3 border-b border-gray-100">
-                                <dt className="w-24 shrink-0 text-gray-500">収録数</dt>
-                                <dd className="text-gray-800">{pack.stickers.length}枚</dd>
+                        <dl className="text-sm border-t border-outline-variant">
+                            <div className="flex gap-4 py-3 border-b border-outline-variant">
+                                <dt className="w-24 shrink-0 text-on-surface-subtle">収録数</dt>
+                                <dd className="text-on-surface">{pack.stickers.length}枚</dd>
                             </div>
                             {pack.category && (
-                                <div className="flex gap-4 py-3 border-b border-gray-100">
-                                    <dt className="w-24 shrink-0 text-gray-500">カテゴリ</dt>
-                                    <dd className="text-gray-800">{pack.category}</dd>
+                                <div className="flex gap-4 py-3 border-b border-outline-variant">
+                                    <dt className="w-24 shrink-0 text-on-surface-subtle">カテゴリ</dt>
+                                    <dd className="text-on-surface">{pack.category}</dd>
                                 </div>
                             )}
                             {pack.createdAt && (
-                                <div className="flex gap-4 py-3 border-b border-gray-100">
-                                    <dt className="w-24 shrink-0 text-gray-500">公開日</dt>
-                                    <dd className="text-gray-800">
+                                <div className="flex gap-4 py-3 border-b border-outline-variant">
+                                    <dt className="w-24 shrink-0 text-on-surface-subtle">公開日</dt>
+                                    <dd className="text-on-surface">
                                         {formatPackDate(pack.createdAt)}
                                         {pack.updatedAt && pack.updatedAt !== pack.createdAt && (
-                                            <span className="text-gray-400">（最終更新: {formatPackDate(pack.updatedAt)}）</span>
+                                            <span className="text-outline">（最終更新: {formatPackDate(pack.updatedAt)}）</span>
                                         )}
                                     </dd>
                                 </div>
                             )}
                             {pack.tags.length > 0 && (
-                                <div className="flex gap-4 py-3 border-b border-gray-100">
-                                    <dt className="w-24 shrink-0 text-gray-500">タグ</dt>
-                                    <dd className="text-gray-600 flex flex-wrap gap-x-3 gap-y-1">
+                                <div className="flex gap-4 py-3 border-b border-outline-variant">
+                                    <dt className="w-24 shrink-0 text-on-surface-subtle">タグ</dt>
+                                    <dd className="text-on-surface-variant flex flex-wrap gap-x-3 gap-y-1">
                                         {pack.tags.map((tag) => (
                                             <span key={tag}>#{tag}</span>
                                         ))}
@@ -151,7 +151,7 @@ export default async function StickerPackDetailPage({
                         <div>
                             <button
                                 disabled
-                                className="text-xs text-gray-400 cursor-not-allowed underline decoration-dotted"
+                                className="text-xs text-outline cursor-not-allowed underline decoration-dotted"
                                 title="通報機能は近日公開予定です"
                             >
                                 このぺったんを通報する
@@ -163,7 +163,7 @@ export default async function StickerPackDetailPage({
                 {/* このクリエイターの、ほかのぺったん */}
                 {otherPacks.length > 0 && (
                     <section className="mt-20">
-                        <h2 className="text-lg font-bold text-gray-900 tracking-wider mb-6">このクリエイターの、他のぺったん</h2>
+                        <h2 className="text-lg font-bold text-on-surface tracking-wider mb-6">このクリエイターの、他のぺったん</h2>
                         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
                             {otherPacks.map((p) => (
                                 <StickerPackCard key={p.id} pack={p} creator={creator} />

@@ -58,29 +58,29 @@ export function DataSection({ id = "data", geek = false }: { id?: string; geek?:
     return (
         <div id={id} className="scroll-mt-8">
             <SectionHeading label="WHAT WE HOLD" title="取得する情報と、取得しない情報" icon={Database} />
-            <p className="text-gray-600 text-sm leading-relaxed mb-8">
+            <p className="text-on-surface-variant text-sm leading-relaxed mb-8">
                 メールアドレスを画面に表示せず、DaiDai自身の{geek ? "Firestoreのデータベース" : "保存先"}にも保存しません。但し、下に挙げた情報は扱います。
             </p>
             <div className="flex flex-col gap-6">
-                <div className="bg-white rounded-m3-lg shadow-sm border border-gray-100 p-6 md:p-8">
-                    <h3 className="text-base font-bold text-gray-900 mb-4">取得しない情報</h3>
+                <div className="bg-surface-container-lowest rounded-m3-lg shadow-sm border border-outline-variant p-6 md:p-8">
+                    <h3 className="text-base font-bold text-on-surface mb-4">取得しない情報</h3>
                     <ul className="space-y-3">
                         {notHeld.map((t) => (
-                            <li key={t} className="flex items-start gap-3 text-sm text-gray-700 leading-relaxed">
-                                <Minus className="w-4 h-4 text-gray-400 shrink-0 mt-0.5" strokeWidth={1.5} />
+                            <li key={t} className="flex items-start gap-3 text-sm text-on-surface-variant leading-relaxed">
+                                <Minus className="w-4 h-4 text-outline shrink-0 mt-0.5" strokeWidth={1.5} />
                                 {t}
                             </li>
                         ))}
                     </ul>
                 </div>
-                <div className="bg-white rounded-m3-lg shadow-sm border border-gray-100 p-6 md:p-8">
-                    <h3 className="text-base font-bold text-gray-900 mb-4">取得している情報</h3>
+                <div className="bg-surface-container-lowest rounded-m3-lg shadow-sm border border-outline-variant p-6 md:p-8">
+                    <h3 className="text-base font-bold text-on-surface mb-4">取得している情報</h3>
                     <ul className="space-y-4">
                         {held.map((h) => (
                             <li key={h.name} className="flex items-start gap-3">
                                 <Check className="w-4 h-4 text-tertiary shrink-0 mt-1" strokeWidth={1.5} />
-                                <p className="text-sm text-gray-600 leading-relaxed">
-                                    <span className="font-bold text-gray-800">{h.name}</span>
+                                <p className="text-sm text-on-surface-variant leading-relaxed">
+                                    <span className="font-bold text-on-surface">{h.name}</span>
                                                                         <br />
                                     {h.note}
                                 </p>
@@ -89,9 +89,9 @@ export function DataSection({ id = "data", geek = false }: { id?: string; geek?:
                     </ul>
                 </div>
             </div>
-            <p className="text-xs text-gray-400 leading-relaxed mt-4">
+            <p className="text-xs text-outline leading-relaxed mt-4">
                 詳しい項目と保存期間は、
-                <Link href="/legal/privacy" className="underline hover:text-gray-600">プライバシーポリシー</Link>
+                <Link href="/legal/privacy" className="underline hover:text-on-surface-variant">プライバシーポリシー</Link>
                 をご覧ください。
             </p>
         </div>
@@ -122,7 +122,7 @@ export function HonestSection({ id = "honest", geek = false }: { id?: string; ge
                     {geek && (
                         <>
                             {" "}
-                            Firestoreのセキュリティルールで、<code className="text-xs bg-gray-100 rounded px-1">users</code>の読み取りは「ログイン済みなら可」としています。監査ログ（<code className="text-xs bg-gray-100 rounded px-1">adminAuditLogs</code>）はサーバー側（Admin SDK）だけが書き込め、クライアントからは読み書きできません。
+                            Firestoreのセキュリティルールで、<code className="text-xs bg-surface-container-high rounded px-1">users</code>の読み取りは「ログイン済みなら可」としています。監査ログ（<code className="text-xs bg-surface-container-high rounded px-1">adminAuditLogs</code>）はサーバー側（Admin SDK）だけが書き込め、クライアントからは読み書きできません。
                         </>
                     )}
                 </>
@@ -147,9 +147,9 @@ export function HonestSection({ id = "honest", geek = false }: { id?: string; ge
             <SectionHeading label="HONESTY" title="現在の制限事項と今後の予定" icon={TriangleAlert} />
             <div className="flex flex-col gap-4">
                 {items.map((it) => (
-                    <div key={it.title} className="bg-white rounded-m3-lg shadow-sm border border-gray-100 p-6 md:p-8">
-                        <h3 className="text-base font-bold text-gray-900 mb-3 text-balance">{it.title}</h3>
-                        <p className="text-gray-600 text-sm leading-relaxed text-pretty">{it.body}</p>
+                    <div key={it.title} className="bg-surface-container-lowest rounded-m3-lg shadow-sm border border-outline-variant p-6 md:p-8">
+                        <h3 className="text-base font-bold text-on-surface mb-3 text-balance">{it.title}</h3>
+                        <p className="text-on-surface-variant text-sm leading-relaxed text-pretty">{it.body}</p>
                     </div>
                 ))}
             </div>
@@ -186,23 +186,23 @@ const lifecycle: { title: string; body: string }[] = [
 
 export function NotificationCard() {
     return (
-        <div id="notification" className="scroll-mt-8 bg-white/50 backdrop-blur-md border border-white/80 shadow-elevation-2 rounded-lg p-8">
-            <h3 className="text-base font-bold text-gray-900 mb-4">電気通信事業の届出</h3>
-            <p className="text-gray-700 leading-relaxed mb-6 text-sm">
+        <div id="notification" className="scroll-mt-8 bg-surface-container-lowest/50 backdrop-blur-md border border-glass-edge/80 shadow-elevation-2 rounded-lg p-8">
+            <h3 className="text-base font-bold text-on-surface mb-4">電気通信事業の届出</h3>
+            <p className="text-on-surface-variant leading-relaxed mb-6 text-sm">
                 DaiDaiは、電気通信事業法に基づく電気通信事業の届出を、総務大臣に対して行っています。
             </p>
-            <dl className="text-sm border-t border-gray-200">
-                <div className="flex gap-4 py-3 border-b border-gray-100">
-                    <dt className="w-24 shrink-0 text-gray-500">届出番号</dt>
-                    <dd className="text-gray-800 font-bold tracking-wider">E-08-05840</dd>
+            <dl className="text-sm border-t border-outline-variant">
+                <div className="flex gap-4 py-3 border-b border-outline-variant">
+                    <dt className="w-24 shrink-0 text-on-surface-subtle">届出番号</dt>
+                    <dd className="text-on-surface font-bold tracking-wider">E-08-05840</dd>
                 </div>
-                <div className="flex gap-4 py-3 border-b border-gray-100">
-                    <dt className="w-24 shrink-0 text-gray-500">届出年月日</dt>
-                    <dd className="text-gray-800">2026年10月5日</dd>
+                <div className="flex gap-4 py-3 border-b border-outline-variant">
+                    <dt className="w-24 shrink-0 text-on-surface-subtle">届出年月日</dt>
+                    <dd className="text-on-surface">2026年10月5日</dd>
                 </div>
-                <div className="flex gap-4 py-3 border-b border-gray-100">
-                    <dt className="w-24 shrink-0 text-gray-500">届出者</dt>
-                    <dd className="text-gray-800">Rhing（畑中 新）</dd>
+                <div className="flex gap-4 py-3 border-b border-outline-variant">
+                    <dt className="w-24 shrink-0 text-on-surface-subtle">届出者</dt>
+                    <dd className="text-on-surface">Rhing（畑中 新）</dd>
                 </div>
             </dl>
         </div>
@@ -215,9 +215,9 @@ export function LifecycleSection({ id = "lifecycle" }: { id?: string }) {
             <SectionHeading label="DATA LIFECYCLE" title="データの扱いの流れ" icon={Workflow} />
             <div className="grid md:grid-cols-2 gap-4 mb-8">
                 {lifecycle.map((l) => (
-                    <div key={l.title} className="bg-white rounded-m3-lg shadow-sm border border-gray-100 p-6">
-                        <h3 className="text-base font-bold text-gray-900 mb-2">{l.title}</h3>
-                        <p className="text-gray-600 text-sm leading-relaxed text-pretty">{l.body}</p>
+                    <div key={l.title} className="bg-surface-container-lowest rounded-m3-lg shadow-sm border border-outline-variant p-6">
+                        <h3 className="text-base font-bold text-on-surface mb-2">{l.title}</h3>
+                        <p className="text-on-surface-variant text-sm leading-relaxed text-pretty">{l.body}</p>
                     </div>
                 ))}
             </div>
@@ -310,34 +310,34 @@ export function CompareSection({ id = "compare", geek = false }: { id?: string; 
     return (
         <div id={id} className="scroll-mt-8">
             <SectionHeading label="COMPARISON" title="他のアプリとの比較" icon={Scale} />
-            <p className="text-gray-600 text-sm leading-relaxed text-pretty mb-6 max-w-3xl">
+            <p className="text-on-surface-variant text-sm leading-relaxed text-pretty mb-6 max-w-3xl">
                 LINE・Discord・Signalと、公式ページに書かれていることを並べます。他社の欄は、公式ページの原文をそのまま引用し、出典のリンクを付けています。DaiDaiが劣る点は、太字で示した枠に、そのまま載せています。
             </p>
-            <div className="overflow-x-auto bg-white rounded-m3-lg shadow-sm border border-gray-100">
+            <div className="overflow-x-auto bg-surface-container-lowest rounded-m3-lg shadow-sm border border-outline-variant">
                 <table className="w-full text-left text-sm min-w-[900px]">
                     <thead>
-                        <tr className="border-b border-gray-100 text-gray-400 text-xs tracking-widest">
+                        <tr className="border-b border-outline-variant text-outline text-xs tracking-widest">
                             <th className="p-4 w-32"></th>
                             {compareHeads.map((h) => (
                                 <th key={h} className="p-4">{h}</th>
                             ))}
                         </tr>
                     </thead>
-                    <tbody className="text-gray-600">
+                    <tbody className="text-on-surface-variant">
                         {compareRows.map((row) => (
-                            <tr key={row.label} className="border-b last:border-0 border-gray-100 align-top">
-                                <th className="p-4 font-bold text-gray-800 whitespace-nowrap align-top">{row.label}</th>
+                            <tr key={row.label} className="border-b last:border-0 border-outline-variant align-top">
+                                <th className="p-4 font-bold text-on-surface whitespace-nowrap align-top">{row.label}</th>
                                 {row.cells.map((c, i) => (
                                     <td key={i} className="p-4 leading-relaxed">
-                                        {c.none && <span className="text-gray-400">—</span>}
+                                        {c.none && <span className="text-outline">—</span>}
                                         {c.text && (
-                                            <span className={c.emphasis ? "font-bold text-gray-800" : ""}>{(!geek && c.generalText ? c.generalText : c.text).join("")}</span>
+                                            <span className={c.emphasis ? "font-bold text-on-surface" : ""}>{(!geek && c.generalText ? c.generalText : c.text).join("")}</span>
                                         )}
                                         {c.quotes && (
                                             <>
                                                 <ul className="space-y-1.5">
                                                     {c.quotes.map((q) => (
-                                                        <li key={q} lang="en" className="text-xs text-gray-600">
+                                                        <li key={q} lang="en" className="text-xs text-on-surface-variant">
                                                             &ldquo;{q}&rdquo;
                                                         </li>
                                                     ))}
@@ -347,7 +347,7 @@ export function CompareSection({ id = "compare", geek = false }: { id?: string; 
                                                         href={c.href}
                                                         target="_blank"
                                                         rel="noopener noreferrer"
-                                                        className="inline-block mt-2 text-xs text-gray-400 underline hover:text-gray-700"
+                                                        className="inline-block mt-2 text-xs text-outline underline hover:text-on-surface-variant"
                                                     >
                                                         出典
                                                     </a>
@@ -361,7 +361,7 @@ export function CompareSection({ id = "compare", geek = false }: { id?: string; 
                     </tbody>
                 </table>
             </div>
-            <ul className="mt-4 space-y-1.5 text-xs text-gray-400 leading-relaxed">
+            <ul className="mt-4 space-y-1.5 text-xs text-outline leading-relaxed">
                 <li>確認日: 2026年11月18日。他社の欄は、各社の公式ページの記述で、その後に変更されている場合が有ります。</li>
                 <li>「—」は、公式ページ同士の記述が食い違う、または確認できなかった為、記載していない項目です。</li>
                 <li>Appleでのログインは、本番環境のWeb版でログイン出来ることを確認しています。</li>
@@ -382,17 +382,17 @@ export function CompareSection({ id = "compare", geek = false }: { id?: string; 
 
 export function CreatorsSection({ id = "creators" }: { id?: string }) {
     return (
-        <div id={id} className="scroll-mt-8 bg-white rounded-m3-lg shadow-sm border border-gray-100 p-8 md:p-12 max-w-3xl mx-auto w-full">
+        <div id={id} className="scroll-mt-8 bg-surface-container-lowest rounded-m3-lg shadow-sm border border-outline-variant p-8 md:p-12 max-w-3xl mx-auto w-full">
             <SectionHeading label="FOR CREATORS" title="ぺったんと意匠を作る" icon={StickyNote} mb="mb-6" />
-            <p className="text-gray-600 text-sm leading-relaxed text-pretty mb-4">
+            <p className="text-on-surface-variant text-sm leading-relaxed text-pretty mb-4">
                 作ったぺったんを、daidai横丁に出品出来ます。DaiDaiの色・形・背景を着せ替える意匠は、投稿出来ます。意匠は、審査の後に公開します。有料化した際の目標として、購入額の約91.4%の還元を目指しています。これは概算で、保証するものではありません。
             </p>
-            <p className="text-gray-600 text-sm leading-relaxed text-pretty mb-6">
+            <p className="text-on-surface-variant text-sm leading-relaxed text-pretty mb-6">
                 当面は、無料のぺったんと意匠のみを扱います。還元は、まだ発生していません。
             </p>
             <Link
                 href="/services/daidai-yokocho#fee"
-                className="inline-flex items-center gap-2 text-sm font-bold text-gray-800 border-b border-gray-400 hover:border-gray-800 transition-colors pb-0.5"
+                className="inline-flex items-center gap-2 text-sm font-bold text-on-surface border-b border-outline hover:border-on-surface transition-colors pb-0.5"
             >
                 算出の前提を見る
                 <ArrowRight className="w-4 h-4" />
@@ -442,12 +442,12 @@ export function FaqSection({ id = "faq", geek = false }: { id?: string; geek?: b
             <SectionHeading label="FAQ" title="よくある質問" icon={CircleHelp} />
             <div className="flex flex-col gap-3">
                 {faqs.map((f) => (
-                    <details key={f.q} className="group bg-white rounded-m3-lg shadow-sm border border-gray-100">
-                        <summary className="flex items-center justify-between gap-4 cursor-pointer list-none p-5 md:p-6 text-gray-900 font-bold text-sm leading-relaxed">
+                    <details key={f.q} className="group bg-surface-container-lowest rounded-m3-lg shadow-sm border border-outline-variant">
+                        <summary className="flex items-center justify-between gap-4 cursor-pointer list-none p-5 md:p-6 text-on-surface font-bold text-sm leading-relaxed">
                             {f.q}
-                            <ChevronDown className="w-4 h-4 text-gray-400 shrink-0 transition-transform group-open:rotate-180" strokeWidth={1.5} />
+                            <ChevronDown className="w-4 h-4 text-outline shrink-0 transition-transform group-open:rotate-180" strokeWidth={1.5} />
                         </summary>
-                        <p className="px-5 md:px-6 pb-5 md:pb-6 text-gray-600 text-sm leading-relaxed text-pretty">{!geek && f.generalA ? f.generalA : f.a}</p>
+                        <p className="px-5 md:px-6 pb-5 md:pb-6 text-on-surface-variant text-sm leading-relaxed text-pretty">{!geek && f.generalA ? f.generalA : f.a}</p>
                     </details>
                 ))}
             </div>
@@ -471,11 +471,11 @@ export function GlossarySection({ id = "glossary" }: { id?: string }) {
     return (
         <div id={id} className="scroll-mt-8">
             <SectionHeading label="GLOSSARY" title="用語集" icon={BookOpen} />
-            <dl className="bg-white rounded-m3-lg shadow-sm border border-gray-100 divide-y divide-gray-100">
+            <dl className="bg-surface-container-lowest rounded-m3-lg shadow-sm border border-outline-variant divide-y divide-outline-variant">
                 {glossary.map(([term, desc]) => (
                     <div key={term} className="flex flex-col sm:flex-row gap-1 sm:gap-6 p-5 md:p-6">
-                        <dt className="sm:w-44 shrink-0 font-bold text-gray-800 text-sm">{term}</dt>
-                        <dd className="text-gray-600 text-sm leading-relaxed">{desc}</dd>
+                        <dt className="sm:w-44 shrink-0 font-bold text-on-surface text-sm">{term}</dt>
+                        <dd className="text-on-surface-variant text-sm leading-relaxed">{desc}</dd>
                     </div>
                 ))}
             </dl>

@@ -62,7 +62,7 @@ function LoginPageContent() {
 
     return (
         <div className="container mx-auto px-6 pb-32 max-w-md text-center">
-            <h1 className="text-2xl font-bold text-gray-900 mb-4">ログイン</h1>
+            <h1 className="text-2xl font-bold text-on-surface mb-4">ログイン</h1>
 
             {user ? (
                 <div className="flex flex-col items-center gap-4">
@@ -70,20 +70,20 @@ function LoginPageContent() {
                         // eslint-disable-next-line @next/next/no-img-element
                         <img src={user.photoURL} alt="" referrerPolicy="no-referrer" className="w-16 h-16 rounded-full" />
                     ) : (
-                        <span className="w-16 h-16 rounded-full bg-gray-300 block" />
+                        <span className="w-16 h-16 rounded-full bg-outline block" />
                     )}
-                    <p className="font-bold text-gray-900">{user.displayName ?? "DaiDaiアカウント"}</p>
-                    {user.email && <p className="text-sm text-gray-500">{user.email}</p>}
+                    <p className="font-bold text-on-surface">{user.displayName ?? "DaiDaiアカウント"}</p>
+                    {user.email && <p className="text-sm text-on-surface-subtle">{user.email}</p>}
                     <div className="mt-2 flex flex-col items-stretch gap-2 w-full">
                         <Link
                             href="/daidai-yokocho/owned"
-                            className="px-8 py-3 rounded-full bg-white/70 backdrop-blur-sm border border-white/80 shadow-sm shadow-blue-300/5 text-primary hover:text-primary hover:border-primary/40 hover:bg-white/90 hover:shadow-md hover:shadow-blue-300/15 transition-all duration-300 text-center"
+                            className="px-8 py-3 rounded-full bg-surface-container-lowest/70 backdrop-blur-sm border border-glass-edge/80 shadow-sm shadow-blue-300/5 text-primary hover:text-primary hover:border-primary/40 hover:bg-surface-container-lowest/90 hover:shadow-md hover:shadow-blue-300/15 transition-all duration-300 text-center"
                         >
                             購入済みを管理
                         </Link>
                         <Link
                             href="/daidai-yokocho/creator"
-                            className="px-8 py-3 rounded-full bg-white/70 backdrop-blur-sm border border-white/80 shadow-sm shadow-blue-300/5 text-primary hover:text-primary hover:border-primary/40 hover:bg-white/90 hover:shadow-md hover:shadow-blue-300/15 transition-all duration-300 text-center"
+                            className="px-8 py-3 rounded-full bg-surface-container-lowest/70 backdrop-blur-sm border border-glass-edge/80 shadow-sm shadow-blue-300/5 text-primary hover:text-primary hover:border-primary/40 hover:bg-surface-container-lowest/90 hover:shadow-md hover:shadow-blue-300/15 transition-all duration-300 text-center"
                         >
                             作成と管理
                         </Link>
@@ -97,7 +97,7 @@ function LoginPageContent() {
                     <button
                         type="button"
                         onClick={() => setShowDeleteDialog(true)}
-                        className="text-sm text-red-600 hover:text-red-800 transition-colors"
+                        className="text-sm text-red-600 dark:text-red-400 hover:text-red-800 transition-colors"
                     >
                         アカウントを削除
                     </button>
@@ -120,7 +120,7 @@ function LoginPageContent() {
                     }}
                     className="flex flex-col items-center gap-3"
                 >
-                    <p className="text-sm text-gray-600">認証アプリの6桁コードを入力してください</p>
+                    <p className="text-sm text-on-surface-variant">認証アプリの6桁コードを入力してください</p>
                     <input
                         value={code}
                         onChange={(e) => handleCodeChange(e.target.value)}
@@ -131,7 +131,7 @@ function LoginPageContent() {
                         inputMode="numeric"
                         maxLength={6}
                         autoFocus
-                        className="w-40 text-center rounded-lg border border-gray-300 px-4 py-2 text-lg tracking-widest"
+                        className="w-40 text-center rounded-lg border border-outline/50 px-4 py-2 text-lg tracking-widest"
                     />
                     <div className="flex gap-3">
                         <button
@@ -153,22 +153,22 @@ function LoginPageContent() {
             ) : (
                 <div className="flex flex-col items-center gap-4">
                     {deleted === "requested" && (
-                        <p className="text-sm text-emerald-700 bg-emerald-50 border border-emerald-200 rounded-xl px-4 py-3">
+                        <p className="text-sm text-emerald-700 dark:text-emerald-200 bg-emerald-50 dark:bg-emerald-950/40 border border-emerald-200 dark:border-emerald-800 rounded-xl px-4 py-3">
                             アカウント削除を申請しました。30日以内に再度ログインすると取り消せます。
                         </p>
                     )}
                     {deleted === "immediate" && (
-                        <p className="text-sm text-gray-700 bg-gray-50 border border-gray-200 rounded-xl px-4 py-3">
+                        <p className="text-sm text-on-surface-variant bg-surface-container border border-outline-variant rounded-xl px-4 py-3">
                             アカウントを削除しました。ご利用ありがとうございました。
                         </p>
                     )}
-                    <p className="text-gray-500 mb-2">DaiDaiアカウント（Google）でログインします。</p>
+                    <p className="text-on-surface-subtle mb-2">DaiDaiアカウント（Google）でログインします。</p>
                     <GoogleSignInButton mode={mode} redirecting={redirecting} onRedirect={startGoogleRedirect} containerRef={buttonContainerRef} />
-                    <div className="w-full border-t border-gray-200 my-2" />
+                    <div className="w-full border-t border-outline-variant my-2" />
                     <button
                         type="button"
                         onClick={() => setShowPasskeySignIn(true)}
-                        className="flex items-center justify-center gap-2 w-full max-w-xs px-4 py-2.5 rounded-full border border-gray-300 text-sm text-gray-700 hover:bg-gray-50 transition-colors"
+                        className="flex items-center justify-center gap-2 w-full max-w-xs px-4 py-2.5 rounded-full border border-outline/50 text-sm text-on-surface-variant hover:bg-surface-container transition-colors"
                     >
                         <KeyRound className="w-4 h-4" />
                         パスキーでログイン
@@ -184,22 +184,22 @@ function LoginPageContent() {
                                 // エラー表示はpasskeyRegisterErrorに反映済み
                             }
                         }}
-                        className="text-sm text-gray-500 hover:text-gray-800 transition-colors disabled:opacity-50"
+                        className="text-sm text-on-surface-subtle hover:text-on-surface transition-colors disabled:opacity-50"
                     >
                         {registeringPasskey ? "作成中..." : "Rhing Seedでアカウントを作成"}
                     </button>
                     <button
                         type="button"
                         onClick={() => setShowPasskeyRecovery(true)}
-                        className="text-sm text-gray-500 hover:text-gray-800 transition-colors"
+                        className="text-sm text-on-surface-subtle hover:text-on-surface transition-colors"
                     >
                         パスキーが使えない場合
                     </button>
-                    {passkeyRegisterError && <p className="text-sm text-red-600">{passkeyRegisterError}</p>}
+                    {passkeyRegisterError && <p className="text-sm text-red-600 dark:text-red-400">{passkeyRegisterError}</p>}
                 </div>
             )}
 
-            {error && <p className="mt-6 text-sm text-red-600">{error}</p>}
+            {error && <p className="mt-6 text-sm text-red-600 dark:text-red-400">{error}</p>}
 
             <AnimatePresence>
                 {showPasskeySignIn && (

@@ -53,19 +53,19 @@ export default function NotFound() {
                     initial={{ opacity: 0, y: 20 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ duration: 1.2, ease: "easeOut" }}
-                    className="mb-16 text-center py-10 bg-white/40 backdrop-blur-md border border-white/80 shadow-md shadow-gray-200/20 rounded-3xl"
+                    className="mb-16 text-center py-10 bg-surface-container-lowest/40 backdrop-blur-md border border-glass-edge/80 shadow-md shadow-outline-variant/20 rounded-3xl"
                 >
-                    <h1 className="text-4xl md:text-5xl font-bold tracking-widest text-gray-900 mb-4">404 MUSEUM</h1>
-                    <p className="text-gray-500 tracking-wider text-sm">お探しのページは見つかりませんでした</p>
+                    <h1 className="text-4xl md:text-5xl font-bold tracking-widest text-on-surface mb-4">404 MUSEUM</h1>
+                    <p className="text-on-surface-subtle tracking-wider text-sm">お探しのページは見つかりませんでした</p>
                 </motion.div>
 
                 <motion.div
                     initial={{ opacity: 0, y: 20 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ duration: 1.2, ease: "easeOut", delay: 0.1 }}
-                    className="mb-16 text-center bg-white/40 backdrop-blur-md border border-white/80 shadow-md shadow-gray-200/20 rounded-3xl p-8 md:p-10"
+                    className="mb-16 text-center bg-surface-container-lowest/40 backdrop-blur-md border border-glass-edge/80 shadow-md shadow-outline-variant/20 rounded-3xl p-8 md:p-10"
                 >
-                    <p className="text-gray-600 leading-relaxed">
+                    <p className="text-on-surface-variant leading-relaxed">
                         本日は存在しないページ特別展を開催しております。
                         <br />
                         お探しのページは見当たりませんでした。
@@ -80,7 +80,7 @@ export default function NotFound() {
                     {/* 左の人物イラスト（undraw.co "book-lover"） */}
                     <div className="hidden lg:block w-36 xl:w-44 shrink-0 pb-6">
                         {/* eslint-disable-next-line @next/next/no-img-element */}
-                        <img src="/illustrations/book-lover.svg" alt="" className="w-full h-auto" />
+                        <img src="/illustrations/book-lover.svg" alt="" className="w-full h-auto dark:bg-white/90 dark:rounded-3xl dark:p-3" />
                     </div>
 
                     {/* 展示物本体（ランダムで1点だけ表示） */}
@@ -88,17 +88,17 @@ export default function NotFound() {
                         initial={{ opacity: 0, y: 20 }}
                         animate={{ opacity: exhibit ? 1 : 0, y: 0 }}
                         transition={{ duration: 0.8, ease: "easeOut" }}
-                        className="w-full max-w-md bg-white/60 backdrop-blur-md border border-white/80 shadow-md shadow-gray-200/30 rounded-2xl p-3 md:p-4"
+                        className="w-full max-w-md bg-surface-container-lowest/60 backdrop-blur-md border border-glass-edge/80 shadow-md shadow-outline-variant/30 rounded-2xl p-3 md:p-4"
                     >
                         {exhibit && (
                             <>
-                                <div className="border border-gray-200 bg-white p-2">
+                                <div className="border border-outline-variant bg-surface-container-lowest p-2">
                                     {/* eslint-disable-next-line @next/next/no-img-element */}
                                     <img src={exhibit.src} alt={exhibit.title} className="w-full h-72 object-cover" />
                                 </div>
                                 <div className="text-center mt-4 mb-1">
-                                    <p className="text-sm font-bold text-gray-800 tracking-wider">{exhibit.title}</p>
-                                    <p className="text-xs text-gray-400 mt-1 tracking-wide">{exhibit.caption}</p>
+                                    <p className="text-sm font-bold text-on-surface tracking-wider">{exhibit.title}</p>
+                                    <p className="text-xs text-outline mt-1 tracking-wide">{exhibit.caption}</p>
                                 </div>
                             </>
                         )}
@@ -107,7 +107,7 @@ export default function NotFound() {
                     {/* 右の人物イラスト（undraw.co "couple-photo"） */}
                     <div className="hidden lg:block w-36 xl:w-44 shrink-0 pb-6">
                         {/* eslint-disable-next-line @next/next/no-img-element */}
-                        <img src="/illustrations/couple-photo.svg" alt="" className="w-full h-auto" />
+                        <img src="/illustrations/couple-photo.svg" alt="" className="w-full h-auto dark:bg-white/90 dark:rounded-3xl dark:p-3" />
                     </div>
                 </div>
             </div>

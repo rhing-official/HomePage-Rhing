@@ -58,15 +58,15 @@ export default function PasskeySignInDialog({
                 animate={{ opacity: 1, scale: 1 }}
                 exit={{ opacity: 0, scale: 0.95 }}
                 onClick={(e) => e.stopPropagation()}
-                className="bg-white/90 backdrop-blur-md rounded-3xl shadow-2xl border border-white/80 max-w-sm w-full p-8 flex flex-col gap-5"
+                className="bg-surface-container-lowest/90 backdrop-blur-md rounded-3xl shadow-2xl border border-glass-edge/80 max-w-sm w-full p-8 flex flex-col gap-5"
             >
-                <h2 className="text-lg font-bold text-gray-900">パスキーでログイン</h2>
-                <p className="text-sm text-gray-600">保存済みのパスキーを選んでください。候補が出ない場合は、登録済みのRhing Seedを入力してください。</p>
+                <h2 className="text-lg font-bold text-on-surface">パスキーでログイン</h2>
+                <p className="text-sm text-on-surface-variant">保存済みのパスキーを選んでください。候補が出ない場合は、登録済みのRhing Seedを入力してください。</p>
 
-                <label className="flex flex-col gap-1.5 text-sm text-gray-600">
+                <label className="flex flex-col gap-1.5 text-sm text-on-surface-variant">
                     Rhing Seed
                     <div className="relative">
-                        <span className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400">@</span>
+                        <span className="absolute left-4 top-1/2 -translate-y-1/2 text-outline">@</span>
                         <input
                             value={rhingSeed}
                             onChange={(e) => setRhingSeed(e.target.value)}
@@ -74,12 +74,12 @@ export default function PasskeySignInDialog({
                             onKeyDown={(e) => {
                                 if (e.key === "Enter" && !submitting) handleSubmit();
                             }}
-                            className="w-full rounded-lg border border-gray-200 pl-8 pr-4 py-2 bg-white/70"
+                            className="w-full rounded-lg border border-outline-variant pl-8 pr-4 py-2 bg-surface-container-lowest/70"
                         />
                     </div>
                 </label>
 
-                {error && <p className="text-sm text-red-600">{error}</p>}
+                {error && <p className="text-sm text-red-600 dark:text-red-400">{error}</p>}
 
                 <div className="flex gap-3">
                     <button
