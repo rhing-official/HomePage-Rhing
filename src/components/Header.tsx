@@ -3,7 +3,7 @@ import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { usePathname, useRouter } from "next/navigation";
-import { motion, AnimatePresence, animate, useDragControls, useMotionValue } from "framer-motion";
+import { motion, AnimatePresence, useDragControls } from "framer-motion";
 import ThemeToggle from "@/components/ThemeToggle";
 import { HEADER_BAR_SLOT_ID, usePhonePortrait } from "@/lib/usePhonePortrait";
 
@@ -148,7 +148,6 @@ export default function Header() {
     const pathname = usePathname();
     const router = useRouter();
     const dragControls = useDragControls();
-    const drawerX = useMotionValue(0);
     // 指を押したまま滑らせて、項目を選ぶ操作の状態。axis は、最初の数ピクセルの動きで、縦（項目を選ぶ）か横（閉じる）かを決める
     const scrubRef = useRef<{ x: number; y: number; axis: "none" | "scrub" | "close"; start: string | null; from: string | null; last: string | null } | null>(null);
     const phonePortrait = usePhonePortrait();
@@ -320,21 +319,17 @@ export default function Header() {
                             drag="x"
                             dragControls={dragControls}
                             dragListener={false}
+                            dragSnapToOrigin // 離した時に、閉じる条件を満たさなければ、元の位置へ戻る。閉じる時は、exit が後から上書きする
                             onPointerDown={onScrubDown}
                             onPointerMove={onScrubMove}
                             onPointerUp={onScrubUp}
                             onPointerCancel={() => { scrubRef.current = null; }}
-                            style={{ x: drawerX, y: "-50%", touchAction: "none" }} // 縦は、テキストの範囲だけの高さにして、画面の中央に置く
+                            style={{ y: "-50%", touchAction: "none" }} // 縦は、テキストの範囲だけの高さにして、画面の中央に置く
                             dragConstraints={{ left: 0, right: 256 }} // メニュー幅分のみ右ドラッグを許可
                             dragElastic={{ left: 0, right: 0.15 }}    // 引っ張ったときの心地よい弾力
                             onDragEnd={(event, info) => {
-                                // ゆっくりでも、右へ40px以上引いたら閉じる。速く払う動きなら、短くても閉じる。
-                                // どちらでもない時は、離した位置で止まらず、元の位置へ戻す
-                                if (info.offset.x > 40 || info.velocity.x > 500) {
-                                    closeDrawer();
-                                } else {
-                                    animate(drawerX, 0, { type: "spring", stiffness: 500, damping: 40 });
-                                }
+                                // ゆっくりでも、右へ40px以上引いたら閉じる。速く払う動きなら、短くても閉じる
+                                if (info.offset.x > 40 || info.velocity.x > 500) closeDrawer();
                             }}
                             initial={{ x: "100%" }}
                             animate={{ x: 0 }}
