@@ -45,9 +45,9 @@ export function setPreference(pref: ThemePreference): void {
         listeners.forEach((l) => l());
     };
     // 切り替えの瞬間に、古い見た目が、にじんで消え、新しい見た目が、にじんで現れる（globals.cssの::view-transition-*）。
-    // View Transitions APIに対応していないブラウザと、動きを減らす設定の時は、その場で切り替える
-    const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-    if (typeof document.startViewTransition === "function" && !reduced) {
+    // View Transitions APIに対応していないブラウザでは、その場で切り替える。
+    // 動きを減らす設定（prefers-reduced-motion）は、見ない（2026-11-28、ユーザー指示。サイト内のアニメーションは、端末の設定に関わらず、全て実行する）。
+    if (typeof document.startViewTransition === "function") {
         document.startViewTransition(apply);
     } else {
         apply();

@@ -1,11 +1,11 @@
 // スケルトンスクリーン（読み込み中の、灰色の仮の枠）の共通部品（2026-11-17）。
 // VPN・海外・Firestoreの応答待ちで、画面が空白になる・「読み込み中...」の文字だけになるのを避け、
-// 読み込み後に近いレイアウトを先に出す。動きを減らす設定（prefers-reduced-motion）の人には、
-// パルスを止める（motion-safe）。
+// 読み込み後に近いレイアウトを先に出す。
+// 動きを減らす設定（prefers-reduced-motion）は、見ない（2026-11-28、ユーザー指示。サイト内のアニメーションは、端末の設定に関わらず、全て実行する）。
 
 // 灰色の角丸の枠。幅・高さ・形は、classNameで渡す（例: "h-4 w-24 rounded-full"）
 export function Skeleton({ className = "" }: { className?: string }) {
-    return <div aria-hidden="true" className={`bg-outline-variant/70 motion-safe:animate-pulse ${className}`} />;
+    return <div aria-hidden="true" className={`bg-outline-variant/70 animate-pulse ${className}`} />;
 }
 
 // スクリーンリーダー用の「読み込み中」の案内と、読み込み中であることを伝える外枠

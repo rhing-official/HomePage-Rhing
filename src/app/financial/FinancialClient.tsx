@@ -12,7 +12,7 @@ import {
     Legend,
 } from "chart.js";
 import { Line } from "react-chartjs-2";
-import { AnimatePresence, animate, motion, useMotionValue, useReducedMotion, useTransform } from "framer-motion";
+import { AnimatePresence, animate, motion, useMotionValue, useTransform } from "framer-motion";
 import { subscribeTheme } from "@/lib/theme";
 import { months, type Amount, type YearData } from "@/data/financialData";
 import {
@@ -227,18 +227,14 @@ const hideScrollbar = "[scrollbar-width:none] [&::-webkit-scrollbar]:hidden";
 
 // 金額を、前の値から新しい値へ、数え上がるように変える。どちらかが未確定の「-」の時は、動かさない。
 // 月の切り替えでは、内容が作り直されるので、前の月の値を from で受け取って、そこから始める
-function AnimatedAmount({ from, to, reduceMotion }: { from: Amount; to: Amount; reduceMotion: boolean }) {
+function AnimatedAmount({ from, to }: { from: Amount; to: Amount }) {
     const mv = useMotionValue(typeof from === "number" ? from : typeof to === "number" ? to : 0);
     const text = useTransform(mv, (v) => formatCurrency(Math.round(v)));
     useEffect(() => {
         if (typeof to !== "number") return;
-        if (reduceMotion) {
-            mv.set(to);
-            return;
-        }
         const controls = animate(mv, to, { duration: 0.5, ease: [0.2, 0, 0, 1] });
         return () => controls.stop();
-    }, [to, mv, reduceMotion]);
+    }, [to, mv]);
     if (typeof to !== "number") return <>{formatCurrency(to)}</>;
     return <motion.span>{text}</motion.span>;
 }
@@ -274,7 +270,6 @@ function useSlidingIndicator(
     rowRef: RefObject<HTMLElement | null>,
     barRef: RefObject<HTMLElement | null>,
     key: string,
-    reduceMotion: boolean | null,
 ) {
     useEffect(() => {
         const row = rowRef.current;
@@ -283,7 +278,7 @@ function useSlidingIndicator(
         const place = (animated: boolean) => {
             const el = row.querySelector<HTMLElement>('[aria-selected="true"]');
             if (!el) return;
-            bar.style.transition = animated && !reduceMotion ? "transform 0.3s cubic-bezier(0.2, 0, 0, 1), width 0.3s cubic-bezier(0.2, 0, 0, 1)" : "none";
+            bar.style.transition = animated ? "transform 0.3s cubic-bezier(0.2, 0, 0, 1), width 0.3s cubic-bezier(0.2, 0, 0, 1)" : "none";
             bar.style.transform = `translateX(${el.offsetLeft}px)`;
             bar.style.width = `${el.offsetWidth}px`;
         };
@@ -292,7 +287,7 @@ function useSlidingIndicator(
         const observer = new ResizeObserver(() => place(false));
         observer.observe(row);
         return () => observer.disconnect();
-    }, [rowRef, barRef, key, reduceMotion]);
+    }, [rowRef, barRef, key]);
 }
 
 // 年度のタブ。月のタブと同じ作りで、選んだ年度は濃くなる。下の棒は、行の側が滑らせる
@@ -325,7 +320,6 @@ function YearTab({
 
 export default function FinancialClient({ years: yearsProp }: { years: Record<string, YearData> }) {
     const years = yearsProp;
-    const reduceMotion = useReducedMotion();
     // 年度は、古い順（新しい年度が下）に並べる。最初に開く年度は、一番新しいもの
     const availableYears = Object.keys(years).sort((x, y) => parseInt(x, 10) - parseInt(y, 10));
     const [selectedYear, setActiveYear] = useState(availableYears[availableYears.length - 1]);
@@ -372,8 +366,8 @@ export default function FinancialClient({ years: yearsProp }: { years: Record<st
     // 年度の行は、途切れている側の端を、滲ませる
     useEdgeFade(yearRowRef);
     // 年度と月の下線: 選んだタブの下へ、滑って移る
-    useSlidingIndicator(yearRowRef, yearIndicatorRef, activeYear, reduceMotion);
-    useSlidingIndicator(tabRowRef, indicatorRef, activeTab, reduceMotion);
+    useSlidingIndicator(yearRowRef, yearIndicatorRef, activeYear);
+    useSlidingIndicator(tabRowRef, indicatorRef, activeTab);
     // 押したまま動かして、年度・月を切り替える。年度の行と月の行は、またいで動かせる
     useScrubRows(
         [
@@ -435,7 +429,7 @@ export default function FinancialClient({ years: yearsProp }: { years: Record<st
     const chartOptions = {
         responsive: true,
         maintainAspectRatio: false,
-        animation: reduceMotion ? (false as const) : { duration: 900, easing: "easeInOutCubic" as const },
+        animation: { duration: 900, easing: "easeInOutCubic" as const },
         interaction: { mode: "index" as const, intersect: false },
         plugins: {
             legend: { position: "top" as const, labels: { color: colors?.text } },
@@ -513,9 +507,9 @@ export default function FinancialClient({ years: yearsProp }: { years: Record<st
                         key={activeTab}
                         custom={tabState.dir}
                         variants={{
-                            enter: (dir: number) => (reduceMotion ? { opacity: 0 } : { opacity: 0, x: dir * 24 }),
-                            show: { opacity: 1, x: 0, transition: { duration: reduceMotion ? 0 : 0.2, ease: [0.2, 0, 0, 1] } },
-                            leave: (dir: number) => (reduceMotion ? { opacity: 0, transition: { duration: 0 } } : { opacity: 0, x: dir * -24, transition: { duration: 0.15, ease: [0.4, 0, 1, 1] } }),
+                            enter: (dir: number) => ({ opacity: 0, x: dir * 24 }),
+                            show: { opacity: 1, x: 0, transition: { duration: 0.2, ease: [0.2, 0, 0, 1] } },
+                            leave: (dir: number) => ({ opacity: 0, x: dir * -24, transition: { duration: 0.15, ease: [0.4, 0, 1, 1] } }),
                         }}
                         initial="enter"
                         animate="show"
@@ -529,15 +523,15 @@ export default function FinancialClient({ years: yearsProp }: { years: Record<st
                         <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-10">
                             <div className="bg-surface-container-lowest p-6 rounded-xl shadow-sm border border-outline-variant text-center">
                                 <span className="text-xs font-bold tracking-widest text-on-surface-subtle block mb-2">年間収入</span>
-                                <p className="text-2xl font-bold text-on-surface"><AnimatedAmount from={prevAmounts.income} to={annualIncome} reduceMotion={!!reduceMotion} /></p>
+                                <p className="text-2xl font-bold text-on-surface"><AnimatedAmount from={prevAmounts.income} to={annualIncome} /></p>
                             </div>
                             <div className="bg-surface-container-lowest p-6 rounded-xl shadow-sm border border-outline-variant text-center">
                                 <span className="text-xs font-bold tracking-widest text-on-surface-subtle block mb-2">年間支出</span>
-                                <p className="text-2xl font-bold text-on-surface"><AnimatedAmount from={prevAmounts.expense} to={annualExpense} reduceMotion={!!reduceMotion} /></p>
+                                <p className="text-2xl font-bold text-on-surface"><AnimatedAmount from={prevAmounts.expense} to={annualExpense} /></p>
                             </div>
                             <div className="bg-on-surface text-surface p-6 rounded-xl text-center">
                                 <span className="text-xs font-bold tracking-widest text-outline block mb-2">年間純利益</span>
-                                <p className="text-2xl font-bold"><AnimatedAmount from={prevAmounts.profit} to={annualProfit} reduceMotion={!!reduceMotion} /></p>
+                                <p className="text-2xl font-bold"><AnimatedAmount from={prevAmounts.profit} to={annualProfit} /></p>
                             </div>
                         </div>
                         <div className="w-full h-[400px]">
@@ -554,7 +548,7 @@ export default function FinancialClient({ years: yearsProp }: { years: Record<st
                             {/* ---- 収入カード ---- */}
                             <div className="bg-surface-container-lowest p-8 rounded-xl shadow-sm border border-outline-variant">
                                 <span className="text-sm font-bold tracking-widest text-on-surface-subtle block mb-2">INCOME / 収入</span>
-                                <p className="text-4xl font-bold text-on-surface mb-4"><AnimatedAmount from={prevAmounts.income} to={current.income} reduceMotion={!!reduceMotion} /></p>
+                                <p className="text-4xl font-bold text-on-surface mb-4"><AnimatedAmount from={prevAmounts.income} to={current.income} /></p>
 
                                 <div className="bg-surface-container rounded-lg p-4 mb-4 space-y-2">
                                     <p className="text-xs font-bold text-outline tracking-widest mb-3">BREAKDOWN / 内訳</p>
@@ -578,7 +572,7 @@ export default function FinancialClient({ years: yearsProp }: { years: Record<st
                             {/* ---- 支出カード ---- */}
                             <div className="bg-surface-container-lowest p-8 rounded-xl shadow-sm border border-outline-variant">
                                 <span className="text-sm font-bold tracking-widest text-on-surface-subtle block mb-2">EXPENSE / 支出</span>
-                                <p className="text-4xl font-bold text-on-surface mb-4"><AnimatedAmount from={prevAmounts.expense} to={current.expense} reduceMotion={!!reduceMotion} /></p>
+                                <p className="text-4xl font-bold text-on-surface mb-4"><AnimatedAmount from={prevAmounts.expense} to={current.expense} /></p>
 
                                 <div className="bg-surface-container rounded-lg p-4 mb-4 space-y-2">
                                     <p className="text-xs font-bold text-outline tracking-widest mb-3">BREAKDOWN / 内訳</p>
@@ -603,7 +597,7 @@ export default function FinancialClient({ years: yearsProp }: { years: Record<st
                         {/* 純利益バー */}
                         <div className="mt-8 bg-on-surface text-surface p-8 rounded-xl flex flex-col md:flex-row justify-between items-center">
                             <span className="text-lg font-bold tracking-widest mb-2 md:mb-0">当月純利益</span>
-                            <span className="text-3xl font-bold"><AnimatedAmount from={prevAmounts.profit} to={netProfit(current.income, current.expense)} reduceMotion={!!reduceMotion} /></span>
+                            <span className="text-3xl font-bold"><AnimatedAmount from={prevAmounts.profit} to={netProfit(current.income, current.expense)} /></span>
                         </div>
                     </div>
                 ) : null}

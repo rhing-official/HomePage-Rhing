@@ -6,7 +6,7 @@
 //   4. 着くと、チップのアイコンが弾み、件数のバッジが大きくなる（外した時は、飛び立つ時に弾む）
 // 外した時は、チップから、点が一旦真上へ放られ、落ちながら消える（捨てる動き）。
 // 位置は、押した瞬間に画面上で測る（getBoundingClientRect）ので、画面の幅・縦横・密度が違っても、ずれない。
-// チップが画面に無い時（ログイン前など）と、動きを減らす設定の時は、何もしない。
+// チップが画面に無い時（ログイン前など）は、何もしない。
 
 export type FlyTarget = "favorite" | "cart";
 
@@ -187,7 +187,8 @@ function fly(target: FlyTarget, from: Point, to: Point, style: FlyStyle, onDepar
     window.setTimeout(() => onArrive?.(), duration * 0.92);
 }
 
-const usable = () => typeof document !== "undefined" && !window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+// 動きを減らす設定（prefers-reduced-motion）は、見ない（2026-11-28、ユーザー指示。サイト内のアニメーションは、端末の設定に関わらず、全て実行する）。
+const usable = () => typeof document !== "undefined";
 
 /**
  * 追加した時: 押したボタン（カードのハート・カートの丸ボタンなど）から、メニューのチップへ。

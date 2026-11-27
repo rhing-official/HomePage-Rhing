@@ -1,20 +1,18 @@
 @import "tailwindcss";
 
-/* 折りたたみ端末（展開した状態）用のバリアント。
-   fold: 展開した折りたたみ端末・タブレットの縦長でない画面（幅600〜1023px、縦横比が5:4以下）、
-         または、ヒンジで画面が左右2つに分かれる端末（Viewport Segments）。
-   サイドメニューを、ドロワーではなく、左に常時表示する場所で使う（Header.tsx、layout.tsx） */
+/* 画面がヒンジで左右2つに分かれる端末（Viewport Segments）用のバリアント。
+   fold: horizontal-viewport-segments が2の時だけ。サイドメニューを、ドロワーではなく、左に常時表示する場所で使う（Header.tsx、layout.tsx）。
+   以前は、幅600〜1023pxで縦横比が5:4以下の画面も含めていたが、縦長のタブレット（iPad Mini など）にも当てはまり、
+   サイドメニューが常に出てしまった。縦横比では、タブレットと折りたたみ端末を、確実に見分けられないため、外した（2026-11-28、ユーザー指示）。
+   展開した折りたたみ端末も、他のモバイルと同じ、ハンバーガーにする */
 @custom-variant fold {
-    @media (min-width: 600px) and (max-width: 1023.98px) and (max-aspect-ratio: 5/4) {
-        @slot;
-    }
     @media (horizontal-viewport-segments: 2) {
         @slot;
     }
 }
 
 /* ヘッダーを、PC用のナビバーにする幅。これ未満は、全て、ハンバーガーのバー（縦画面も横画面も同じ）。
-   hb: 幅1500px以上（2026-11-28、ユーザー指示）。折りたたみ端末は、fold が優先でヘッダーごと隠れる（Header.tsx） */
+   hb: 幅1500px以上（2026-11-28、ユーザー指示）。画面が左右2つに分かれる端末は、fold が優先でヘッダーごと隠れる（Header.tsx） */
 @custom-variant hb {
     @media (min-width: 1500px) {
         @slot;
@@ -218,13 +216,7 @@
     animation: page-blur-in 0.4s ease-in-out backwards;
 }
 
-@media (prefers-reduced-motion: reduce) {
-    .page-blur-in {
-        animation: none;
-    }
-}
-
-/* スマホ縦画面で、右ドロワーを開いた間、ページを傾けて奥へ退かせる。Header.tsx が html の data-recede を切り替える。
+/* スマホとタブレットで、右ドロワーを開いた間、ページを傾けて奥へ退かせる。Header.tsx が html の data-recede を切り替える。
    - flat: ページを、画面1枚分の枠に切り取って固定する。見た目は、通常のページと同じ
    - tilt: 枠ごと縮めて傾ける。flat へ戻すと、水平に戻りながら全面に広がる
    枠は画面と同じ大きさで原点に有るので、枠の中の fixed の部品も、位置が跳ねない。
@@ -241,13 +233,13 @@
 /* ヒーローのカード（14枚）の背景のぼかしは、スマホの縦画面では付けない。
    ドロワーを閉じて、傾きを解く時に、ぼかしが戻る瞬間の再描画で、1コマが約100ミリ秒になり、引っ掛かった（2026-11-28、計測）。
    半透明の白い縁の中のぼかしで、外しても、見た目の差は、ほぼ無い */
-@media (max-width: 639.98px) and (orientation: portrait) {
+@media (max-width: 1499.98px) and ((orientation: portrait) or (min-height: 600px)) {
     .hero-card {
         backdrop-filter: none;
     }
 }
 
-@media (max-width: 639.98px) and (orientation: portrait) {
+@media (max-width: 1499.98px) and ((orientation: portrait) or (min-height: 600px)) {
     html[data-recede] body {
         background: var(--color-surface-container-high);
     }
@@ -338,8 +330,3 @@
     animation: page-dot 0.8s ease-out backwards;
 }
 
-@media (prefers-reduced-motion: reduce) {
-    .page-dot {
-        animation: none;
-    }
-}

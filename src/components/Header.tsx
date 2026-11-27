@@ -3,7 +3,7 @@ import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { usePathname } from "next/navigation";
-import { motion, AnimatePresence, useReducedMotion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 import ThemeToggle from "@/components/ThemeToggle";
 import { HEADER_BAR_SLOT_ID, usePhonePortrait } from "@/lib/usePhonePortrait";
 
@@ -24,7 +24,7 @@ const navItems = [
     { href: "https://note.com/rhing_official/all", label: "NEWS" },
 ];
 
-// 折りたたみ端末を広げた時（foldバリアント、globals.css）の、左に常時表示するサイドメニュー。
+// 画面がヒンジで左右2つに分かれる端末（foldバリアント、globals.css）の、左に常時表示するサイドメニュー。
 // この時は、右上のハンバーガー・ドロワー・左上のロゴは出さず、ロゴもここに入れる。
 function FoldSideMenu() {
     const pathname = usePathname();
@@ -68,13 +68,11 @@ const EASE_M3 = [0.2, 0, 0, 1] as const;
 function DrawerLink({
     href,
     selected,
-    reduceMotion,
     onSelect,
     children,
 }: {
     href: string;
     selected: boolean;
-    reduceMotion: boolean;
     onSelect: () => void;
     children: React.ReactNode;
 }) {
@@ -83,7 +81,7 @@ function DrawerLink({
         <Link
             href={href}
             onClick={() => {
-                if (!reduceMotion) setRipple((n) => n + 1);
+                setRipple((n) => n + 1);
                 onSelect();
             }}
             className={`relative block py-3 px-5 font-bold tracking-[0.16em] transition-colors duration-300 ease-m3-standard ${
@@ -95,7 +93,7 @@ function DrawerLink({
                     layoutId="drawer-marker"
                     aria-hidden
                     className="absolute left-0 top-2 bottom-2 w-[3px] rounded-full bg-on-surface"
-                    transition={reduceMotion ? { duration: 0 } : { type: "spring", stiffness: 520, damping: 38 }}
+                    transition={{ type: "spring", stiffness: 520, damping: 38 }}
                 />
             )}
             {ripple > 0 &&
@@ -146,10 +144,9 @@ export default function Header() {
     const [isOpen, setIsOpen] = useState(false);
     const [selected, setSelected] = useState<string | null>(null);
     const pathname = usePathname();
-    const reduceMotion = useReducedMotion();
     const phonePortrait = usePhonePortrait();
-    // ページを傾ける動きは、スマホの縦画面で、動きを減らす設定でない時だけ。
-    const recede = phonePortrait && !reduceMotion;
+    // ページを傾ける動きは、スマホの縦画面だけ。動きを減らす設定は、見ない（2026-11-28、ユーザー指示）。
+    const recede = phonePortrait;
 
     // 傾いている間の、元のスクロール位置と、ページ移動の有無。
     const recedeRef = useRef<{ scrollY: number; pathname: string; active: boolean; timer?: number }>({ scrollY: 0, pathname, active: false });
@@ -196,12 +193,12 @@ export default function Header() {
     // 項目を選ぶと、縦棒と輪の動きを見せてから、ドロワーを閉じる。
     const selectItem = (href: string) => {
         setSelected(href);
-        window.setTimeout(closeDrawer, reduceMotion ? 0 : DRAWER_SELECT_MS);
+        window.setTimeout(closeDrawer, DRAWER_SELECT_MS);
     };
 
     return (
         <>
-            {/* 折りたたみ端末を広げた時の、左のサイドメニュー */}
+            {/* 画面が左右2つに分かれる端末の、左のサイドメニュー */}
             <FoldSideMenu />
 
             {/* ナビゲーションエリア */}
@@ -279,10 +276,10 @@ export default function Header() {
                                     closeDrawer();
                                 }
                             }}
-                            initial={reduceMotion ? { opacity: 0 } : { x: "100%" }}
-                            animate={reduceMotion ? { opacity: 1 } : { x: 0 }}
-                            exit={reduceMotion ? { opacity: 0 } : { x: "100%" }}
-                            transition={reduceMotion ? { duration: 0.15 } : { type: "spring", damping: 25 }}
+                            initial={{ x: "100%" }}
+                            animate={{ x: 0 }}
+                            exit={{ x: "100%" }}
+                            transition={{ type: "spring", damping: 25 }}
                             /* 掴んでスライドできることが感覚的にわかるよう、カーソル表現を追加しています */
                             className="fixed top-1/2 right-0 w-64 bg-surface/80 backdrop-blur-md z-[80] p-10 flex flex-col gap-6 pointer-events-auto shadow-elevation-3 rounded-l-3xl border-y border-l border-outline-variant/60 text-on-surface cursor-grab active:cursor-grabbing select-none"
                         >
@@ -292,14 +289,13 @@ export default function Header() {
                                 {navItems.map((item, index) => (
                                     <motion.div
                                         key={item.href}
-                                        initial={reduceMotion ? false : { opacity: 0, x: 14 }}
+                                        initial={{ opacity: 0, x: 14 }}
                                         animate={{ opacity: 1, x: 0 }}
                                         transition={{ duration: 0.3, delay: 0.1 + index * 0.04, ease: EASE_M3 }}
                                     >
                                         <DrawerLink
                                             href={item.href}
                                             selected={selected === item.href}
-                                            reduceMotion={!!reduceMotion}
                                             onSelect={() => selectItem(item.href)}
                                         >
                                             {item.label}

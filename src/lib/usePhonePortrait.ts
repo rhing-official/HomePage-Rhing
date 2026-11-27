@@ -12,15 +12,15 @@ function useMediaQuery(query: string): boolean {
     );
 }
 
-// スマホの縦画面か。ドロワーを開いた間にページを傾ける動き（Header.tsx、globals.css の data-recede）の条件で、
+// ページを傾ける動きを使う画面か。ハンバーガーの幅（1500px未満）の、スマホとタブレットの縦画面と、タブレットの横画面。高さの低いスマホの横画面は含めない。ドロワーを開いた間にページを傾ける動き（Header.tsx、globals.css の data-recede）の条件で、
 // globals.css の @media と同じ値にしておく。
 export function usePhonePortrait(): boolean {
-    return useMediaQuery("(max-width: 639.98px) and (orientation: portrait)");
+    return useMediaQuery("(max-width: 1499.98px) and ((orientation: portrait) or (min-height: 600px))");
 }
 
 // ヘッダー右上の、ハンバーガーとモード切り替えのバーが、今、画面に出ているか。
 // daidai横丁のメニューは、出ている間、そのバーの中へ入る。幅や縦横の条件は、ここには書かず、場所そのものが見えているかで決める。
-// そのため、幅1500px以上（PC用のナビバー）や、折りたたみ端末のサイドメニュー（ヘッダーごと隠れる）の時は、自然に、入らなくなる
+// そのため、幅1500px以上（PC用のナビバー）や、画面が左右2つに分かれる端末のサイドメニュー（ヘッダーごと隠れる）の時は、自然に、入らなくなる
 export function useHeaderBarMerged(slot: HTMLElement | null): boolean {
     return useSyncExternalStore(
         (onChange) => {
