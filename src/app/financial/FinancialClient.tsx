@@ -499,6 +499,7 @@ export default function FinancialClient({ years: yearsProp }: { years: Record<st
                 <div
                     ref={yearRowRef}
                     role="tablist"
+                    data-no-drawer-swipe
                     aria-label="年度"
                     style={{ maskImage: edgeFadeMask, WebkitMaskImage: edgeFadeMask }}
                     className={`relative mb-10 touch-none select-none border-b border-outline-variant overflow-x-auto overflow-y-hidden ${hideScrollbar}`}
@@ -516,6 +517,7 @@ export default function FinancialClient({ years: yearsProp }: { years: Record<st
                 <div
                     ref={tabRowRef}
                     role="tablist"
+                    data-no-drawer-swipe
                     aria-label="月"
                     className={`relative flex touch-none select-none justify-between items-center border-b border-outline-variant overflow-x-auto overflow-y-hidden ${hideScrollbar}`}
                 >
@@ -538,7 +540,7 @@ export default function FinancialClient({ years: yearsProp }: { years: Record<st
             </div>
 
             {/* ====== コンテンツエリア ====== */}
-            <div ref={contentRef} className="bg-surface-container p-8 md:p-12 rounded-m3-lg min-h-[500px]">
+            <div ref={contentRef} data-no-drawer-swipe className="bg-surface-container p-8 md:p-12 rounded-m3-lg min-h-[500px]">
                 {/* 月の切り替え: 内容が、進む向きに合わせて滑って入れ替わる。素早く切り替える時は、途中の月を飛ばす */}
                 <AnimatePresence mode="wait" initial={false} custom={tabState.dir}>
                     <motion.div

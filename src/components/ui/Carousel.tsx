@@ -87,6 +87,7 @@ export default function Carousel({
 
     return (
         <div
+            data-no-drawer-swipe
             role="region"
             aria-roledescription="carousel"
             aria-label={label}

@@ -137,6 +137,7 @@ function ZoomableImage({
 
     return (
         <div
+            data-no-drawer-swipe
             className="absolute inset-0 flex items-center justify-center touch-none select-none"
             onPointerDown={onPointerDown}
             onPointerMove={onPointerMove}

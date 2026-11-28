@@ -205,6 +205,7 @@ export default function Header() {
 
     // 閉じる全ての経路が通る。ページは水平に戻りながら全面に広がり、戻りきったら、通常の配置とスクロール位置に戻す。
     const closeDrawer = () => {
+        exitingRef.current = true;
         setIsOpen(false);
         const state = recedeRef.current;
         if (!state.active) return;
@@ -218,6 +219,10 @@ export default function Header() {
 
     // ドロワーを指で動かしている間（右端から引き出す時と、開いたドロワーを横へ引いて収納する時）の印。
     const draggingRef = useRef(false);
+    // 閉じる動き（退場のアニメーション）の最中か。この間に、次の引き出しが始まることが有る
+    const exitingRef = useRef(false);
+    // 引き出しの開始時の、ドロワーの位置。指の動いた量は、ここからの差として足す
+    const baseXRef = useRef(DRAWER_WIDTH);
     // ドロワーの位置に合わせて、ページの傾き（--recede-progress）を、毎コマ更新する。引き出す時も、収納する時も、同じ作り。
     // 指を離して、閉じずに元へ戻る時は、ドロワーが全開の位置へ戻ったところで、傾きの動きを tilt に戻す
     useEffect(
@@ -232,7 +237,8 @@ export default function Header() {
         [drawerX],
     );
 
-    // 画面の右端から左へ引いて、ドロワーを開く。ドロワーは指に追従して出てくる（勝手に最後まで伸びない）。
+    // 画面のどこからでも、左へ横に引いて、ドロワーを開く。ドロワーは指に追従して出てくる（勝手に最後まで伸びない）。
+    // ただし、横の操作を持つ場所（カルーセル、収支の表、横にスクロールできる要素、ダイアログなど）の上で始めた指は、その場所に任せる。右端24px の中で始めた指だけは、どこでも開く。
     // 途中で指を戻せば、そのまま指に追従して収納される。離した時に、半分を超えていたら開き、手前なら閉じる。速く払った時は、その向きに従う。
     // ハンバーガーが見えている幅だけで効く（PC用のナビバーや、画面が左右に分かれる端末では、ボタンが見えないので効かない）。
     // ページを傾ける動きは、離して開くと決まってから始める（傾きは時間で動くので、指には追従させない）。
@@ -241,16 +247,29 @@ export default function Header() {
         edgeRef.current = {
             opened: isOpen,
             begin: () => {
-                drawerX.set(DRAWER_WIDTH);
+                // 速く連続して引いた時は、前の閉じる動きが、まだ続いている。動いているアニメーションを止め、今の位置から引き継ぐ
+                drawerX.stop();
+                const base = exitingRef.current ? Math.min(Math.max(drawerX.get(), 0), DRAWER_WIDTH) : DRAWER_WIDTH;
+                exitingRef.current = false;
+                baseXRef.current = base;
+                drawerX.set(base);
                 selectCurrent();
                 // ページも、指に合わせて傾ける（globals.css の data-recede="drag"）
-                const state = recedeRef.current;
-                if (recede && !state.active) {
+                if (recede) {
+                    const state = recedeRef.current;
+                    const html = document.documentElement;
+                    // 閉じる動きの後片付け（傾きを解くタイマー）が、引き出しの最中に働かないよう、必ず止める
                     window.clearTimeout(state.timer);
-                    state.scrollY = window.scrollY;
-                    state.pathname = pathname;
-                    state.active = true;
-                    startRecede(state.scrollY, "drag");
+                    if (!state.active) {
+                        state.scrollY = window.scrollY;
+                        state.pathname = pathname;
+                        state.active = true;
+                        startRecede(state.scrollY, "drag");
+                    } else {
+                        // 傾きを解いている途中（flat）なら、drag に戻して、指に追従させる
+                        html.style.setProperty("--recede-progress", String(1 - base / DRAWER_WIDTH));
+                        html.dataset.recede = "drag";
+                    }
                 }
                 draggingRef.current = true;
                 setEdgeDragging(true);
@@ -260,15 +279,20 @@ export default function Header() {
                 draggingRef.current = false;
                 if (open) {
                     if (recedeRef.current.active) setRecedePhase("tilt"); // 指の位置から、全開の傾きまで動く
+                    // 指の速さを、ばねに引き継がない。引き継ぐと、勢い良く払った時に、全開の位置を行き過ぎて、ドロワーの右端が見える。
+                    // なお、行き過ぎを、値の変化の通知の中で止める作り（change の中で jump(0)）は、通知が入れ子になり、古い値が描画に残るので、使わない
+                    drawerX.jump(drawerX.get());
                     setEdgeDragging(false); // animate={{ x: 0 }} が、今の位置から全開まで動かす
                 } else {
-                    closeDrawer(); // 傾きは、指の位置から水平まで戻り、ドロワーは、今の位置から隠れる。edgeDragging は、退場が終わってから戻す
+                    closeDrawer(); // 傾きは、指の位置から水平まで戻り、ドロワーは、今の位置から隠れる
+                    // 退場するドロワーは、最後に描いた時の属性を保つので、ここで戻して良い。ドロワーが、まだ描かれていない時（速い払い）も、戻しておかないと、次に開く時に、位置が決まらなくなる
+                    setEdgeDragging(false);
                 }
             },
         };
     });
     useEffect(() => {
-        const EDGE_PX = 24; // 右端からこの幅の中で始まった指だけを対象にする
+        const EDGE_PX = 24; // 右端からこの幅の中で始まった指は、横の操作を持つ場所の上でも、開く
         const INTENT_PX = 8; // この距離以上、横へ動いたら、引き出す操作と見なす
         const FLICK_PX_PER_S = 600; // これ以上の速さで払ったら、位置に関わらず、その向きに従う
         let start: { x: number; y: number } | null = null;
@@ -277,7 +301,17 @@ export default function Header() {
         let velocity = 0; // 右向きが正
         const hamburgerVisible = () =>
             (document.querySelector<HTMLElement>('button[aria-label^="メニューを"]')?.getClientRects().length ?? 0) > 0;
-        const fingerToX = (clientX: number) => Math.min(Math.max(clientX - (window.innerWidth - DRAWER_WIDTH), 0), DRAWER_WIDTH);
+        // 指の動いた量だけ、ドロワーも動く（指を置いた位置に関わらず、最初は、隠れた位置から始まる）
+        const fingerToX = (clientX: number) => Math.min(Math.max(baseXRef.current + (clientX - (start?.x ?? clientX)), 0), DRAWER_WIDTH);
+        // 横の操作を持つ場所か。data-no-drawer-swipe の付いた要素、ダイアログ、入力部品、横にスクロールできる要素の中
+        const ownsHorizontalSwipe = (target: EventTarget | null) => {
+            for (let n = target instanceof Element ? target : null; n && n !== document.body; n = n.parentElement) {
+                if (n.hasAttribute("data-no-drawer-swipe") || n.matches('[role="dialog"], [aria-modal="true"], input, textarea, select')) return true;
+                const { overflowX } = getComputedStyle(n);
+                if ((overflowX === "auto" || overflowX === "scroll") && n.scrollWidth > n.clientWidth) return true;
+            }
+            return false;
+        };
         const finish = () => {
             if (dragging) {
                 dragging = false;
@@ -292,7 +326,7 @@ export default function Header() {
             dragging = false;
             if (e.touches.length !== 1 || edgeRef.current.opened) return;
             const t = e.touches[0];
-            if (t.clientX < window.innerWidth - EDGE_PX) return;
+            if (t.clientX < window.innerWidth - EDGE_PX && ownsHorizontalSwipe(e.target)) return;
             if (!hamburgerVisible()) return;
             start = { x: t.clientX, y: t.clientY };
             last = { x: t.clientX, t: performance.now() };
@@ -306,6 +340,11 @@ export default function Header() {
                 const dy = t.clientY - start.y;
                 // 縦に動いた時は、ページのスクロールなので、見送る
                 if (Math.abs(dy) > Math.abs(dx) && Math.abs(dy) > 10) {
+                    start = null;
+                    return;
+                }
+                // 右へ動いた時は、ドロワーを開く操作ではない
+                if (dx > INTENT_PX) {
                     start = null;
                     return;
                 }
@@ -436,7 +475,12 @@ export default function Header() {
             </header>
 
             {/* ドロワーメニュー */}
-            <AnimatePresence onExitComplete={() => setEdgeDragging(false)}>
+            <AnimatePresence
+                onExitComplete={() => {
+                    exitingRef.current = false;
+                    setEdgeDragging(false);
+                }}
+            >
                 {isOpen && (
                     <>
                         {/* スマホの縦画面では、傾いたページが背景になるので、暗幕は付けない。押すと閉じる範囲だけ残す */}
